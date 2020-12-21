@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, options, ... }:
 
 with lib;
 
@@ -15,6 +15,7 @@ in {
 
     homeModule = mkOption {
       internal = true;
+      type = types.anything;
       description = "Home Manager module to apply for all users.";
     };
   };
