@@ -4,15 +4,15 @@ with config.stylix.fonts;
 with config.lib.stylix.colors;
 
 let
-  background = "#${base00-hex}";
-  secondary-background = "#${base01-hex}";
-  selection-background = "#${base03-hex}";
-  foreground = "#${base05-hex}";
-  inverted-foreground = "#${base00-hex}";
-  info = "#${base0B-hex}";
-  secondary-info = "#${base0C-hex}";
-  warning = "#${base0E-hex}";
-  error = "#${base08-hex}";
+  background = base00-hash;
+  secondary-background = base01-hash;
+  selection-background = base03-hash;
+  foreground = base05-hash;
+  inverted-foreground = base00-hash;
+  info = base0B-hash;
+  secondary-info = base0C-hash;
+  warning = base0E-hash;
+  error = base08-hash;
 
 in {
   stylix.homeModule = {

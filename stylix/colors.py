@@ -78,6 +78,7 @@ for key, color in scheme.items():
         round(b * 255),
     )
     data[key + "-hex"] = hex_color
+    data[key + "-hash"] = "#" + hex_color
     data[key + "-hex-r"] = hex_color[0:2]
     data[key + "-hex-g"] = hex_color[2:4]
     data[key + "-hex-b"] = hex_color[4:6]
