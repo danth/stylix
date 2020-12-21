@@ -16,9 +16,11 @@ let
     passAsFile = [ "data" ];
 
     buildPhase = ''
-      mkdir -p $out/colors
+      # Remove pre-built color schemes
+      rm colors/*
+
       ${pkgs.mustache-go}/bin/mustache $dataPath \
-        $src/templates/default.mustache > $out/colors/base16-stylix.vim
+        templates/default.mustache > colors/base16-stylix.vim
     '';
   };
 
