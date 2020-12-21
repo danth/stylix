@@ -1,0 +1,48 @@
+### BACKGROUND ###
+
+background.original_image = Image("background.png");
+background.ratio = Math.Max(
+  Window.GetWidth() / background.original_image.GetWidth(),
+  Window.GetHeight() / background.original_image.GetHeight()
+);
+background.image = background.original_image.Scale(
+  Math.Int(background.original_image.GetWidth() * background.ratio),
+  Math.Int(background.original_image.GetHeight() * background.ratio)
+);
+background.sprite = Sprite(background.image);
+background.sprite.SetPosition(
+  Math.Int((Window.GetWidth() - background.image.GetWidth()) / 2),
+  Math.Int((Window.GetHeight() - background.image.GetHeight()) / 2),
+  0
+);
+
+
+### PROGRESS ###
+
+progress_bar.width = 0;
+progress_bar.height = 4;
+
+progress_bar.original_image = Image("progress.png");
+progress_bar.sprite = Sprite();
+progress_bar.sprite.SetY(Window.GetHeight() - progress_bar.height);
+progress_bar.sprite.SetZ(1);
+
+fun progress_callback (duration, progress) {
+  progress_bar.width = Math.Int(Window.GetWidth() * progress);
+
+  if (progress_bar.image.GetWidth() != progress_bar.width) {
+    progress_bar.image = progress_bar.original_image.Scale(progress_bar.width, progress_bar.height);
+    progress_bar.sprite.SetImage(progress_bar.image);
+  }
+}
+
+Plymouth.SetBootProgressFunction(progress_callback);
+
+
+### QUIT ###
+
+fun quit_callback () {
+  progress_bar.sprite.SetOpacity(0);
+}
+
+Plymouth.SetQuitFunction(quit_callback);

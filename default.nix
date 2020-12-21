@@ -8,6 +8,7 @@
     ./modules/gtk.nix
     ./modules/kitty.nix
     ./modules/lightdm.nix
+    ./modules/plymouth
     ./modules/qutebrowser.nix
     ./modules/vim.nix
   ];
