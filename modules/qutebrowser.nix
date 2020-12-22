@@ -195,27 +195,7 @@ in {
       };
 
       fonts = {
-        completion = {
-          category = sansSerif.name;
-          entry = sansSerif.name;
-        };
-        contextmenu = sansSerif.name;
-        debug_console = monospace.name;
         default_family = sansSerif.name;
-        downloads = sansSerif.name;
-        hints = monospace.name;
-        keyhint = monospace.name;
-        messages = {
-          error = sansSerif.name;
-          info = sansSerif.name;
-          warning = sansSerif.name;
-        };
-        prompts = sansSerif.name;
-        statusbar = sansSerif.name;
-        tabs = {
-          selected = sansSerif.name;
-          unselected = sansSerif.name;
-        };
         web.family = {
           cursive = serif.name;
           fantasy = serif.name;
