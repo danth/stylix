@@ -12,6 +12,13 @@ let
     };
     nativeBuildInputs = [ bc inkscape optipng sassc ];
 
+    postPatch = "patchShebangs .";
+    buildPhase = ''
+      export HOME="$NIX_BUILD_ROOT"
+      ./change_color.sh -t $out/share/themes -o stylix $themePath
+    '';
+
+    # Colors
     theme = with config.lib.stylix.colors; lib.generators.toKeyValue {} {
       # Normal
       BG = base00-hex;
@@ -49,15 +56,15 @@ let
     };
     passAsFile = [ "theme" ];
 
+    # Fonts
     FONTCONFIG_FILE = makeFontsConf {
       fontDirectories = [ config.stylix.fonts.sansSerif.package ];
     };
-
-    postPatch = "patchShebangs .";
-    dontConfigure = true;
-    buildPhase = ''
-      export HOME="$NIX_BUILD_ROOT"
-      ./change_color.sh -t $out/share/themes -o stylix $themePath
+    configurePhase = let font = config.stylix.fonts.sansSerif.name; in ''
+      sed 's/$font-family: .*;/$font-family: "${font}";/' \
+        -i src/gnome-shell/sass/_variables.scss
+      sed 's/$font-family-large: .*;/$font-family-large: "${font}";/' \
+        -i src/gnome-shell/sass/_variables.scss
     '';
   };
 
