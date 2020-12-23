@@ -27,17 +27,17 @@ let
       ACCENT_BG = base0F-hex;
       ACCENT_FG = base00-hex;
       # Buttons
-      BTN_BG = base02-hex;
-      BTN_FG = base06-hex;
+      BTN_BG = base01-hex;
+      BTN_FG = base05-hex;
       # Header bar
-      HDR_BG = base00-hex;
+      HDR_BG = base01-hex;
       HDR_FG = base05-hex;
       # Header buttons
-      HDR_BTN_BG = base01-hex;
+      HDR_BTN_BG = base02-hex;
       HDR_BTN_FG = base05-hex;
       # Materia
       MATERIA_SURFACE = base01-hex;
-      MATERIA_VIEW = base01-hex;
+      MATERIA_VIEW = base00-hex;
       # Menu
       MENU_BG = base01-hex;
       MENU_FG = base05-hex;
