@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 let
   materia = with pkgs; stdenvNoCC.mkDerivation {
@@ -73,7 +73,8 @@ let
     name = "stylix";
   };
 
-in {
+# GTK will probably be unused without Xserver
+in lib.mkIf config.services.xserver.enable {
   # Required for Home Manager's GTK settings to work
   services.dbus.packages = [ pkgs.gnome3.dconf ];
 
