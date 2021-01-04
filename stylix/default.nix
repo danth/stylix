@@ -8,6 +8,7 @@ with lib;
     ./colors.nix
     ./fonts.nix
     ./home-manager.nix
+    ./pixel.nix
   ];
 
   options.stylix.image = mkOption {

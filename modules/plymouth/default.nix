@@ -12,9 +12,7 @@ let theme = pkgs.runCommandLocal "plymouth-theme" {}
     # Convert in case the input image is not PNG
     ${pkgs.imagemagick}/bin/convert ${config.stylix.image} $themeDir/background.png
 
-    # A single pixel of base0B, will be stretched to make the progress bar
-    # (Plymouth scripts can only display images)
-    ${pkgs.imagemagick}/bin/convert xc:#${base0B-hex} $themeDir/progress.png
+    cp ${config.lib.stylix.pixel "base0B"} $themeDir/progress.png
 
     echo "
     [Plymouth Theme]
