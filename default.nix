@@ -3,6 +3,7 @@
     ./stylix/default.nix
 
     ./modules/console.nix
+    ./modules/dunst.nix
     ./modules/feh.nix
     ./modules/fish.nix
     ./modules/grub.nix
