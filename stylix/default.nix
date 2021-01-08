@@ -12,7 +12,7 @@ with lib;
   ];
 
   options.stylix.image = mkOption {
-    type = types.package;
+    type = types.coercedTo types.package toString types.path;
     description = "Wallpaper image.";
   };
 }
