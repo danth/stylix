@@ -40,8 +40,8 @@ scheme = {}
 for i in range(8):
     scheme[int_to_base(i)] = (
         dominant_color.hsl.h,
-        dominant_color.hsl.s,
         scale(i),
+        dominant_color.hsl.s,
     )
 
 # base08 to base0A use the remaining 8 colors from the image,
@@ -51,19 +51,33 @@ for i in range(8, 16):
     color = colors[i-8]
     scheme[int_to_base(i)] = (
         color.hsl.h,
-        color.hsl.s,
         clamp(color.hsl.l),
+        color.hsl.s,
     )
+
+# Override with any manually selected colors
+manual_colors = json.load(sys.stdin)
+for k, v in manual_colors.items():
+    if v is not None:
+      scheme[k] = colorsys.rgb_to_hls(
+          int(v[0:2], 16) / 255,
+          int(v[2:4], 16) / 255,
+          int(v[4:6], 16) / 255,
+      )
+      scheme[k] = (
+          scheme[k][0] * 255,
+          scheme[k][1] * 255,
+          scheme[k][2] * 255,
+      )
 
 
 data = {}
 
 for key, color in scheme.items():
     r, g, b = colorsys.hls_to_rgb(
-        # Function wants HLS, stored as HSL
         color[0] / 255,
-        color[2] / 255,
         color[1] / 255,
+        color[2] / 255,
     )
     data[key + "-dec-r"] = r
     data[key + "-dec-g"] = g
