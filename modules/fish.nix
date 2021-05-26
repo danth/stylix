@@ -1,13 +1,11 @@
 { pkgs, config, ... }:
 
 let
-  # When https://github.com/tomyun/base16-fish/pull/5 is merged,
-  # this can use the main repository rather than a fork
   base16-fish = pkgs.fetchFromGitHub {
-    owner = "ngmoviedo";
+    owner = "tomyun";
     repo = "base16-fish";
-    rev = "2aa139c901c8568764dbdc13934862178cb84595";
-    sha256 = "ppYxLr+wD42Xwsq8dk6MLk8TrudTnlQlgvFf4ZyTjVk=";
+    rev = "7f647967fddedaf803191bc9113b13d2071dc3cf";
+    sha256 = "IGUbLjsmmAvB9UKGkR7oqdpjeVEfzt83GpyBkrZf2O4=";
   };
 
   theme = config.lib.stylix.base16.buildTemplate "fish"
