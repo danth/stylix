@@ -1,0 +1,53 @@
+name: Beautify
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.nix'
+
+concurrency: beautify
+
+jobs:
+  beautify:
+    name: Beautify Nix code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout nixfmt
+        uses: actions/checkout@v2
+        with:
+          repository: serokell/nixfmt
+          path: nixfmt
+
+      - name: Get nixfmt version
+        id: nixfmt-version
+        run: |
+          cd nixfmt
+          new_sha=$(git rev-parse HEAD)
+          echo "::set-output name=SHA::$new_sha"
+
+      - name: Create nixfmt.nix
+        run: echo "(import ./nixfmt {}).nixfmt" > nixfmt.nix
+
+      - name: Install nixfmt
+        uses: rikhuijzer/cache-install@v1.0.8
+        with:
+          key: nixfmt-${{ steps.nixfmt-version.outputs.SHA }}
+          nix_file: nixfmt.nix
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          path: stylix
+
+      - name: Run nixfmt
+        run: find stylix/ -type f -name "*.nix" -print -exec nixfmt {} \;
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          cwd: stylix
+          message: Beautify ${{ github.sha }}
+          default_author: github_actions
