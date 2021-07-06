@@ -16,7 +16,7 @@ dominant_color = colors.pop(0)
 # on the lightness of the dominant color
 if dominant_color.hsl.l >= 128:
     def scale(i):
-        scale = 0.8 - (0.1 * i)
+        scale = 0.7 - (0.1 * i)
         return scale * 255
 
     def clamp(l):
