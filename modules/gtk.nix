@@ -151,8 +151,8 @@ let
     name = "Materia-compact";
   };
 
-# GTK will probably be unused without Xserver
-in lib.mkIf config.services.xserver.enable {
+# GTK will probably be unused without Xorg / Wayland
+in lib.mkIf (config.services.xserver.enable || config.programs.sway.enable) {
   # Required for Home Manager's GTK settings to work
   services.dbus.packages = [ pkgs.gnome3.dconf ];
 
