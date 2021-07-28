@@ -19,7 +19,5 @@ let
 in {
   programs.fish.promptInit = promptInit;
 
-  stylix.homeModule = {
-    programs.fish.promptInit = promptInit;
-  };
+  stylix.homeModule = { programs.fish.promptInit = promptInit; };
 }

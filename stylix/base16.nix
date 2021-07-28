@@ -12,11 +12,9 @@
     });
 
     buildTemplate = name: templatePath:
-      pkgs.runCommand "base16-${name}"
-      {
+      pkgs.runCommand "base16-${name}" {
         inherit json templatePath;
         passAsFile = [ "json" ];
-      }
-      "${pkgs.mustache-go}/bin/mustache $jsonPath $templatePath > $out";
+      } "${pkgs.mustache-go}/bin/mustache $jsonPath $templatePath > $out";
   };
 }

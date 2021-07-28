@@ -5,17 +5,19 @@ with lib;
 let
   cfg = config.stylix.fonts;
 
-  fontType = types.submodule { options = {
-    package = mkOption {
-      description = "Package providing the font.";
-      type = types.package;
-    };
+  fontType = types.submodule {
+    options = {
+      package = mkOption {
+        description = "Package providing the font.";
+        type = types.package;
+      };
 
-    name = mkOption {
-      description = "Name of the font within the package.";
-      type = types.str;
+      name = mkOption {
+        description = "Name of the font within the package.";
+        type = types.str;
+      };
     };
-  }; };
+  };
 
 in {
   options.stylix.fonts = {

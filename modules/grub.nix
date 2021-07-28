@@ -8,13 +8,10 @@ let
   # Grub requires fonts to be converted to "PFF2 format"
   # This function takes a font { name, package } and produces a .pf2 file
   mkGrubFont = font:
-    pkgs.runCommand "${font.package.name}.pf2"
-    {
-      FONTCONFIG_FILE = pkgs.makeFontsConf {
-        fontDirectories = [ font.package ];
-      };
-    }
-    ''
+    pkgs.runCommand "${font.package.name}.pf2" {
+      FONTCONFIG_FILE =
+        pkgs.makeFontsConf { fontDirectories = [ font.package ]; };
+    } ''
       # Use fontconfig to select the correct .ttf or .otf file based on name
       font=$(
         ${pkgs.fontconfig}/bin/fc-match -v "${font.name}" \
@@ -84,8 +81,7 @@ in {
         }
       '';
       passAsFile = [ "themeTxt" ];
-    }
-    ''
+    } ''
       mkdir $out
       cp $themeTxtPath $out/theme.txt
 

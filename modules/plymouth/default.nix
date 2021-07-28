@@ -2,8 +2,8 @@
 
 with config.lib.stylix.colors;
 
-let theme = pkgs.runCommandLocal "plymouth-theme" {}
-  ''
+let
+  theme = pkgs.runCommandLocal "plymouth-theme" { } ''
     themeDir="$out/share/plymouth/themes/stylix"
     mkdir -p $themeDir
 

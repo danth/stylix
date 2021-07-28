@@ -1,5 +1,1 @@
-{
-  outputs = inputs: {
-    nixosModules.stylix = import ./default.nix;
-  };
-}
+{ outputs = inputs: { nixosModules.stylix = import ./default.nix; }; }

@@ -2,15 +2,14 @@
 
 with lib;
 
-let
-  cfg = config.stylix;
+let cfg = config.stylix;
 
 in {
   options.stylix = {
     homeManagerUsers = mkOption {
       type = types.listOf types.str;
       description = "Users for which to enable Home Manager integration.";
-      default = [];
+      default = [ ];
     };
 
     homeModule = mkOption {
