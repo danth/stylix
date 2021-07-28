@@ -12,6 +12,7 @@
     ./modules/lightdm.nix
     ./modules/plymouth
     ./modules/qutebrowser.nix
+    ./modules/sway.nix
     ./modules/vim.nix
   ];
 }
