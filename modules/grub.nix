@@ -85,10 +85,14 @@ in {
       mkdir $out
       cp $themeTxtPath $out/theme.txt
 
-      # Make sure the background image is .png by asking to convert it
-      ${pkgs.imagemagick}/bin/convert ${config.stylix.image} png32:$out/background.png
+      ${
+        if config.boot.plymouth.enable
+        # Make sure the background image is .png by asking to convert it
+        then "${pkgs.imagemagick}/bin/convert ${config.stylix.image} png32:$out/background.png"
+        else "cp ${pixel "base00"} $out/background.png"
+      }
 
-      cp ${pixel "base00"} $out/background_c.png
+      cp ${pixel "base01"} $out/background_c.png
       cp ${pixel "base0B"} $out/selection_c.png
 
       cp ${mkGrubFont sansSerif} $out/sans_serif.pf2
