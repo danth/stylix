@@ -10,6 +10,7 @@ let
 
   themePlugin = pkgs.vimUtils.buildVimPlugin {
     name = "stylix";
+    pname = "stylix";
 
     src = base16-vim;
     data = config.lib.stylix.base16.json;
