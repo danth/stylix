@@ -18,8 +18,7 @@ let
         sha256 = "2Q4RUkrBs27J3Lp1hAzaPpg0gd/0z8zwQBAHhtGBYks=";
       };
 
-      nativeBuildInputs =
-        [ bc meson ninja optipng rendersvg sassc ];
+      nativeBuildInputs = [ bc meson ninja optipng rendersvg sassc ];
 
       FONTCONFIG_FILE = makeFontsConf {
         fontDirectories = [ config.stylix.fonts.sansSerif.package ];
