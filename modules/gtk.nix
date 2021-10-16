@@ -1,15 +1,10 @@
 { pkgs, config, lib, ... }:
 
 let
-  # Pin to an older version of Inkscape
-  # See https://github.com/nana-4/materia-theme/issues/589
-  inkscape-pkgs-source = pkgs.fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "ff8752a60361623bdb01f3534f12d503cc854c8e";
-    sha256 = "u7lB6n2gOwVWnCE05FDBKQoHG3BqmPtYxVUvvBM8krc=";
-  };
-  inkscape-pkgs = import inkscape-pkgs-source { inherit (pkgs) system; };
+  rendersvg = pkgs.runCommandLocal "rendersvg" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.resvg}/bin/resvg $out/bin/rendersvg
+  '';
 
   materia = with pkgs;
     stdenvNoCC.mkDerivation {
@@ -24,13 +19,16 @@ let
       };
 
       nativeBuildInputs =
-        [ bc inkscape-pkgs.inkscape meson ninja optipng sassc ];
+        [ bc meson ninja optipng rendersvg sassc ];
 
       FONTCONFIG_FILE = makeFontsConf {
         fontDirectories = [ config.stylix.fonts.sansSerif.package ];
       };
 
-      postPatch = "patchShebangs .";
+      postPatch = ''
+        patchShebangs .
+        sed -e '/handle-horz-.*/d' -e '/handle-vert-.*/d' -i src/gtk-2.0/assets.txt
+      '';
 
       # Based on https://github.com/nana-4/materia-theme/blob/master/change_color.sh
       preConfigure = with config.lib.stylix.colors;
