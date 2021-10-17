@@ -9,7 +9,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        ghc = pkgs.haskell.packages.ghc901.ghcWithPackages
+        ghc = pkgs.haskellPackages.ghcWithPackages
           (haskellPackages: with haskellPackages; [ json JuicyPixels ]);
 
         palette-generator = pkgs.stdenvNoCC.mkDerivation {
