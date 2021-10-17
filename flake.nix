@@ -5,7 +5,7 @@
   };
 
   outputs = { nixpkgs, utils, self, ... }:
-    (utils.lib.eachDefaultSystem (system:
+    (utils.lib.eachSystem ["aarch64-linux" "i686-linux" "x86_64-linux"] (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
