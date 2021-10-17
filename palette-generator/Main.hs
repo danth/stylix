@@ -78,8 +78,11 @@ selectColours image = zip names palette
         primaryScale = [HSV h s (v / 8) | v <- [1..8]]
           where (HSV h s _) = head shortlist
 
+        secondaryScale :: [HSV Float]
+        secondaryScale = sortOn (\(HSV h _ _) -> h) $ tail shortlist
+
         palette :: [HSV Float]
-        palette = primaryScale ++ tail shortlist
+        palette = primaryScale ++ secondaryScale
 
 unpackImage :: DynamicImage -> [RGB Float]
 unpackImage image = do
