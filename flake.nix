@@ -17,8 +17,8 @@
             name = "palette-generator";
             src = ./palette-generator;
             buildInputs = [ ghc ];
-            buildPhase = "ghc -O -threaded -Wall Main.hs";
-            installPhase = "install -D Main $out/bin/palette-generator";
+            buildPhase = "ghc -O -threaded -Wall Stylix/Main.hs";
+            installPhase = "install -D Stylix/Main $out/bin/palette-generator";
           };
 
           palette-generator-app = utils.lib.mkApp {

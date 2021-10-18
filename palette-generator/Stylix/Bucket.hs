@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Bucket
+module Stylix.Bucket
   ( Bucket
   , emptyBucket
   , insertToBucket
@@ -12,9 +12,9 @@ module Bucket
   , makeBuckets'
   ) where
 
+import Data.Colour ( HSV(HSV) )
 import Data.Map ( Map )
 import qualified Data.Map as Map
-import RGBHSV ( HSV(HSV) )
 
 data Bucket a = Bucket Int a a a
 

@@ -1,4 +1,4 @@
-module RGBHSV ( RGB(..), HSV(..), rgbToHsv, hsvToRgb ) where
+module Data.Colour ( RGB(..), HSV(..), rgbToHsv, hsvToRgb ) where
 
 import Data.Fixed ( mod' )
 
