@@ -1,8 +1,7 @@
+import Bucket ( Bucket, bucketAverage, bucketSize, makeBuckets' )
 import Codec.Picture ( DynamicImage, Image(imageWidth, imageHeight), PixelRGB8(PixelRGB8), convertRGB8, pixelAt, readImage )
 import Data.Bifunctor ( second )
 import Data.List ( sortOn )
-import Data.Map ( Map )
-import qualified Data.Map as Map
 import Data.Word ( Word8 )
 import RGBHSV ( HSV(HSV), RGB(RGB), hsvToRgb, rgbToHsv )
 import System.Environment ( getArgs )
@@ -36,43 +35,17 @@ makeOutputTable = toJSObject . concatMap makeOutputs
                   b' :: Word8
                   b' = round b
 
-data Bin a = Bin Int a a a
-type Bins a = Map Int (Bin a)
-
 selectColours :: [HSV Float] -> [(String, HSV Float)]
 selectColours image = zip names palette
 
   where names :: [String]
         names = map (printf "base%02X") ([0..15] :: [Int])
 
-        emptyBin :: (Num a) => Bin a
-        emptyBin = Bin 0 0 0 0
-
-        emptyBins :: (Num a) => Bins a
-        emptyBins = Map.fromList [(x, emptyBin) | x <- [0..8]]
-
-        insertToBin :: (Num a) => HSV a -> Bin a -> Bin a
-        insertToBin (HSV h s v) (Bin count h' s' v')
-          = Bin (count + 1) (h' + h) (s' + s) (v' + v)
-
-        allocateToBin :: (Fractional a, Num a, RealFrac a) => HSV a -> Bins a -> Bins a
-        allocateToBin colour = Map.adjust (insertToBin colour) bin
-          where (HSV h _ _) = colour
-                bin = floor $ (h / 6) * 9
-
-        bins :: Bins Float
-        bins = foldr allocateToBin emptyBins image
-
-        binSize :: Bin a -> Int
-        binSize (Bin size _ _ _) = size
-
-        averageColour :: (Fractional a) => Bin a -> HSV a
-        averageColour (Bin size h' s' v')
-          = HSV (h' / size') (s' / size') (v' / size')
-          where size' = fromIntegral size
+        buckets :: [Bucket Float]
+        buckets = makeBuckets' (\(HSV h _ _) -> h / 6) 9 image
 
         shortlist :: [HSV Float]
-        shortlist = map averageColour $ sortOn binSize $ Map.elems bins
+        shortlist = map bucketAverage $ sortOn bucketSize buckets
 
         primaryScale :: [HSV Float]
         primaryScale = [HSV h s (v / 8) | v <- [1..8]]
