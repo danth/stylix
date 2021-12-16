@@ -10,14 +10,18 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
 
-          ghc = pkgs.haskellPackages.ghcWithPackages
-            (haskellPackages: with haskellPackages; [ json JuicyPixels ]);
+          ghc = pkgs.haskellPackages.ghcWithPackages (haskellPackages:
+            with haskellPackages; [
+              json
+              JuicyPixels
+              random
+            ]);
 
           palette-generator = pkgs.stdenvNoCC.mkDerivation {
             name = "palette-generator";
             src = ./palette-generator;
             buildInputs = [ ghc ];
-            buildPhase = "ghc -O -threaded -Wall Stylix/Main.hs";
+            buildPhase = "ghc -O -threaded -Wall -Wno-type-defaults Stylix/Main.hs";
             installPhase = "install -D Stylix/Main $out/bin/palette-generator";
           };
 
