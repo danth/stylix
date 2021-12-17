@@ -5,50 +5,37 @@ built upon ideas from [Base16](http://chriskempson.com/projects/base16/).
 
 ## Installation
 
-Import `default.nix` into your system configuration:
-
-```nix
-{ pkgs, ... }:
-
-let stylix = pkgs.fetchFromGitHub {
-  owner = "danth";
-  repo = "stylix";
-  rev = "...";
-  sha256 = "...";
-};
-
-in {
-  imports = [ "${stylix}/default.nix" ];
-}
-```
-
-### Home Manager
-
-Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
-to install a lot of its theming. This requires Home Manager to be installed as
-a NixOS module, if you do not already have that set up you will need to follow
-[these instructions](https://rycee.gitlab.io/home-manager/index.html#sec-install-nixos-module).
-
-### Nix Flakes
-
-Stylix can also be installed using the experimental
+Stylix can be installed using the experimental
 [flakes](https://nixos.wiki/wiki/Flakes) feature:
 
 ```nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { self, nixpkgs, stylix }: {
+  outputs = { self, nixpkgs, home-manager, stylix }: {
     nixosConfigurations."<hostname>" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [ stylix.nixosModules.stylix ];
+      modules = [
+        home-manager.nixosModules.home-manager
+        stylix.nixosModules.stylix
+      ];
     };
   };
 }
 ```
+
+Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
+to install a lot of its theming. This requires Home Manager to be installed as
+a NixOS module; how to do this is shown in the example above. Users must be
+listed in `stylix.homeManagerUsers` to enable styles which rely on Home Manager
+for that user.
 
 ## Configuration
 
