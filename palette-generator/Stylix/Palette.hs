@@ -38,15 +38,17 @@ instance (Floating a, Real a) => Species (V.Vector (LAB a)) (V.Vector (LAB a)) w
        in (generator'', palette // [(index, colour)])
 
   fitness _ palette
-    = realToFrac $ accentDifference - accentLightness - primaryLightness
+    = realToFrac $ accentDifference - min lightScheme darkScheme
       where accentDifference = minimum $ do
               a <- accent palette
               b <- accent palette
               return $ deltaE a b
-            accentLightness
-              = sum $ V.map (max 0 . (60 -) . lightness) $ accent palette
-            primaryLightness
-              = sum $ V.zipWith
-                  (\a b -> abs $ a - b)
-                  (V.map lightness $ primary palette)
-                  (V.fromList [10, 30, 45, 65, 75, 90, 95, 95])
+            lightnesses = V.map lightness palette
+            difference a b = abs $ a - b
+            lightnessError primaryScale accentValue
+              = sum (V.zipWith difference primaryScale $ primary lightnesses)
+              + sum (V.map (difference accentValue) $ accent lightnesses)
+            lightScheme
+              = lightnessError (V.fromList [90, 70, 55, 35, 25, 10, 5, 5]) 40
+            darkScheme
+              = lightnessError (V.fromList [10, 30, 45, 65, 75, 90, 95, 95]) 60
