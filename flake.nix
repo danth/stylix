@@ -43,6 +43,7 @@
               ./modules/fish.nix
               ./modules/grub.nix
               ./modules/gtk.nix
+              ./modules/helix.nix
               ./modules/kitty.nix
               ./modules/lightdm.nix
               ./modules/plymouth
