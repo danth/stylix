@@ -1,4 +1,4 @@
-palette-generator:
+{ palette-generator, base16 }:
 { pkgs, lib, config, ... }:
 
 with lib;
@@ -6,9 +6,15 @@ with lib;
 let
   cfg = config.stylix;
 
-  palette = pkgs.runCommand "palette.json" { } ''
+  paletteJSON = pkgs.runCommand "palette.json" { } ''
     ${palette-generator}/bin/palette-generator ${cfg.image} $out
   '';
+
+  palette = importJSON paletteJSON // {
+    author = "Stylix";
+    scheme = "Stylix";
+    slug = "stylix";
+  };
 
 in {
   options.stylix = {
@@ -50,5 +56,7 @@ in {
     */
   };
 
-  config.lib.stylix.colors = importJSON palette;
+  # This attrset can be used like a function too, see
+  # https://github.com/SenchoPens/base16.nix#mktheme
+  config.lib.stylix.colors = base16.mkSchemeAttrs palette;
 }

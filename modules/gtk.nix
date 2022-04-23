@@ -30,7 +30,7 @@ let
       '';
 
       # Based on https://github.com/nana-4/materia-theme/blob/master/change_color.sh
-      preConfigure = with config.lib.stylix.colors;
+      preConfigure = with config.lib.stylix.colors.withHashtag;
         let font = config.stylix.fonts.sansSerif.name;
         in ''
           echo 'Setting font family'
@@ -91,24 +91,24 @@ let
               {} \; ;
 
             find "$FILEPATH" -type f -exec sed -i'\' \
-              -e 's/%BG%/${base00-hash}/g' \
-              -e 's/%BG2%/${base01-hash}/g' \
-              -e 's/%FG%/${base05-hash}/g' \
-              -e 's/%HDR_BG%/${base01-hash}/g' \
-              -e 's/%HDR_BG2%/${base01-hash}/g' \
-              -e 's/%HDR_BG3%/${base01-hash}/g' \
-              -e 's/%HDR_FG%/${base05-hash}/g' \
-              -e 's/%INACTIVE_FG%/${base04-hash}/g' \
-              -e 's/%MATERIA_SURFACE%/${base01-hash}/g' \
-              -e 's/%MATERIA_VIEW%/${base00-hash}/g' \
-              -e 's/%SEL_BG%/${base02-hash}/g' \
-              -e 's/%SEL_BG2%/${base03-hash}/g' \
-              -e 's/%TERMINAL_COLOR4%/${base0A-hash}/g' \
-              -e 's/%TERMINAL_COLOR5%/${base0D-hash}/g' \
-              -e 's/%TERMINAL_COLOR9%/${base03-hash}/g' \
-              -e 's/%TERMINAL_COLOR10%/${base09-hash}/g' \
-              -e 's/%TERMINAL_COLOR11%/${base01-hash}/g' \
-              -e 's/%TERMINAL_COLOR12%/${base02-hash}/g' \
+              -e 's/%BG%/${base00}/g' \
+              -e 's/%BG2%/${base01}/g' \
+              -e 's/%FG%/${base05}/g' \
+              -e 's/%HDR_BG%/${base01}/g' \
+              -e 's/%HDR_BG2%/${base01}/g' \
+              -e 's/%HDR_BG3%/${base01}/g' \
+              -e 's/%HDR_FG%/${base05}/g' \
+              -e 's/%INACTIVE_FG%/${base04}/g' \
+              -e 's/%MATERIA_SURFACE%/${base01}/g' \
+              -e 's/%MATERIA_VIEW%/${base00}/g' \
+              -e 's/%SEL_BG%/${base02}/g' \
+              -e 's/%SEL_BG2%/${base03}/g' \
+              -e 's/%TERMINAL_COLOR4%/${base0A}/g' \
+              -e 's/%TERMINAL_COLOR5%/${base0D}/g' \
+              -e 's/%TERMINAL_COLOR9%/${base03}/g' \
+              -e 's/%TERMINAL_COLOR10%/${base09}/g' \
+              -e 's/%TERMINAL_COLOR11%/${base01}/g' \
+              -e 's/%TERMINAL_COLOR12%/${base02}/g' \
               -e 's/%MATERIA_SELECTION_OPACITY%/0.32/g' \
               -e 's/%MATERIA_PANEL_OPACITY%/0.6/g' \
               {} \; ;

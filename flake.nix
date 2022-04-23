@@ -1,10 +1,14 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    base16 = {
+      url = "github:SenchoPens/base16.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, utils, self, ... }:
+  outputs = { nixpkgs, base16, utils, self, ... }:
     (utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-linux" ]
       (system:
         let
@@ -35,7 +39,7 @@
           packages.palette-generator = palette-generator;
           apps.palette-generator = palette-generator-app;
         })) // {
-          nixosModules.stylix = { pkgs, ... }: {
+          nixosModules.stylix = { pkgs, ... }@args: {
             imports = [
               ./modules/console.nix
               ./modules/dunst.nix
@@ -50,9 +54,10 @@
               ./modules/qutebrowser.nix
               ./modules/sway.nix
               ./modules/vim.nix
-              (import ./stylix/palette.nix
-                self.packages.${pkgs.system}.palette-generator)
-              ./stylix/base16.nix
+              (import ./stylix/palette.nix {
+                inherit (self.packages.${pkgs.system}) palette-generator;
+                base16 = base16.lib args;
+              })
               ./stylix/fonts.nix
               ./stylix/home-manager.nix
               ./stylix/pixel.nix

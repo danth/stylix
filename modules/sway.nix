@@ -1,12 +1,12 @@
 { config, ... }:
 
-with config.lib.stylix.colors;
+with config.lib.stylix.colors.withHashtag;
 
 let
-  text = base05-hash;
-  urgent = base08-hash;
-  focused = base0A-hash;
-  unfocused = base03-hash;
+  text = base05;
+  urgent = base08;
+  focused = base0A;
+  unfocused = base03;
 
   fonts = {
     names = [ config.stylix.fonts.sansSerif.name ];
@@ -19,8 +19,8 @@ in {
       inherit fonts;
 
       colors = let
-        background = base00-hash;
-        indicator = base0B-hash;
+        background = base00;
+        indicator = base0B;
       in {
         inherit background;
         urgent = {
@@ -59,12 +59,12 @@ in {
     inherit fonts;
 
     colors = let
-      background = base01-hash;
+      background = base01;
       border = background;
     in {
       inherit background;
       statusline = text;
-      separator = base03-hash;
+      separator = base03;
       focusedWorkspace = {
         inherit text border;
         background = focused;

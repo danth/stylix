@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "base16": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1643556194,
+        "narHash": "sha256-mU/pD30cIRcodLROhbIpRuEoEsO9aV5lDrYav0ZSIUA=",
+        "owner": "SenchoPens",
+        "repo": "base16.nix",
+        "rev": "abc25e69d0e18ce54dbe6d95a531c4d63ed59932",
+        "type": "github"
+      },
+      "original": {
+        "owner": "SenchoPens",
+        "repo": "base16.nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1633422745,
@@ -18,6 +38,7 @@
     },
     "root": {
       "inputs": {
+        "base16": "base16",
         "nixpkgs": "nixpkgs",
         "utils": "utils"
       }

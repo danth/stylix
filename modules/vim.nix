@@ -1,27 +1,24 @@
 { pkgs, config, ... }:
 
 let
-  base16-vim = pkgs.fetchFromGitHub {
-    owner = "chriskempson";
-    repo = "base16-vim";
-    rev = "6191622d5806d4448fa2285047936bdcee57a098";
-    sha256 = "6FsT87qcl9GBxgxrPx2bPULIMA/O8TRxHaN49qMM4uM=";
+  themeFile = config.lib.stylix.colors {
+    templateRepo = pkgs.fetchFromGitHub {
+      owner = "chriskempson";
+      repo = "base16-vim";
+      rev = "6191622d5806d4448fa2285047936bdcee57a098";
+      sha256 = "6FsT87qcl9GBxgxrPx2bPULIMA/O8TRxHaN49qMM4uM=";
+    };
   };
 
   themePlugin = pkgs.vimUtils.buildVimPlugin {
     name = "stylix";
     pname = "stylix";
 
-    src = base16-vim;
-    data = config.lib.stylix.base16.json;
-    passAsFile = [ "data" ];
+    src = themeFile;
+    dontUnpack = true;
 
     buildPhase = ''
-      # Remove pre-built color schemes
-      rm colors/*
-
-      ${pkgs.mustache-go}/bin/mustache $dataPath \
-        templates/default.mustache > colors/base16-stylix.vim
+      install -D $src $out/colors/base16-stylix.vim
     '';
   };
 

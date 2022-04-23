@@ -1,18 +1,18 @@
 { config, ... }:
 
 with config.stylix.fonts;
-with config.lib.stylix.colors;
+with config.lib.stylix.colors.withHashtag;
 
 let
-  background = base00-hash;
-  secondary-background = base01-hash;
-  selection-background = base03-hash;
-  foreground = base05-hash;
-  inverted-foreground = base00-hash;
-  info = base0B-hash;
-  secondary-info = base0C-hash;
-  warning = base0E-hash;
-  error = base08-hash;
+  background = base00;
+  secondary-background = base01;
+  selection-background = base03;
+  foreground = base05;
+  inverted-foreground = base00;
+  info = base0B;
+  secondary-info = base0C;
+  warning = base0E;
+  error = base08;
 
 in {
   stylix.homeModule = {

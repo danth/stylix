@@ -2,7 +2,7 @@
 
 with config.lib.stylix;
 with config.stylix.fonts;
-with config.lib.stylix.colors;
+with config.lib.stylix.colors.withHashtag;
 
 let
   # Grub requires fonts to be converted to "PFF2 format"
@@ -24,7 +24,7 @@ let
 
 in {
   boot.loader.grub = {
-    backgroundColor = base00-hash;
+    backgroundColor = base00;
     # Need to override the NixOS splash, this will match the background
     splashImage = pixel "base00";
 
@@ -36,7 +36,7 @@ in {
       themeTxt = ''
         desktop-image: "background.png"
         desktop-image-scale-method: "crop"
-        desktop-color: "${base00-hash}"
+        desktop-color: "${base00}"
 
         title-text: ""
 
@@ -56,10 +56,10 @@ in {
           font = "${sansSerif.name}"
           text = "@TIMEOUT_NOTIFICATION_MIDDLE@"
 
-          border_color = "${base00-hash}"
-          bg_color = "${base00-hash}"
-          fg_color = "${base0B-hash}"
-          text_color = "${base05-hash}"
+          border_color = "${base00}"
+          bg_color = "${base00}"
+          fg_color = "${base0B}"
+          text_color = "${base05}"
         }
 
         + boot_menu {
@@ -74,9 +74,9 @@ in {
           item_spacing = 0
           item_padding = 0
           item_font = "${sansSerif.name}"
-          item_color = "${base05-hash}"
+          item_color = "${base05}"
 
-          selected_item_color = "${base01-hash}"
+          selected_item_color = "${base01}"
           selected_item_pixmap_style = "selection_*.png"
         }
       '';
