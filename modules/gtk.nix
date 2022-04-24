@@ -145,13 +145,13 @@ in lib.mkIf (config.services.xserver.enable || config.programs.sway.enable) {
   # Required for Home Manager's GTK settings to work
   programs.dconf.enable = true;
 
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     gtk = {
       enable = true;
       inherit theme;
       font = config.stylix.fonts.sansSerif;
     };
-  };
+  }];
 
   services.xserver.displayManager.lightdm.greeters.gtk.theme = theme;
 }

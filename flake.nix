@@ -59,7 +59,6 @@
                 base16 = base16.lib args;
               })
               ./stylix/fonts.nix
-              ./stylix/home-manager.nix
               ./stylix/pixel.nix
             ];
           };

@@ -1,7 +1,7 @@
 { config, ... }:
 
 {
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     programs.kitty = {
       font = config.stylix.fonts.monospace;
 
@@ -39,5 +39,5 @@
         color15 = base07;
       };
     };
-  };
+  }];
 }

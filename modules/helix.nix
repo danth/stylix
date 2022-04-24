@@ -99,10 +99,10 @@ let theme = {
 };
 
 in {
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     programs.helix = {
       settings.theme = "stylix";
       themes.stylix = theme;
     };
-  };
+  }];
 }

@@ -4,7 +4,7 @@ with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 
 {
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     services.dunst.settings = {
       global = {
         separator_color = base02;
@@ -29,5 +29,5 @@ with config.stylix.fonts;
         frame_color = base08;
       };
     };
-  };
+  }];
 }

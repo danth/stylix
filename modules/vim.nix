@@ -28,8 +28,8 @@ let
   };
 
 in {
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     programs.vim = vimOptions;
     programs.neovim = vimOptions;
-  };
+  }];
 }

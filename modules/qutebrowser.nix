@@ -15,7 +15,7 @@ let
   error = base08;
 
 in {
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     programs.qutebrowser.settings = {
       hints.border = background;
       colors = {
@@ -206,5 +206,5 @@ in {
         };
       };
     };
-  };
+  }];
 }

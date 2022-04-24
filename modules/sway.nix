@@ -14,7 +14,7 @@ let
   };
 
 in {
-  stylix.homeModule = {
+  home-manager.sharedModules = [{
     wayland.windowManager.sway.config = {
       inherit fonts;
 
@@ -52,7 +52,7 @@ in {
 
       output."*".bg = "${config.stylix.image} fill";
     };
-  };
+  }];
 
   # Merge this with your bar configuration using //config.lib.stylix.sway.bar
   lib.stylix.sway.bar = {

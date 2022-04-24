@@ -33,9 +33,7 @@ Stylix can be installed using the experimental
 
 Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
 to install a lot of its theming. This requires Home Manager to be installed as
-a NixOS module; how to do this is shown in the example above. Users must be
-listed in `stylix.homeManagerUsers` to enable styles which rely on Home Manager
-for that user.
+a NixOS module; how to do this is shown in the example above.
 
 ## Configuration
 
@@ -65,8 +63,5 @@ for that user.
       name = "Noto Color Emoji";
     };
   };
-
-  # Add users to this list to enable Home Manager integration
-  stylix.homeManagerUsers = [ "danth" ];
 }
 ```

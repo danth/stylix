@@ -18,5 +18,7 @@ let
 in {
   programs.fish.promptInit = promptInit;
 
-  stylix.homeModule = { programs.fish.interactiveShellInit = promptInit; };
+  home-manager.sharedModules = [{
+    programs.fish.interactiveShellInit = promptInit;
+  }];
 }
