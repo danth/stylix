@@ -1,7 +1,21 @@
 # Stylix
 
-System-wide colorscheming and typography for [NixOS](https://nixos.org/),
-built upon ideas from [Base16](http://chriskempson.com/projects/base16/).
+Stylix is a NixOS module which applies a standard colourscheme and font to every supported application, including:
+
+- Everything which uses GTK: notably Firefox and the GNOME apps
+- Text editors: Vim, NeoVim and Helix
+- Terminals: Kitty and Foot
+- The Linux console
+- The Plymouth boot screen
+- The GRUB bootloader
+
+It also exports functions and values which make it easy to use the theme elsewhere within your NixOS configuration.
+
+The colours used are generated from a background image, using a homemade [genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).  
+Fonts are selected by the user via a NixOS option, choosing from any of the font packages available in Nixpkgs.
+
+Stylix builds upon [base16.nix](https://github.com/SenchoPens/base16.nix#base16nix) to manage the installation of themes into the appropriate location, as required by the application which is being themed.  
+base16.nix uses templates from [Base16](http://chriskempson.com/projects/base16/).
 
 ## Installation
 
