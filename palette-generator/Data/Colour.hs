@@ -1,10 +1,12 @@
 module Data.Colour ( LAB(..), RGB(..), deltaE, lab2rgb, rgb2lab ) where
 
+-- | Lightness A-B
 data LAB a = LAB { lightness :: a
                  , channelA :: a
                  , channelB :: a
                  }
 
+-- | Red, Green, Blue
 data RGB a = RGB { red :: a
                  , green :: a
                  , blue :: a
@@ -29,6 +31,7 @@ deltaE (LAB l1 a1 b1) (LAB l2 a2 b2) =
       i = deltaL^2 + deltaCkcsc^2 + deltaHkhsh^2
    in if i < 0 then 0 else sqrt i
 
+-- | Convert a 'LAB' colour to a 'RGB' colour
 lab2rgb :: (Floating a, Ord a) => LAB a -> RGB a
 lab2rgb (LAB l a bx) =
   let y = (l + 16) / 116
@@ -48,6 +51,7 @@ lab2rgb (LAB l a bx) =
           , blue = max 0 (min 1 b') * 255
           }
 
+-- | Convert a 'RGB' colour to a 'LAB' colour
 rgb2lab :: (Floating a, Ord a) => RGB a -> LAB a
 rgb2lab (RGB r g b) =
   let r' = r / 255

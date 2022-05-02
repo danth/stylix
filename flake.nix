@@ -30,13 +30,26 @@
             installPhase = "install -D Stylix/Main $out/bin/palette-generator";
           };
 
+          # Internal documentation
+          palette-generator-haddock = pkgs.stdenvNoCC.mkDerivation {
+            name = "palette-generator-haddock";
+            src = ./palette-generator;
+            buildInputs = [ ghc ];
+            buildPhase =
+              "haddock $src/**/*.hs --html --ignore-all-exports --odir $out";
+            dontInstall = true;
+            dontFixup = true;
+          };
+
           palette-generator-app = utils.lib.mkApp {
             drv = palette-generator;
             name = "palette-generator";
           };
 
         in {
-          packages.palette-generator = palette-generator;
+          packages = {
+            inherit palette-generator palette-generator-haddock;
+          };
           apps.palette-generator = palette-generator-app;
         })) // {
           nixosModules.stylix = { pkgs, ... }@args: {

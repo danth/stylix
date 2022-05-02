@@ -9,10 +9,14 @@ import System.Exit ( die )
 import System.Random ( mkStdGen )
 import Text.JSON ( encode )
 
-selectColours :: (Floating a, Real a) => V.Vector (LAB a) -> V.Vector (LAB a)
+-- | Run the genetic algorithm to generate a palette from the given image.
+selectColours :: (Floating a, Real a)
+              => V.Vector (LAB a) -- ^ Colours of the source image
+              -> V.Vector (LAB a) -- ^ Generated palette
 selectColours image
   = snd $ evolve image (EvolutionConfig 1000 100 0.5 150) (mkStdGen 0)
 
+-- | Convert a 'DynamicImage' to a simple 'V.Vector' of colours.
 unpackImage :: (Num a) => DynamicImage -> V.Vector (RGB a)
 unpackImage image = do
   let image' = convertRGB8 image
@@ -21,7 +25,9 @@ unpackImage image = do
   let (PixelRGB8 r g b) = pixelAt image' x y
   return $ RGB (fromIntegral r) (fromIntegral g) (fromIntegral b)
 
-loadImage :: String -> IO DynamicImage
+-- | Load an image file.
+loadImage :: String -- ^ Path to the file
+          -> IO DynamicImage
 loadImage input = either error id <$> readImage input
 
 mainProcess :: (String, String) -> IO ()
