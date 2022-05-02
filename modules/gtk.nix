@@ -140,8 +140,11 @@ let
     name = "Materia-compact";
   };
 
-  # GTK will probably be unused without Xorg / Wayland
-in lib.mkIf (config.services.xserver.enable || config.programs.sway.enable) {
+# GTK will probably be unused without Xorg / Wayland.
+# There isn't a single option which covers all Wayload compositors,
+# and many of them don't have NixOS modules at all. Therefore, we use
+# OpenGL as the next best condition to detect that Wayland is enabled.
+in lib.mkIf (config.services.xserver.enable || config.hardware.opengl.enable) {
   # Required for Home Manager's GTK settings to work
   programs.dconf.enable = true;
 
