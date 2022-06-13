@@ -24,7 +24,10 @@ let
 
   vimOptions = {
     plugins = [ themePlugin ];
-    extraConfig = "colorscheme base16-stylix";
+    extraConfig = ''
+      colorscheme base16-stylix
+      set guifont=${escape [" "] config.stylix.fonts.monospace.name}:h10
+    '';
   };
 
 in {
