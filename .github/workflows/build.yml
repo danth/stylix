@@ -1,0 +1,17 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+    name: Build
+    uses: nixbuild/nixbuild-action/.github/workflows/ci-workflow.yml@v11
+
+    # Secret key will not be available to forks
+    if: github.repository_owner == 'danth'
+    secrets:
+      nixbuild_ssh_key: ${{ secrets.NIXBUILD_SSH_KEY }}
+
+    with:
+      filter_builds: '.system == "x86_64-linux"'
+      label_builds: '"\(.attr)"'
