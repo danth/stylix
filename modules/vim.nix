@@ -27,6 +27,7 @@ let
   vimOptions = {
     plugins = [ themePlugin ];
     extraConfig = ''
+      set termguicolors
       colorscheme base16-stylix
       set guifont=${escape [" "] config.stylix.fonts.monospace.name}:h10
     '';
