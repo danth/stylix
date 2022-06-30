@@ -34,12 +34,12 @@ randomFromVector generator vector
   = let (index, generator') = randomR (0, V.length vector - 1) generator
      in (vector ! index, generator')
 
-instance (Floating a, Real a) => Species (V.Vector (LAB a)) (V.Vector (LAB a)) where
+instance (Floating a, Real a) => Species (String, (V.Vector (LAB a))) (V.Vector (LAB a)) where
   {- |
   Palettes in the initial population are created by randomly
   sampling 16 colours from the source image.
   -}
-  generate image = generateColour 16
+  generate (_, image) = generateColour 16
       where generateColour 0 generator = (generator, V.empty)
             generateColour n generator
               = let (colour, generator') = randomFromVector generator image
@@ -51,17 +51,13 @@ instance (Floating a, Real a) => Species (V.Vector (LAB a)) (V.Vector (LAB a)) w
   Mutation is done by replacing a random slot in the palette with
   a new colour, which is randomly sampled from the source image.
   -}
-  mutate image generator palette
+  mutate (_, image) generator palette
     = let (index, generator') = randomR (0, 15) generator
           (colour, generator'') = randomFromVector generator' image
        in (generator'', palette // [(index, colour)])
 
-  fitness _ palette
-    = realToFrac $
-      accentDifference -
-      -- Either light schemes or dark themes are allowed.
-      -- We try to converge on whichever theme we are closer to.
-      min lightScheme darkScheme
+  fitness (polarity, _) palette
+    = realToFrac $ accentDifference - scheme
       where
         -- The accent colours should be as different as possible.
         accentDifference = minimum $ do
@@ -78,6 +74,12 @@ instance (Floating a, Real a) => Species (V.Vector (LAB a)) (V.Vector (LAB a)) w
           = sum (V.zipWith difference primaryScale $ primary lightnesses)
           -- The accent colours should all have the given lightness.
           + sum (V.map (difference accentValue) $ accent lightnesses)
+
+        scheme = case polarity of
+          "either" -> min lightScheme darkScheme
+          "light" -> lightScheme
+          "dark" -> darkScheme
+          _ -> error ("Invalid polarity: " ++ polarity)
 
         {-
         For light themes, the background is bright and the text is dark.

@@ -11,10 +11,11 @@ import Text.JSON ( encode )
 
 -- | Run the genetic algorithm to generate a palette from the given image.
 selectColours :: (Floating a, Real a)
-              => V.Vector (LAB a) -- ^ Colours of the source image
+              => String -- ^ Scheme type: "either", "light" or "dark"
+              -> V.Vector (LAB a) -- ^ Colours of the source image
               -> V.Vector (LAB a) -- ^ Generated palette
-selectColours image
-  = snd $ evolve image (EvolutionConfig 1000 100 0.5 150) (mkStdGen 0)
+selectColours polarity image
+  = snd $ evolve (polarity, image) (EvolutionConfig 1000 100 0.5 150) (mkStdGen 0)
 
 -- | Convert a 'DynamicImage' to a simple 'V.Vector' of colours.
 unpackImage :: (Num a) => DynamicImage -> V.Vector (RGB a)
@@ -30,22 +31,23 @@ loadImage :: String -- ^ Path to the file
           -> IO DynamicImage
 loadImage input = either error id <$> readImage input
 
-mainProcess :: (String, String) -> IO ()
-mainProcess (input, output) = do
+mainProcess :: (String, String, String) -> IO ()
+mainProcess (polarity, input, output) = do
   putStrLn $ "Processing " ++ input
   image <- loadImage input
   let outputTable = makeOutputTable
                   $ V.map lab2rgb
-                  $ selectColours
+                  $ selectColours polarity
                   $ V.map rgb2lab
                   $ unpackImage image
   writeFile output $ encode outputTable
   putStrLn $ "Saved to " ++ output
 
-parseArguments :: [String] -> Either String (String, String)
-parseArguments [input, output] = Right (input, output)
-parseArguments [_] = Left "Please specify an output file"
-parseArguments [] = Left "Please specify an image"
+parseArguments :: [String] -> Either String (String, String, String)
+parseArguments [polarity, input, output] = Right (polarity, input, output)
+parseArguments [_, _] = Left "Please specify an output file"
+parseArguments [_] = Left "Please specify an image"
+parseArguments [] = Left "Please specify a polarity: either, light or dark"
 parseArguments _ = Left "Too many arguments"
 
 main :: IO ()

@@ -55,8 +55,11 @@ a NixOS module; how to do this is shown in the example above.
 { pkgs, ... }:
 
 {
-  # A colorscheme will be chosen automatically based on your wallpaper
+  # A colorscheme will be chosen automatically based on your wallpaper.
   stylix.image = ./wallpaper.png;
+
+  # Use this option to force a light or dark theme.
+  stylix.polarity = "light";
 
   # Select your preferred fonts, or use these defaults:
   stylix.fonts = {
