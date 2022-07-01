@@ -57,8 +57,14 @@ instance (Floating a, Real a) => Species (String, (V.Vector (LAB a))) (V.Vector 
        in (generator'', palette // [(index, colour)])
 
   fitness (polarity, _) palette
-    = realToFrac $ accentDifference - scheme
+    = realToFrac $ accentDifference - (primarySimilarity/10) - scheme
       where
+        -- The primary scale should use similar colours, to an extent.
+        primarySimilarity = maximum $ do
+          a <- primary palette
+          b <- primary palette
+          return $ deltaE a b
+
         -- The accent colours should be as different as possible.
         accentDifference = minimum $ do
           a <- accent palette
