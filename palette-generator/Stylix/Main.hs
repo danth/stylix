@@ -15,7 +15,7 @@ selectColours :: (Floating a, Real a)
               -> V.Vector (LAB a) -- ^ Colours of the source image
               -> V.Vector (LAB a) -- ^ Generated palette
 selectColours polarity image
-  = snd $ evolve (polarity, image) (EvolutionConfig 1000 100 0.5 150) (mkStdGen 0)
+  = snd $ evolve (polarity, image) (EvolutionConfig 1000 100 0.5 0.01) (mkStdGen 0)
 
 -- | Convert a 'DynamicImage' to a simple 'V.Vector' of colours.
 unpackImage :: (Num a) => DynamicImage -> V.Vector (RGB a)

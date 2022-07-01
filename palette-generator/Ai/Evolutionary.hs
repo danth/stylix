@@ -3,9 +3,9 @@
 module Ai.Evolutionary ( EvolutionConfig(..), Species(..), evolve ) where
 
 import Control.Applicative ( liftA2 )
-import Data.Bifunctor ( second )
+import Data.Bifunctor ( first, second )
 import Data.List ( mapAccumR, sortBy )
-import Data.Ord ( Down(Down), comparing )
+import Data.Ord ( Down(Down, getDown), comparing )
 import System.Random ( RandomGen, randomR )
 
 {- |
@@ -21,10 +21,6 @@ from the same list. Values are allowed to be paired with themself.
 -}
 cartesianSquare :: [a] -> [(a, a)]
 cartesianSquare as = as `cartesianProduct` as
-
--- | Chain a function a set number of times.
-repeatCall :: Int -> (a -> a) -> a -> a
-repeatCall n f = (!! n) . iterate f
 
 -- | Pick a random element from a list using a random generator.
 randomFromList :: (RandomGen r) => r -> [a] -> (a, r)
@@ -75,8 +71,9 @@ data EvolutionConfig = EvolutionConfig
     -- | The chance of a genotype being randomly changed
     --   before crossover. Between 0 and 1.
     mutationProbability :: Double,
-    -- | Number of passes of the algorithm.
-    generations :: Int
+    -- | When the fitness score improves by less than this percentage,
+    --   the algorithm will stop.
+    changeThreshold :: Double
   }
 
 {- |
@@ -103,10 +100,10 @@ naturalSelection :: (Species e g)
                  => e -- ^ Environment
                  -> EvolutionConfig
                  -> [g] -- ^ Original population
-                 -> [g] -- ^ Survivors
+                 -> [(Double, g)] -- ^ Survivors with fitness scores
 naturalSelection environment config
-  = map snd
-  . take (survivors config)
+  = take (survivors config)
+  . map (first getDown)
   . sortBy (comparing fst)
   -- Avoid computing fitness multiple times during sorting
   -- Down reverses the sort order so that the best fitness comes first
@@ -116,15 +113,36 @@ naturalSelection environment config
 evolveGeneration :: (RandomGen r, Species e g)
                  => e -- ^ Environment
                  -> EvolutionConfig
-                 -> (r, [g]) -- ^ Random generator, original population
-                 -> (r, [g]) -- ^ New random generator, new population
+                 -> (r, [g]) -- ^ Random generator, population from previous generation
+                 -> (r, Double, [g]) -- ^ New random generator, maximum fitness, new population
 evolveGeneration environment config (generator, population)
-  = second (naturalSelection environment config)
-  $ mapWithGen (randomMutation environment config)
-  $ unfoldWithGen randomCrossover (populationSize config) generator
-    where pairs = cartesianSquare population
-          randomCrossover gen = let (pair, gen') = randomFromList gen pairs
-                                 in (uncurry $ crossover environment gen') pair
+  = (newGenerator, maximum fitnesses, newPopulation)
+  where
+    (fitnesses, newPopulation) = unzip newPopulationWithFitness
+
+    (newGenerator, newPopulationWithFitness) =
+      second (naturalSelection environment config)
+      $ mapWithGen (randomMutation environment config)
+      $ unfoldWithGen randomCrossover (populationSize config) generator
+
+    randomCrossover gen = let (pair, gen') = randomFromList gen pairs
+                           in (uncurry $ crossover environment gen') pair
+
+    pairs = cartesianSquare population
+
+evolveUntilThreshold :: (RandomGen r, Species e g)
+                     => e -- ^ Environment
+                     -> EvolutionConfig
+                     -> Double -- ^ Fitness of previous generation
+                     -> (r, [g]) -- ^ Random generator, population from previous generation
+                     -> (r, [g]) -- ^ New random generator, final population
+evolveUntilThreshold environment config fitness =
+  recurse . evolveGeneration environment config
+  where
+    recurse (generator', fitness', population') =
+      if 1 - (fitness' / fitness) < changeThreshold config
+      then (generator', population')
+      else evolveUntilThreshold environment config fitness' (generator', population')
 
 {- |
 Create the initial population, to be fed into the first
@@ -146,5 +164,5 @@ evolve :: (RandomGen r, Species e g)
        -> (r, g) -- ^ New random generator, optimal genotype
 evolve environment config generator
   = second head
-  $ repeatCall (generations config) (evolveGeneration environment config)
+  $ evolveUntilThreshold environment config 0
   $ initialGeneration environment config generator
