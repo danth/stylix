@@ -6,7 +6,8 @@ import Control.Applicative ( liftA2 )
 import Data.Bifunctor ( first, second )
 import Data.List ( mapAccumR, sortBy )
 import Data.Ord ( Down(Down, getDown), comparing )
-import System.Random ( RandomGen, randomR )
+import System.Random ( RandomGen, mkStdGen, randomR )
+import Text.Printf ( printf )
 
 {- |
 Find every possible combination of two values, with the first value
@@ -133,16 +134,26 @@ evolveGeneration environment config (generator, population)
 evolveUntilThreshold :: (RandomGen r, Species e g)
                      => e -- ^ Environment
                      -> EvolutionConfig
+                     -> Int -- ^ Generation number
                      -> Double -- ^ Fitness of previous generation
                      -> (r, [g]) -- ^ Random generator, population from previous generation
-                     -> (r, [g]) -- ^ New random generator, final population
-evolveUntilThreshold environment config fitness =
-  recurse . evolveGeneration environment config
-  where
-    recurse (generator', fitness', population') =
-      if 1 - (fitness' / fitness) < changeThreshold config
-      then (generator', population')
-      else evolveUntilThreshold environment config fitness' (generator', population')
+                     -> IO (r, [g]) -- ^ New random generator, final population
+evolveUntilThreshold environment config generation fitness (generator, population) =
+  do
+    let generation' = generation + 1
+        (generator', fitness', population') =
+          evolveGeneration environment config (generator, population)
+        change = 1 - (fitness' / fitness)
+
+    if generation == 0
+       then printf "Generation: %3i  Fitness: %7.1f\n"
+              generation' fitness'
+       else printf "Generation: %3i  Fitness: %7.1f  Improvement: %5.1f%%\n"
+              generation' fitness' (change * 100)
+
+    if change < changeThreshold config
+      then return (generator', population')
+      else evolveUntilThreshold environment config generation' fitness' (generator', population')
 
 {- |
 Create the initial population, to be fed into the first
@@ -157,12 +168,14 @@ initialGeneration environment config
   = unfoldWithGen (generate environment) (survivors config)
 
 -- | Run the full genetic algorithm.
-evolve :: (RandomGen r, Species e g)
+evolve :: Species e g
        => e -- ^ Environment
        -> EvolutionConfig
-       -> r -- ^ Random generator
-       -> (r, g) -- ^ New random generator, optimal genotype
-evolve environment config generator
-  = second head
-  $ evolveUntilThreshold environment config 0
-  $ initialGeneration environment config generator
+       -> IO g -- ^ Optimal genotype
+evolve environment config = do
+  (_, population) <-
+    evolveUntilThreshold environment config 0 0
+    $ initialGeneration environment config
+    $ mkStdGen 0 -- Fixed seed for determinism
+
+  return $ head population
