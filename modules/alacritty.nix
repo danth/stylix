@@ -1,4 +1,7 @@
 {pkgs, config, lib, ... }:
+
+with config.stylix.fonts;
+
 let
   themeFile = config.lib.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
@@ -11,6 +14,14 @@ let
 in
 {
   home-manager.sharedModules = [{
-    programs.alacritty.settings.import = [ themeFile ];
+    programs.alacritty.settings = {
+      font = {
+        normal = {
+          family = monospace.name;
+          style = "Regular";
+        };
+      };
+      import = [ themeFile ];
+    };
   }];
 }
