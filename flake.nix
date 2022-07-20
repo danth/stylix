@@ -54,6 +54,7 @@
         })) // {
           nixosModules.stylix = { pkgs, ... }@args: {
             imports = [
+              ./modules/alacritty.nix
               ./modules/console.nix
               ./modules/dunst.nix
               ./modules/feh.nix
