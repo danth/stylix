@@ -42,8 +42,14 @@ in {
       description = ''
         Hexadecimal color value for ${base}.
 
+        You can use this option to override single colors.
         See <literal>stylix.base16Scheme</literal> if you want to import a
-        base16 scheme from a file.
+        whole base16 scheme from a file.
+
+        You should not read from this option to access the chosen colors - use
+        <literal>lib.stylix.colors</literal> instead.
+        If <literal>stylix.base16Scheme</literal> is set to an external file,
+        those colors won't appear here.
       '';
       type = types.strMatching "[0-9a-fA-F]{6}";
       default = generatedPalette.${base};
