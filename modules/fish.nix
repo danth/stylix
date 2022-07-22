@@ -12,7 +12,7 @@ let
 
   promptInit = ''
     source ${theme}
-    base16-stylix
+    base16-${config.lib.stylix.colors.slug}
   '';
 
 in {
