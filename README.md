@@ -4,7 +4,7 @@ Stylix is a NixOS module which applies a standard colourscheme and font to every
 
 - Everything which uses GTK: notably Firefox and the GNOME apps
 - Text editors: Vim, NeoVim and Helix
-- Terminals: Kitty and Foot
+- Terminals: Alacritty, Kitty and Foot
 - The Linux console
 - The Plymouth boot screen
 - The GRUB bootloader
