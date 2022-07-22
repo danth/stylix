@@ -58,8 +58,17 @@ a NixOS module; how to do this is shown in the example above.
   # A colorscheme will be chosen automatically based on your wallpaper.
   stylix.image = ./wallpaper.png;
 
-  # Use this option to force a light or dark theme.
+  # Use this option to force a light or dark theme to be chosen.
   stylix.polarity = "light";
+
+  # You can override parts of the scheme by hand:
+  stylix.palette = {
+    base00 = "eeeeee";
+    base05 = "111111";
+  };
+
+  # Or replace it with a scheme from base16:
+  stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
 
   # Select your preferred fonts, or use these defaults:
   stylix.fonts = {
