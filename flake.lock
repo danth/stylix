@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1643556194,
-        "narHash": "sha256-mU/pD30cIRcodLROhbIpRuEoEsO9aV5lDrYav0ZSIUA=",
+        "lastModified": 1658255652,
+        "narHash": "sha256-Uzb9wmFfKTcv12UjPNA+qUxpMrkJt1GLjZ4ZMyCZqgE=",
         "owner": "SenchoPens",
         "repo": "base16.nix",
-        "rev": "abc25e69d0e18ce54dbe6d95a531c4d63ed59932",
+        "rev": "4b57d524bbcbc3cdb0ee3de3f0c025dbc861732c",
         "type": "github"
       },
       "original": {
