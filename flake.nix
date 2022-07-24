@@ -61,6 +61,7 @@
           ./modules/plymouth
           ./modules/qutebrowser.nix
           ./modules/sway.nix
+          ./modules/swaylock.nix
           ./modules/vim.nix
           (import ./stylix/palette.nix {
             inherit (self.packages.${pkgs.system}) palette-generator;
