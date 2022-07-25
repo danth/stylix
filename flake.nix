@@ -69,6 +69,7 @@
           })
           ./stylix/fonts.nix
           ./stylix/pixel.nix
+          ./stylix/target.nix
         ];
       };
     };

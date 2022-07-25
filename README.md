@@ -91,3 +91,15 @@ a NixOS module; how to do this is shown in the example above.
   };
 }
 ```
+
+### Enabling and disabling module
+
+Each file in `modules/` corresponds to a single target, with the same name as
+the file. A target is just something which can have styling applied to it. 
+
+Each target has an option like `stylix.targets.«target».enable` to turn its
+styling on or off. By default, styling is turned on automatically when the
+target is installed.
+
+You can set `stylix.autoEnable = false` to opt out of this behaviour, in which
+case you'll need to manually enable each target you want to be styled.

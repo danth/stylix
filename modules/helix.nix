@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 
@@ -99,10 +99,15 @@ let theme = {
 };
 
 in {
-  home-manager.sharedModules = [{
-    programs.helix = {
-      settings.theme = "stylix";
-      themes.stylix = theme;
-    };
-  }];
+  options.stylix.targets.helix.enable =
+    config.lib.stylix.mkEnableTarget "Helix" true;
+
+  config = lib.mkIf config.stylix.targets.helix.enable {
+    home-manager.sharedModules = [{
+      programs.helix = {
+        settings.theme = "stylix";
+        themes.stylix = theme;
+      };
+    }];
+  };
 }

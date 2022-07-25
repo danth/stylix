@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 with config.lib.stylix;
 with config.stylix.fonts;
@@ -23,7 +23,10 @@ let
     '';
 
 in {
-  boot.loader.grub = {
+  options.stylix.targets.grub.enable =
+    config.lib.stylix.mkEnableTarget "GRUB" true;
+
+  config.boot.loader.grub = lib.mkIf config.stylix.targets.grub.enable {
     backgroundColor = base00;
     # Need to override the NixOS splash, this will match the background
     splashImage = pixel "base00";

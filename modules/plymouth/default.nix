@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 with config.lib.stylix.colors;
 
@@ -26,7 +26,10 @@ let
   '';
 
 in {
-  boot.plymouth = {
+  options.stylix.targets.plymouth.enable =
+    config.lib.stylix.mkEnableTarget "the Plymouth boot screen" true;
+
+  config.boot.plymouth = lib.mkIf config.stylix.targets.plymouth.enable {
     theme = "stylix";
     themePackages = [ theme ];
   };

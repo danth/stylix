@@ -140,21 +140,27 @@ let
     name = "Materia-compact";
   };
 
-# GTK will probably be unused without Xorg / Wayland.
-# There isn't a single option which covers all Wayload compositors,
-# and many of them don't have NixOS modules at all. Therefore, we use
-# OpenGL as the next best condition to detect that Wayland is enabled.
-in lib.mkIf (config.services.xserver.enable || config.hardware.opengl.enable) {
-  # Required for Home Manager's GTK settings to work
-  programs.dconf.enable = true;
+in {
+  options.stylix.targets.gtk.enable =
+    config.lib.stylix.mkEnableTarget "the GTK theme"
+    # GTK will probably be unused without Xorg / Wayland.
+    # There isn't a single option which covers all Wayload compositors,
+    # and many of them don't have NixOS modules at all. Therefore, we use
+    # OpenGL as the next best condition to detect that Wayland is enabled.
+    (config.services.xserver.enable || config.hardware.opengl.enable);
 
-  home-manager.sharedModules = [{
-    gtk = {
-      enable = true;
-      inherit theme;
-      font = config.stylix.fonts.sansSerif;
-    };
-  }];
+  config = lib.mkIf config.stylix.targets.gtk.enable {
+    # Required for Home Manager's GTK settings to work
+    programs.dconf.enable = true;
 
-  services.xserver.displayManager.lightdm.greeters.gtk.theme = theme;
+    home-manager.sharedModules = [{
+      gtk = {
+        enable = true;
+        inherit theme;
+        font = config.stylix.fonts.sansSerif;
+      };
+    }];
+
+    services.xserver.displayManager.lightdm.greeters.gtk.theme = theme;
+  };
 }

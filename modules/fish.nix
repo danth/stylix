@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 let
   theme = config.lib.stylix.colors {
@@ -16,9 +16,14 @@ let
   '';
 
 in {
-  programs.fish.promptInit = promptInit;
+  options.stylix.targets.fish.enable =
+    config.lib.stylix.mkEnableTarget "Fish" true;
 
-  home-manager.sharedModules = [{
-    programs.fish.interactiveShellInit = promptInit;
-  }];
+  config = lib.mkIf config.stylix.targets.fish.enable {
+    programs.fish.promptInit = promptInit;
+
+    home-manager.sharedModules = [{
+      programs.fish.interactiveShellInit = promptInit;
+    }];
+  };
 }
