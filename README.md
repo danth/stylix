@@ -1,26 +1,20 @@
 # Stylix
 
-Stylix is a NixOS module which applies a standard colourscheme and font to every supported application, including:
+Stylix is a NixOS module which applies the same color scheme, font and
+wallpaper to a wide range of applications and desktop environments.
+In some cases, theming can be activated as early as the bootloader!
 
-- Everything which uses GTK: notably Firefox and the GNOME apps
-- Text editors: Vim, NeoVim and Helix
-- Terminals: Alacritty, Kitty and Foot
-- The Linux console
-- The Plymouth boot screen
-- The GRUB bootloader
+It also exports utilities for you to apply the theming to custom parts of your
+configuration.
 
-It also exports functions and values which make it easy to use the theme elsewhere within your NixOS configuration.
-
-The colours used are generated from a background image, using a homemade [genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).  
-Fonts are selected by the user via a NixOS option, choosing from any of the font packages available in Nixpkgs.
-
-Stylix builds upon [base16.nix](https://github.com/SenchoPens/base16.nix#base16nix) to manage the installation of themes into the appropriate location, as required by the application which is being themed.  
-base16.nix uses templates from [Base16](http://chriskempson.com/projects/base16/).
+Stylix is built using [base16.nix](https://github.com/SenchoPens/base16.nix#readme),
+a library which handles the generation of config files from templates provided by
+the [base16](https://github.com/chriskempson/base16#readme) project.
 
 ## Installation
 
-Stylix can be installed using the experimental
-[flakes](https://nixos.wiki/wiki/Flakes) feature:
+You can install Stylix using [Flakes](https://nixos.wiki/wiki/Flakes),
+for example:
 
 ```nix
 {
@@ -46,60 +40,126 @@ Stylix can be installed using the experimental
 ```
 
 Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
-to install a lot of its theming. This requires Home Manager to be installed as
-a NixOS module; how to do this is shown in the example above.
+for a lot of its work, so that needs to be imported too.
 
-## Configuration
+## Wallpaper
+
+To get started, you need to set a wallpaper image.
 
 ```nix
-{ pkgs, ... }:
-
-{
-  # A colorscheme will be chosen automatically based on your wallpaper.
-  stylix.image = ./wallpaper.png;
-
-  # Use this option to force a light or dark theme to be chosen.
-  stylix.polarity = "light";
-
-  # You can override parts of the scheme by hand:
-  stylix.palette = {
-    base00 = "eeeeee";
-    base05 = "111111";
-  };
-
-  # Or replace it with a scheme from base16:
-  stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
-
-  # Select your preferred fonts, or use these defaults:
-  stylix.fonts = {
-    serif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Serif";
-    };
-    sansSerif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans";
-    };
-    monospace = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans Mono";
-    };
-    emoji = {
-      package = pkgs.noto-fonts-emoji;
-      name = "Noto Color Emoji";
-    };
-  };
-}
+stylix.image = ./wallpaper.png;
 ```
 
-### Enabling and disabling module
+The option accepts derivations as well as paths, so you can fetch a wallpaper
+directly from the internet:
 
-Each file in `modules/` corresponds to a single target, with the same name as
-the file. A target is just something which can have styling applied to it. 
+```nix
+stylix.image = pkgs.fetchurl {
+  url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
+  sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
+};
+```
+
+The wallpaper is the only option which is required!
+
+## Color scheme
+
+### Automatic color schemes
+
+If you only set a wallpaper, Stylix will use a homemade
+[genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm)
+to choose a color scheme based on it. The quality of the generated palettes can
+vary - but more colorful images tend to have better results.
+
+You can force a light or dark theme using the polarity option:
+
+```nix
+stylix.polarity = "dark";
+```
+
+### Mixed color schemes
+
+You can override part of the scheme by hand, perhaps to select your background
+and text colors manually while keeping the genetic accent colors:
+
+```nix
+stylix.palette = {
+  base00 = "000000";
+  # ...
+  base07 = "ffffff";
+};
+```
+
+The `baseXX` names correspond to
+[this table](https://github.com/chriskempson/base16/blob/main/styling.md#styling-guidelines).
+
+### Manual color schemes
+
+Alternatively, you can use a pre-made colorscheme from
+[the base16 repository](https://github.com/base16-project/base16-schemes):
+
+```nix
+stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
+```
+
+If you want anything more complex - like running an external palette generator
+program - `base16Scheme` can accept any argument to
+[`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
+
+## Fonts
+
+The default combination of fonts is:
+
+```nix
+stylix.fonts = {
+  serif = {
+    package = pkgs.dejavu_fonts;
+    name = "DejaVu Serif";
+  };
+
+  sansSerif = {
+    package = pkgs.dejavu_fonts;
+    name = "DejaVu Sans";
+  };
+
+  monospace = {
+    package = pkgs.dejavu_fonts;
+    name = "DejaVu Sans Mono";
+  };
+
+  emoji = {
+    package = pkgs.noto-fonts-emoji;
+    name = "Noto Color Emoji";
+  };
+};
+```
+
+You might like to set `serif = sansSerif` for a more uniform look:
+
+```nix
+stylix.fonts = rec {
+  serif = sansSerif;
+
+  sansSerif = {
+    package = pkgs.dejavu_fonts;
+    name = "DejaVu Sans";
+  };
+};
+```
+
+Or even use your favorite monospace font for all of them!
+
+All that really matters is that `monospace` is actually monospace, as using a
+non-monospace font there will probably break your terminal.
+
+## Turning targets on and off
+
+In Stylix terms, a target is anything which can have colors, fonts or a
+wallpaper applied to it. Each module in this repository should correspond to a
+target of the same name.
 
 Each target has an option like `stylix.targets.«target».enable` to turn its
-styling on or off. By default, styling is turned on automatically when the
-target is installed.
-
-You can set `stylix.autoEnable = false` to opt out of this behaviour, in which
-case you'll need to manually enable each target you want to be styled.
+styling on or off. Normally, it's turned on automatically when the target is
+installed. You can set `stylix.autoEnable = false` to opt out of this
+behaviour, in which case you'll need to manually enable each target you want to
+be styled.
