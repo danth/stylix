@@ -1,17 +1,27 @@
 name: Build
 
-on: push
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
-  build:
-    name: Build
-    uses: nixbuild/nixbuild-action/.github/workflows/ci-workflow.yml@v11
+  palette-generator:
+    name: Palette generator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Nix
+        uses: cachix/install-nix-action@v16
 
-    # Secret key will not be available to forks
-    if: github.repository_owner == 'danth'
-    secrets:
-      nixbuild_ssh_key: ${{ secrets.NIXBUILD_SSH_KEY }}
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: danth
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-    with:
-      filter_builds: '.system == "x86_64-linux"'
-      label_builds: '"\(.attr)"'
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build palette generator
+        run: nix build .#palette-generator
