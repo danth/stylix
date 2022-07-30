@@ -20,7 +20,7 @@ in {
         # See https://github.com/danth/stylix/issues/8#issuecomment-1194484544
         # This check can be removed when programs.swaylock is in a stable release
         programs.swaylock.settings = lib.mkIf (options.programs ? swaylock) {
-          image = config.stylix.image;
+          image = "${config.stylix.image}";
           scaling = "fill";
           inside-color = inside;
           inside-clear-color = inside;
