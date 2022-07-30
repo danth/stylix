@@ -25,7 +25,7 @@ with lib;
     mkOption {
       description = "Whether to style ${humanName}.";
       type = types.bool;
-      defaultText = ''
+      defaultText = literalDocBook ''
         When <literal>stylix.autoEnable</literal> is <literal>true</literal>:
         Enabled when ${humanName} is installed.
 

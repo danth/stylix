@@ -5,12 +5,30 @@
       url = "github:SenchoPens/base16.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Used for documentation
+    coricamu = {
+      url = "github:danth/coricamu";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { nixpkgs, base16, self, ... }:
+    { nixpkgs, base16, coricamu, self, ... }@inputs:
     with nixpkgs.lib;
-    {
+
+    let
+      docsOutputs = coricamu.lib.generateFlakeOutputs {
+        outputName = "docs";
+        modules = [ ./docs/default.nix ];
+        specialArgs = { inherit inputs; };
+      };
+
+    in recursiveUpdate docsOutputs {
       packages = genAttrs [ "aarch64-linux" "i686-linux" "x86_64-linux" ] (
         system:
         let
@@ -31,17 +49,6 @@
             installPhase = ''
               install -D Stylix/Main $out/bin/palette-generator
             '';
-          };
-
-          palette-generator-haddock = pkgs.stdenvNoCC.mkDerivation {
-            name = "palette-generator-haddock";
-            src = ./palette-generator;
-            buildInputs = [ ghc ];
-            buildPhase = ''
-              haddock $src/**/*.hs --html --ignore-all-exports --odir $out
-            '';
-            dontInstall = true;
-            dontFixup = true;
           };
         }
       );

@@ -53,7 +53,7 @@ in {
       '';
       type = types.strMatching "[0-9a-fA-F]{6}";
       default = generatedPalette.${base};
-      defaultText = "Automatically selected from the background image.";
+      defaultText = literalDocBook "Automatically selected from the background image.";
     });
 
     base16Scheme = mkOption {
@@ -68,7 +68,7 @@ in {
         scheme = "Stylix";
         slug = "stylix";
       };
-      defaultText = ''
+      defaultText = literalDocBook ''
         The colors defined in <literal>stylix.palette</literal>.
 
         Those are automatically selected from the background image by default,
