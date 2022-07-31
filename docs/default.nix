@@ -41,7 +41,7 @@
         in
           coricamuLib.makeOptionsDocBook {
             inherit (nixosSystem) options;
-            customFilter = option: pkgsLib.hasPrefix "stylix" option.name;
+            customFilter = option: builtins.elemAt option.loc 0 == "stylix";
           };
     }
   ];
