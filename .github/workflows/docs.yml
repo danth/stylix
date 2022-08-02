@@ -9,6 +9,6 @@ on:
 jobs:
   pages:
     name: Pages
-    uses: danth/coricamu/.github/workflows/pages.yml@755231f9591dd34d3d12fd508e76157f3edb7a89
+    uses: danth/coricamu/.github/workflows/pages.yml@cd253a6940853ffc3da7c14c9311940f1d70e222
     with:
       output_name: docs
