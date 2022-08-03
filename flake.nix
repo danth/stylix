@@ -65,6 +65,7 @@
           ./modules/helix.nix
           ./modules/kitty.nix
           ./modules/lightdm.nix
+          ./modules/mako.nix
           ./modules/plymouth
           ./modules/qutebrowser.nix
           ./modules/sway.nix
