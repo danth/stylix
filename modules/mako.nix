@@ -3,8 +3,11 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 {
+  options.stylix.targets.mako.enable =
+    config.lib.stylix.mkEnableTarget "Mako" true;
+
   # Referenced https://github.com/stacyharper/base16-mako
-  home-manager.sharedModules = [{
+  config.home-manager.sharedModules = lib.mkIf config.stylix.targets.mako.enable [{
     programs.mako = {
       backgroundColor = base00;
       borderColor = base0D;
