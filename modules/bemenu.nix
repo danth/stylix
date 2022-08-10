@@ -5,11 +5,14 @@ with config.stylix.fonts;
 {
   options.stylix.targets.bemenu = {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
-    fontSize = lib.mkOption { type = lib.types.str; default = ""; }; # optional argument
+    fontSize = lib.mkOption {
+      type = with lib.types; nullOr int;
+      default = null;
+    }; # optional argument
     alternate = lib.mkOption { type = lib.types.bool; default = false; };
   };
 
-  config.home-manager.sharedModules = lib.mkIf config.stylix.targets.mako.enable [{
+  config.home-manager.sharedModules = lib.mkIf config.stylix.targets.bemenu.enable [{
     home.sessionVariables.BEMENU_OPTS = with config.stylix.targets.bemenu; builtins.concatStringsSep " " [
       # Inspired from https://git.sr.ht/~h4n1/base16-bemenu_opts
       "--tb '${base01}'"
@@ -28,7 +31,7 @@ with config.stylix.fonts;
       "--ab '${if alternate then base00 else base01}'"
       "--af '${if alternate then base04 else base05}'"
 
-      "--fn '${sansSerif.name} ${fontSize}'" 
+      "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'" 
     ];
   }];
 }
