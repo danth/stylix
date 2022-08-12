@@ -25,13 +25,14 @@ with lib;
     mkOption {
       description = "Whether to style ${humanName}.";
       type = types.bool;
-      defaultText = literalDocBook ''
-        When <literal>stylix.autoEnable</literal> is <literal>true</literal>:
-        Enabled when ${humanName} is installed.
 
-        When <literal>stylix.autoEnable</literal> is <literal>false</literal>:
-        Defaults to <literal>false</literal>.
+      # We can't substitute the target name into this description because some
+      # don't make sense: "if the desktop background using Feh is installed"
+      defaultText = literalDocBook ''
+        <literal>true</literal> if <literal>stylix.autoEnable == true</literal>
+        and the target is installed, otherwise <literal>false</literal>.
       '';
+
       default = config.stylix.autoEnable && autoEnable;
     };
 }
