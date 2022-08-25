@@ -1,0 +1,9 @@
+{
+	"outputStores": [
+		{
+			"store": "danth",
+			"authToken": "lEaE5jUApvnP4H7Yi/hHUHdKFpChnQtARUngvzUXYmGeFHJ2q7j/ijBVB/BubFX/ACsnxDDCrQRny+lyQGzcoLwhdCc0lCJ3Xu2gamz3YuNa3bWJ8V9t5Cue3SMXZ2YwrJNG0wUBAqW3lZRdGDqiPJVMlYzgMDN2Gm9MoRkJvhGpeHJ1cgiG/V5yQt/RmUQ331K0bEr1WelDe4uDeEl3h4xF4co7/I/PK7xHWyE/B07q4loFLj5wSuFYi3nmJrYWTi5svco7P2ZYy1A6zAJlW4eC1CIcsJsDE+wrgPCSTit/znlA4De4GWPOZbDgNoEvtGMnst5bBA5GWKLHgt5AQQ==",
+			"type": "cachix"
+		}
+	]
+}
