@@ -4,14 +4,24 @@ with config.lib.stylix.colors;
 
 let
   inside = base01-hex;
+  outside = base01-hex;
   ring = base05-hex;
   text = base05-hex;
   positive = base0B-hex;
   negative = base08-hex;
 
 in {
-  options.stylix.targets.swaylock.enable =
-    config.lib.stylix.mkEnableTarget "Swaylock" true;
+  options.stylix.targets.swaylock = {
+    enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
+    useImage = lib.mkOption {
+      description = ''
+        Whether to use your wallpaper image for the Swaylock background.
+        If this is disabled, a plain color will be used instead.
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
+  };
 
   config = lib.mkIf config.stylix.targets.swaylock.enable {
     home-manager.sharedModules = [(
@@ -19,8 +29,8 @@ in {
       {
         # See https://github.com/danth/stylix/issues/8#issuecomment-1194484544
         # This check can be removed when programs.swaylock is in a stable release
-        programs.swaylock.settings = lib.mkIf (options.programs ? swaylock) {
-          image = "${config.stylix.image}";
+        programs.swaylock.settings = lib.mkIf (options.programs ? swaylock) ({
+          color = outside;
           scaling = "fill";
           inside-color = inside;
           inside-clear-color = inside;
@@ -43,7 +53,9 @@ in {
           text-caps-lock-color = text;
           text-ver-color = text;
           text-wrong-color = text;
-        };
+        } // (if config.stylix.targets.swaylock.useImage then {
+          image = "${config.stylix.image}";
+        } else {} ));
       }
     )];
   };
