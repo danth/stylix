@@ -77,7 +77,15 @@ in {
     };
   };
 
-  # This attrset can be used like a function too, see
-  # https://github.com/SenchoPens/base16.nix#mktheme
-  config.lib.stylix.colors = base16.mkSchemeAttrs cfg.base16Scheme;
+  config = {
+    # Making palette.json part of the system closure will protect it from
+    # garbage collection, so future configurations can be evaluated without
+    # having to generate the palette again. The generator is not kept, only the
+    # palette which came from it, so this uses very little disk space.
+    system.extraDependencies = [ paletteJSON ];
+
+    # This attrset can be used like a function too, see
+    # https://github.com/SenchoPens/base16.nix#mktheme
+    lib.stylix.colors = base16.mkSchemeAttrs cfg.base16Scheme;
+  };
 }

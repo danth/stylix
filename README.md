@@ -42,18 +42,6 @@ for example:
 Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
 for a lot of its work, so that needs to be imported too.
 
-## Binary cache
-
-Stylix includes a Haskell program which generates color palettes.
-To avoid compiling this from source, add the following settings:
-
-```nix
-nix.settings = {
-  substituters = "https://danth.cachix.org";
-  trusted-public-keys = "danth.cachix.org-1:wpodfSL7suXRc/rJDZZUptMa1t4MJ795hemRN0q84vI=";
-};
-```
-
 ## Wallpaper
 
 To get started, you need to set a wallpaper image.
