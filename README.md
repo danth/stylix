@@ -66,10 +66,11 @@ The wallpaper is the only option which is required!
 
 ### Automatic color schemes
 
-If you only set a wallpaper, Stylix will use a homemade
+If you only set a wallpaper, Stylix will use a
 [genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm)
-to choose a color scheme based on it. The quality of the generated palettes can
-vary - but more colorful images tend to have better results.
+to choose a color scheme based on it. The quality of these automatically
+generated schemes can vary, but more colorful images tend to have better
+results.
 
 You can force a light or dark theme using the polarity option:
 
@@ -79,8 +80,8 @@ stylix.polarity = "dark";
 
 ### Mixed color schemes
 
-You can override part of the scheme by hand, perhaps to select your background
-and text colors manually while keeping the genetic accent colors:
+You can override part of the scheme by hand, perhaps to select background
+and text colors manually while keeping the generated accent colors:
 
 ```nix
 stylix.palette = {
@@ -96,15 +97,16 @@ The `baseXX` names correspond to
 ### Manual color schemes
 
 Alternatively, you can use a pre-made colorscheme from
-[the base16 repository](https://github.com/base16-project/base16-schemes):
+[the base16 repository](https://github.com/base16-project/base16-schemes).
 
 ```nix
 stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
 ```
 
-If you want anything more complex - like running an external palette generator
-program - `base16Scheme` can accept any argument to
-[`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
+If you want to do anything more complex - such as running your own program to
+generate the colour scheme - `base16Scheme` can accept any argument which
+[`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs)
+supports.
 
 ## Fonts
 
