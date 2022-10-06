@@ -3,6 +3,12 @@ center_y = Window.GetHeight() / 2;
 baseline_y = (Window.GetHeight() / 3) * 2;
 
 
+### BACKGROUND ###
+
+Window.SetBackgroundTopColor(%BASE00%);
+Window.SetBackgroundBottomColor(%BASE00%);
+
+
 ### LOGO ###
 
 logo.original_image = Image("logo.png");
@@ -60,13 +66,13 @@ Plymouth.SetBootProgressFunction(progress_callback);
 
 prompt = null;
 bullets = null;
-bullet.image = Image.Text("•", 1, 1, 1);
+bullet.image = Image.Text("•", %BASE05%);
 
 fun password_callback (prompt_text, bullet_count) {
   progress_background.sprite.SetOpacity(0);
   progress_bar.sprite.SetOpacity(0);
 
-  prompt.image = Image.Text("Enter password", 1, 1, 1);
+  prompt.image = Image.Text("Enter password", %BASE05%);
   prompt.sprite = Sprite(prompt.image);
   prompt.sprite.SetPosition(
     center_x - (prompt.image.GetWidth() / 2),

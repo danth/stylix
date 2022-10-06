@@ -18,6 +18,13 @@ let
     cp ${config.lib.stylix.pixel "base01"} $themeDir/progress-bar.png
 
     cp ${./theme.script} $themeDir/stylix.script
+    substituteInPlace $themeDir/stylix.script \
+      --replace "%BASE00%" "${
+        if config.stylix.targets.plymouth.blackBackground
+        then "0, 0, 0"
+        else "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}"
+      }" \
+      --replace "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
 
     echo "
     [Plymouth Theme]
@@ -47,6 +54,18 @@ in {
         url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg";
         sha256 = "SCuQlSPB14GFTq4XvExJ0QEuK2VIbrd5YYKHLRG/q5I=";
       };
+    };
+
+    blackBackground = mkOption {
+      description = ''
+        Whether to use a black background rather than a theme colour.
+
+        This looks good in combination with systemd-boot, as it means that the
+        background colour doesn't change throughout the boot process.
+      '';
+      type = types.bool;
+      defaultText = literalDocBook "<literal>true</literal> if systemd-boot is enabled";
+      default = config.boot.loader.systemd-boot.enable;
     };
   };
 
