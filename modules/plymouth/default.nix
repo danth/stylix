@@ -4,7 +4,7 @@ with lib;
 with config.lib.stylix.colors;
 
 let
-  theme = pkgs.runCommandLocal "plymouth-theme" { } ''
+  theme = pkgs.runCommand "stylix-plymouth" { } ''
     themeDir="$out/share/plymouth/themes/stylix"
     mkdir -p $themeDir
 
