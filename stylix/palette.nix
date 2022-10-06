@@ -28,10 +28,10 @@ in {
     image = mkOption {
       type = types.coercedTo types.package toString types.path;
       description = ''
-        Wallpaper image. This is set as the background of your desktop
-        environment, if possible, and additionally used as the Plymouth splash
-        screen if that is enabled. Colours are automatically selected from the
-        picture to generate the system colour scheme.
+        Wallpaper image.
+
+        This is set as the background of your desktop environment, if possible,
+        and used to generate a colour scheme if you don't set one manually.
       '';
     };
 

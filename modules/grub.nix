@@ -27,13 +27,9 @@ in {
     enable = config.lib.stylix.mkEnableTarget "GRUB" true;
 
     useImage = lib.mkOption {
-      description = ''
-        Whether to use your wallpaper image for the GRUB background.
-        If this is disabled, a plain color will be used instead.
-      '';
+      description = "Whether to use your wallpaper image as the GRUB background.";
       type = lib.types.bool;
-      default = config.stylix.targets.plymouth.enable;
-      defaultText = lib.literalExpression "stylix.targets.plymouth.enable";
+      default = false;
     };
   };
 
