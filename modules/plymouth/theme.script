@@ -1,6 +1,5 @@
 center_x = Window.GetWidth() / 2;
 center_y = Window.GetHeight() / 2;
-baseline_y = (Window.GetHeight() / 3) * 2;
 
 
 ### BACKGROUND ###
@@ -11,13 +10,7 @@ Window.SetBackgroundBottomColor(%BASE00%);
 
 ### LOGO ###
 
-logo.original_image = Image("logo.png");
-if (logo.original_image.GetHeight() > 200) {
-  logo.ratio = logo.original_image.GetWidth() / logo.original_image.GetHeight();
-  logo.image = logo.original_image.Scale(Math.Int(200 * logo.ratio), 200);
-} else {
-  logo.image = logo.original_image;
-}
+logo.image = Image("logo.png");
 logo.sprite = Sprite(logo.image);
 logo.sprite.SetPosition(
   center_x - (logo.image.GetWidth() / 2),
@@ -25,10 +18,12 @@ logo.sprite.SetPosition(
   1
 );
 
+baseline_y = center_y + logo.image.GetHeight();
+
 
 ### PROGRESS ###
 
-progress_background.width = 200;
+progress_background.width = Math.Int(logo.image.GetWidth() * 0.65);
 progress_background.height = 6;
 progress_background.original_image = Image("progress-background.png");
 progress_background.image = progress_background.original_image.Scale(progress_background.width, progress_background.height);

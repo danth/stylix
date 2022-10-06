@@ -52,7 +52,13 @@ in {
       defaultText = literalDocBook "NixOS snowflake";
       default = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg";
-        sha256 = "SCuQlSPB14GFTq4XvExJ0QEuK2VIbrd5YYKHLRG/q5I=";
+        # Reduce size
+        postFetch = ''
+          substituteInPlace $out \
+            --replace "141.5919" "70.79595" \
+            --replace "122.80626" "61.40313"
+        '';
+        sha256 = "4+MWdqESKo9omd3q0WfRmnrd3Wpe2feiayMnQlA4izU=";
       };
     };
 
