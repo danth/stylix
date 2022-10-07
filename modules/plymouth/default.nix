@@ -18,13 +18,19 @@ let
     cp ${config.lib.stylix.pixel "base01"} $themeDir/progress-bar.png
 
     cp ${./theme.script} $themeDir/stylix.script
-    substituteInPlace $themeDir/stylix.script \
-      --replace "%BASE00%" "${
-        if config.stylix.targets.plymouth.blackBackground
-        then "0, 0, 0"
-        else "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}"
-      }" \
-      --replace "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
+    ${
+      if config.stylix.targets.plymouth.blackBackground
+      then ''
+        substituteInPlace $themeDir/stylix.script \
+          --replace "%BASE00%" "0, 0, 0" \
+          --replace "%BASE05%" "1, 1, 1"
+      ''
+      else ''
+        substituteInPlace $themeDir/stylix.script \
+          --replace "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
+          --replace "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
+      ''
+    }
 
     echo "
     [Plymouth Theme]
