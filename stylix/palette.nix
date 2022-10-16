@@ -82,7 +82,13 @@ in {
     # garbage collection, so future configurations can be evaluated without
     # having to generate the palette again. The generator is not kept, only the
     # palette which came from it, so this uses very little disk space.
-    system.extraDependencies = [ paletteJSON ];
+    system.extraDependencies = [ (lib.mkIf (cfg.base16Scheme == cfg.palette // {
+        author = "Stylix";
+        scheme = "Stylix";
+        slug = "Stylix";
+      }
+      ) paletteJSON )
+    ];
 
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix#mktheme
