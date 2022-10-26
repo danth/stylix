@@ -73,6 +73,7 @@
           ./modules/sway.nix
           ./modules/swaylock.nix
           ./modules/vim.nix
+          ./modules/vscode/default.nix
           (import ./stylix/palette.nix {
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
