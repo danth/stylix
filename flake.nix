@@ -53,6 +53,10 @@
         }
       );
 
+      hydraJobs = {
+        inherit (self.packages.x86_64-linux) docs palette-generator;
+      };
+
       nixosModules.stylix = { pkgs, ... }@args: {
         imports = [
           ./modules/alacritty.nix
