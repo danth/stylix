@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <style>
+            body {
+                margin: 2rem;
+                font-family: sans-serif;
+            }
+            body > div {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 1em;
+            }
+            body > div > div {
+                width: 5rem;
+                height: 5rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #base00 { background-color: #{{base00-hex}}; color: #{{base05-hex}}; }
+            #base01 { background-color: #{{base01-hex}}; color: #{{base05-hex}}; }
+            #base02 { background-color: #{{base02-hex}}; color: #{{base05-hex}}; }
+            #base03 { background-color: #{{base03-hex}}; color: #{{base00-hex}}; }
+            #base04 { background-color: #{{base04-hex}}; color: #{{base00-hex}}; }
+            #base05 { background-color: #{{base05-hex}}; color: #{{base00-hex}}; }
+            #base06 { background-color: #{{base06-hex}}; color: #{{base00-hex}}; }
+            #base07 { background-color: #{{base07-hex}}; color: #{{base00-hex}}; }
+            #base08 { background-color: #{{base08-hex}}; color: #{{base00-hex}}; }
+            #base09 { background-color: #{{base09-hex}}; color: #{{base00-hex}}; }
+            #base0A { background-color: #{{base0A-hex}}; color: #{{base00-hex}}; }
+            #base0B { background-color: #{{base0B-hex}}; color: #{{base00-hex}}; }
+            #base0C { background-color: #{{base0C-hex}}; color: #{{base00-hex}}; }
+            #base0D { background-color: #{{base0D-hex}}; color: #{{base00-hex}}; }
+            #base0E { background-color: #{{base0E-hex}}; color: #{{base00-hex}}; }
+            #base0F { background-color: #{{base0F-hex}}; color: #{{base00-hex}}; }
+        </style>
+    </head>
+    <body>
+        <h2>Primary colors</h2>
+        <div>
+            <div id="base00">00</div>
+            <div id="base01">01</div>
+            <div id="base02">02</div>
+            <div id="base03">03</div>
+            <div id="base04">04</div>
+            <div id="base05">05</div>
+            <div id="base06">06</div>
+            <div id="base07">07</div>
+        </div>
+
+        <h2>Accents</h2>
+        <div>
+            <div id="base08">08</div>
+            <div id="base09">09</div>
+            <div id="base0A">0A</div>
+            <div id="base0B">0B</div>
+            <div id="base0C">0C</div>
+            <div id="base0D">0D</div>
+            <div id="base0E">0E</div>
+            <div id="base0F">0F</div>
+        </div>
+
+        <h2>Documentation</h2>
+        <p>Each color should be used as described in <a href="https://github.com/chriskempson/base16/blob/main/styling.md#styling-guidelines"> this table</a>.</p>
+        <p>See the <a href="https://danth.github.io/stylix/">Stylix documentation</a> for how to apply these colors on NixOS.</p>
+    </body>
+</html>

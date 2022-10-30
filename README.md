@@ -78,6 +78,9 @@ You can force a light or dark theme using the polarity option:
 stylix.polarity = "dark";
 ```
 
+The generated scheme can be viewed in a web browser at
+`file:///etc/stylix/palette.html`.
+
 ### Mixed color schemes
 
 You can override part of the scheme by hand, perhaps to select background
