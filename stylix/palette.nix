@@ -84,12 +84,12 @@ in {
     # https://github.com/SenchoPens/base16.nix#mktheme
     lib.stylix.colors = base16.mkSchemeAttrs cfg.base16Scheme;
 
-    environment.etc = {
+    environment.etc = mkIf (cfg.base16Scheme == generatedScheme) {
       # Making palette.json part of the system closure will protect it from
       # garbage collection, so future configurations can be evaluated without
       # having to generate the palette again. The generator is not kept, only
       # the palette which came from it, so this uses very little disk space.
-      "stylix/palette.json".source = mkIf (cfg.base16Scheme == generatedScheme) paletteJSON;
+      "stylix/palette.json".source = paletteJSON;
 
       # We also provide a HTML version which is useful for viewing the colors
       # during development.
