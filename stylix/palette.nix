@@ -11,6 +11,12 @@ let
   '';
   generatedPalette = importJSON paletteJSON;
 
+  generatedScheme = cfg.palette // {
+    author = "Stylix";
+    scheme = "Stylix";
+    slug = "stylix";
+  };
+
 in {
   options.stylix = {
     polarity = mkOption {
@@ -63,11 +69,7 @@ in {
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
       type = with types; oneOf [ path lines attrs ];
-      default = cfg.palette // {
-        author = "Stylix";
-        scheme = "Stylix";
-        slug = "stylix";
-      };
+      default = generatedScheme;
       defaultText = literalDocBook ''
         The colors defined in <literal>stylix.palette</literal>.
 
@@ -87,7 +89,7 @@ in {
       # garbage collection, so future configurations can be evaluated without
       # having to generate the palette again. The generator is not kept, only
       # the palette which came from it, so this uses very little disk space.
-      "stylix/palette.json".source = paletteJSON;
+      "stylix/palette.json".source = mkIf (cfg.base16Scheme == generatedScheme) paletteJSON;
 
       # We also provide a HTML version which is useful for viewing the colors
       # during development.
