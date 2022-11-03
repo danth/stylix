@@ -13,12 +13,11 @@ let
       src = fetchFromGitHub {
         owner = "nana-4";
         repo = "materia-theme";
-        # Newer versions require dart-sass (not yet in nixpkgs)
-        rev = "81bbfe6ca61e0b372daa7fada4c2d85752925cfd";
-        sha256 = "2Q4RUkrBs27J3Lp1hAzaPpg0gd/0z8zwQBAHhtGBYks=";
+        rev = "af63425f9bbb2ac9bc4853a4357457d743c65308";
+        sha256 = "+E8eJQcDw4F12MmGrCoFUeGFZzYZWQtY7PVhXVAZRFY=";
       };
 
-      nativeBuildInputs = [ bc meson ninja optipng rendersvg sassc ];
+      nativeBuildInputs = [ bc meson ninja nodePackages.sass optipng rendersvg ];
 
       FONTCONFIG_FILE = makeFontsConf {
         fontDirectories = [ config.stylix.fonts.sansSerif.package ];
@@ -36,14 +35,14 @@ let
           echo 'Setting font family'
 
           sed 's/$font-family: .*;/$font-family: "${font}";/' \
-            -i src/gnome-shell/sass/_variables.scss
+            -i src/gnome-shell/sass/_typography.scss
           sed 's/$font-family-large: .*;/$font-family-large: "${font}";/' \
-            -i src/gnome-shell/sass/_variables.scss
+            -i src/gnome-shell/sass/_typography.scss
 
           echo 'Substituting colors'
 
           PATHLIST=(
-            './src/_colors.scss'
+            './src/_theme-color.scss'
             './src/chrome'
             './src/cinnamon'
             './src/cinnamon/assets'
@@ -59,7 +58,7 @@ let
             './src/xfwm4'
           )
 
-          mv src/_colors.scss.template src/_colors.scss
+          mv src/_theme-color.template.scss src/_theme-color.scss
 
           for FILEPATH in "$PATHLIST"; do
             find "$FILEPATH" -type f -not -name '_color-palette.scss' -exec sed -i'\' \
