@@ -67,7 +67,7 @@
           ./modules/fish.nix
           ./modules/gnome.nix
           ./modules/grub.nix
-          ./modules/gtk.nix
+          ./modules/gtk
           ./modules/helix.nix
           ./modules/kitty.nix
           ./modules/lightdm.nix
