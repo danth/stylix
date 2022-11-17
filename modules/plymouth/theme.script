@@ -1,5 +1,6 @@
 center_x = Window.GetWidth() / 2;
 center_y = Window.GetHeight() / 2;
+baseline_y = Window.GetHeight() * 0.9;
 
 
 ### BACKGROUND ###
@@ -17,8 +18,6 @@ logo.sprite.SetPosition(
   center_y - (logo.image.GetHeight() / 2),
   1
 );
-
-baseline_y = center_y + logo.image.GetHeight();
 
 logo.spinner_active = 1;
 logo.spinner_third = 0;

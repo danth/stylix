@@ -9,8 +9,11 @@ let
     mkdir -p $themeDir
 
     # Convert in case the input image is not PNG
+    # A transparent border of 42% ensures that the image is not clipped when rotated
     ${pkgs.imagemagick}/bin/convert \
       -background transparent \
+      -bordercolor transparent \
+      -border 42% \
       ${config.stylix.targets.plymouth.logo} \
       $themeDir/logo.png
 
