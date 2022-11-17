@@ -20,42 +20,39 @@ logo.sprite.SetPosition(
 
 baseline_y = center_y + logo.image.GetHeight();
 
+logo.spinner_active = 1;
+logo.spinner_third = 0;
+logo.spinner_index = 0;
+logo.spinner_max_third = 32;
+logo.spinner_max = logo.spinner_max_third * 3;
 
-### PROGRESS ###
-
-progress_background.width = Math.Int(logo.image.GetWidth() * 0.65);
-progress_background.height = 6;
-progress_background.original_image = Image("progress-background.png");
-progress_background.image = progress_background.original_image.Scale(progress_background.width, progress_background.height);
-progress_background.sprite = Sprite(progress_background.image);
-progress_background.sprite.SetPosition(
-  center_x - (progress_background.width / 2),
-  baseline_y - (progress_background.height / 2),
-  1
-);
-
-progress_bar.width = 0;
-progress_bar.max_width = progress_background.width;
-progress_bar.height = progress_background.height;
-progress_bar.original_image = Image("progress-bar.png");
-progress_bar.sprite = Sprite();
-progress_bar.sprite.SetPosition(
-  center_x - (progress_bar.max_width / 2),
-  baseline_y - (progress_bar.height / 2),
-  1
-);
-
-fun progress_callback (duration, progress) {
-  progress_bar.width = Math.Int(progress_background.width * progress);
-
-  if (progress_bar.image.GetWidth() != progress_bar.width) {
-    progress_bar.image = progress_bar.original_image.Scale(progress_bar.width, progress_bar.height);
-    progress_bar.sprite.SetImage(progress_bar.image);
+real_index = 0;
+for (third = 0; third < 3; third++) {
+  for (index = 0; index < logo.spinner_max_third; index++) {
+    subthird = index / logo.spinner_max_third;
+    angle = (third + ((Math.Sin(Math.Pi * (subthird - 0.5)) / 2) + 0.5)) / 3;
+    logo.spinner_image[real_index] = logo.image.Rotate(2*Math.Pi * angle);
+    real_index++;
   }
 }
 
-Plymouth.SetBootProgressFunction(progress_callback);
+fun activate_spinner () {
+  logo.spinner_active = 1;
+}
 
+fun deactivate_spinner () {
+  logo.spinner_active = 0;
+  logo.sprite.SetImage(logo.image);
+}
+
+fun refresh_callback () {
+  if (logo.spinner_active) {
+    logo.spinner_index = (logo.spinner_index + 1) % (logo.spinner_max * 2);
+    logo.sprite.SetImage(logo.spinner_image[Math.Int(logo.spinner_index / 2)]);
+  }
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
 
 ### PASSWORD ###
 
@@ -64,8 +61,7 @@ bullets = null;
 bullet.image = Image.Text("•", %BASE05%);
 
 fun password_callback (prompt_text, bullet_count) {
-  progress_background.sprite.SetOpacity(0);
-  progress_bar.sprite.SetOpacity(0);
+  deactivate_spinner();
 
   prompt.image = Image.Text("Enter password", %BASE05%);
   prompt.sprite = Sprite(prompt.image);
@@ -97,9 +93,7 @@ Plymouth.SetDisplayPasswordFunction(password_callback);
 fun normal_callback() {
     prompt = null;
     bullets = null;
-
-    progress_background.sprite.SetOpacity(1);
-    progress_bar.sprite.SetOpacity(1);
+    activate_spinner();
 }
 
 Plymouth.SetDisplayNormalFunction(normal_callback);
@@ -107,12 +101,10 @@ Plymouth.SetDisplayNormalFunction(normal_callback);
 
 ### QUIT ###
 
-fun quit_callback () {
+fun quit_callback() {
   prompt = null;
   bullets = null;
-
-  progress_background.sprite.SetOpacity(0);
-  progress_bar.sprite.SetOpacity(0);
+  deactivate_spinner();
 }
 
 Plymouth.SetQuitFunction(quit_callback);

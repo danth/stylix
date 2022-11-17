@@ -14,9 +14,6 @@ let
       ${config.stylix.targets.plymouth.logo} \
       $themeDir/logo.png
 
-    cp ${config.lib.stylix.pixel "base00"} $themeDir/progress-background.png
-    cp ${config.lib.stylix.pixel "base01"} $themeDir/progress-bar.png
-
     cp ${./theme.script} $themeDir/stylix.script
     ${
       if config.stylix.targets.plymouth.blackBackground
