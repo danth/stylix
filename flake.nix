@@ -65,6 +65,7 @@
           ./modules/dunst.nix
           ./modules/feh.nix
           ./modules/fish.nix
+          ./modules/gedit
           ./modules/gnome.nix
           ./modules/grub.nix
           ./modules/gtk
