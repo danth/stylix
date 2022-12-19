@@ -66,7 +66,7 @@
           ./modules/feh.nix
           ./modules/fish.nix
           ./modules/gedit
-          ./modules/gnome.nix
+          ./modules/gnome
           ./modules/grub.nix
           ./modules/gtk
           ./modules/helix.nix
