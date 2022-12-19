@@ -139,23 +139,23 @@ stylix.fonts = {
 };
 ```
 
-You might like to set `serif = sansSerif` for a more uniform look:
+These can be changed as you like.
+
+To make things more uniform, you can replace the serif font with sans-serif:
 
 ```nix
-stylix.fonts = rec {
-  serif = sansSerif;
-
-  sansSerif = {
-    package = pkgs.dejavu_fonts;
-    name = "DejaVu Sans";
-  };
-};
+stylix.fonts.serif = config.stylix.fonts.sansSerif;
 ```
 
-Or even use your favorite monospace font for all of them!
+Or even use monospace for everything:
 
-All that really matters is that `monospace` is actually monospace, as using a
-non-monospace font there will probably break your terminal.
+```nix
+stylix.fonts = {
+  serif = config.stylix.fonts.monospace;
+  sansSerif = config.stylix.fonts.monospace;
+  emoji = config.stylix.fonts.monospace;
+};
+```
 
 ## Turning targets on and off
 
