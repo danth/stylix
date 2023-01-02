@@ -70,6 +70,7 @@
           ./modules/grub.nix
           ./modules/gtk
           ./modules/helix.nix
+          ./modules/i3.nix
           ./modules/kitty.nix
           ./modules/lightdm.nix
           ./modules/mako.nix
