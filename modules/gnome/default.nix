@@ -9,26 +9,29 @@ let
   };
 
   theme = pkgs.stdenv.mkDerivation {
-    name = "stylix-gnome-shell.css";
+    name = "stylix-gnome-shell";
 
     src = pkgs.fetchurl {
       url = "mirror://gnome/sources/gnome-shell/43/gnome-shell-43.2.tar.xz";
       sha256 = "52/UvpNCQQ7p+9zday2Bxv8GDnyMxaDxyuanq6JdGGA=";
     };
-    sourceRoot = "gnome-shell-43.2/data/theme";
 
     patches = [ ./shell.patch ];
     postPatch = ''
-      rm gnome-shell-sass/{_colors.scss,_palette.scss}
-      cp ${colors} gnome-shell-sass/_colors.scss
+      rm data/theme/gnome-shell-sass/{_colors.scss,_palette.scss}
+      cp ${colors} data/theme/gnome-shell-sass/_colors.scss
     '';
 
-    nativeBuildInputs = with pkgs; [ sass ];
+    nativeBuildInputs = with pkgs; [ sass glib.dev ];
     buildPhase = ''
-      sass gnome-shell.scss >$out
+      sass data/theme/gnome-shell.scss >data/theme/gnome-shell.css
+      # cp data/theme/gnome-shell.css data/theme/gnome-shell-high-contrast.css
+      glib-compile-resources --sourcedir=data/theme data/gnome-shell-theme.gresource.xml
     '';
 
-    installPhase = "true";
+    installPhase = ''
+      mv data/gnome-shell-theme.gresource $out
+    '';
   };
 
 in {
@@ -49,16 +52,6 @@ in {
           if config.stylix.polarity == "dark"
           then "prefer-dark"
           else "default";
-
-        "org/gnome/shell/extensions/user-theme".name = "Stylix";
-      };
-
-      xdg.dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
-        source = theme;
-        onChange = ''
-          gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com
-          gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
-        '';
       };
     })];
 
@@ -68,5 +61,15 @@ in {
     # "${pkgs.gnome.gnome-backgrounds}/path/to/your/preferred/background"
     # which will then download the pack regardless of its exclusion below.
     environment.gnome.excludePackages = [ pkgs.gnome.gnome-backgrounds ];
+
+    nixpkgs.overlays = [(self: super: {
+      gnome = super.gnome.overrideScope' (gnomeSelf: gnomeSuper: {
+        gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
+          postFixup = ''
+            cp ${theme} $out/share/gnome-shell/gnome-shell-theme.gresource
+          '';
+        });
+      });
+    })];
   };
 }

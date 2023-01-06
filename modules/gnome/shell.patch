@@ -1,7 +1,7 @@
-diff --git a/gnome-shell-sass/_drawing.scss b/gnome-shell-sass/_drawing.scss
+diff --git a/data/theme/gnome-shell-sass/_drawing.scss b/data/theme/gnome-shell-sass/_drawing.scss
 index 7c8959e2c..6066def91 100644
---- a/gnome-shell-sass/_drawing.scss
-+++ b/gnome-shell-sass/_drawing.scss
+--- a/data/theme/gnome-shell-sass/_drawing.scss
++++ b/data/theme/gnome-shell-sass/_drawing.scss
 @@ -248,7 +248,7 @@
      &:insensitive {
        @include button(insensitive);
@@ -11,10 +11,10 @@ index 7c8959e2c..6066def91 100644
      }
    }
  }
-diff --git a/gnome-shell-sass/widgets/_dash.scss b/gnome-shell-sass/widgets/_dash.scss
+diff --git a/data/theme/gnome-shell-sass/widgets/_dash.scss b/data/theme/gnome-shell-sass/widgets/_dash.scss
 index 8f5d5f939..f3a7e1029 100644
---- a/gnome-shell-sass/widgets/_dash.scss
-+++ b/gnome-shell-sass/widgets/_dash.scss
+--- a/data/theme/gnome-shell-sass/widgets/_dash.scss
++++ b/data/theme/gnome-shell-sass/widgets/_dash.scss
 @@ -1,6 +1,6 @@
  /* Dash */
  
@@ -23,10 +23,10 @@ index 8f5d5f939..f3a7e1029 100644
  $dash_placeholder_size: 32px;
  $dash_padding: $base_padding*2; // 12px
  $dash_border_radius: $modal_radius + $dash_padding;
-diff --git a/gnome-shell-sass/widgets/_message-list.scss b/gnome-shell-sass/widgets/_message-list.scss
+diff --git a/data/theme/gnome-shell-sass/widgets/_message-list.scss b/data/theme/gnome-shell-sass/widgets/_message-list.scss
 index 5196661c1..663e754bd 100644
---- a/gnome-shell-sass/widgets/_message-list.scss
-+++ b/gnome-shell-sass/widgets/_message-list.scss
+--- a/data/theme/gnome-shell-sass/widgets/_message-list.scss
++++ b/data/theme/gnome-shell-sass/widgets/_message-list.scss
 @@ -128,7 +128,7 @@
    }
  
@@ -67,10 +67,10 @@ index 5196661c1..663e754bd 100644
      border: 1px solid transparent;
      border-radius: $base_border_radius;
      icon-size: $large_icon_size !important; // 32px
-diff --git a/gnome-shell-sass/widgets/_panel.scss b/gnome-shell-sass/widgets/_panel.scss
+diff --git a/data/theme/gnome-shell-sass/widgets/_panel.scss b/data/theme/gnome-shell-sass/widgets/_panel.scss
 index fd3e7d2da..051eefbfe 100644
---- a/gnome-shell-sass/widgets/_panel.scss
-+++ b/gnome-shell-sass/widgets/_panel.scss
+--- a/data/theme/gnome-shell-sass/widgets/_panel.scss
++++ b/data/theme/gnome-shell-sass/widgets/_panel.scss
 @@ -1,7 +1,7 @@
  /* Top Bar */
  // a.k.a. the panel
@@ -80,10 +80,10 @@ index fd3e7d2da..051eefbfe 100644
  $panel_fg_color: if($variant == 'light', lighten($bg_color, 10%), darken($fg_color, 5%));
  $panel_height: 2.2em;
  $panel_transition_duration: 250ms; // same as the overview transition duration
-diff --git a/gnome-shell-sass/widgets/_popovers.scss b/gnome-shell-sass/widgets/_popovers.scss
+diff --git a/data/theme/gnome-shell-sass/widgets/_popovers.scss b/data/theme/gnome-shell-sass/widgets/_popovers.scss
 index 138a4fc0f..ccd020a0f 100644
---- a/gnome-shell-sass/widgets/_popovers.scss
-+++ b/gnome-shell-sass/widgets/_popovers.scss
+--- a/data/theme/gnome-shell-sass/widgets/_popovers.scss
++++ b/data/theme/gnome-shell-sass/widgets/_popovers.scss
 @@ -37,22 +37,22 @@
    &:rtl {padding-right: $base_padding;}
  
@@ -140,10 +140,10 @@ index 138a4fc0f..ccd020a0f 100644
    }
  
    .popup-menu-section {
-diff --git a/gnome-shell-sass/widgets/_quick-settings.scss b/gnome-shell-sass/widgets/_quick-settings.scss
+diff --git a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
 index b429a2dc5..858f286a2 100644
---- a/gnome-shell-sass/widgets/_quick-settings.scss
-+++ b/gnome-shell-sass/widgets/_quick-settings.scss
+--- a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
++++ b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
 @@ -81,9 +81,12 @@
        icon-size: $base_icon_size*1.5; // a non-standard symbolic size but ok
        border-radius: 999px;
