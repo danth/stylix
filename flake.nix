@@ -61,6 +61,7 @@
         imports = [
           ./modules/alacritty.nix
           ./modules/bemenu.nix
+          ./modules/chromium.nix
           ./modules/console.nix
           ./modules/dunst.nix
           ./modules/feh.nix
