@@ -100,7 +100,7 @@ The `baseXX` names correspond to
 ### Manual color schemes
 
 Alternatively, you can use a pre-made colorscheme from
-[the base16 repository](https://github.com/base16-project/base16-schemes).
+[the base16 repository](https://github.com/tinted-theming/base16-schemes).
 
 ```nix
 stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
