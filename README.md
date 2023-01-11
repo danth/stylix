@@ -99,8 +99,20 @@ The `baseXX` names correspond to
 
 ### Manual color schemes
 
-Alternatively, you can use a pre-made colorscheme from
-[the base16 repository](https://github.com/tinted-theming/base16-schemes).
+Alternatively, you can choose a pre-made colorscheme from
+[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes).
+Either add the repository to your Flake inputs, or fetch it as follows:
+
+```nix
+let base16-schemes = pkgs.fetchFromGitHub {
+  owner = "tinted-theming";
+  repo = "base16-schemes";
+  rev = "...";
+  sha256 = "...";
+};
+```
+
+Then you can choose which file you would like to use:
 
 ```nix
 stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
