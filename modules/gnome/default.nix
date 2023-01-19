@@ -16,6 +16,9 @@ with lib;
           picture-uri-dark = "file://${config.stylix.image}";
         };
 
+        # We show the same colours regardless of this setting, and the quick
+        # settings tile is removed. The value is still used by Epiphany to
+        # request dark mode for websites which support it.
         "org/gnome/desktop/interface".color-scheme =
           if config.stylix.polarity == "dark"
           then "prefer-dark"
@@ -42,7 +45,10 @@ with lib;
             rm data/theme/gnome-shell-sass/{_colors.scss,_palette.scss}
             cp ${colors} data/theme/gnome-shell-sass/_colors.scss
           '';
-          patches = (oldAttrs.patches or []) ++ [ ./shell.patch ];
+          patches = (oldAttrs.patches or []) ++ [
+            ./shell_colors.patch
+            ./shell_remove_dark_mode.patch
+          ];
         });
       });
     })];
