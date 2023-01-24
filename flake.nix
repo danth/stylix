@@ -72,6 +72,7 @@
           ./modules/gtk
           ./modules/helix.nix
           ./modules/i3.nix
+          ./modules/k9s.nix
           ./modules/kitty.nix
           ./modules/lightdm.nix
           ./modules/mako.nix
