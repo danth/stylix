@@ -17,15 +17,6 @@ let
     slug = "stylix";
   };
 
-  yaml2json = yaml: pkgs.stdenv.mkDerivation {
-    name = "fromYAML";
-    phases = [ "buildPhase" ];
-    buildInputs = [ pkgs.yaml2json ];
-    buildPhase = "yaml2json < ${yaml} > $out";
-  };
-
-  yaml2attrs = yaml: builtins.fromJSON (builtins.readFile (yaml2json yaml));
-
 in {
   options.stylix = {
     polarity = mkOption {
@@ -92,9 +83,6 @@ in {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix#mktheme
     lib.stylix.colors = base16.mkSchemeAttrs cfg.base16Scheme;
-
-    # Like `lib.stylix.colors`, but returns an attrset.
-    lib.stylix.colorAttrSet = scheme: yaml2attrs (config.lib.stylix.colors scheme);
 
     environment.etc = mkIf (cfg.base16Scheme == generatedScheme) {
       # Making palette.json part of the system closure will protect it from
