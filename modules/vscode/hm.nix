@@ -37,12 +37,10 @@ in {
     config.lib.stylix.mkEnableTarget "VSCode" true;
 
   config = lib.mkIf config.stylix.targets.vscode.enable {
-    home-manager.sharedModules = [{
-      programs.vscode = {
-        extensions = [ themeExtension ];
-        userSettings."workbench.colorTheme" = "Stylix";
-      };
-    }];
+    programs.vscode = {
+      extensions = [ themeExtension ];
+      userSettings."workbench.colorTheme" = "Stylix";
+    };
   };
 }
 

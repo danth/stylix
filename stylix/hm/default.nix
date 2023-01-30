@@ -5,13 +5,14 @@ let
   inherit (lib) types;
   from-nixos = mod-args ? "osConfig";
   system-theme = config.stylix.useSystemTheme;
+  autoload = import ../autoload.nix { inherit lib; } "hm";
 in {
   imports = [
     ../pixel.nix
     ../target.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
-  ];
+  ] ++ autoload;
 
   options.stylix = {
     useSystemTheme = lib.mkOption {

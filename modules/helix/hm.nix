@@ -103,11 +103,9 @@ in {
     config.lib.stylix.mkEnableTarget "Helix" true;
 
   config = lib.mkIf config.stylix.targets.helix.enable {
-    home-manager.sharedModules = [{
-      programs.helix = {
-        settings.theme = "stylix";
-        themes.stylix = theme;
-      };
-    }];
+    programs.helix = {
+      settings.theme = "stylix";
+      themes.stylix = theme;
+    };
   };
 }

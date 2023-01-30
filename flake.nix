@@ -63,29 +63,6 @@
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
           })
-          ./modules/alacritty.nix
-          ./modules/bemenu.nix
-          ./modules/chromium.nix
-          ./modules/console.nix
-          ./modules/dunst.nix
-          ./modules/feh.nix
-          ./modules/fish.nix
-          ./modules/gedit
-          ./modules/gnome
-          ./modules/grub.nix
-          ./modules/gtk
-          ./modules/helix.nix
-          ./modules/i3.nix
-          ./modules/k9s.nix
-          ./modules/kitty.nix
-          ./modules/lightdm.nix
-          ./modules/mako.nix
-          ./modules/plymouth
-          ./modules/qutebrowser.nix
-          ./modules/sway.nix
-          ./modules/swaylock.nix
-          ./modules/vim.nix
-          ./modules/vscode/default.nix
         ];
       };
 

@@ -1,15 +1,16 @@
-{ palette-generator, base16 }@args:
+{ palette-generator, base16 }:
 { config, lib, ... }:
 
 let
   cfg = config.stylix.home-manager;
+  autoload = import ../autoload.nix { inherit lib; } "nixos";
 in {
   imports = [
     ../pixel.nix
     ../target.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
-  ];
+  ] ++ autoload;
 
   options.stylix.home-manager = {
     enable = lib.mkEnableOption "home-manager support";
