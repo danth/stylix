@@ -41,6 +41,14 @@ in {
       '';
     };
 
+    generatedJSON = mkOption {
+      type = types.path;
+      description = "The result of palette-generator.";
+      readOnly = true;
+      internal = true;
+      default = paletteJSON;
+    };
+
     palette = genAttrs [
       "base00" "base01" "base02" "base03" "base04" "base05" "base06" "base07"
       "base08" "base09" "base0A" "base0B" "base0C" "base0D" "base0E" "base0F"
@@ -83,20 +91,5 @@ in {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix#mktheme
     lib.stylix.colors = base16.mkSchemeAttrs cfg.base16Scheme;
-
-    environment.etc = mkIf (cfg.base16Scheme == generatedScheme) {
-      # Making palette.json part of the system closure will protect it from
-      # garbage collection, so future configurations can be evaluated without
-      # having to generate the palette again. The generator is not kept, only
-      # the palette which came from it, so this uses very little disk space.
-      "stylix/palette.json".source = paletteJSON;
-
-      # We also provide a HTML version which is useful for viewing the colors
-      # during development.
-      "stylix/palette.html".source = config.lib.stylix.colors {
-        template = builtins.readFile ./palette.html.mustache;
-        extension = ".html";
-      };
-    };
   };
 }

@@ -3,8 +3,6 @@
 with lib;
 
 let
-  cfg = config.stylix.fonts;
-
   fontType = types.submodule {
     options = {
       package = mkOption {
@@ -55,22 +53,6 @@ in {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
-    };
-  };
-
-  config.fonts = {
-    fonts = [
-      cfg.monospace.package
-      cfg.serif.package
-      cfg.sansSerif.package
-      cfg.emoji.package
-    ];
-
-    fontconfig.defaultFonts = {
-      monospace = [ cfg.monospace.name ];
-      serif = [ cfg.serif.name ];
-      sansSerif = [ cfg.sansSerif.name ];
-      emoji = [ cfg.emoji.name ];
     };
   };
 }

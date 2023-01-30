@@ -59,6 +59,10 @@
 
       nixosModules.stylix = { pkgs, ... }@args: {
         imports = [
+          (import ./stylix/nixos {
+            inherit (self.packages.${pkgs.system}) palette-generator;
+            base16 = base16.lib args;
+          })
           ./modules/alacritty.nix
           ./modules/bemenu.nix
           ./modules/chromium.nix
@@ -82,13 +86,15 @@
           ./modules/swaylock.nix
           ./modules/vim.nix
           ./modules/vscode/default.nix
-          (import ./stylix/palette.nix {
+        ];
+      };
+
+      homeManagerModules.stylix = { pkgs, ... }@args: {
+        imports = [
+          (import ./stylix/hm {
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
           })
-          ./stylix/fonts.nix
-          ./stylix/pixel.nix
-          ./stylix/target.nix
         ];
       };
     };
