@@ -1,4 +1,4 @@
-{ palette-generator, base16 }:
+{ palette-generator, base16, homeManagerModule }:
 { config, lib, ... }:
 
 let
@@ -19,6 +19,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     home-manager.sharedModules = [
+      homeManagerModule
       { stylix.useSystemTheme = lib.mkOverride 99 cfg.useSystemTheme; }
     ];
   };
