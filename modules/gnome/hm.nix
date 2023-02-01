@@ -31,8 +31,10 @@ with lib;
         let theme = import ./theme.nix { inherit pkgs config; };
         in "${theme}/share/gnome-shell/gnome-shell.css";
       onChange = ''
-        gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com
-        gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
+        if [ -x "$(command -v gnome-extensions)" ]; then
+          gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com
+          gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
+        fi
       '';
     };
   };
