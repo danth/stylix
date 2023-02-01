@@ -1,8 +1,8 @@
 { palette-generator, base16, homeManagerModule }:
-{ config, lib, ... }:
+{ options, config, lib, ... }:
 
 let
-  cfg = config.stylix.home-manager;
+  hm = config.stylix.homeManagerIntegration;
   autoload = import ../autoload.nix { inherit lib; } "nixos";
 in {
   imports = [
@@ -12,15 +12,33 @@ in {
     (import ./palette.nix { inherit palette-generator base16; })
   ] ++ autoload;
 
-  options.stylix.home-manager = {
-    enable = lib.mkEnableOption "home-manager support";
-    useSystemTheme = lib.mkEnableOption "system theme in home-manager";
+  options.stylix.homeManagerIntegration = {
+    enable = lib.mkOption {
+      description = ''
+        Enable home-manager integration
+
+        This means that by default all the users will use the system
+        theme, and the stylix hm module will be included in all users
+        configurations.
+      '';
+      type = lib.types.bool;
+      default = options ? home-manager;
+      defaultText = "true if home-manager is imported";
+    };
+
+    disableImport = lib.mkOption {
+      description = ''
+        When the home-manager integration is enabled, do not automatically
+        imports stylix into the user configuration.
+      '';
+      type = lib.types.bool;
+      default = false;
+    };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (hm.enable && !hm.disableImport) {
     home-manager.sharedModules = [
       homeManagerModule
-      { stylix.useSystemTheme = lib.mkOverride 99 cfg.useSystemTheme; }
     ];
   };
 }

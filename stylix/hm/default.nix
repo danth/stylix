@@ -23,7 +23,10 @@ in {
         Doesn't do anything if the home-manager configuration is not used
         from NixOS.
       '';
-      default = false;
+      default =
+        if from-nixos
+          then mod-args.osConfig.stylix.homeManagerIntegration.enable
+          else false;
     };
   };
 
