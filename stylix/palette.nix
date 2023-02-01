@@ -1,9 +1,11 @@
 { palette-generator, base16 }:
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, ... }@args:
 
 with lib;
 
 let
+  fromOs = import ./fromos.nix { inherit lib args; };
+
   cfg = config.stylix;
 
   paletteJSON = pkgs.runCommand "palette.json" { } ''
@@ -11,7 +13,7 @@ let
   '';
   generatedPalette = importJSON paletteJSON;
 
-  generatedScheme = cfg.palette // {
+  generatedScheme = generatedPalette // {
     author = "Stylix";
     scheme = "Stylix";
     slug = "stylix";
@@ -21,7 +23,7 @@ in {
   options.stylix = {
     polarity = mkOption {
       type = types.enum [ "either" "light" "dark" ];
-      default = "either";
+      default = fromOs [ "polarity" ] "either";
       description = ''
         Use this option to force a light or dark theme.
 
@@ -39,36 +41,28 @@ in {
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
+      default = fromOs [ "image" ] null;
     };
 
-    generatedJSON = mkOption {
-      type = types.path;
-      description = "The result of palette-generator.";
-      readOnly = true;
-      internal = true;
-      default = paletteJSON;
+    generated = {
+      json = mkOption {
+        type = types.path;
+        description = "The result of palette-generator.";
+        readOnly = true;
+        internal = true;
+        default = paletteJSON;
+      };
+
+      palette = mkOption {
+        type = types.attrs;
+        description = "The imported json";
+        readOnly = true;
+        internal = true;
+        default = generatedPalette;
+      };
     };
 
-    palette = genAttrs [
-      "base00" "base01" "base02" "base03" "base04" "base05" "base06" "base07"
-      "base08" "base09" "base0A" "base0B" "base0C" "base0D" "base0E" "base0F"
-    ] (base: mkOption {
-      description = ''
-        Hexadecimal color value for ${base}.
-
-        You can use this option to override single colors.
-        See <literal>stylix.base16Scheme</literal> if you want to import a
-        whole base16 scheme from a file.
-
-        You should not read from this option to access the chosen colors - use
-        <literal>lib.stylix.colors</literal> instead.
-        If <literal>stylix.base16Scheme</literal> is set to an external file,
-        those colors won't appear here.
-      '';
-      type = types.strMatching "[0-9a-fA-F]{6}";
-      default = generatedPalette.${base};
-      defaultText = literalDocBook "Automatically selected from the background image.";
-    });
+    # TODO proper removal of palette
 
     base16Scheme = mkOption {
       description = ''
@@ -77,9 +71,12 @@ in {
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
       type = with types; oneOf [ path lines attrs ];
-      default = generatedScheme;
+      default =
+        if args ? "osConfig" && cfg.image != args.osConfig.stylix.image
+          then generatedScheme
+          else fromOs [ "base16Scheme" ] generatedScheme;
       defaultText = literalDocBook ''
-        The colors defined in <literal>stylix.palette</literal>.
+        The colors used in the theming.
 
         Those are automatically selected from the background image by default,
         but could be overridden manually.

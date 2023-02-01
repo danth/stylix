@@ -10,7 +10,7 @@ args:
       # garbage collection, so future configurations can be evaluated without
       # having to generate the palette again. The generator is not kept, only
       # the palette which came from it, so this uses very little disk space.
-      "stylix/palette.json".source = config.stylix.generatedJSON;
+      "stylix/palette.json".source = config.stylix.generated.json;
 
       # We also provide a HTML version which is useful for viewing the colors
       # during development.
