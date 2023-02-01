@@ -22,6 +22,18 @@ with lib;
         if config.stylix.polarity == "dark"
         then "prefer-dark"
         else "default";
+
+      "org/gnome/shell/extensions/user-theme".name = "Stylix";
+    };
+
+    xdg.dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
+      source =
+        let theme = import ./theme.nix { inherit pkgs config; };
+        in "${theme}/share/gnome-shell/gnome-shell.css";
+      onChange = ''
+        gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com
+        gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
+      '';
     };
   };
 }

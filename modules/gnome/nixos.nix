@@ -17,17 +17,13 @@ with lib;
     nixpkgs.overlays = [(self: super: {
       gnome = super.gnome.overrideScope' (gnomeSelf: gnomeSuper: {
         gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
-          postPatch = let
-            colors = config.lib.stylix.colors {
-              template = builtins.readFile ./colors.mustache;
-              extension = "scss";
-            };
-          in (oldAttrs.postPatch or "") + ''
-            rm data/theme/gnome-shell-sass/{_colors.scss,_palette.scss}
-            cp ${colors} data/theme/gnome-shell-sass/_colors.scss
-          '';
+          postFixup =
+            let theme = import ./theme.nix { inherit pkgs config; };
+            in ''
+              cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
+                $out/share/gnome-shell/gnome-shell-theme.gresource
+            '';
           patches = (oldAttrs.patches or []) ++ [
-            ./shell_colors.patch
             ./shell_remove_dark_mode.patch
           ];
         });
