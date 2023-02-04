@@ -1,6 +1,6 @@
 { lib, args }:
 
 path: default:
-if (args ? "osConfig" && args.osConfig.stylix.homeManagerIntegration.enable)
+if (args ? "osConfig" && args.osConfig.stylix.homeManagerIntegration.followSystem)
   then lib.attrByPath path default args.osConfig.stylix
   else default

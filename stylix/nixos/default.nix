@@ -13,32 +13,34 @@ in {
   ] ++ autoload;
 
   options.stylix.homeManagerIntegration = {
-    enable = lib.mkOption {
+    followSystem = lib.mkOption {
       description = ''
-        Enable home-manager integration
+        When this option is <literal>true</literal>, Home Manager will follow
+        the system theme by default, rather than requiring a theme to be set.
 
-        This means that by default all the users will use the system
-        theme, and the stylix hm module will be included in all users
-        configurations.
+        This will only affect Home Manager configurations which are built
+        within the NixOS configuration.
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
+
+    autoImport = lib.mkOption {
+      description = ''
+        Whether to enable Stylix automatically for every user.
+
+        This only applies to users for which Home Manager is set up within the
+        NixOS configuration.
       '';
       type = lib.types.bool;
       default = options ? home-manager;
-      defaultText = "true if home-manager is imported";
-    };
-
-    disableImport = lib.mkOption {
-      description = ''
-        When the home-manager integration is enabled, do not automatically
-        imports stylix into the user configuration.
+      defaultText = lib.literalDocBook ''
+        <literal>true</literal> when Home Manager is present.
       '';
-      type = lib.types.bool;
-      default = false;
     };
   };
 
-  config = lib.mkIf (hm.enable && !hm.disableImport) {
-    home-manager.sharedModules = [
-      homeManagerModule
-    ];
+  config = lib.mkIf hm.autoImport {
+    home-manager.sharedModules = [ homeManagerModule ];
   };
 }

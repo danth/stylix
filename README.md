@@ -13,8 +13,8 @@ the [base16](https://github.com/chriskempson/base16#readme) project.
 
 ## Installation
 
-You can install Stylix using [Flakes](https://nixos.wiki/wiki/Flakes),
-for example:
+You can install Stylix into your NixOS configuration using
+[Flakes](https://nixos.wiki/wiki/Flakes), for example:
 
 ```nix
 {
@@ -26,21 +26,26 @@ for example:
   outputs = { self, nixpkgs, home-manager, stylix }: {
     nixosConfigurations."<hostname>" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [
-        stylix.nixosModules.stylix
-      ];
+      modules = [ stylix.nixosModules.stylix ];
     };
   };
 }
 ```
 
-If [Home Manager](https://github.com/nix-community/home-manager) home-manager is available,
-stylix with also import the home-manager module into it (can be disabled with
-`stylix.homeManagerIntegration.enable = false`), and the system theme will be used
-by default for each user theme.
+If [Home Manager](https://github.com/nix-community/home-manager) is available,
+Stylix will use it to configure apps which don't support system wide settings.
+The majority of apps are that way, so
+[setting up Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module)
+is highly recommended if you don't use it already.
 
-If you want to use the home-manager module on its own, you need to import the
-`homeManagerModules.stylix` output of the flake in your configuration.
+If you prefer using Home Manager separately from NixOS, you can import
+`homeManagerModules.stylix` into your Home Manager configuration instead. In
+this case, you will need to copy the settings described later into both your
+NixOS and Home Manager configurations, as they will not be able to follow each
+other automatically.
+
+It's also possible to use either NixOS or Home Manager without the other,
+however that would make some features unavailable.
 
 ## Wallpaper
 
@@ -160,6 +165,21 @@ stylix.fonts = {
 };
 ```
 
+## Multi-user configurations
+
+For those apps which are configured through Home Manager, Stylix allows you to
+choose a different theme for each user. This can be done by setting the theme
+within Home Manager for that user rather than at the system level.
+
+By default, all users follow the system theme. This can be turned off by
+setting `stylix.homeManagerIntegration.followSystem = false`, in which case you
+must explicitly set a theme for each user. Setting that option is not required
+just to be able to override an individual theme.
+
+If you would like to disable all Home Manager activity for a user, you can set
+`stylix.homeManagerIntegration.autoImport = false`, then manually import the
+Home Manager module for the users for which it should be enabled.
+
 ## Turning targets on and off
 
 In Stylix terms, a target is anything which can have colors, fonts or a
@@ -172,5 +192,5 @@ installed. You can set `stylix.autoEnable = false` to opt out of this
 behaviour, in which case you'll need to manually enable each target you want to
 be styled.
 
-Targets are different between home-manager and NixOS, and sometimes available
+Targets are different between Home Manager and NixOS, and sometimes available
 in both cases. If both are available, it is always correct to enable both.
