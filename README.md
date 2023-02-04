@@ -20,10 +20,6 @@ for example:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     stylix.url = "github:danth/stylix";
   };
 
@@ -31,7 +27,6 @@ for example:
     nixosConfigurations."<hostname>" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        home-manager.nixosModules.home-manager
         stylix.nixosModules.stylix
       ];
     };
@@ -39,8 +34,13 @@ for example:
 }
 ```
 
-Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
-for a lot of its work, so that needs to be imported too.
+If [Home Manager](https://github.com/nix-community/home-manager) home-manager is available,
+stylix with also import the home-manager module into it (can be disabled with
+`stylix.homeManagerIntegration.enable = false`), and the system theme will be used
+by default for each user theme.
+
+If you want to use the home-manager module on its own, you need to import the
+`homeManagerModules.stylix` output of the flake in your configuration.
 
 ## Wallpaper
 
@@ -60,7 +60,9 @@ stylix.image = pkgs.fetchurl {
 };
 ```
 
-The wallpaper is the only option which is required!
+The wallpaper is the only option which is required! On home-manager used from a NixOS
+configuration, the system image will be used by default, thus nothing is required at
+all.
 
 ## Color scheme
 
@@ -80,22 +82,6 @@ stylix.polarity = "dark";
 
 The generated scheme can be viewed in a web browser at
 `file:///etc/stylix/palette.html`.
-
-### Mixed color schemes
-
-You can override part of the scheme by hand, perhaps to select background
-and text colors manually while keeping the generated accent colors:
-
-```nix
-stylix.palette = {
-  base00 = "000000";
-  # ...
-  base07 = "ffffff";
-};
-```
-
-The `baseXX` names correspond to
-[this table](https://github.com/chriskempson/base16/blob/main/styling.md#styling-guidelines).
 
 ### Manual color schemes
 
@@ -122,6 +108,11 @@ If you want to do anything more complex - such as running your own program to
 generate the colour scheme - `base16Scheme` can accept any argument which
 [`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs)
 supports.
+
+If the system `base16Scheme` is set this way, it will be used as default for the
+corresponding `home-manager` option only if the user config has the same image. If
+the user has changed the image, the default value will be the generated color scheme
+from this picture.
 
 ## Fonts
 
@@ -180,3 +171,6 @@ styling on or off. Normally, it's turned on automatically when the target is
 installed. You can set `stylix.autoEnable = false` to opt out of this
 behaviour, in which case you'll need to manually enable each target you want to
 be styled.
+
+Targets are different between home-manager and NixOS, and sometimes available
+in both cases. If both are available, it is always correct to enable both.
