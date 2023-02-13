@@ -31,31 +31,11 @@
     in recursiveUpdate docsOutputs {
       packages = genAttrs [ "aarch64-linux" "i686-linux" "x86_64-linux" ] (
         system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-
-          ghc =
-            pkgs.haskellPackages.ghcWithPackages
-            (ps: with ps; [ json JuicyPixels random ]);
-
+        let pkgs = nixpkgs.legacyPackages.${system};
         in {
-          palette-generator = pkgs.stdenvNoCC.mkDerivation {
-            name = "palette-generator";
-            src = ./palette-generator;
-            buildInputs = [ ghc ];
-            buildPhase = ''
-              ghc -O -threaded -Wall -Wno-type-defaults Stylix/Main.hs
-            '';
-            installPhase = ''
-              install -D Stylix/Main $out/bin/palette-generator
-            '';
-          };
+          palette-generator = pkgs.callPackage ./palette-generator { };
         }
       );
-
-      hydraJobs = {
-        inherit (self.packages.x86_64-linux) docs palette-generator;
-      };
 
       nixosModules.stylix = { pkgs, ... }@args: {
         imports = [

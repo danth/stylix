@@ -1,4 +1,4 @@
-{ pkgs, pkgsLib, coricamuLib, config, inputs, ... }:
+{ pkgs, pkgsLib, coricamuLib, inputs, ... }:
 
 {
   baseUrl = "https://danth.github.io/stylix/";
@@ -11,7 +11,6 @@
       <a href="">Home</a>
       <a href="options.html">NixOS options</a>
       <a href="options-hm.html">Home Manager options</a>
-      <a href="haddock/doc-index.html">Haskell internals</a>
       <a href="https://github.com/danth/stylix">GitHub repository</a>
     </nav>
   '';
@@ -76,24 +75,4 @@
           };
     }
   ];
-
-  files.haddock =
-    let
-      ghc = pkgs.haskellPackages.ghcWithPackages
-        (ps: with ps; [ json JuicyPixels random ]);
-    in
-      pkgs.stdenvNoCC.mkDerivation {
-        name = "palette-generator-haddock";
-        src = ../palette-generator;
-        buildInputs = [ ghc ];
-        buildPhase = ''
-          haddock $src/**/*.hs \
-            --html \
-            --ignore-all-exports \
-            --use-contents '${config.baseUrl}' \
-            --odir $out
-        '';
-        dontInstall = true;
-        dontFixup = true;
-      };
 }
