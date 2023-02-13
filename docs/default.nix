@@ -9,7 +9,8 @@
     <h1>Stylix</h1>
     <nav>
       <a href="">Home</a>
-      <a href="options.html">Options list</a>
+      <a href="options.html">NixOS options</a>
+      <a href="options-hm.html">Home Manager options</a>
       <a href="haddock/doc-index.html">Haskell internals</a>
       <a href="https://github.com/danth/stylix">GitHub repository</a>
     </nav>
@@ -25,22 +26,52 @@
         tail -n+2 ${../README.md} >$out
       '';
     }
+
     {
       path = "options.html";
-      title = "NixOS Options";
+      title = "NixOS options";
 
       body.docbook =
         let
-          nixosSystem = pkgsLib.nixosSystem {
+          configuration = pkgsLib.nixosSystem {
             inherit (pkgs) system;
             modules = [
-              inputs.home-manager.nixosModules.home-manager
               inputs.self.nixosModules.stylix
+              ./settings.nix
+              { _module.check = false; }
             ];
           };
         in
           coricamuLib.makeOptionsDocBook {
-            inherit (nixosSystem) options;
+            inherit (configuration) options;
+            customFilter = option: builtins.elemAt option.loc 0 == "stylix";
+          };
+    }
+
+    {
+      path = "options-hm.html";
+      title = "Home Manager options";
+
+      body.docbook =
+        let
+          configuration = inputs.home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              inputs.self.homeManagerModules.stylix
+              ./settings.nix
+              {
+                home = {
+                  homeDirectory = "/home/docs";
+                  stateVersion = "22.11";
+                  username = "docs";
+                };
+              }
+            ];
+            check = false;
+          };
+        in
+          coricamuLib.makeOptionsDocBook {
+            inherit (configuration) options;
             customFilter = option: builtins.elemAt option.loc 0 == "stylix";
           };
     }

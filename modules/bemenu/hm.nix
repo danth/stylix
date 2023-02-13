@@ -12,7 +12,7 @@ with config.stylix.fonts;
     alternate = lib.mkOption { type = lib.types.bool; default = false; };
   };
 
-  config.home-manager.sharedModules = lib.mkIf config.stylix.targets.bemenu.enable [{
+  config = lib.mkIf config.stylix.targets.bemenu.enable {
     home.sessionVariables.BEMENU_OPTS = with config.stylix.targets.bemenu; builtins.concatStringsSep " " [
       # Inspired from https://git.sr.ht/~h4n1/base16-bemenu_opts
       "--tb '${base01}'"
@@ -33,5 +33,5 @@ with config.stylix.fonts;
 
       "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'" 
     ];
-  }];
+  };
 }

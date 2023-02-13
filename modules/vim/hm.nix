@@ -38,9 +38,7 @@ in {
     config.lib.stylix.mkEnableTarget "Vim and/or Neovim" true;
 
   config = lib.mkIf config.stylix.targets.vim.enable {
-    home-manager.sharedModules = [{
-      programs.vim = vimOptions;
-      programs.neovim = vimOptions;
-    }];
+    programs.vim = vimOptions;
+    programs.neovim = vimOptions;
   };
 }

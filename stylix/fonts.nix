@@ -1,9 +1,10 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, ... } @ args:
 
 with lib;
 
 let
-  cfg = config.stylix.fonts;
+
+  fromOs = import ./fromos.nix { inherit lib args; };
 
   fontType = types.submodule {
     options = {
@@ -24,7 +25,7 @@ in {
     serif = mkOption {
       description = "Serif font.";
       type = fontType;
-      default = {
+      default = fromOs [ "fonts" "serif" ] {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
       };
@@ -33,7 +34,7 @@ in {
     sansSerif = mkOption {
       description = "Sans-serif font.";
       type = fontType;
-      default = {
+      default = fromOs [ "fonts" "sansSerif" ] {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
       };
@@ -42,7 +43,7 @@ in {
     monospace = mkOption {
       description = "Monospace font.";
       type = fontType;
-      default = {
+      default = fromOs [ "fonts" "monospace" ] {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
       };
@@ -51,26 +52,10 @@ in {
     emoji = mkOption {
       description = "Emoji font.";
       type = fontType;
-      default = {
+      default = fromOs [ "fonts" "emoji" ] {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
-    };
-  };
-
-  config.fonts = {
-    fonts = [
-      cfg.monospace.package
-      cfg.serif.package
-      cfg.sansSerif.package
-      cfg.emoji.package
-    ];
-
-    fontconfig.defaultFonts = {
-      monospace = [ cfg.monospace.name ];
-      serif = [ cfg.serif.name ];
-      sansSerif = [ cfg.sansSerif.name ];
-      emoji = [ cfg.emoji.name ];
     };
   };
 }

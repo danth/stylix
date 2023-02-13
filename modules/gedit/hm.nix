@@ -11,10 +11,8 @@ in {
     config.lib.stylix.mkEnableTarget "GEdit" true;
 
   config = lib.mkIf config.stylix.targets.gedit.enable {
-    home-manager.sharedModules = [{
-      xdg.dataFile = {
-        "gedit/styles/stylix.xml".source = style;
-      };
-    }];
+    xdg.dataFile = {
+      "gedit/styles/stylix.xml".source = style;
+    };
   };
 }

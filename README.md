@@ -1,46 +1,49 @@
 # Stylix
 
 Stylix is a NixOS module which applies the same color scheme, font and
-wallpaper to a wide range of applications and desktop environments.
-In some cases, theming can be activated as early as the bootloader!
-
-It also exports utilities for you to apply the theming to custom parts of your
-configuration.
+wallpaper to a wide range of applications and desktop environments. It also
+exports utilities for you to use the theme in custom parts of your configuration.
 
 Stylix is built using [base16.nix](https://github.com/SenchoPens/base16.nix#readme),
-a library which handles the generation of config files from templates provided by
-the [base16](https://github.com/chriskempson/base16#readme) project.
+a library which processes themes created for
+[base16](https://github.com/chriskempson/base16#readme) or
+[Tinted Theming](https://github.com/tinted-theming).
 
 ## Installation
 
-You can install Stylix using [Flakes](https://nixos.wiki/wiki/Flakes),
-for example:
+You can install Stylix into your NixOS configuration using
+[Flakes](https://nixos.wiki/wiki/Flakes), for example:
 
 ```nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     stylix.url = "github:danth/stylix";
   };
 
   outputs = { self, nixpkgs, home-manager, stylix }: {
     nixosConfigurations."<hostname>" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [
-        home-manager.nixosModules.home-manager
-        stylix.nixosModules.stylix
-      ];
+      modules = [ stylix.nixosModules.stylix ];
     };
   };
 }
 ```
 
-Stylix relies on [Home Manager](https://github.com/nix-community/home-manager)
-for a lot of its work, so that needs to be imported too.
+If [Home Manager](https://github.com/nix-community/home-manager) is available,
+Stylix will use it to configure apps which don't support system wide settings.
+The majority of apps are that way, so
+[setting up Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module)
+is highly recommended if you don't use it already.
+
+If you prefer using Home Manager separately from NixOS, you can import
+`homeManagerModules.stylix` into your Home Manager configuration instead. In
+this case, you will need to copy the settings described later into both your
+NixOS and Home Manager configurations, as they will not be able to follow each
+other automatically.
+
+It's also possible to use either NixOS or Home Manager without the other,
+however that would make some features unavailable.
 
 ## Wallpaper
 
@@ -60,48 +63,36 @@ stylix.image = pkgs.fetchurl {
 };
 ```
 
-The wallpaper is the only option which is required!
+At this point you should be able to rebuild and have a reasonable theme
+generated based on the image you chose.
 
 ## Color scheme
 
 ### Automatic color schemes
 
-If you only set a wallpaper, Stylix will use a
-[genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm)
-to choose a color scheme based on it. The quality of these automatically
-generated schemes can vary, but more colorful images tend to have better
-results.
+If you only set a wallpaper, Stylix will use a [genetic
+algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm) to generate a color
+scheme. The quality of these automatically generated schemes can vary, but more
+colorful images tend to have better results.
 
-You can force a light or dark theme using the polarity option:
+You can force the generation of a light or dark theme using the polarity
+option:
 
 ```nix
 stylix.polarity = "dark";
 ```
 
-The generated scheme can be viewed in a web browser at
-`file:///etc/stylix/palette.html`.
-
-### Mixed color schemes
-
-You can override part of the scheme by hand, perhaps to select background
-and text colors manually while keeping the generated accent colors:
-
-```nix
-stylix.palette = {
-  base00 = "000000";
-  # ...
-  base07 = "ffffff";
-};
-```
-
-The `baseXX` names correspond to
-[this table](https://github.com/chriskempson/base16/blob/main/styling.md#styling-guidelines).
+After rebuilding, the full theme can be previewed at
+`file:///etc/stylix/palette.html` in a web browser.
 
 ### Manual color schemes
 
-Alternatively, you can choose a pre-made colorscheme from
-[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes).
-Either add the repository to your Flake inputs, or fetch it as follows:
+If you would prefer to choose a theme, you can use anything from
+[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes),
+or another file following that format.
+
+To use Tinted Theming, either add their repository to your Flake inputs, or
+fetch it as follows:
 
 ```nix
 let base16-schemes = pkgs.fetchFromGitHub {
@@ -112,16 +103,14 @@ let base16-schemes = pkgs.fetchFromGitHub {
 };
 ```
 
-Then you can choose which file you would like to use:
+Then set the following option to the path of the theme you would like to use:
 
 ```nix
 stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
 ```
 
-If you want to do anything more complex - such as running your own program to
-generate the colour scheme - `base16Scheme` can accept any argument which
-[`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs)
-supports.
+`base16Scheme` can also accept other formats as supported by
+[`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
 
 ## Fonts
 
@@ -153,13 +142,14 @@ stylix.fonts = {
 
 These can be changed as you like.
 
-To make things more uniform, you can replace the serif font with sans-serif:
+To make things look more uniform, you could replace the serif font with
+the sans-serif font:
 
 ```nix
 stylix.fonts.serif = config.stylix.fonts.sansSerif;
 ```
 
-Or even use monospace for everything:
+Or even choose monospace for everything:
 
 ```nix
 stylix.fonts = {
@@ -168,6 +158,29 @@ stylix.fonts = {
   emoji = config.stylix.fonts.monospace;
 };
 ```
+
+## Multi-user configurations
+
+For those apps which are configured through Home Manager, Stylix allows you to
+choose a different theme for each user. This can be done by setting the theme
+within Home Manager for that user rather than at the system level.
+
+By default, all users follow the system theme. This can be turned off by
+setting `stylix.homeManagerIntegration.followSystem = false`, in which case you
+must explicitly set a theme for each user. Setting that option is not required
+just to be able to override an individual theme.
+
+If you would like to disable all Home Manager activity for a user, you can set
+`stylix.homeManagerIntegration.autoImport = false`, then manually import the
+Home Manager module for the users for which it should be enabled.
+
+Note that if the wallpaper image for a user is different to the rest of the
+system, a separate theme will always be generated for them, even though their
+`base16Scheme` option has not been overridden. If you want that user to follow
+the system theme while having a different wallpaper, you will need to manually
+copy the system theme into their configuration. (This behaviour is necessary as
+otherwise it would be impossible to use a generated theme for a user while
+having a manually created theme for the rest of the system.)
 
 ## Turning targets on and off
 
@@ -180,3 +193,6 @@ styling on or off. Normally, it's turned on automatically when the target is
 installed. You can set `stylix.autoEnable = false` to opt out of this
 behaviour, in which case you'll need to manually enable each target you want to
 be styled.
+
+Targets are different between Home Manager and NixOS, and sometimes available
+in both cases. If both are available, it is always correct to enable both.

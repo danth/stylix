@@ -17,16 +17,14 @@ in
     config.lib.stylix.mkEnableTarget "Alacritty" true;
 
   config = lib.mkIf config.stylix.targets.alacritty.enable {
-    home-manager.sharedModules = [{
-      programs.alacritty.settings = {
-        font = {
-          normal = {
-            family = monospace.name;
-            style = "Regular";
-          };
+    programs.alacritty.settings = {
+      font = {
+        normal = {
+          family = monospace.name;
+          style = "Regular";
         };
-        import = [ themeFile ];
       };
-    }];
+      import = [ themeFile ];
+    };
   };
 }
