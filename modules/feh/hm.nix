@@ -4,7 +4,11 @@
   options.stylix.targets.feh.enable =
     config.lib.stylix.mkEnableTarget
     "the desktop background using Feh"
-    true;
+    (with config.xsession.windowManager; bspwm.enable 
+                                      || herbsflutwm.enable 
+                                      || i3.enable 
+                                      || spectrwm.enable 
+                                      || xmonad.enable);
 
   config.xsession.initExtra =
     lib.mkIf config.stylix.targets.feh.enable
