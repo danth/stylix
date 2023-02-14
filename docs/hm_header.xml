@@ -21,7 +21,7 @@ home-manager.users.«name» = {
 
 <link
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xlink:href="..#multi-userconfigurations">
+	xlink:href="https://danth.github.io/stylix#multi-userconfigurations">
 Read more about per-user themes.
 </link>
 </para>
