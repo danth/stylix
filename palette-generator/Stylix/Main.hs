@@ -1,6 +1,6 @@
 import Ai.Evolutionary ( EvolutionConfig(EvolutionConfig), evolve )
-import Codec.Picture ( DynamicImage, Image(imageWidth, imageHeight), PixelRGB8(PixelRGB8), convertRGB8, pixelAt, readImage )
-import Data.Colour ( LAB, RGB(RGB), lab2rgb, rgb2lab )
+import Codec.Picture ( DynamicImage, Image, PixelRGB8, convertRGB8, readImage )
+import Data.Colour ( LAB, RGB(RGB), lab2rgb )
 import qualified Data.Vector as V
 import Stylix.Output ( makeOutputTable )
 import Stylix.Palette ( )
@@ -11,19 +11,10 @@ import Text.JSON ( encode )
 -- | Run the genetic algorithm to generate a palette from the given image.
 selectColours :: (Floating a, Real a)
               => String -- ^ Scheme type: "either", "light" or "dark"
-              -> V.Vector (LAB a) -- ^ Colours of the source image
+              -> Image PixelRGB8 -- ^ Source image
               -> IO (V.Vector (LAB a)) -- ^ Generated palette
 selectColours polarity image
   = evolve (polarity, image) (EvolutionConfig 1000 100 0.5 0.01)
-
--- | Convert a 'DynamicImage' to a simple 'V.Vector' of colours.
-unpackImage :: (Num a) => DynamicImage -> V.Vector (RGB a)
-unpackImage image = do
-  let image' = convertRGB8 image
-  x <- V.enumFromN 0 (imageWidth image')
-  y <- V.enumFromN 0 (imageHeight image')
-  let (PixelRGB8 r g b) = pixelAt image' x y
-  return $ RGB (fromIntegral r) (fromIntegral g) (fromIntegral b)
 
 -- | Load an image file.
 loadImage :: String -- ^ Path to the file
@@ -33,10 +24,9 @@ loadImage input = either error id <$> readImage input
 mainProcess :: (String, String, String) -> IO ()
 mainProcess (polarity, input, output) = do
   putStrLn $ "Processing " ++ input
-  image <- loadImage input
 
-  let labImage = V.map rgb2lab $ unpackImage image
-  palette <- selectColours polarity labImage
+  image <- loadImage input
+  palette <- selectColours polarity (convertRGB8 image)
   let outputTable = makeOutputTable $ V.map lab2rgb palette
 
   writeFile output $ encode outputTable

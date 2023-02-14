@@ -3,9 +3,10 @@
 module Stylix.Palette ( ) where
 
 import Ai.Evolutionary ( Species(..) )
+import Codec.Picture ( Image(imageWidth, imageHeight), PixelRGB8(PixelRGB8), pixelAt )
 import Data.Bifunctor ( second )
-import Data.Colour ( LAB(lightness), deltaE )
-import Data.Vector ( (!), (//) )
+import Data.Colour ( LAB(lightness), RGB(RGB), deltaE, rgb2lab )
+import Data.Vector ( (//) )
 import qualified Data.Vector as V
 import System.Random ( RandomGen, randomR )
 
@@ -25,16 +26,19 @@ taken enough colours for a new palette.
 alternatingZip :: V.Vector a -> V.Vector a -> V.Vector a
 alternatingZip = V.izipWith (\i a b -> if even i then a else b)
 
--- | Select a random item from a vector.
-randomFromVector :: (RandomGen r)
-                 => r -- ^ Random generator
-                 -> V.Vector a
-                 -> (a, r) -- ^ Chosen item, new random generator
-randomFromVector generator vector
-  = let (index, generator') = randomR (0, V.length vector - 1) generator
-     in (vector ! index, generator')
+-- | Select a random color from an image.
+randomFromImage :: (RandomGen r, Floating a, Num a, Ord a)
+                => r -- ^ Random generator
+                -> Image PixelRGB8
+                -> (LAB a, r) -- ^ Chosen color, new random generator
+randomFromImage generator image
+  = let (x, generator') = randomR (0, imageWidth image - 1) generator
+        (y, generator'') = randomR (0, imageHeight image - 1) generator'
+        (PixelRGB8 r g b) = pixelAt image x y
+        color = RGB (fromIntegral r) (fromIntegral g) (fromIntegral b)
+     in (rgb2lab color, generator'')
 
-instance (Floating a, Real a) => Species (String, (V.Vector (LAB a))) (V.Vector (LAB a)) where
+instance (Floating a, Real a) => Species (String, (Image PixelRGB8)) (V.Vector (LAB a)) where
   {- |
   Palettes in the initial population are created by randomly
   sampling 16 colours from the source image.
@@ -42,7 +46,7 @@ instance (Floating a, Real a) => Species (String, (V.Vector (LAB a))) (V.Vector 
   generate (_, image) = generateColour 16
       where generateColour 0 generator = (generator, V.empty)
             generateColour n generator
-              = let (colour, generator') = randomFromVector generator image
+              = let (colour, generator') = randomFromImage generator image
                  in second (V.cons colour) $ generateColour (n - 1) generator'
 
   crossover _ generator a b = (generator, alternatingZip a b)
@@ -53,7 +57,7 @@ instance (Floating a, Real a) => Species (String, (V.Vector (LAB a))) (V.Vector 
   -}
   mutate (_, image) generator palette
     = let (index, generator') = randomR (0, 15) generator
-          (colour, generator'') = randomFromVector generator' image
+          (colour, generator'') = randomFromImage generator' image
        in (generator'', palette // [(index, colour)])
 
   fitness (polarity, _) palette
