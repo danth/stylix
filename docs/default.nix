@@ -41,6 +41,7 @@
             ];
           };
         in
+          builtins.readFile ./nixos_header.xml +
           coricamuLib.makeOptionsDocBook {
             inherit (configuration) options;
             customFilter = option: builtins.elemAt option.loc 0 == "stylix";
@@ -69,6 +70,7 @@
             check = false;
           };
         in
+          builtins.readFile ./hm_header.xml +
           coricamuLib.makeOptionsDocBook {
             inherit (configuration) options;
             customFilter = option: builtins.elemAt option.loc 0 == "stylix";

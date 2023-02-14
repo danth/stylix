@@ -11,8 +11,11 @@ a library which processes themes created for
 
 ## Installation
 
+### NixOS
+
 You can install Stylix into your NixOS configuration using
-[Flakes](https://nixos.wiki/wiki/Flakes), for example:
+[Flakes](https://nixos.wiki/wiki/Flakes). This will provide theming for system
+level programs such as bootloaders, splash screens, and display managers.
 
 ```nix
 {
@@ -21,33 +24,64 @@ You can install Stylix into your NixOS configuration using
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { self, nixpkgs, home-manager, stylix }: {
-    nixosConfigurations."<hostname>" = nixpkgs.lib.nixosSystem {
+  outputs = { nixpkgs, stylix, ... }: {
+    nixosConfigurations."«hostname»" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [ stylix.nixosModules.stylix ];
+      modules = [ stylix.nixosModules.stylix ./configuration.nix ];
     };
   };
 }
 ```
+<small>Minimal `flake.nix` for a NixOS configuration.</small>
 
-If [Home Manager](https://github.com/nix-community/home-manager) is available,
-Stylix will use it to configure apps which don't support system wide settings.
-The majority of apps are that way, so
-[setting up Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module)
-is highly recommended if you don't use it already.
+Many applications cannot be configured system wide, so Stylix will also need
+[Home Manager](https://github.com/nix-community/home-manager) to be able to
+change their settings within your home directory.
 
-If you prefer using Home Manager separately from NixOS, you can import
-`homeManagerModules.stylix` into your Home Manager configuration instead. In
-this case, you will need to copy the settings described later into both your
-NixOS and Home Manager configurations, as they will not be able to follow each
+[Installing Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module)
+is highly recommended if you don't use it already. This will combine it with
+your existing configuration, so you don't need to run any extra commands when
+you rebuild, and the theme you set in NixOS will automatically be used for Home
+Manager too.
+
+When Stylix is installed to a NixOS configuration, it will automatically set up
+its Home Manager modules if it detects that Home Manager is available. You can
+theoretically use it without installing Home Manager, however most features
+will be unavailable.
+
+### Home Manager
+
+If you would prefer to use the standalone version of Home Manager, you can
+install Stylix directly into your Home Manager configuration instead. This
+could be useful if you are on a different Linux distribution, or a NixOS
+machine which is managed by someone else.
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    stylix.url = "github:danth/stylix";
+  };
+
+  outputs = { nixpkgs, home-manager, stylix, ... }: {
+    homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [ stylix.nixosModules.stylix ./home.nix ];
+    };
+  };
+}
+```
+<small>Minimal `flake.nix` for a Home Manager configuration.</small>
+
+If you choose to use both NixOS and Home Manager but configure them separately,
+you will need to copy the settings described below into both of your
+configurations, as keeping them separate means that they cannot follow each
 other automatically.
-
-It's also possible to use either NixOS or Home Manager without the other,
-however that would make some features unavailable.
 
 ## Wallpaper
 
-To get started, you need to set a wallpaper image.
+To start theming, you need to set a wallpaper image.
 
 ```nix
 stylix.image = ./wallpaper.png;
@@ -63,7 +97,7 @@ stylix.image = pkgs.fetchurl {
 };
 ```
 
-At this point you should be able to rebuild and have a reasonable theme
+At this point you should be able to rebuild and have a reasonable color scheme
 generated based on the image you chose.
 
 ## Color scheme
@@ -71,7 +105,7 @@ generated based on the image you chose.
 ### Automatic color schemes
 
 If you only set a wallpaper, Stylix will use a [genetic
-algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm) to generate a color
+algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm) to create a color
 scheme. The quality of these automatically generated schemes can vary, but more
 colorful images tend to have better results.
 
@@ -87,7 +121,7 @@ After rebuilding, the full theme can be previewed at
 
 ### Manual color schemes
 
-If you would prefer to choose a theme, you can use anything from
+If you would prefer to choose a color scheme, you can use anything from
 [the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes),
 or another file following that format.
 
@@ -103,7 +137,8 @@ let base16-schemes = pkgs.fetchFromGitHub {
 };
 ```
 
-Then set the following option to the path of the theme you would like to use:
+Then set the following option to the path of the color scheme you would like to
+use:
 
 ```nix
 stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
@@ -196,3 +231,9 @@ be styled.
 
 Targets are different between Home Manager and NixOS, and sometimes available
 in both cases. If both are available, it is always correct to enable both.
+
+The Stylix website has a list of the available targets
+[for NixOS](https://danth.github.io/stylix/options.html)
+and
+[for Home Manager](https://danth.github.io/stylix/options-hm.html)
+respectively.
