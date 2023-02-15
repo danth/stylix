@@ -84,17 +84,21 @@ other automatically.
 To start theming, you need to set a wallpaper image.
 
 ```nix
-stylix.image = ./wallpaper.png;
+{
+  stylix.image = ./wallpaper.png;
+}
 ```
 
 The option accepts derivations as well as paths, so you can fetch a wallpaper
 directly from the internet:
 
 ```nix
-stylix.image = pkgs.fetchurl {
-  url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
-  sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
-};
+{
+  stylix.image = pkgs.fetchurl {
+    url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
+    sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
+  };
+}
 ```
 
 At this point you should be able to rebuild and have a reasonable color scheme
@@ -113,7 +117,9 @@ You can force the generation of a light or dark theme using the polarity
 option:
 
 ```nix
-stylix.polarity = "dark";
+{
+  stylix.polarity = "dark";
+}
 ```
 
 After rebuilding, the full theme can be previewed in a web browser by
@@ -134,19 +140,23 @@ To use Tinted Theming, either add their repository to your Flake inputs, or
 fetch it as follows:
 
 ```nix
-let base16-schemes = pkgs.fetchFromGitHub {
-  owner = "tinted-theming";
-  repo = "base16-schemes";
-  rev = "...";
-  sha256 = "...";
-};
+let
+  base16-schemes = pkgs.fetchFromGitHub {
+    owner = "tinted-theming";
+    repo = "base16-schemes";
+    rev = "...";
+    sha256 = "...";
+  };
+in { }
 ```
 
 Then set the following option to the path of the color scheme you would like to
 use:
 
 ```nix
-stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
+{
+  stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
+}
 ```
 
 `base16Scheme` can also accept other formats as supported by
@@ -157,27 +167,29 @@ stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
 The default combination of fonts is:
 
 ```nix
-stylix.fonts = {
-  serif = {
-    package = pkgs.dejavu_fonts;
-    name = "DejaVu Serif";
-  };
+{
+  stylix.fonts = {
+    serif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Serif";
+    };
 
-  sansSerif = {
-    package = pkgs.dejavu_fonts;
-    name = "DejaVu Sans";
-  };
+    sansSerif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans";
+    };
 
-  monospace = {
-    package = pkgs.dejavu_fonts;
-    name = "DejaVu Sans Mono";
-  };
+    monospace = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans Mono";
+    };
 
-  emoji = {
-    package = pkgs.noto-fonts-emoji;
-    name = "Noto Color Emoji";
+    emoji = {
+      package = pkgs.noto-fonts-emoji;
+      name = "Noto Color Emoji";
+    };
   };
-};
+}
 ```
 
 These can be changed as you like.
@@ -186,17 +198,21 @@ To make things look more uniform, you could replace the serif font with
 the sans-serif font:
 
 ```nix
-stylix.fonts.serif = config.stylix.fonts.sansSerif;
+{
+  stylix.fonts.serif = config.stylix.fonts.sansSerif;
+}
 ```
 
 Or even choose monospace for everything:
 
 ```nix
-stylix.fonts = {
-  serif = config.stylix.fonts.monospace;
-  sansSerif = config.stylix.fonts.monospace;
-  emoji = config.stylix.fonts.monospace;
-};
+{
+  stylix.fonts = {
+    serif = config.stylix.fonts.monospace;
+    sansSerif = config.stylix.fonts.monospace;
+    emoji = config.stylix.fonts.monospace;
+  };
+}
 ```
 
 ## Multi-user configurations
