@@ -5,7 +5,7 @@
     config.lib.stylix.mkEnableTarget
     "the desktop background using Feh"
     (with config.xsession.windowManager; bspwm.enable 
-                                      || herbsflutwm.enable 
+                                      || herbstluftwm.enable
                                       || i3.enable 
                                       || spectrwm.enable 
                                       || xmonad.enable);
