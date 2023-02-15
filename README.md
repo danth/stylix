@@ -116,8 +116,13 @@ option:
 stylix.polarity = "dark";
 ```
 
-After rebuilding, the full theme can be previewed at
-`file:///etc/stylix/palette.html` in a web browser.
+After rebuilding, the full theme can be previewed in a web browser by
+opening either of these files:
+
+- `/etc/stylix/palette.html` if you are using NixOS, or
+- `$XDG_CONFIG_HOME/stylix/palette.html` (by default
+  `~/.config/stylix/palette.html`) if you are using home-manager
+  without NixOS.
 
 ### Manual color schemes
 
