@@ -29,6 +29,7 @@ let
     extraConfig = ''
       set termguicolors
       colorscheme base16-stylix
+      unlet g:colors_name
       set guifont=${escape [" "] config.stylix.fonts.monospace.name}:h10
     '';
   };
