@@ -17,11 +17,9 @@ in
     config.lib.stylix.mkEnableTarget "Rofi" true;
 
   config = lib.mkIf config.stylix.targets.rofi.enable {
-    home-manager.sharedModules = [{
-      programs.rofi = {
-        font = monospace.name;
-        theme = themeFile;
-      };
-    }];
+    programs.rofi = {
+      font = monospace.name;
+      theme = themeFile;
+    };
   };
 }
