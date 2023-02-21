@@ -17,14 +17,12 @@ in
     config.lib.stylix.mkEnableTarget "Xresources" true;
 
   config = lib.mkIf config.stylix.targets.xresources.enable {
-    home-manager.sharedModules = [{
-      xresources = {
-        properties = {
-          "*.faceName" = monospace.name;
-          "*.renderFont" = true;
-        };
-        extraConfig = builtins.readFile themeFile;
+    xresources = {
+      properties = {
+        "*.faceName" = monospace.name;
+        "*.renderFont" = true;
       };
-    }];
+      extraConfig = builtins.readFile themeFile;
+    };
   };
 }
