@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  evaluate:
+    name: List packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Nix
+        uses: cachix/install-nix-action@v19
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: List packages
+        id: list-packages
+        run: |
+          nix flake show . --json | jq -rc '{checks: (.checks // {}), packages: (.packages // {})} | to_entries | map(.key as $type | .value | to_entries | map(select(.key == "x86_64-linux") | .value | to_entries | map({type: $type, key: .key})) | flatten) | flatten | "::set-output name=packages::\(.)"'
+
+    outputs:
+      packages: ${{ steps.list-packages.outputs.packages }}
+
+  build:
+    needs: evaluate
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build: ${{ fromJSON(needs.evaluate.outputs.packages) }}
+
+    name: Build ${{ matrix.build.key }}
+
+    steps:
+      - name: Install Nix
+        uses: cachix/install-nix-action@v19
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build ${{ matrix.build.key }}
+        run: nix -L build .#${{ matrix.build.type }}.x86_64-linux.${{ matrix.build.key }}
