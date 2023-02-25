@@ -56,6 +56,7 @@ install Stylix directly into your Home Manager configuration instead. This
 could be useful if you are on a different Linux distribution, or a NixOS
 machine which is managed by someone else.
 
+
 ```nix
 {
   inputs = {
@@ -78,6 +79,32 @@ If you choose to use both NixOS and Home Manager but configure them separately,
 you will need to copy the settings described below into both of your
 configurations, as keeping them separate means that they cannot follow each
 other automatically.
+
+### Without flakes
+
+If you haven't enabled flakes yet or don't want to use this feature, the
+`default.nix` re-exports all the flake outputs. This means that once you have a
+copy of this repo, using either a local checkout,
+[niv](https://github.com/nmattia/niv) or any other method, you can import it to
+get the NixOS module as the `nixosModules.stylix` attribute and the Home Manager
+module as the `homeManagerModules.stylix` attribute.
+
+```nix
+let
+  stylix = pkgs.fetchFromGitHub {
+      owner = "danth";
+      repo = "stylix";
+      rev = "f123771bd968cd1ac34a9f655a793de9c7bce7e6";
+      sha256 = "1671giqcyahxrbf7jf3r1mzj1j1rpla36fgyia7g86x7w28war2p";
+  };
+in {
+    imports = [ stylix.homeManagerModules.stylix ];
+
+    stylix.image = ./wallpaper.jpg;
+}
+
+```
+<small>Example usage of the Home Manager module without flakes</small>
 
 ## Wallpaper
 
