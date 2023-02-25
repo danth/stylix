@@ -189,6 +189,18 @@ use:
 `base16Scheme` can also accept other formats as supported by
 [`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
 
+## Overriding
+
+For convenience, it is possible to override parts of `stylix.base16Scheme` using
+`stylix.override`. Anything that
+[base16.nix](https://github.com/SenchoPens/base16.nix) accepts as override is
+valid.
+
+When using both the Home Manager and NixOS modules, both the system overrides
+and the user-provided one are used in the user configuration if
+`stylix.base16Scheme` is not changed in the user config. If that is the case,
+only the user override is used.
+
 ## Fonts
 
 The default combination of fonts is:
