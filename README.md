@@ -82,10 +82,10 @@ other automatically.
 
 ### Without flakes
 
-If you haven't enabled flakes yet or don't want to use this feature, the
-`default.nix` re-exports all the flake outputs. This means that once you have a
-copy of this repo, using either a local checkout,
-[niv](https://github.com/nmattia/niv) or any other method, you can import it to
+If you haven't enabled flakes yet or don't want to use this feature, `default.nix`
+re-exports all the flake outputs, without requiring flakes to be enabled. This means
+that once you have a copy of this repo, using either a local checkout,
+[niv](https://github.com/nmattia/niv), or any other method, you can import it to
 get the NixOS module as the `nixosModules.stylix` attribute and the Home Manager
 module as the `homeManagerModules.stylix` attribute.
 
@@ -94,17 +94,17 @@ let
   stylix = pkgs.fetchFromGitHub {
       owner = "danth";
       repo = "stylix";
-      rev = "f123771bd968cd1ac34a9f655a793de9c7bce7e6";
-      sha256 = "1671giqcyahxrbf7jf3r1mzj1j1rpla36fgyia7g86x7w28war2p";
+      rev = "...";
+      sha256 = "...";
   };
 in {
-    imports = [ stylix.homeManagerModules.stylix ];
+    imports = [ (import stylix).homeManagerModules.stylix ];
 
     stylix.image = ./wallpaper.jpg;
 }
 
 ```
-<small>Example usage of the Home Manager module without flakes</small>
+<small>Example usage of the Home Manager module without flakes.</small>
 
 ## Wallpaper
 
@@ -189,7 +189,7 @@ use:
 `base16Scheme` can also accept other formats as supported by
 [`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
 
-## Overriding
+### Overriding
 
 For convenience, it is possible to override parts of `stylix.base16Scheme` using
 `stylix.override`. Anything that
