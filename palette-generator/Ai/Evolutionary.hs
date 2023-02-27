@@ -134,26 +134,36 @@ evolveGeneration environment config (generator, population)
 evolveUntilThreshold :: (RandomGen r, Species e g)
                      => e -- ^ Environment
                      -> EvolutionConfig
-                     -> Int -- ^ Generation number
-                     -> Double -- ^ Fitness of previous generation
+                     -> [Double] -- ^ Fitnesses of previous generations
                      -> (r, [g]) -- ^ Random generator, population from previous generation
                      -> IO (r, [g]) -- ^ New random generator, final population
-evolveUntilThreshold environment config generation fitness (generator, population) =
+evolveUntilThreshold environment config fitnesses (generator, population) =
   do
-    let generation' = generation + 1
-        (generator', fitness', population') =
+    let (generator', fitness, population') =
           evolveGeneration environment config (generator, population)
-        change = 1 - (fitness' / fitness)
 
-    if generation == 0
-       then printf "Generation: %3i  Fitness: %7.1f\n"
-              generation' fitness'
-       else printf "Generation: %3i  Fitness: %7.1f  Improvement: %5.1f%%\n"
-              generation' fitness' (change * 100)
+        -- Begins at 0 on the first iteration
+        generationNumber = length fitnesses
+
+        fitnesses' = fitness : fitnesses
+        recentFitnesses = take 5 fitnesses'
+
+        {-
+           On the first iteration there is only one recent fitness, so the
+           improvement would be calculated as 0%. To prevent the algorithm
+           stopping immediately, we fall back to 100% in this case.
+        -}
+        change =
+          if generationNumber < 1
+          then 1
+          else 1 - (head recentFitnesses / last recentFitnesses);
+
+    printf "Generation: %3i  Fitness: %7.1f Improvement: %5.1f%%\n"
+      generationNumber fitness (change * 100)
 
     if change < changeThreshold config
       then return (generator', population')
-      else evolveUntilThreshold environment config generation' fitness' (generator', population')
+      else evolveUntilThreshold environment config fitnesses' (generator', population')
 
 {- |
 Create the initial population, to be fed into the first
@@ -174,7 +184,7 @@ evolve :: Species e g
        -> IO g -- ^ Optimal genotype
 evolve environment config = do
   (_, population) <-
-    evolveUntilThreshold environment config 0 0
+    evolveUntilThreshold environment config []
     $ initialGeneration environment config
     $ mkStdGen 0 -- Fixed seed for determinism
 
