@@ -11,17 +11,12 @@ Here's an example Nix expression that takes an input image, applies a brightness
 
 let
   inputImage = ./path/to/image.jpg;
-  outputImage = "${inputImage}.dimmed.png";
   brightness = -30;
   contrast = 0;
   fillColor = "black"
 in
 {
-  image = pkgs.runCommand "dimmed-background" { } ''
-    ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} "${outputImage}"
+  stylix.image = pkgs.runCommand "dimmed-background.png" { } ''
+    ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
   '';
-
-  # ...
-
-  stylix.Image = outputImage;
 }
