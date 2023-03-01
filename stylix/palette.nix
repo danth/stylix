@@ -9,7 +9,7 @@ let
   cfg = config.stylix;
 
   paletteJSON = pkgs.runCommand "palette.json" { } ''
-    ${palette-generator}/bin/palette-generator ${cfg.polarity} ${cfg.image} $out
+    ${palette-generator}/bin/palette-generator ${cfg.polarity} ${escapeShellArg cfg.image} $out
   '';
   generatedPalette = importJSON paletteJSON;
 
