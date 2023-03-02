@@ -1,31 +1,19 @@
-{ pkgs, pkgsLib, coricamuLib, inputs, ... }:
+{ pkgs, pkgsLib, coricamuLib, config, inputs, ... }:
 
-{
+with coricamuLib;
+
+rec {
   baseUrl = "https://danth.github.io/stylix/";
   siteTitle = "Stylix";
   language = "en-gb";
 
-  header.html = ''
-    <h1>Stylix</h1>
-    <nav>
-      <a href="">Home</a>
-      <a href="options.html">NixOS options</a>
-      <a href="options-hm.html">Home Manager options</a>
-      <a href="https://github.com/danth/stylix">GitHub repository</a>
-    </nav>
-  '';
+  header = makeProjectHeader {
+    title = siteTitle;
+    inherit (config) pages;
+    repository = "https://github.com/danth/stylix";
+  };
 
-  pages = [
-    {
-      path = "index.html";
-      title = "Stylix";
-
-      body.markdownFile = pkgs.runCommand "index.md" {} ''
-        # Remove the title line
-        tail -n+2 ${../README.md} >$out
-      '';
-    }
-
+  pages = makeProjectPages ../. ++ [
     {
       path = "options.html";
       title = "NixOS options";
@@ -42,7 +30,7 @@
           };
         in
           builtins.readFile ./nixos_header.xml +
-          coricamuLib.makeOptionsDocBook {
+          makeOptionsDocBook {
             inherit (configuration) options;
             customFilter = option: builtins.elemAt option.loc 0 == "stylix";
           };
@@ -71,7 +59,7 @@
           };
         in
           builtins.readFile ./hm_header.xml +
-          coricamuLib.makeOptionsDocBook {
+          makeOptionsDocBook {
             inherit (configuration) options;
             customFilter = option: builtins.elemAt option.loc 0 == "stylix";
           };
