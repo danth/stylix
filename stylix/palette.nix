@@ -8,16 +8,18 @@ let
 
   cfg = config.stylix;
 
-  paletteJSON = pkgs.runCommand "palette.json" { } ''
-    ${palette-generator}/bin/palette-generator ${cfg.polarity} ${cfg.image} $out
-  '';
-  generatedPalette = importJSON paletteJSON;
-
-  generatedScheme = generatedPalette // {
-    author = "Stylix";
-    scheme = "Stylix";
-    slug = "stylix";
-  };
+  paletteJSON = let
+    generatedJSON = pkgs.runCommand "palette.json" { } ''
+      ${palette-generator}/bin/palette-generator ${cfg.polarity} ${cfg.image} $out
+    '';
+    palette = importJSON generatedJSON;
+    scheme = base16.mkSchemeAttrs palette;
+    json = scheme {
+      template = builtins.readFile ./palette.json.mustache;
+      extension = ".json";
+    };
+  in json;
+  generatedScheme = importJSON paletteJSON;
 
   override =
     (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
@@ -84,7 +86,7 @@ in {
         description = "The imported json";
         readOnly = true;
         internal = true;
-        default = generatedPalette;
+        default = generatedScheme;
       };
     };
 
@@ -124,5 +126,6 @@ in {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix#mktheme
     lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
+    lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
   };
 }
