@@ -57,5 +57,25 @@ in {
         name = "Noto Color Emoji";
       };
     };
+
+    sizes = let
+      mkFontSize = default: description: mkOption {
+        inherit description default;
+        type = types.ints.unsigned;
+      };
+    in {
+      desktop = mkFontSize 10 ''
+        The font size used in window titles/bars/widgets elements of the desktop.
+      '';
+      applications = mkFontSize 12 ''
+        The font size used by applications.
+      '';
+      terminal = mkFontSize config.stylix.fonts.sizes.applications ''
+        The font size for terminals/text editors.
+      '';
+      popups = mkFontSize config.stylix.fonts.sizes.desktop ''
+        The font size for notifications/popups and in general overlay elements of the desktop.
+      '';
+    };
   };
 }
