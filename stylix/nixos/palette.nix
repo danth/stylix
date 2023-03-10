@@ -10,7 +10,18 @@ args:
       # garbage collection, so future configurations can be evaluated without
       # having to generate the palette again. The generator is not kept, only
       # the palette which came from it, so this uses very little disk space.
-      "stylix/palette.json".source = config.stylix.generated.json;
+      # The extra indirection should prevent the palette generator from running
+      # when the theme is manually specified. generated.json is necessary in
+      # the presence of overrides.
+      "stylix/generated.json".source = config.lib.stylix.scheme {
+        template = builtins.readFile ../palette.json.mustache;
+        extension = ".json";
+      };
+
+      "stylix/palette.json".source = config.lib.stylix.colors {
+        template = builtins.readFile ../palette.json.mustache;
+        extension = ".json";
+      };
 
       # We also provide a HTML version which is useful for viewing the colors
       # during development.
