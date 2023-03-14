@@ -13,7 +13,7 @@ with config.stylix.fonts;
       borderColor = base0D;
       textColor = base05;
       progressColor = "over ${base02}";
-      font = sansSerif.name;
+      font = "${sansSerif.name} ${toString sizes.popups}";
       # I wish the mako hm module was like the dunst one
       extraConfig = ''
         [urgency=low]

@@ -19,7 +19,7 @@ let
       )
 
       # Convert to .pf2
-      ${pkgs.grub2}/bin/grub-mkfont $font --output $out --size 17
+      ${pkgs.grub2}/bin/grub-mkfont $font --output $out --size ${toString sizes.applications}
     '';
 
 in {

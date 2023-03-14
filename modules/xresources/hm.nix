@@ -20,6 +20,7 @@ in
     xresources = {
       properties = {
         "*.faceName" = monospace.name;
+        "*.faceSize" = sizes.terminal;
         "*.renderFont" = true;
       };
       extraConfig = builtins.readFile themeFile;

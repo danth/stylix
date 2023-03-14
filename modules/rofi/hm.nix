@@ -18,7 +18,7 @@ in
 
   config = lib.mkIf config.stylix.targets.rofi.enable {
     programs.rofi = {
-      font = monospace.name;
+      font = "${monospace.name} ${toString sizes.popups}";
       theme = themeFile;
     };
   };

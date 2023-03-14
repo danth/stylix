@@ -7,7 +7,7 @@ with config.stylix.fonts;
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
     fontSize = lib.mkOption {
       type = with lib.types; nullOr int;
-      default = null;
+      default = sizes.popups;
     }; # optional argument
     alternate = lib.mkOption { type = lib.types.bool; default = false; };
   };
