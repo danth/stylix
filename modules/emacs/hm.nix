@@ -46,7 +46,8 @@ with config.stylix.fonts;
 
               ;; Add path to theme to theme-path
               (add-to-list 'custom-theme-load-path
-                  (file-name-directory load-file-name))
+                  (file-name-directory
+                      (file-truename load-file-name)))
 
               (provide 'base16-stylix-theme)
             '';
