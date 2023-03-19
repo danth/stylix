@@ -40,7 +40,7 @@ in {
       enable = true;
       font = {
         inherit (config.stylix.fonts.sansSerif) package name;
-        size = config.stylix.sizes.applications;
+        size = config.stylix.fonts.sizes.applications;
       };
       theme = {
         package = pkgs.adw-gtk3;
