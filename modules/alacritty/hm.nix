@@ -23,6 +23,7 @@ in
           family = monospace.name;
           style = "Regular";
         };
+        size = sizes.terminal;
       };
       import = [ themeFile ];
     };

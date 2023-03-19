@@ -24,13 +24,15 @@ let
     '';
   };
 
-  vimOptions = {
+  vimOptions = let
+    fonts = config.stylix.fonts;
+  in {
     plugins = [ themePlugin ];
     extraConfig = ''
       set termguicolors
       colorscheme base16-stylix
       unlet g:colors_name
-      set guifont=${escape [" "] config.stylix.fonts.monospace.name}:h10
+      set guifont=${escape [" "] fonts.monospace.name}:h${toString fonts.sizes.terminal}
     '';
   };
 

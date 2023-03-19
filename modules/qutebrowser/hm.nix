@@ -197,15 +197,17 @@ in {
         };
       };
 
-      fonts = {
-        default_family = sansSerif.name;
+      fonts = let
+        mkFont = name: "${name} ${toString sizes.applications}pt";
+      in {
+        default_family = mkFont sansSerif.name;
         web.family = {
-          cursive = serif.name;
-          fantasy = serif.name;
-          fixed = monospace.name;
-          sans_serif = sansSerif.name;
-          serif = serif.name;
-          standard = sansSerif.name;
+          cursive = mkFont serif.name;
+          fantasy = mkFont serif.name;
+          fixed = mkFont monospace.name;
+          sans_serif = mkFont sansSerif.name;
+          serif = mkFont serif.name;
+          standard = mkFont sansSerif.name;
         };
       };
     };

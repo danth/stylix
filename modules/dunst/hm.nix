@@ -11,7 +11,7 @@ with config.stylix.fonts;
     services.dunst.settings = {
       global = {
         separator_color = base02;
-        font = sansSerif.name;
+        font = "${sansSerif.name} ${toString sizes.popups}";
       };
 
       urgency_low = {

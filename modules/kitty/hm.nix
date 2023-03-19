@@ -19,7 +19,10 @@ in {
 
   config = lib.mkIf cfg.enable {
     programs.kitty = {
-      font = config.stylix.fonts.monospace;
+      font = {
+        inherit (config.stylix.fonts.monospace) package name;
+        size = config.stylix.fonts.sizes.terminal;
+      };
       extraConfig = builtins.readFile theme;
     };
   };

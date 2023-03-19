@@ -10,7 +10,7 @@ let
 
   fonts = {
     names = [ config.stylix.fonts.sansSerif.name ];
-    size = 8.0;
+    size = config.stylix.fonts.sizes.desktop + 0.0;
   };
 
 in {

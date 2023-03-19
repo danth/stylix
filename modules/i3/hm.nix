@@ -8,8 +8,10 @@ let
   focused = base0A;
   unfocused = base03;
 
-  fonts = {
-    names = [ config.stylix.fonts.sansSerif.name ];
+  fonts = let
+    fonts = config.stylix.fonts;
+  in {
+    names = [ "${fonts.sansSerif.name} ${fonts.sizes.desktop}" ];
   };
 
 in {
