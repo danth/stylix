@@ -3,6 +3,7 @@
 with lib;
 
 let
+  cfg = config.stylix.fonts;
 
   fromOs = import ./fromos.nix { inherit lib args; };
 
@@ -58,24 +59,40 @@ in {
       };
     };
 
-    sizes = let
-      mkFontSize = default: description: mkOption {
-        inherit description default;
+    sizes = {
+      desktop = mkOption {
+        description = ''
+          The font size used in window titles/bars/widgets elements of
+          the desktop.
+        '';
         type = types.ints.unsigned;
+        default = fromOs [ "fonts" "sizes" "desktop" ] 10;
       };
-    in {
-      desktop = mkFontSize 10 ''
-        The font size used in window titles/bars/widgets elements of the desktop.
-      '';
-      applications = mkFontSize 12 ''
-        The font size used by applications.
-      '';
-      terminal = mkFontSize config.stylix.fonts.sizes.applications ''
-        The font size for terminals/text editors.
-      '';
-      popups = mkFontSize config.stylix.fonts.sizes.desktop ''
-        The font size for notifications/popups and in general overlay elements of the desktop.
-      '';
+
+      applications = mkOption {
+        description = ''
+          The font size used by applications.
+        '';
+        type = types.ints.unsigned;
+        default = fromOs [ "fonts" "sizes" "applications" ] 12;
+      };
+
+      terminal = mkOption {
+        description = ''
+          The font size for terminals/text editors.
+        '';
+        type = types.ints.unsigned;
+        default = fromOs [ "fonts" "sizes" "terminal" ] cfg.sizes.applications;
+      };
+
+      popups = mkOption {
+        description = ''
+          The font size for notifications/popups and in general overlay
+          elements of the desktop.
+        '';
+        type = types.ints.unsigned;
+        default = fromOs [ "fonts" "sizes" "popups" ] cfg.sizes.desktop;
+      };
     };
   };
 }
