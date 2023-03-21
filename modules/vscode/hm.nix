@@ -26,10 +26,14 @@ let
     };
   });
 
-  themeExtension = pkgs.runCommandLocal "stylix-vscode" {} ''
-    mkdir -p $out/share/vscode/extensions/stylix/themes
-    ln -s ${themePackageJson} $out/share/vscode/extensions/stylix/package.json
-    ln -s ${themeFile} $out/share/vscode/extensions/stylix/themes/stylix.json
+  themeExtension = pkgs.runCommandLocal "stylix-vscode" {
+      vscodeExtUniqueId = "Stylix.stylix";
+      vscodeExtPublisher = "Stylix";
+      version = "0.0.0";
+    } ''
+    mkdir -p $out/share/vscode/extensions/Stylix.stylix/themes
+    ln -s ${themePackageJson} $out/share/vscode/extensions/Stylix.stylix/package.json
+    ln -s ${themeFile} $out/share/vscode/extensions/Stylix.stylix/themes/stylix.json
   '';
 
 in {
