@@ -13,9 +13,9 @@ a library which processes themes created for
 
 ### NixOS
 
-You can install Stylix into your NixOS configuration using
-[Flakes](https://nixos.wiki/wiki/Flakes). This will provide theming for system
-level programs such as bootloaders, splash screens, and display managers.
+You can install Stylix into your NixOS configuration using [Flakes][nix-flakes].
+This will provide theming for system level programs such as bootloaders, splash
+screens, and display managers.
 
 ```nix
 {
@@ -35,8 +35,8 @@ level programs such as bootloaders, splash screens, and display managers.
 <small>Minimal `flake.nix` for a NixOS configuration.</small>
 
 Many applications cannot be configured system wide, so Stylix will also need
-[Home Manager](https://github.com/nix-community/home-manager) to be able to
-change their settings within your home directory.
+[Home Manager][nix-hm] to be able to change their settings within your home
+directory.
 
 [Installing Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module)
 is highly recommended if you don't use it already. This will combine it with
@@ -48,6 +48,37 @@ When Stylix is installed to a NixOS configuration, it will automatically set up
 its Home Manager modules if it detects that Home Manager is available. You can
 theoretically use it without installing Home Manager, however most features
 will be unavailable.
+
+### nix-darwin
+
+You can install Stylix intor your nix-darwin configuration in a similar fashion
+to NixOS via [Flakes][nix-flakes]. 
+
+```nix
+{
+  inputs = {
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    stylix.url = "github:danth/stylix";
+  };
+
+  outputs = { darwin, nixpkgs, stylix, ... }: {
+    darwinConfigurations."«hostname»" = darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [ stylix.darwinModules.stylix ./configuration.nix ];
+    };
+  };
+}
+```
+
+While this won't have an effect on the looks of macOS, since we don't have the
+controls to theme it like we do NixOS, it will automatically set up its [Home
+Manager][nix-hm] modules if it detects that Home Manager is available. You can
+theoretically use it without installing Home Manager, however most features will
+be unavailable.
 
 ### Home Manager
 
@@ -297,3 +328,6 @@ The Stylix website has a list of the available targets
 and
 [for Home Manager](https://danth.github.io/stylix/options-hm.html)
 respectively.
+
+[nix-flakes]: https://nixos.wiki/wiki/Flakes
+[nix-hm]: https://github.com/nix-community/home-manager
