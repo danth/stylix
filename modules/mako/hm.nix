@@ -8,7 +8,7 @@ with config.stylix.fonts;
 
   # Referenced https://github.com/stacyharper/base16-mako
   config = lib.mkIf config.stylix.targets.mako.enable {
-    services.mako = {
+    programs.mako = {
       backgroundColor = base00;
       borderColor = base0D;
       textColor = base05;
