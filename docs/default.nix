@@ -1,68 +1,56 @@
-{ pkgs, pkgsLib, coricamuLib, config, inputs, ... }:
+{ pkgs, lib, inputs, ... }:
 
-with coricamuLib;
+let
+  makeOptionsDoc = configuration: pkgs.nixosOptionsDoc {
+    inherit (configuration) options;
 
-rec {
-  baseUrl = "https://danth.github.io/stylix/";
-  siteTitle = "Stylix";
-  language = "en-gb";
-
-  header = makeProjectHeader {
-    title = siteTitle;
-    inherit (config) pages;
-    repository = "https://github.com/danth/stylix";
+    # Filter out any options not beginning with `stylix`
+    transformOptions = option: option // {
+      visible = option.visible &&
+        builtins.elemAt option.loc 0 == "stylix";
+    };
   };
 
-  pages = makeProjectPages ../. ++ [
-    {
-      path = "options.html";
-      title = "NixOS options";
+  nixos = makeOptionsDoc
+    (lib.nixosSystem {
+      inherit (pkgs) system;
+      modules = [
+        inputs.home-manager.nixosModules.home-manager
+        inputs.self.nixosModules.stylix
+        ./settings.nix
+      ];
+    });
 
-      body.docbook =
-        let
-          configuration = pkgsLib.nixosSystem {
-            inherit (pkgs) system;
-            modules = [
-              inputs.self.nixosModules.stylix
-              ./settings.nix
-              { _module.check = false; }
-            ];
+  homeManager = makeOptionsDoc
+    (inputs.home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [
+        inputs.self.homeManagerModules.stylix
+        ./settings.nix
+        {
+          home = {
+            homeDirectory = "/home/book";
+            stateVersion = "22.11";
+            username = "book";
           };
-        in
-          builtins.readFile ./nixos_header.xml +
-          makeOptionsDocBook {
-            inherit (configuration) options;
-            customFilter = option: builtins.elemAt option.loc 0 == "stylix";
-          };
-    }
+        }
+      ];
+    });
 
-    {
-      path = "options-hm.html";
-      title = "Home Manager options";
+in pkgs.stdenvNoCC.mkDerivation {
+  name = "stylix-book";
+  src = ./.;
 
-      body.docbook =
-        let
-          configuration = inputs.home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [
-              inputs.self.homeManagerModules.stylix
-              ./settings.nix
-              {
-                home = {
-                  homeDirectory = "/home/docs";
-                  stateVersion = "22.11";
-                  username = "docs";
-                };
-              }
-            ];
-            check = false;
-          };
-        in
-          builtins.readFile ./hm_header.xml +
-          makeOptionsDocBook {
-            inherit (configuration) options;
-            customFilter = option: builtins.elemAt option.loc 0 == "stylix";
-          };
-    }
-  ];
+  patchPhase = ''
+    cp ${../README.md} src/README.md
+
+    # The "declared by" links point to a file which only exists when the docs
+    # are built locally. This removes the links.
+    sed '/*Declared by:*/,/^$/d' <${nixos.optionsCommonMark} >>src/options/nixos.md
+    sed '/*Declared by:*/,/^$/d' <${homeManager.optionsCommonMark} >>src/options/hm.md
+  '';
+
+  buildPhase = ''
+    ${pkgs.mdbook}/bin/mdbook build --dest-dir $out
+  '';
 }

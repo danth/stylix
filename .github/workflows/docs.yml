@@ -6,8 +6,54 @@ on:
       - master
 
 jobs:
-  pages:
-    name: Pages
-    uses: danth/coricamu/.github/workflows/pages.yml@cd253a6940853ffc3da7c14c9311940f1d70e222
-    with:
-      output_name: docs
+  build:
+    name: Build
+
+    permissions:
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Nix
+        uses: cachix/install-nix-action@v19
+
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v12
+        with:
+          name: danth
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build docs
+        run: nix -L build .#docs
+
+      - name: Prepare docs for upload
+        run: cp -r --dereference --no-preserve=mode,ownership result/ public/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: public/
+
+  deploy:
+    name: Deploy
+
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy docs to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

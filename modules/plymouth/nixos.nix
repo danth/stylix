@@ -48,14 +48,14 @@ in {
     enable = config.lib.stylix.mkEnableTarget "the Plymouth boot screen" true;
 
     logo = mkOption {
-      description = ''
+      description = mdDoc ''
         Logo to be used on the boot screen.
 
         This defaults to the NixOS logo, but you could set it to your OEM logo
         if it suits the theme.
       '';
       type = with types; either path package;
-      defaultText = literalDocBook "NixOS snowflake";
+      defaultText = literalMD "NixOS snowflake";
       default = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg";
         # Reduce size
@@ -69,14 +69,14 @@ in {
     };
 
     blackBackground = mkOption {
-      description = ''
+      description = mdDoc ''
         Whether to use a black background rather than a theme colour.
 
         This looks good in combination with systemd-boot, as it means that the
         background colour doesn't change throughout the boot process.
       '';
       type = types.bool;
-      defaultText = literalDocBook "<literal>true</literal> if systemd-boot is enabled";
+      defaultText = literalMD "`true` if systemd-boot is enabled";
       default = config.boot.loader.systemd-boot.enable;
     };
   };

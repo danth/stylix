@@ -7,7 +7,7 @@ let
 in {
   options.stylix.targets.gnome.enable =
     lib.mkOption {
-      description = "Whether to style GNOME";
+      description = lib.mdDoc "Whether to style GNOME";
       type = lib.types.bool;
       default = config.stylix.autoEnable 
              && config.services.xserver.desktopManager.gnome.enable;

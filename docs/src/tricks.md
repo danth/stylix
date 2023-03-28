@@ -1,8 +1,6 @@
-# FAQ
+# Tips and tricks
 
-## NixOS Stylix Tricks
-
-### Adjusting the brightness and contrast of a background image
+## Adjusting the brightness and contrast of a background image
 
 If you want to use a background image for your desktop but find it too bright or distracting, you can use the `imagemagick` package to dim the image, or adjust its brightness and contrast to suit your preference.
 
@@ -22,3 +20,4 @@ in
     ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
   '';
 }
+```

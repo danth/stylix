@@ -14,7 +14,7 @@ in {
   options.stylix.targets.swaylock = {
     enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
     useImage = lib.mkOption {
-      description = ''
+      description = lib.mdDoc ''
         Whether to use your wallpaper image for the Swaylock background.
         If this is disabled, a plain color will be used instead.
       '';

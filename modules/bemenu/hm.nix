@@ -5,11 +5,22 @@ with config.stylix.fonts;
 {
   options.stylix.targets.bemenu = {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
+
     fontSize = lib.mkOption {
+      description = lib.mdDoc ''
+        Font size used for bemenu.
+      '';
       type = with lib.types; nullOr int;
       default = sizes.popups;
     }; # optional argument
-    alternate = lib.mkOption { type = lib.types.bool; default = false; };
+
+    alternate = lib.mkOption {
+      description = lib.mdDoc ''
+        Whether to use alternating colours.
+      '';
+      type = lib.types.bool;
+      default = false;
+    };
   };
 
   config = lib.mkIf config.stylix.targets.bemenu.enable {
@@ -27,10 +38,8 @@ with config.stylix.fonts;
       "--nf '${base05}'"
       "--scb '${base01}'"
       "--scf '${base03}'"
-      # Alternating colours, currently set to match primary. Adding a module option to enable or disable alternating in Stylix could be useful
       "--ab '${if alternate then base00 else base01}'"
       "--af '${if alternate then base04 else base05}'"
-
       "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'" 
     ];
   };

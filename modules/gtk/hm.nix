@@ -21,9 +21,8 @@ in {
       "all GTK3, GTK4 and Libadwaita apps" true;
 
     extraCss = mkOption {
-      description = ''
-        Extra code added to <literal>gtk-3.0/gtk.css</literal>
-        and <literal>gtk-4.0/gtk.css</literal>.
+      description = mdDoc ''
+        Extra code added to `gtk-3.0/gtk.css` and `gtk-4.0/gtk.css`.
       '';
       type = types.lines;
       default = "";

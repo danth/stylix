@@ -14,7 +14,15 @@ let
 in {
   options.stylix.targets.kitty = {
     enable = config.lib.stylix.mkEnableTarget "Kitty" true;
-    variant256Colors = lib.mkOption { type = lib.types.bool; default = false; };
+
+    variant256Colors = lib.mkOption {
+      description = lib.mdDoc ''
+        Whether to use the [256-color variant](https://github.com/kdrag0n/base16-kitty#256-color-variants)
+        rather than the default combination of colors.
+      '';
+      type = lib.types.bool;
+      default = false;
+    };
   };
 
   config = lib.mkIf cfg.enable {

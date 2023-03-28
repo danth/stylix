@@ -6,7 +6,7 @@ let
   fromOs = import ./fromos.nix { inherit lib args; };
 in {
   options.stylix.autoEnable = mkOption {
-    description = "Whether to automatically enable styling for installed targets.";
+    description = mdDoc "Whether to automatically enable styling for installed targets.";
     type = types.bool;
     default = fromOs [ "autoEnable" ] true;
   };
@@ -25,14 +25,14 @@ in {
     autoEnable:
 
     mkOption {
-      description = "Whether to style ${humanName}.";
+      description = mdDoc "Whether to style ${humanName}.";
       type = types.bool;
 
       # We can't substitute the target name into this description because some
       # don't make sense: "if the desktop background using Feh is installed"
-      defaultText = literalDocBook ''
-        <literal>true</literal> if <literal>stylix.autoEnable == true</literal>
-        and the target is installed, otherwise <literal>false</literal>.
+      defaultText = literalMD ''
+        `true` if `stylix.autoEnable == true` and the target is installed,
+        otherwise `false`.
       '';
 
       default = config.stylix.autoEnable && autoEnable;

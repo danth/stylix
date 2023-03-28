@@ -52,7 +52,7 @@ in {
     polarity = mkOption {
       type = types.enum [ "either" "light" "dark" ];
       default = fromOs [ "polarity" ] "either";
-      description = ''
+      description = mdDoc ''
         Use this option to force a light or dark theme.
 
         By default we will select whichever is ranked better by the genetic
@@ -63,7 +63,7 @@ in {
 
     image = mkOption {
       type = types.coercedTo types.package toString types.path;
-      description = ''
+      description = mdDoc ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
@@ -91,7 +91,7 @@ in {
     };
 
     base16Scheme = mkOption {
-      description = ''
+      description = mdDoc ''
         A scheme following the base16 standard.
 
         This can be a path to a file, a string of YAML, or an attribute set.
@@ -101,7 +101,7 @@ in {
         if args ? "osConfig" && cfg.image != args.osConfig.stylix.image
           then generatedScheme
           else fromOs [ "base16Scheme" ] generatedScheme;
-      defaultText = literalDocBook ''
+      defaultText = literalMD ''
         The colors used in the theming.
 
         Those are automatically selected from the background image by default,
@@ -110,7 +110,7 @@ in {
     };
     
     override = mkOption {
-      description = ''
+      description = mdDoc ''
         An override that will be applied to stylix.base16Scheme when generating
         lib.stylix.colors.
 
