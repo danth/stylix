@@ -12,34 +12,47 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v19
 
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v12
+        with:
+          name: danth
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: List packages
         id: list-packages
         run: |
-          nix flake show . --json | jq -rc '{checks: (.checks // {}), packages: (.packages // {})} | to_entries | map(.key as $type | .value | to_entries | map(select(.key == "x86_64-linux") | .value | to_entries | map({type: $type, key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
+          nix flake show . --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-latest" else "macos-latest" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
 
     outputs:
       packages: ${{ steps.list-packages.outputs.packages }}
 
   build:
     needs: evaluate
-    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         build: ${{ fromJSON(needs.evaluate.outputs.packages) }}
 
-    name: Build ${{ matrix.build.key }}
+    name: ${{ matrix.build.key }} on ${{ matrix.build.arch }}
+
+    runs-on: ${{ matrix.build.os }}
 
     steps:
       - name: Install Nix
         uses: cachix/install-nix-action@v19
 
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v12
+        with:
+          name: danth
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Build ${{ matrix.build.key }}
-        run: nix -L build .#${{ matrix.build.type }}.x86_64-linux.${{ matrix.build.key }}
+        run: nix -L build .#${{ matrix.build.type }}.${{ matrix.build.arch }}.${{ matrix.build.key }}
