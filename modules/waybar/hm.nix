@@ -43,7 +43,7 @@ with config.stylix.fonts;
           padding: 0 5px;
           border-bottom: 3px solid transparent;
       }
-      #workspaces button.focused, button.active {
+      #workspaces button.focused, #workspaces button.active {
           border-bottom: 3px solid ${base00};
       }
       ''
