@@ -5,20 +5,20 @@ with config.stylix.fonts;
 {
   options.stylix.targets.waybar = {
       enable = config.lib.stylix.mkEnableTarget "Waybar" true;
-      enableLeftAccent = lib.mkOption {
+      enableLeftBackColors = lib.mkOption {
           type = lib.types.bool;
           default = false;
-          description = lib.mkDoc "sets the left waybar accent colors";
+          description = lib.mkDoc "enables background colors on the left side of the bar";
       };
-      enableCenterAccent = lib.mkOption {
+      enableCenterBackColors = lib.mkOption {
           type = lib.types.bool;
           default = false;
-          description = lib.mkDoc "sets the center waybar accent colors";
+          description = lib.mkDoc "enables background colors on the center of the bar";
       };
-      enableRightAccent = lib.mkOption {
+      enableRightBackColors = lib.mkOption {
           type = lib.types.bool;
           default = false;
-          description = lib.mkDoc "sets the right waybar accent colors";
+          description = lib.mkDoc "enables background colors on the right side of the bar";
       };
   };
 
@@ -40,8 +40,8 @@ with config.stylix.fonts;
           color: ${base05};
       }
       ''
-      + (if config.stylix.targets.waybar.enableLeftAccent then builtins.readFile ./left.css else "")
-      + (if config.stylix.targets.waybar.enableCenterAccent then builtins.readFile ./center.css else "")
-      + (if config.stylix.targets.waybar.enableRightAccent then builtins.readFile ./right.css else "");
+      + (if config.stylix.targets.waybar.enableLeftBackColors then builtins.readFile ./left.css else "")
+      + (if config.stylix.targets.waybar.enableCenterBackColors then builtins.readFile ./center.css else "")
+      + (if config.stylix.targets.waybar.enableRightBackColors then builtins.readFile ./right.css else "");
   };
 }
