@@ -1,0 +1,114 @@
+window .modules-left #workspaces button {
+    padding: 0 5px;
+    background-color: @base01;
+    color: @base05;
+}
+
+.modules-left #wireplumber,
+.modules-left #pulseaudio,
+.modules-left #sndio {
+    background-color: @base09;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-left #workspaces button.focused,
+.modules-left #workspaces button.active {
+    background: @base02;
+}
+
+.modules-left #workspaces button.urgent {
+    background-color: @base08;
+}
+
+.modules-left #wireplumber.muted,
+.modules-left #pulseaudio.muted,
+.modules-left #sndio.muted {
+    background-color: @base0C;
+}
+
+.modules-left #upower,
+.modules-left #battery {
+    background-color: @base0D;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-left #upower.charging,
+.modules-left #battery.Charging {
+    background-color: @base0E;
+}
+
+.modules-left #network {
+    background-color: @base0B;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-left #network.disconnected {
+    background-color: @base0C;
+}
+
+.modules-left #user {
+    background-color: @base0F;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-left #clock {
+    background-color: @base03;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #backlight {
+    background-color: @base0E;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #cpu {
+    background-color: @base0B;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #disk {
+    background-color: @base02;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #idle_inhibitor {
+    background-color: @base06;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #temperature {
+    background-color: @base07;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #mpd {
+    background-color: @base02;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #language {
+    background-color: @base02;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-left #keyboard-state {
+    background-color: @base03;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-left #memory {
+    background-color: @base09;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-left #window {
+    background-color: @base0C;
+    color: @base05;
+    padding: 0 5px;
+}

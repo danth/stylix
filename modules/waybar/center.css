@@ -1,0 +1,114 @@
+window .modules-center #workspaces button {
+    padding: 0 5px;
+    background-color: @base01;
+    color: @base05;
+}
+
+.modules-center #wireplumber,
+.modules-center #pulseaudio,
+.modules-center #sndio {
+    background-color: @base09;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-center #workspaces button.focused,
+.modules-center #workspaces button.active {
+    background: @base02;
+}
+
+.modules-center #workspaces button.urgent {
+    background-color: @base08;
+}
+
+.modules-center #wireplumber.muted,
+.modules-center #pulseaudio.muted,
+.modules-center #sndio.muted {
+    background-color: @base0C;
+}
+
+.modules-center #upower,
+.modules-center #battery {
+    background-color: @base0D;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-center #upower.charging,
+.modules-center #battery.Charging {
+    background-color: @base0E;
+}
+
+.modules-center #network {
+    background-color: @base0B;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-center #network.disconnected {
+    background-color: @base0C;
+}
+
+.modules-center #user {
+    background-color: @base0F;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-center #clock {
+    background-color: @base03;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #backlight {
+    background-color: @base0E;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #cpu {
+    background-color: @base0B;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #disk {
+    background-color: @base02;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #idle_inhibitor {
+    background-color: @base06;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #temperature {
+    background-color: @base07;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #mpd {
+    background-color: @base02;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #language {
+    background-color: @base02;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-center #keyboard-state {
+    background-color: @base03;
+    color: @base05;
+    padding: 0 5px;
+}
+
+.modules-center #memory {
+    background-color: @base09;
+    color: @base05;
+    padding: 0 5px;
+}
+.modules-center #window {
+    background-color: @base0C;
+    color: @base05;
+    padding: 0 5px;
+}
