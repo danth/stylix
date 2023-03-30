@@ -1,12 +1,12 @@
 window .modules-left #workspaces button {
     background-color: @base01;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #wireplumber,
 .modules-left #pulseaudio,
 .modules-left #sndio {
     background-color: @base09;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #workspaces button.focused,
 .modules-left #workspaces button.active {
@@ -23,7 +23,7 @@ window .modules-left #workspaces button {
 .modules-left #upower,
 .modules-left #battery {
     background-color: @base0D;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #upower.charging,
 .modules-left #battery.Charging {
@@ -31,56 +31,56 @@ window .modules-left #workspaces button {
 }
 .modules-left #network {
     background-color: @base0B;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #network.disconnected {
     background-color: @base0C;
 }
 .modules-left #user {
     background-color: @base0F;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #clock {
     background-color: @base03;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #backlight {
     background-color: @base0E;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #cpu {
     background-color: @base0B;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #disk {
     background-color: @base02;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #idle_inhibitor {
     background-color: @base06;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #temperature {
     background-color: @base07;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #mpd {
     background-color: @base02;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #language {
     background-color: @base02;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #keyboard-state {
     background-color: @base03;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #memory {
     background-color: @base09;
-    color: @base05;
+    color: @base00;
 }
 .modules-left #window {
     background-color: @base0C;
-    color: @base05;
+    color: @base00;
 }
