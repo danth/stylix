@@ -36,15 +36,15 @@ with config.stylix.fonts;
           font-size: ${builtins.toString sizes.desktop};
       }
       window#waybar {
-          background: ${base00};
-          color: ${base05};
+          background: @base00;
+          color: @base05;
       }
       #workspaces button {
           padding: 0 5px;
           border-bottom: 3px solid transparent;
       }
       #workspaces button.focused, #workspaces button.active {
-          border-bottom: 3px solid ${base00};
+          border-bottom: 3px solid @base00;
       }
       ''
       + (if config.stylix.targets.waybar.enableLeftBackColors then builtins.readFile ./left.css else "")
