@@ -10,7 +10,7 @@ window .modules-left #workspaces button {
 }
 .modules-left #workspaces button.focused,
 .modules-left #workspaces button.active {
-    background: @base02;
+    background: @base03;
 }
 .modules-left #workspaces button.urgent {
     background-color: @base08;
