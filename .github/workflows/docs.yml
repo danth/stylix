@@ -18,12 +18,6 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v19
 
-      - name: Set up Cachix
-        uses: cachix/cachix-action@v12
-        with:
-          name: danth
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
