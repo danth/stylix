@@ -46,7 +46,7 @@ with config.stylix.fonts;
       }
       .modules-left #workspaces button.focused,
       .modules-left #workspaces button.active {
-          border-bottom: 3px solid @base00;
+          border-bottom: 3px solid @base05;
       }
       '')
       + (if config.stylix.targets.waybar.enableCenterBackColors then builtins.readFile ./center.css else ''
@@ -55,7 +55,7 @@ with config.stylix.fonts;
       }
       .modules-center #workspaces button.focused,
       .modules-center #workspaces button.active {
-          border-bottom: 3px solid @base00;
+          border-bottom: 3px solid @base05;
       }
       '')
       + (if config.stylix.targets.waybar.enableRightBackColors then builtins.readFile ./right.css else ''
@@ -64,7 +64,7 @@ with config.stylix.fonts;
       }
       .modules-right #workspaces button.focused,
       .modules-right #workspaces button.active {
-          border-bottom: 3px solid @base00;
+          border-bottom: 3px solid @base05;
       }
       '');
   };
