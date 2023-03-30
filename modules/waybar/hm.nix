@@ -42,7 +42,6 @@ with config.stylix.fonts;
       ''
       + (if config.stylix.targets.waybar.enableLeftBackColors then builtins.readFile ./left.css else ''
       .modules-left #workspaces button {
-          padding: 0 5px;
           border-bottom: 3px solid transparent;
       }
       .modules-left #workspaces button.focused,
@@ -52,7 +51,6 @@ with config.stylix.fonts;
       '')
       + (if config.stylix.targets.waybar.enableCenterBackColors then builtins.readFile ./center.css else ''
       .modules-center #workspaces button {
-          padding: 0 5px;
           border-bottom: 3px solid transparent;
       }
       .modules-center #workspaces button.focused,
@@ -62,7 +60,6 @@ with config.stylix.fonts;
       '')
       + (if config.stylix.targets.waybar.enableRightBackColors then builtins.readFile ./right.css else ''
       .modules-right #workspaces button {
-          padding: 0 5px;
           border-bottom: 3px solid transparent;
       }
       .modules-right #workspaces button.focused,

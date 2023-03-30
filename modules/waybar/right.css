@@ -1,5 +1,4 @@
 window .modules-right #workspaces button {
-    padding: 0 5px;
     background-color: @base01;
     color: @base05;
 }
@@ -8,7 +7,6 @@ window .modules-right #workspaces button {
 .modules-right #sndio {
     background-color: @base09;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #workspaces button.focused,
 .modules-right #workspaces button.active {
@@ -26,7 +24,6 @@ window .modules-right #workspaces button {
 .modules-right #battery {
     background-color: @base0D;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #upower.charging,
 .modules-right #battery.Charging {
@@ -35,7 +32,6 @@ window .modules-right #workspaces button {
 .modules-right #network {
     background-color: @base0B;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #network.disconnected {
     background-color: @base0C;
@@ -43,60 +39,48 @@ window .modules-right #workspaces button {
 .modules-right #user {
     background-color: @base0F;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #clock {
     background-color: @base03;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #backlight {
     background-color: @base0E;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #cpu {
     background-color: @base0B;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #disk {
     background-color: @base02;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #idle_inhibitor {
     background-color: @base06;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #temperature {
     background-color: @base07;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #mpd {
     background-color: @base02;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #language {
     background-color: @base02;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #keyboard-state {
     background-color: @base03;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #memory {
     background-color: @base09;
     color: @base05;
-    padding: 0 5px;
 }
 .modules-right #window {
     background-color: @base0C;
     color: @base05;
-    padding: 0 5px;
 }
