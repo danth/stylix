@@ -39,16 +39,36 @@ with config.stylix.fonts;
           background: @base00;
           color: @base05;
       }
-      #workspaces button {
+      ''
+      + (if config.stylix.targets.waybar.enableLeftBackColors then builtins.readFile ./left.css else ''
+      .modules-left #workspaces button {
           padding: 0 5px;
           border-bottom: 3px solid transparent;
       }
-      #workspaces button.focused, #workspaces button.active {
+      .modules-left #workspaces button.focused,
+      .modules-left #workspaces button.active {
           border-bottom: 3px solid @base00;
       }
-      ''
-      + (if config.stylix.targets.waybar.enableLeftBackColors then builtins.readFile ./left.css else "")
-      + (if config.stylix.targets.waybar.enableCenterBackColors then builtins.readFile ./center.css else "")
-      + (if config.stylix.targets.waybar.enableRightBackColors then builtins.readFile ./right.css else "");
+      '')
+      + (if config.stylix.targets.waybar.enableCenterBackColors then builtins.readFile ./center.css else ''
+      .modules-center #workspaces button {
+          padding: 0 5px;
+          border-bottom: 3px solid transparent;
+      }
+      .modules-center #workspaces button.focused,
+      .modules-center #workspaces button.active {
+          border-bottom: 3px solid @base00;
+      }
+      '')
+      + (if config.stylix.targets.waybar.enableRightBackColors then builtins.readFile ./right.css else ''
+      .modules-right #workspaces button {
+          padding: 0 5px;
+          border-bottom: 3px solid transparent;
+      }
+      .modules-right #workspaces button.focused,
+      .modules-right #workspaces button.active {
+          border-bottom: 3px solid @base00;
+      }
+      '');
   };
 }
