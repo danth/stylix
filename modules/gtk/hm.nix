@@ -11,7 +11,7 @@ let
   };
 
   themeMods = ''
-  @define-color window_bg_color alpha(${config.stylix.colors.withHashtag; base00}, ${with config.stylix.opacity; applications})
+  @define-color window_bg_color alpha(${with config.stylix.colors.withHashtag; base00}, ${with config.stylix.opacity; applications})
   '';
 
   finalCss = pkgs.runCommandLocal "gtk.css" {} ''
