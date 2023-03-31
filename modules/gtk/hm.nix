@@ -10,14 +10,10 @@ let
     extension = "css";
   };
 
-  themeMods = ''
-  @define-color window_bg_color alpha(${with config.lib.stylix.colors.withHashtag; base00}, ${with config.stylix.opacity; applications})
-  '';
 
-  finalCss = pkgs.runCommandLocal "gtk.css" {} ''
-    cat ${baseCss} >>$out
+  finalCss = with config.lib.stylix.colors.withHashtag; pkgs.runCommandLocal "gtk.css" {} ''
     echo ${escapeShellArg cfg.extraCss} >>$out
-    echo ${escapeShellArg themeMods} >>$out
+    cat ${builtins.replaceStrings ["window_bg_color ${base00}" "window_bg_color alpha(${base00}, ${builtins.toString config.stylix.opacity.applications})"] baseCss} >>$out
   '';
 
 in {
