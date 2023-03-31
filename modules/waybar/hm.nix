@@ -37,7 +37,7 @@ with config.stylix.fonts;
     }
 
     window#waybar {
-        background: alpha(@base00, ${with config.stylix.opacity; desktop});
+        background: alpha(@base00, ${with config.stylix.opacity; builtins.toString desktop});
         color: @base05;
     }
     ''
