@@ -25,6 +25,7 @@ in
         };
         size = sizes.terminal;
       };
+      window.opacity = with config.stylix.opacity; terminal;
       import = [ themeFile ];
     };
   };
