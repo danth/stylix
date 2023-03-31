@@ -22,6 +22,6 @@ in {
       with config.stylix.fonts;
       "${monospace.name}:size=${toString sizes.terminal}";
     dpi-aware = "no";
-    alpha = with config.stylix.opacity; terminal;
+    colors.alpha = with config.stylix.opacity; terminal;
   };
 }
