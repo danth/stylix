@@ -35,6 +35,11 @@ with config.stylix.fonts;
         font-family: ${sansSerif.name};
         font-size: ${builtins.toString sizes.desktop};
     }
+
+    window#waybar {
+        background: alpha(@base00, ${with config.stylix.opacity; desktop});
+        color: @base05;
+    }
     ''
     + (builtins.readFile ./base.css)
     + (if config.stylix.targets.waybar.enableLeftBackColors then builtins.readFile ./left.css else ''
