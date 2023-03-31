@@ -13,7 +13,7 @@ let
 
   finalCss = with config.lib.stylix.colors.withHashtag; pkgs.runCommandLocal "gtk.css" {} ''
     echo ${escapeShellArg cfg.extraCss} >>$out
-    cat ${builtins.replaceStrings ["window_bg_color ${base00}" "window_bg_color alpha(${base00}, ${builtins.toString config.stylix.opacity.applications})"] baseCss} >>$out
+    cat ${baseCss} >>$out
   '';
 
 in {
