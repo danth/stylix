@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.stylix.opacity;
-  #fromOs = import ./fromos.nix { inherit lib args; };
+  fromOs = import ./fromos.nix { inherit lib args; };
 in {
     options.stylix.opacity = {
         desktop = mkOption {
