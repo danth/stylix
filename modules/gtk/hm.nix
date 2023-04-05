@@ -18,6 +18,7 @@ let
 
   finalCss = with config.lib.stylix.colors.withHashtag; pkgs.runCommandLocal "gtk.css" {} ''
     echo ${escapeShellArg cfg.extraCss} >>$out
+    echo ${escapeShellArg cssTransparency} >>$out
     cat ${baseCss} >>$out
   '';
 
