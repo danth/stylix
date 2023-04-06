@@ -12,13 +12,10 @@ let
 
   cssTransparency = ''
 
-    .app {
+    * {
         background-color: alpha (@window_bg_color, ${builtins.toString config.stylix.opacity.applications});
     }
 
-    .prefs-btn {
-        opacity: ${builtins.toString config.stylix.opacity.applications};
-    }
   '';
 
   finalCss = with config.lib.stylix.colors.withHashtag; pkgs.runCommandLocal "gtk.css" {} ''
