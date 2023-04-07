@@ -12,7 +12,11 @@ let
 
   cssTransparency = ''
 
-    * {
+    GtkHeaderBar {
+        background-color: alpha (@window_bg_color, ${builtins.toString config.stylix.opacity.applications});
+    }
+
+    GtkStack {
         background-color: alpha (@window_bg_color, ${builtins.toString config.stylix.opacity.applications});
     }
 
