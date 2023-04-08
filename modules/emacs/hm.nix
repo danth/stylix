@@ -3,6 +3,9 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 
+let
+  opacity = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
+in
 {
   options.stylix.targets.emacs.enable =
     config.lib.stylix.mkEnableTarget "Emacs" config.programs.emacs.enable;
