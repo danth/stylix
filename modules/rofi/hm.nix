@@ -13,8 +13,10 @@ let
   };
   rofiOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
   extraCss = ''
-   background rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, ${rofiOpacity} % );
-   lightbg rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );
+  * {
+   background: rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, ${rofiOpacity} % );
+   lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );
+  }
   '';
 in
 {
