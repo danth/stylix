@@ -66,7 +66,7 @@ in
         (set-face-attribute 'default t :font "${monospace.name}" )
         ;; -----------------------------
         ;; set opacity
-        (add-to-list 'default-frame-alist '(alpha . (${emacsOpacity} . ${emacsOpacity})))
+        (add-to-list 'default-frame-alist '(alpha-background . (${emacsOpacity} . ${emacsOpacity})))
         ;; -----------------------------
       '';
     };
