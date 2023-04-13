@@ -7,6 +7,8 @@ let
   finalString = ''
    * { background: rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, ${rofiOpacity} % );
        lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );
+       red: rgba ( {{base08-rgb-r}}, {{base08-rgb-g}}, {{base08-rgb-b}}, ${rofiOpacity} % );
+       blue: rgba ( {{base0D-rgb-r}}, {{base0D-rgb-g}}, {{base0D-rgb-b}}, ${rofiOpacity} % );
    }
    '' + builtins.toString (builtins.readFile ./template.mustache);
   finalFile = config.lib.stylix.colors {
