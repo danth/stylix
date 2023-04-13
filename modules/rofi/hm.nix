@@ -4,13 +4,10 @@ with config.stylix.fonts;
 
 let
   rofiOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
-  finalString = builtins.replaceStrings [
-   "background: rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, 100 % );"
-   "lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, 100 % );"
-  ] [
+  finalString = ''
    "background: rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, ${rofiOpacity} % );"
    "lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );"
-  ] (builtins.readFile ./template.mustache);
+   '' + builtins.toString (builtins.readFile ./template.mustache);
   finalFile = config.lib.stylix.colors {
       template = finalString;
       extension = ".rasi";
