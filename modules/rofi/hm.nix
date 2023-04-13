@@ -19,7 +19,7 @@ let
   ] (builtins.readFile themeFile/default.mustache);
   finalFile = config.lib.stylix.colors {
       templateRepo = builtins.toFile "Final" finalString;
-  }
+  };
 in
 {
   options.stylix.targets.rofi.enable =
