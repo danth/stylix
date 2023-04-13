@@ -4,12 +4,6 @@ with config.stylix.fonts;
 
 let
   rofiOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
-  extraCss = ''
-  * {
-   background: rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, ${rofiOpacity} % );
-   lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );
-  }
-  '';
   themeFile = config.lib.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
       owner = "tinted-theming";
@@ -34,7 +28,7 @@ in
   config = lib.mkIf config.stylix.targets.rofi.enable {
     programs.rofi = {
       font = "${monospace.name} ${toString sizes.popups}";
-      theme = (finalFile);
+      theme = finalFile;
     };
   };
 }
