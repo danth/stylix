@@ -12,7 +12,8 @@ let
    "lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );"
   ] (builtins.readFile ./template.mustache);
   finalFile = config.lib.stylix.colors {
-      templateRepo = builtins.toFile "Final" finalString;
+      template = builtins.toFile "Final" finalString;
+      extension = ".rasi";
   };
 in
 {
