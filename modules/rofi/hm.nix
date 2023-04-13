@@ -16,7 +16,7 @@ let
   ] [
    "background: rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, ${rofiOpacity} % );"
    "lightbg: rgba ( {{base01-rgb-r}}, {{base01-rgb-g}}, {{base01-rgb-b}}, ${rofiOpacity} % );"
-  ] (builtins.readFile themeFile/default.mustache);
+  ] (builtins.readFile themeFile/templates/default.mustache);
   finalFile = config.lib.stylix.colors {
       templateRepo = builtins.toFile "Final" finalString;
   };
