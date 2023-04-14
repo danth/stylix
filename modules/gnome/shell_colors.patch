@@ -1,161 +1,103 @@
+diff --git a/data/gnome-shell-theme.gresource.xml b/data/gnome-shell-theme.gresource.xml
+index 24b3be8db..3ec37da33 100644
+--- a/data/gnome-shell-theme.gresource.xml
++++ b/data/gnome-shell-theme.gresource.xml
+@@ -10,7 +10,6 @@
+     <file>checkbox-off-light.svg</file>
+     <file>checkbox-off.svg</file>
+     <file>gnome-shell.css</file>
+-    <file>gnome-shell-high-contrast.css</file>
+     <file>gnome-shell-start.svg</file>
+     <file>pad-osd.css</file>
+     <file>process-working.svg</file>
+diff --git a/data/theme/gnome-shell-sass/_common.scss b/data/theme/gnome-shell-sass/_common.scss
+index 953bee598..36ce19a4d 100644
+--- a/data/theme/gnome-shell-sass/_common.scss
++++ b/data/theme/gnome-shell-sass/_common.scss
+@@ -166,8 +166,8 @@ stage {
+ 
+ // tooltip
+ %tooltip {
+-  background-color: transparentize(black, 0.1);
+-  color: $light_1;
++  background-color: transparentize($bg_color, 0.1);
++  color: $fg_color;
+ 
+   border-radius: 99px;
+   padding: $base_padding $base_padding * 2;
 diff --git a/data/theme/gnome-shell-sass/_drawing.scss b/data/theme/gnome-shell-sass/_drawing.scss
-index 7c8959e2c..6066def91 100644
+index a69d38175..e79dc0c28 100644
 --- a/data/theme/gnome-shell-sass/_drawing.scss
 +++ b/data/theme/gnome-shell-sass/_drawing.scss
-@@ -248,7 +248,7 @@
-     &:insensitive {
-       @include button(insensitive);
-       background-color: transparent;
--      color: transparentize($selected_fg_color, .5);
-+      color: $insensitive_fg_color;
-     }
-   }
- }
-diff --git a/data/theme/gnome-shell-sass/widgets/_dash.scss b/data/theme/gnome-shell-sass/widgets/_dash.scss
-index 8f5d5f939..f3a7e1029 100644
---- a/data/theme/gnome-shell-sass/widgets/_dash.scss
-+++ b/data/theme/gnome-shell-sass/widgets/_dash.scss
-@@ -1,6 +1,6 @@
- /* Dash */
+@@ -143,7 +143,7 @@
+ //
+ // since buttons are all flat an borderless now the mixin is simpler
  
--$dash_background_color: lighten($system_bg_color, 5%);
-+$dash_background_color: $card_bg_color;
- $dash_placeholder_size: 32px;
- $dash_padding: $base_padding*2; // 12px
- $dash_border_radius: $modal_radius + $dash_padding;
-diff --git a/data/theme/gnome-shell-sass/widgets/_message-list.scss b/data/theme/gnome-shell-sass/widgets/_message-list.scss
-index 5196661c1..663e754bd 100644
---- a/data/theme/gnome-shell-sass/widgets/_message-list.scss
-+++ b/data/theme/gnome-shell-sass/widgets/_message-list.scss
-@@ -128,7 +128,7 @@
-   }
+-@mixin button($t, $tc:$fg_color, $c:$bg_color, $flat: false) {
++@mixin button($t, $tc:$fg_color, $c:$base_color, $flat: false) {
  
-   // body
--  .message-body {color: darken($fg_color, 10%);}
-+  .message-body {color: $fg_color;}
+   $button_bg_color: mix($tc, $c, $button_mix_factor);
+   transition-duration: 100ms;
+diff --git a/data/theme/gnome-shell-sass/widgets/_calendar.scss b/data/theme/gnome-shell-sass/widgets/_calendar.scss
+index 393221627..0bc93111a 100644
+--- a/data/theme/gnome-shell-sass/widgets/_calendar.scss
++++ b/data/theme/gnome-shell-sass/widgets/_calendar.scss
+@@ -27,6 +27,8 @@
+   .date-label {
+     @extend %title_2;
+   }
++
++  color: $fg_color !important;
  }
  
- // URLs in messages
-@@ -143,18 +143,17 @@
-   border-radius: $base_border_radius;
-   color: $fg_color;
- 
--  // colors are lightened since the media controls are in a card
-   &:hover {
--    background-color: lighten($hover_bg_color, 5%);
-+    background-color: $card_hover_bg_color;
-     color: $fg_color;
+ /* Calendar */
+@@ -250,7 +252,7 @@
+   .weather-forecast-time {
+     @extend %numeric;
+     @extend %caption;
+-    color: darken($fg_color,30%);
++    color: transparentize($insensitive_fg_color, 0.5);
+     padding-top: 0.2em;
+     padding-bottom: 0.4em;
    }
- 
-   &:active { 
--    background-color: lighten($active_bg_color, 5%);
-+    background-color: $card_active_bg_color;
-     color: $fg_color;
-   }
- 
--  &:insensitive { color: lighten($insensitive_fg_color, 5%); }
-+  &:insensitive { color: $insensitive_fg_color; }
-   
-   // fix margin for last button
-   &:last-child:ltr { margin-right: $base_margin*3; }
-@@ -171,7 +170,7 @@
-   // when there is no artwork
-   &.fallback {
-     color: darken($fg_color, 17%);
--    background-color: $bg_color;
-+    background-color: $card_bg_color;
-     border: 1px solid transparent;
-     border-radius: $base_border_radius;
-     icon-size: $large_icon_size !important; // 32px
 diff --git a/data/theme/gnome-shell-sass/widgets/_panel.scss b/data/theme/gnome-shell-sass/widgets/_panel.scss
-index fd3e7d2da..051eefbfe 100644
+index 650d4fa83..63ac5df8f 100644
 --- a/data/theme/gnome-shell-sass/widgets/_panel.scss
 +++ b/data/theme/gnome-shell-sass/widgets/_panel.scss
-@@ -1,7 +1,7 @@
+@@ -1,9 +1,9 @@
  /* Top Bar */
  // a.k.a. the panel
  
--$panel_bg_color: #000;
-+$panel_bg_color: $osd_bg_color;
- $panel_fg_color: if($variant == 'light', lighten($bg_color, 10%), darken($fg_color, 5%));
+-$panel_bg_color: if($variant == 'light', $light_3, $dark_5);
+-$panel_fg_color: if($variant == 'light', $fg_color, darken($fg_color, 5%));
+-$panel_border_color: if($variant == 'light', darken($panel_bg_color, 2%), $panel_bg_color);
++$panel_bg_color: $base_color;
++$panel_fg_color: $fg_color;
++$panel_border_color: transparentize($panel_bg_color, 0.9);
+ 
+ $panel_system_fg_color: $system_fg_color; // always light for lockscreen, overview and other transparent panels
  $panel_height: 2.2em;
- $panel_transition_duration: 250ms; // same as the overview transition duration
-diff --git a/data/theme/gnome-shell-sass/widgets/_popovers.scss b/data/theme/gnome-shell-sass/widgets/_popovers.scss
-index 138a4fc0f..ccd020a0f 100644
---- a/data/theme/gnome-shell-sass/widgets/_popovers.scss
-+++ b/data/theme/gnome-shell-sass/widgets/_popovers.scss
-@@ -37,22 +37,22 @@
-   &:rtl {padding-right: $base_padding;}
- 
-   &:focus, &:hover {
--    background-color: $hover_bg_color !important;
--    &:active { background-color: $active_bg_color !important;}
-+    background-color: $card_hover_bg_color !important;
-+    &:active { background-color: $card_active_bg_color !important;}
-   }
- 
--  &:checked {background-color: $checked_bg_color !important;}
-+  &:checked {background-color: $card_checked_bg_color !important;}
- 
-   &:checked {
-     margin-bottom: 0;
--    box-shadow: inset 0 -1px 0 0 darken($checked_bg_color, 5%);
-+    box-shadow: inset 0 -1px 0 0 darken($card_checked_bg_color, 5%);
-     border-radius: $base_border_radius $base_border_radius 0 0;
--    &:focus,&:hover { background-color: lighten($checked_bg_color, 3%) !important;}
--    &:active { background-color: lighten($checked_bg_color, 5%) !important;}
-+    &:focus,&:hover { background-color: lighten($card_checked_bg_color, 3%) !important;}
-+    &:active { background-color: lighten($card_checked_bg_color, 5%) !important;}
-   }
- 
-   &:active {
--    background-color: lighten($active_bg_color, 5%);
-+    background-color: lighten($card_active_bg_color, 5%);
-     color: $active_fg_color;
-   }
- 
-@@ -84,7 +84,7 @@
- 
- // popover submenus
- .popup-sub-menu {
--  background-color: $checked_bg_color;
-+  background-color: $card_checked_bg_color;
-   border-radius: 0 0 $base_border_radius $base_border_radius;
- 
-   .popup-menu-ornament {
-@@ -100,12 +100,12 @@
-       border-radius: 0 0 $base_border_radius $base_border_radius;
-     }
- 
--    &:focus,&:hover { background-color: $hover_bg_color !important;}
-+    &:focus,&:hover { background-color: $card_hover_bg_color !important;}
-     &:checked {
--      background-color: $checked_bg_color !important;
--      &:focus,&:hover { background-color: lighten($checked_bg_color, 8%) !important;}
-+      background-color: $card_checked_bg_color !important;
-+      &:focus,&:hover { background-color: lighten($card_checked_bg_color, 8%) !important;}
-     }
--    &:active { background-color: $active_bg_color !important;}
-+    &:active { background-color: $card_active_bg_color !important;}
-   }
- 
-   .popup-menu-section {
 diff --git a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-index b429a2dc5..858f286a2 100644
+index 82a5e11aa..681d73e33 100644
 --- a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
 +++ b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-@@ -81,9 +81,12 @@
-       icon-size: $base_icon_size*1.5; // a non-standard symbolic size but ok
-       border-radius: 999px;
-       padding: 1.5 * $base_padding;
--      background-color: lighten($bg_color, 10%);
-+      background-color: $card_bg_color;
+@@ -108,15 +108,10 @@
+     padding-bottom: 2 * $base_padding;
  
--      &.active { background-color: $selected_bg_color; }
-+      &.active {
-+        color: $selected_fg_color;
-+        background-color: $selected_bg_color;
-+      }
+     & .icon {
+-      icon-size: $base_icon_size*1.5; // a non-standard symbolic size but ok
+-      border-radius: 999px;
+-      padding: 1.5 * $base_padding;
+-      background-color: transparentize($fg_color, 0.8);
+-
+-      &.active {
+-        background-color: $selected_bg_color;
+-        color: $selected_fg_color;
+-      }
++      icon-size: $base_icon_size * 1.5;
++      padding: $base_padding;
++      background-color: $bg_color;
++      color: $fg_color;
      }
  
      & .title {
