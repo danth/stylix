@@ -11,7 +11,7 @@ in {
     # Taken from here:
     #   https://github.com/doenerkebap/base16-zathura
     programs.zathura.options = {
-      default-bg = "#rgba(${base00-rgb-r}, ${base00-rgb-g}, ${base00-rgb-b}, ${zathOpacity})";
+      default-bg = "#${base00}$${zathOpacity}";
       default-fg = "#${base01}";
       statusbar-fg = "#${base04}";
       statusbar-bg = "#${base02}";
