@@ -11,7 +11,7 @@ in {
   # Referenced https://github.com/stacyharper/base16-mako
   config = lib.mkIf config.stylix.targets.mako.enable {
     services.mako = {
-      backgroundColor = base00;
+      backgroundColor = base00 + makoOpacity;
       borderColor = base0D;
       textColor = base05;
       progressColor = "over ${base02}";
