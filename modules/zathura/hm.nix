@@ -2,7 +2,7 @@
 
 with config.lib.stylix.colors;
 let
-  zathOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
+  zathOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
 in {
   options.stylix.targets.zathura.enable =
     config.lib.stylix.mkEnableTarget "Zathura" true;

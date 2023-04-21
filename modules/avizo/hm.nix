@@ -3,7 +3,7 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
-  aviOpacity = lib.toHexString (builtins.ceil (config.stylix.opacity.popups * 100));
+  aviOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
 in
 {
   options.stylix.targets.avizo.enable =
