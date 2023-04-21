@@ -1,4 +1,4 @@
-{ pkgs,  config }:
+{ pkgs, config, ... }:
 
 let
   colors = config.lib.stylix.colors {

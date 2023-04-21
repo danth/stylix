@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, ... }@args:
 
 with lib;
 
@@ -28,7 +28,7 @@ with lib;
 
     xdg.dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
       source =
-        let theme = import ./theme.nix { inherit pkgs config; };
+        let theme = import ./theme.nix args;
         in "${theme}/share/gnome-shell/gnome-shell.css";
       onChange = ''
         if [ -x "$(command -v gnome-extensions)" ]; then
