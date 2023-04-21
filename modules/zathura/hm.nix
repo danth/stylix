@@ -1,7 +1,8 @@
 { config, lib, ... }:
 
+with config.lib.stylix.colors;
 let
-  colors = config.lib.stylix.colors;
+  zathOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
 in {
   options.stylix.targets.zathura.enable =
     config.lib.stylix.mkEnableTarget "Zathura" true;
@@ -10,26 +11,26 @@ in {
     # Taken from here:
     #   https://github.com/doenerkebap/base16-zathura
     programs.zathura.options = {
-      default-bg = "#${colors.base00}";
-      default-fg = "#${colors.base01}";
-      statusbar-fg = "#${colors.base04}";
-      statusbar-bg = "#${colors.base02}";
-      inputbar-bg = "#${colors.base00}";
-      inputbar-fg = "#${colors.base07}";
-      notification-bg = "#${colors.base00}";
-      notification-fg = "#${colors.base07}";
-      notification-error-bg = "#${colors.base00}";
-      notification-error-fg = "#${colors.base08}";
-      notification-warning-bg = "#${colors.base00}";
-      notification-warning-fg = "#${colors.base08}";
-      highlight-color = "#${colors.base0A}";
-      highlight-active-color = "#${colors.base0D}";
-      completion-bg = "#${colors.base01}";
-      completion-fg = "#${colors.base0D}";
-      completion-highlight-fg = "#${colors.base07}";
-      completion-highlight-bg = "#${colors.base0D}";
-      recolor-lightcolor = "#${colors.base00}";
-      recolor-darkcolor = "#${colors.base06}";
+      default-bg = "#rgba(${base00-rgb-r}, ${base00-rgb-g}, ${base00-rgb-b}, ${zathOpacity})";
+      default-fg = "#${base01}";
+      statusbar-fg = "#${base04}";
+      statusbar-bg = "#${base02}";
+      inputbar-bg = "#${base00}";
+      inputbar-fg = "#${base07}";
+      notification-bg = "#${base00}";
+      notification-fg = "#${base07}";
+      notification-error-bg = "#${base00}";
+      notification-error-fg = "#${base08}";
+      notification-warning-bg = "#${base00}";
+      notification-warning-fg = "#${base08}";
+      highlight-color = "#${base0A}";
+      highlight-active-color = "#${base0D}";
+      completion-bg = "#${base01}";
+      completion-fg = "#${base0D}";
+      completion-highlight-fg = "#${base07}";
+      completion-highlight-bg = "#${base0D}";
+      recolor-lightcolor = "#${base00}";
+      recolor-darkcolor = "#${base06}";
       recolor = false;
       recolor-keephue = false;
     };

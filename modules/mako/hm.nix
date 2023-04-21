@@ -2,7 +2,9 @@
 
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
-{
+let
+  makoOpacity = lib.toHexString (builtins.ceil (config.stylix.opacity.popups * 100));
+in {
   options.stylix.targets.mako.enable =
     config.lib.stylix.mkEnableTarget "Mako" true;
 
@@ -17,12 +19,12 @@ with config.stylix.fonts;
       # I wish the mako hm module was like the dunst one
       extraConfig = ''
         [urgency=low]
-        background-color=${base00}
+        background-color=${base00}${makoOpacity}
         border-color=${base0D}
         text-color=${base0A}
 
         [urgency=high]
-        background-color=${base00}
+        background-color=${base00}${makoOpacity}
         border-color=${base0D}
         text-color=${base08}
       '';
