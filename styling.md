@@ -4,15 +4,14 @@ towards this goal we will define several common types of applications and how to
 
 <details>
 <summary>General Application</summary>
-
 General applications are applications that do not fit into the mold of any of the applications below, this is the scheme you should default to if you are unsure. examples include zathura and sxiv.
 <br>
-- **base00** - TODO
+- **base00** - Default Background
 - **base01** - TODO
 - **base02** - TODO
 - **base03** - TODO
 - **base04** - TODO
-- **base05** - TODO
+- **base05** - Default Text Color
 - **base06** - TODO
 - **base07** - TODO
 - **base08** - TODO
@@ -27,7 +26,6 @@ General applications are applications that do not fit into the mold of any of th
 
 <details>
 <summary>Text Editor/viewer</summary>
-
 text editors and viewers are any application that can view and/or edit program source code. examples include vim, helix, and bat.
 <br>
 - **base00** - Default Background
@@ -50,20 +48,19 @@ text editors and viewers are any application that can view and/or edit program s
 
 <details>
 <summary>Window Manager/Desktop Environment</summary>
-
 Window Managers and Desktop Environments are the system used to manage windows. this does not include applications bundled with Desktop Enviornments like file managers, these would be included under the general application category. examples include sway, gnome, kde, and i3.
 <br>
-- **base00** - TODO
+- **base00** - Default background when wallpaper is not set
 - **base01** - TODO
 - **base02** - TODO
-- **base03** - TODO
+- **base03** - Unfocused window border
 - **base04** - TODO
-- **base05** - TODO
+- **base05** - Default Text Color
 - **base06** - TODO
 - **base07** - TODO
-- **base08** - TODO
+- **base08** - Color of urgent windows
 - **base09** - TODO
-- **base0A** - TODO
+- **base0A** - Focused window border
 - **base0B** - TODO
 - **base0C** - TODO
 - **base0D** - TODO
@@ -73,15 +70,36 @@ Window Managers and Desktop Environments are the system used to manage windows. 
 
 <details>
 <summary>Notifications and Popups</summary>
-
 Notifications and popups are any application overlay intended to be displayed over other applications. examples include the mako notification daemon and avizo.
 <br>
-- **base00** - TODO
+- **base00** - Default Background Color
+- **base01** - TODO
+- **base02** - Progress/Percentage Bar Color
+- **base03** - TODO
+- **base04** - TODO
+- **base05** - Default Text Color
+- **base06** - TODO
+- **base07** - TODO
+- **base08** - High Urgency Text Color
+- **base09** - TODO
+- **base0A** - Low Urgency Text Color
+- **base0B** - TODO
+- **base0C** - TODO
+- **base0D** - Border Color
+- **base0E** - TODO
+- **base0F** - TODO
+</details>
+
+<details>
+<summary>Desktop Helpers</summary>
+Applications that fall under this groups are applications that complement the window management facilities of whatever window manager the user is using. examples of this include waybar and polybar.
+<br>
+- **base00** - Default Background Color
 - **base01** - TODO
 - **base02** - TODO
 - **base03** - TODO
 - **base04** - TODO
-- **base05** - TODO
+- **base05** - Default Text Color
 - **base06** - TODO
 - **base07** - TODO
 - **base08** - TODO
@@ -93,4 +111,3 @@ Notifications and popups are any application overlay intended to be displayed ov
 - **base0E** - TODO
 - **base0F** - TODO
 </details>
-
