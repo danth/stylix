@@ -1,9 +1,12 @@
-{ pkgs, config, ... }:
+{ pkgs, config, ... }@args:
 
 let 
   # We use this imported lib instead of the one from the module arguments
   # to avoid infinite loops if the lib in arguments depends on nixpkgs.overlays
   lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/c9d4f2476046c6a7a2ce3c2118c48455bf0272ea").lib;
+
+  theme = import ./theme.nix args;
+
 in {
   options.stylix.targets.gnome.enable =
     lib.mkOption {
@@ -24,12 +27,10 @@ in {
     nixpkgs.overlays = [(self: super: {
       gnome = super.gnome.overrideScope' (gnomeSelf: gnomeSuper: {
         gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
-          postFixup =
-            let theme = import ./theme.nix { inherit config; pkgs = super; };
-            in ''
-              cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
-                $out/share/gnome-shell/gnome-shell-theme.gresource
-            '';
+          postFixup = (oldAttrs.postFixup or "") + ''
+            cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
+              $out/share/gnome-shell/gnome-shell-theme.gresource
+          '';
           patches = (oldAttrs.patches or []) ++ [
             ./shell_remove_dark_mode.patch
           ];

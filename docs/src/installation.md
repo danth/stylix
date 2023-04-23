@@ -40,7 +40,7 @@ will be unavailable.
 
 ## nix-darwin
 
-You can install Stylix intor your nix-darwin configuration in a similar fashion
+You can install Stylix into your nix-darwin configuration in a similar fashion
 to NixOS via [Flakes][nix-flakes]. 
 
 ```nix

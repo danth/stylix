@@ -10,7 +10,7 @@ To start theming, you need to set a wallpaper image.
 }
 ```
 
-The option accepts derivations as well as paths, so you can fetch a wallpaper
+The option accepts derivations as well as paths, so you can fetch an image
 directly from the internet:
 
 ```nix
@@ -22,20 +22,16 @@ directly from the internet:
 }
 ```
 
-At this point you should be able to rebuild and have a reasonable color scheme
-generated based on the image you chose.
-
 ## Color scheme
 
-### Automatic color schemes
+### Generated schemes
 
-If you only set a wallpaper, Stylix will use a [genetic
-algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm) to create a color
-scheme. The quality of these automatically generated schemes can vary, but more
+If you only set a wallpaper, Stylix will use a
+[genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm)
+to create a color scheme. The quality of these schemes can vary, but more
 colorful images tend to have better results.
 
-You can force the generation of a light or dark theme using the polarity
-option:
+You can force a light or dark scheme using the polarity option:
 
 ```nix
 {
@@ -43,44 +39,22 @@ option:
 }
 ```
 
-After rebuilding, the full theme can be previewed in a web browser by
-opening either of these files:
+The current scheme can be previewed in a web browser at either
+[`/etc/stylix/palette.html`](file:///etc/stylix/palette.html) for NixOS, or
+`~/.config/stylix/palette.html` for Home Manager.
 
-- `/etc/stylix/palette.html` if you are using NixOS, or
-- `$XDG_CONFIG_HOME/stylix/palette.html` (by default
-  `~/.config/stylix/palette.html`) if you are using home-manager
-  without NixOS.
+### Handmade schemes
 
-### Manual color schemes
-
-If you would prefer to choose a color scheme, you can use anything from
-[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes),
-or another file following that format.
-
-To use Tinted Theming, either add their repository to your Flake inputs, or
-fetch it as follows:
-
-```nix
-let
-  base16-schemes = pkgs.fetchFromGitHub {
-    owner = "tinted-theming";
-    repo = "base16-schemes";
-    rev = "...";
-    sha256 = "...";
-  };
-in { }
-```
-
-Then set the following option to the path of the color scheme you would like to
-use:
+If you prefer a handmade color scheme, you can choose anything from
+[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes):
 
 ```nix
 {
-  stylix.base16Scheme = "${base16-schemes}/gruvbox-dark-hard.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
 }
 ```
 
-`base16Scheme` can also accept other formats as supported by
+This option also accepts other files and formats supported by
 [`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
 
 ### Overriding

@@ -6,30 +6,14 @@ let
     extension = ".json";
   };
 
-  themePackageJson = pkgs.writeText "package.json" (builtins.toJSON {
-    name = "stylix";
-    displayName = "Stylix";
-    description = "Theme configured as part of your NixOS configuration.";
+  themeExtension = pkgs.runCommandLocal "stylix-vscode" {
+    vscodeExtUniqueId = "stylix.stylix";
+    vscodeExtPublisher = "stylix";
     version = "0.0.0";
-    publisher = "Stylix";
-    engines.vscode = "^1.43.0";
-    categories = [ "Themes" ];
-    contributes.themes = [{
-      label = "Stylix";
-      uiTheme = "vs";
-      path = "./themes/stylix.json";
-    }];
-    "__metadata" = {
-      id = "6f0404ee-0463-4def-80f1-515adc5389fc";
-      publisherDisplayName = "Stylix";
-      publisherId = "b78a1e2c-a0b3-413a-8196-1b3e8ca3865b";
-    };
-  });
-
-  themeExtension = pkgs.runCommandLocal "stylix-vscode" {} ''
-    mkdir -p $out/share/vscode/extensions/stylix/themes
-    ln -s ${themePackageJson} $out/share/vscode/extensions/stylix/package.json
-    ln -s ${themeFile} $out/share/vscode/extensions/stylix/themes/stylix.json
+  } ''
+    mkdir -p "$out/share/vscode/extensions/$vscodeExtUniqueId/themes"
+    ln -s ${./package.json} "$out/share/vscode/extensions/$vscodeExtUniqueId/package.json"
+    ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
   '';
 
 in {
