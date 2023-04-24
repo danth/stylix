@@ -11,7 +11,7 @@ let
   };
 
 in {
-  options.stylix.targets.helix.enable =
+  options.stylix.targets.tmux.enable =
     config.lib.stylix.mkEnableTarget "Tmux" config.programs.tmux.enable;
 
   config = lib.mkIf config.stylix.targets.tmux.enable {
