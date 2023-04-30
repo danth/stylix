@@ -10,3 +10,7 @@
 
 - [NixOS options](options/nixos.md)
 - [Home Manager options](options/hm.md)
+
+# Contributing
+
+- [Style Guide](styling.md)
