@@ -1,5 +1,7 @@
 {pkgs, config, lib, ... }:
 
+with config.stylix.fonts;
+
 let
   themeFile = config.lib.stylix.colors {
     template = builtins.readFile ./template.mustache;
@@ -23,7 +25,11 @@ in {
   config = lib.mkIf config.stylix.targets.vscode.enable {
     programs.vscode = {
       extensions = [ themeExtension ];
-      userSettings."workbench.colorTheme" = "Stylix";
+      userSettings = {
+        workbench.colorTheme = "Stylix";
+        terminal.integrated.fontFamily = "'${monospace.name}'";
+        editor.fontFamily = "'${monospace.name}'";
+      };
     };
   };
 }

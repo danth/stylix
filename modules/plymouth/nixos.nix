@@ -4,22 +4,30 @@ with lib;
 with config.lib.stylix.colors;
 
 let
+  cfg = config.stylix.targets.plymouth;
+
   theme = pkgs.runCommand "stylix-plymouth" { } ''
     themeDir="$out/share/plymouth/themes/stylix"
     mkdir -p $themeDir
 
-    # Convert in case the input image is not PNG
-    # A transparent border of 42% ensures that the image is not clipped when rotated
     ${pkgs.imagemagick}/bin/convert \
       -background transparent \
       -bordercolor transparent \
-      -border 42% \
-      ${config.stylix.targets.plymouth.logo} \
+      ${
+        # A transparent border ensures the image is not clipped when rotated
+        optionalString cfg.logoAnimated "-border 42%"
+      } \
+      ${cfg.logo} \
       $themeDir/logo.png
 
-    cp ${./theme.script} $themeDir/stylix.script
     ${
-      if config.stylix.targets.plymouth.blackBackground
+      if cfg.logoAnimated
+      then "cp ${./theme.script} $themeDir/stylix.script"
+      else "cp ${./theme_still.script} $themeDir/stylix.script"
+    }
+
+    ${
+      if cfg.blackBackground
       then ''
         substituteInPlace $themeDir/stylix.script \
           --replace "%BASE00%" "0, 0, 0" \
@@ -48,14 +56,9 @@ in {
     enable = config.lib.stylix.mkEnableTarget "the Plymouth boot screen" true;
 
     logo = mkOption {
-      description = mdDoc ''
-        Logo to be used on the boot screen.
-
-        This defaults to the NixOS logo, but you could set it to your OEM logo
-        if it suits the theme.
-      '';
+      description = mdDoc "Logo to be used on the boot screen.";
       type = with types; either path package;
-      defaultText = literalMD "NixOS snowflake";
+      defaultText = literalMD "NixOS logo";
       default = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg";
         # Reduce size
@@ -66,6 +69,17 @@ in {
         '';
         sha256 = "4+MWdqESKo9omd3q0WfRmnrd3Wpe2feiayMnQlA4izU=";
       };
+    };
+
+    logoAnimated = mkOption {
+      description = mdDoc ''
+        Whether to apply a spinning animation to the logo.
+
+        Disabling this allows the use of logos which don't have rotational
+        symmetry.
+      '';
+      type = types.bool;
+      default = true;
     };
 
     blackBackground = mkOption {
@@ -81,7 +95,7 @@ in {
     };
   };
 
-  config.boot.plymouth = mkIf config.stylix.targets.plymouth.enable {
+  config.boot.plymouth = mkIf cfg.enable {
     theme = "stylix";
     themePackages = [ theme ];
   };

@@ -15,7 +15,7 @@ in {
   options.stylix.homeManagerIntegration = {
     followSystem = lib.mkOption {
       description = lib.mdDoc ''
-        When this option is <literal>true</literal>, Home Manager will follow
+        When this option is `true`, Home Manager will follow
         the system theme by default, rather than requiring a theme to be set.
 
         This will only affect Home Manager configurations which are built

@@ -87,7 +87,7 @@ is managed by someone else.
   outputs = { nixpkgs, home-manager, stylix, ... }: {
     homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ stylix.nixosModules.stylix ./home.nix ];
+      modules = [ stylix.homeManagerModules.stylix ./home.nix ];
     };
   };
 }
