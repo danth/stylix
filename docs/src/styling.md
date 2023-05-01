@@ -21,7 +21,7 @@ this is the scheme you should default to if you are unsure. examples include zat
 - base0C - TODO
 - base0D - TODO
 - base0E - TODO
-- base0F - TODO
+- base0F - Error
 
 ## Text Editors/Viewers
 text editors and viewers are any application that can view and/or edit program source code. examples include vim, helix, and bat.
@@ -61,7 +61,7 @@ Window Managers and Desktop Environments are the system used to manage windows. 
 - base0C - TODO
 - base0D - TODO
 - base0E - TODO
-- base0F - TODO
+- base0F - Error
 
 
 ## Notifications and Popups
@@ -82,15 +82,15 @@ Notifications and popups are any application overlay intended to be displayed ov
 - base0C - TODO
 - base0D - Border Color
 - base0E - TODO
-- base0F - TODO
+- base0F - Error
 
 ## Desktop Helpers
 Applications that fall under this groups are applications that complement the window management facilities of whatever window manager the user is using. examples of this include waybar and polybar.
 
 - base00 - Default Background Color
 - base01 - TODO
-- base02 - TODO
-- base03 - selected item in list,
+- base02 - Media Player
+- base03 - Selected Item In List
 - base04 - TODO
 - base05 - Default Text Color
 - base06 - TODO
@@ -100,6 +100,6 @@ Applications that fall under this groups are applications that complement the wi
 - base0A - TODO
 - base0B - TODO
 - base0C - TODO
-- base0D - item off (for example item discharging or sound muted)
-- base0E - item on (for example item charging or with sound on)
-- base0F - TODO
+- base0D - Item Off (for example item discharging or sound muted), Default List Background
+- base0E - Item On (for example item charging or with sound on)
+- base0F - Error
