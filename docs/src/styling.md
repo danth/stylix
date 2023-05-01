@@ -90,7 +90,7 @@ Applications that fall under this groups are applications that complement the wi
 - base00 - Default Background Color
 - base01 - TODO
 - base02 - TODO
-- base03 - TODO
+- base03 - selected item in list,
 - base04 - TODO
 - base05 - Default Text Color
 - base06 - TODO
@@ -100,6 +100,6 @@ Applications that fall under this groups are applications that complement the wi
 - base0A - TODO
 - base0B - TODO
 - base0C - TODO
-- base0D - TODO
-- base0E - TODO
+- base0D - item off (for example item discharging or sound muted)
+- base0E - item on (for example item charging or with sound on)
 - base0F - TODO
