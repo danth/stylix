@@ -11,15 +11,6 @@ let
   };
 
   cssTransparency = ''
-
-    GtkHeaderBar {
-        background-color: alpha (@window_bg_color, ${builtins.toString config.stylix.opacity.applications});
-    }
-
-    GtkStack {
-        background-color: alpha (@window_bg_color, ${builtins.toString config.stylix.opacity.applications});
-    }
-
   '';
 
   finalCss = with config.lib.stylix.colors.withHashtag; pkgs.runCommandLocal "gtk.css" {} ''
