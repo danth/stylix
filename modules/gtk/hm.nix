@@ -10,13 +10,9 @@ let
     extension = "css";
   };
 
-  cssTransparency = ''
-  '';
-
-  finalCss = with config.lib.stylix.colors.withHashtag; pkgs.runCommandLocal "gtk.css" {} ''
+  finalCss = pkgs.runCommandLocal "gtk.css" {} ''
     echo ${escapeShellArg cfg.extraCss} >>$out
     cat ${baseCss} >>$out
-    echo ${escapeShellArg cssTransparency} >>$out
   '';
 
 in {
