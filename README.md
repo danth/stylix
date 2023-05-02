@@ -1,15 +1,38 @@
 # Stylix
 
-Stylix is a NixOS module which applies the same color scheme, font and
-wallpaper to a wide range of applications and desktop environments. It also
-exports utilities for you to use the theme in custom parts of your configuration.
+Stylix is a NixOS module which applies the same colour scheme, font and
+wallpaper to a range of applications and desktop environments.
 
-Please refer to the [Stylix book](https://danth.github.io/stylix/) for more details.
+## What's this?
 
-Stylix is built upon [base16.nix](https://github.com/SenchoPens/base16.nix#readme),
-a library which processes themes created for
-[base16](https://github.com/chriskempson/base16#readme) or
-[Tinted Theming](https://github.com/tinted-theming).
+[base16.nix](https://github.com/SenchoPens/base16.nix#readme) allows you to
+import colours from [base16](https://github.com/chriskempson/base16#readme)
+into Nix code. Stylix takes this a step further:
+
+- Automatically colours and changes the font of apps
+- Sets your wallpaper
+- Exports the colour scheme to be used manually for anything we missed
+- Can also generate themes based on an image
+
+For those not familiar with [NixOS](https://nixos.org/) and
+[Home Manager](https://github.com/nix-community/home-manager#readme):
+
+- NixOS is a Linux distribution
+- Home Manager is a program which runs anywhere
+- Both use the Nix language and package manager
+- Both let you install programs and change settings via code
+
+Stylix supports either NixOS + Home Manager, or Home Manager on its own.
+Certain features are only available with NixOS.
+
+## Resources
+
+Please refer to the [Stylix book](https://danth.github.io/stylix/)
+for instructions and a list of supported apps.
+
+If you have any questions, you are welcome to
+join our [Matrix room](https://matrix.to/#/#stylix:danth.me),
+or ask on [GitHub Discussions](https://github.com/danth/stylix/discussions).
 
 ## Example configurations
 
