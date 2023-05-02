@@ -18,7 +18,7 @@ in {
             default = fromOs [ "opacity" "applications" ] 1.0;
         };
         terminal = mkOption {
-            description = mdDoc "The opacity of the windows of terminals, this works accross all terminals supported by stylix";
+            description = mdDoc "The opacity of the windows of terminals, this works across all terminals supported by stylix";
             type = types.float;
             default = fromOs [ "opacity" "terminal" ] 1.0;
         };
