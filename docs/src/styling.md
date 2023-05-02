@@ -1,6 +1,6 @@
 ### Styling Guidelines
 The base16 style guide is generally targeted toward text editors. stylix, however aims to support a verity of applications, and as such it requires its own guide to keep colors consistent across applications. 
-towards this goal we will define several common types of applications and how to style each of them with the base16 color scheme.
+towards this goal we will define several common types of applications and how to style each of them with the base16 color scheme. keep in mind this is a general theming guide, there will be several applications that does not fit these groups, in which case it is up to the committer to make sure said application fits in stylistically with the rest of the themed applications.
 
 ## General Applications
 General applications are applications that do not fit into the mold of any of the applications below,
@@ -13,7 +13,7 @@ this is the scheme you should default to if you are unsure. examples include zat
 - base04 - TODO
 - base05 - Default Text Color
 - base06 - TODO
-- base07 - TODO
+- base07 - Urgent
 - base08 - TODO
 - base09 - TODO
 - base0A - TODO
@@ -44,7 +44,7 @@ text editors and viewers are any application that can view and/or edit program s
 - base0F - Deprecated, Opening/Closing Embedded Language Tags, e.g. `<?php ?>`
 
 ## Window Managers/Desktop Enviornments
-Window Managers and Desktop Environments are the system used to manage windows. this does not include applications bundled with Desktop Enviornments like file managers, these would be included under the general application category. examples include sway, gnome, kde, and i3.
+Window Managers and Desktop Environments are the system used to manage windows. this does not include applications bundled with Desktop Environment's like file managers, these would be included under the general application category. examples include sway, gnome, kde, and i3.
 
 - base00 - Default background when wallpaper is not set
 - base01 - TODO
@@ -53,8 +53,8 @@ Window Managers and Desktop Environments are the system used to manage windows. 
 - base04 - TODO
 - base05 - Default Text Color
 - base06 - TODO
-- base07 - TODO
-- base08 - Color of urgent windows
+- base07 - Color of urgent windows
+- base08 - TODO
 - base09 - TODO
 - base0A - Focused window border
 - base0B - TODO
@@ -89,15 +89,15 @@ Applications that fall under this groups are applications that complement the wi
 
 - base00 - Default Background Color
 - base01 - TODO
-- base02 - Media Player
+- base02 - Alternate Item Off
 - base03 - Selected Item In List
-- base04 - TODO
+- base04 - Misc Item (Clocks, Usernames)
 - base05 - Default Text Color
 - base06 - TODO
-- base07 - TODO
+- base07 - Urgent (Battery level critical, high temperatures)
 - base08 - TODO
-- base09 - TODO
-- base0A - TODO
+- base09 - Alternate Item On
+- base0A - Media Player
 - base0B - TODO
 - base0C - TODO
 - base0D - Item Off (for example item discharging or sound muted), Default List Background
