@@ -7,10 +7,10 @@ General applications are applications that do not fit into the mold of any of th
 this is the scheme you should default to if you are unsure. examples include zathura and sxiv.
 
 - base00 - Default Background
-- base01 - TODO
+- base01 - Alternate Background
 - base02 - TODO
 - base03 - TODO
-- base04 - TODO
+- base04 - Alternate Text Color
 - base05 - Default Text Color
 - base06 - TODO
 - base07 - Urgent
@@ -47,7 +47,7 @@ text editors and viewers are any application that can view and/or edit program s
 Window Managers and Desktop Environments are the system used to manage windows. this does not include applications bundled with Desktop Environment's like file managers, these would be included under the general application category. examples include sway, gnome, kde, and i3.
 
 - base00 - Default background when wallpaper is not set
-- base01 - TODO
+- base01 - Alternate Background
 - base02 - TODO
 - base03 - Unfocused window border
 - base04 - TODO
@@ -68,10 +68,10 @@ Window Managers and Desktop Environments are the system used to manage windows. 
 Notifications and popups are any application overlay intended to be displayed over other applications. examples include the mako notification daemon and avizo.
 
 - base00 - Default Background Color
-- base01 - TODO
+- base01 - Alternate Background
 - base02 - Progress/Percentage Bar Color
 - base03 - TODO
-- base04 - TODO
+- base04 - Alternate Text Color
 - base05 - Default Text Color
 - base06 - TODO
 - base07 - TODO
@@ -88,18 +88,18 @@ Notifications and popups are any application overlay intended to be displayed ov
 Applications that fall under this groups are applications that complement the window management facilities of whatever window manager the user is using. examples of this include waybar and polybar.
 
 - base00 - Default Background Color
-- base01 - TODO
-- base02 - Alternate Item Off
+- base01 - Alternate Background
+- base02 - Alternate Item Off (for example internt disconected or media player off)
 - base03 - Selected Item In List
-- base04 - Misc Item (Clocks, Usernames)
+- base04 - Alternate Text Color
 - base05 - Default Text Color
-- base06 - TODO
-- base07 - Urgent (Battery level critical, high temperatures)
-- base08 - TODO
-- base09 - Alternate Item On
-- base0A - Media Player
-- base0B - TODO
-- base0C - TODO
+- base06 - Static Item
+- base07 - Urgent
+- base08 - Static Item
+- base09 - Alternate Item On (for example internt disconected or media player off)
+- base0A - Static Item
+- base0B - Static Item
+- base0C - Static Item
 - base0D - Item Off (for example item discharging or sound muted), Default List Background
 - base0E - Item On (for example item charging or with sound on)
 - base0F - Error
