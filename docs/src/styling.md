@@ -9,7 +9,7 @@ this is the scheme you should default to if you are unsure. examples include zat
 - base00 - Default Background
 - base01 - Alternate Background
 - base02 - TODO
-- base03 - TODO
+- base03 - Selection Color
 - base04 - Alternate Text Color
 - base05 - Default Text Color
 - base06 - TODO
@@ -48,9 +48,9 @@ Window Managers and Desktop Environments are the system used to manage windows. 
 
 - base00 - Default background when wallpaper is not set
 - base01 - Alternate Background
-- base02 - TODO
+- base02 - Preselection background
 - base03 - Unfocused window border
-- base04 - TODO
+- base04 - Alternate Text Color
 - base05 - Default Text Color
 - base06 - TODO
 - base07 - Color of urgent windows
@@ -73,7 +73,7 @@ Notifications and popups are any application overlay intended to be displayed ov
 - base03 - TODO
 - base04 - Alternate Text Color
 - base05 - Default Text Color
-- base06 - TODO
+- base06 - low Urgency Background Color
 - base07 - TODO
 - base08 - High Urgency Text Color
 - base09 - TODO
@@ -82,7 +82,7 @@ Notifications and popups are any application overlay intended to be displayed ov
 - base0C - TODO
 - base0D - Border Color
 - base0E - TODO
-- base0F - Error
+- base0F - High Urgency Background Color
 
 ## Desktop Helpers
 Applications that fall under this groups are applications that complement the window management facilities of whatever window manager the user is using. examples of this include waybar and polybar.
@@ -103,3 +103,26 @@ Applications that fall under this groups are applications that complement the wi
 - base0D - Item Off (for example item discharging or sound muted), Default List Background
 - base0E - Item On (for example item charging or with sound on)
 - base0F - Error
+
+## colorable images
+for coloring images like wallpapers and icons
+
+- base00 - TODO
+- base01 - TODO
+- base02 - TODO
+- base03 - TODO
+- base04 - TODO
+- base05 - TODO
+- base06 - TODO
+- base07 - TODO
+- base08 - Red
+- base09 - orange
+- base0A - yellow
+- base0B - green
+- base0C - cyan
+- base0D - blue
+- base0E - purple
+- base0F - brown
+
+## Credits
+![Base16 Style Guide]("https://github.com/chriskempson/base16/blob/main/styling.md")
