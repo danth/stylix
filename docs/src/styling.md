@@ -107,12 +107,12 @@ Applications that fall under this groups are applications that complement the wi
 ## colorable images
 for coloring images like wallpapers and icons
 
-- base00 - TODO
-- base01 - TODO
+- base00 - Background Color
+- base01 - Alternate Background Color
 - base02 - TODO
 - base03 - TODO
-- base04 - TODO
-- base05 - TODO
+- base04 - Alternate Text Color
+- base05 - Text color
 - base06 - TODO
 - base07 - TODO
 - base08 - Red
