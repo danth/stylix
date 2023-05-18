@@ -13,4 +13,4 @@
 
 # Contributing
 
-- [Style Guide](styling.md)
+- [Style guide](styling.md)

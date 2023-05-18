@@ -1,10 +1,22 @@
-### Styling Guidelines
-The base16 style guide is generally targeted toward text editors. stylix, however aims to support a verity of applications, and as such it requires its own guide to keep colors consistent across applications. 
-towards this goal we will define several common types of applications and how to style each of them with the base16 color scheme. keep in mind this is a general theming guide, there will be several applications that does not fit these groups, in which case it is up to the committer to make sure said application fits in stylistically with the rest of the themed applications.
+# Style guide
+
+The [base16 style guide](https://github.com/chriskempson/base16/blob/main/styling.md)
+is generally targeted towards text editors. Stylix aims to support a variety of
+other applications, and as such it requires its own guide to keep colours
+consistent. Towards this goal we will define several common types of
+applications and how to style each of them using the available colours.
+
+Please keep in mind that this is a general guide; there will be several
+applications that don't fit into any of the groups below. In this case it is up
+to the committer to make sure said application fits in stylistically with the
+rest of the themed applications.
 
 ## General Applications
-General applications are applications that do not fit into the mold of any of the applications below,
-this is the scheme you should default to if you are unsure. examples include zathura and sxiv.
+
+General applications are applications that do not fit into any of the more
+specific categories below. This is the scheme you should default to if you are
+unsure. Examples include zathura and sxiv.
+
 - Default Background: base00 
 - Alternate Background: base01
 - Selection Color: base03
@@ -13,22 +25,30 @@ this is the scheme you should default to if you are unsure. examples include zat
 - Urgent: base07
 - Error: base0F
 
-## Window Managers/Desktop Enviornments
-Window Managers and Desktop Environments are the system used to manage windows. this does not include applications bundled with Desktop Environment's like file managers, these would be included under the general application category. examples include sway, gnome, kde, and i3.
+## Window Managers
 
-- Default background: base00
-- Alternate Background: base01
-- Preselection background: base02
+Window Managers arrange windows and provide decorations like title bars and
+borders. Examples include Sway and i3.
+
+This does not include applications bundled with the desktop environment such as
+file managers, which would fall into the general category.
+
+It also does not include desktop helpers such as taskbars and menus. However,
+these are often configured together with the window manager, especially in the
+case of larger desktop environments such as KDE and GNOME.
+
 - Unfocused window border: base03
-- Alternate Text Color: base04
-- Default Text Color: base05
-- Color of urgent windows: base07
 - Focused window border: base0A
+- Urgent window border: base07
+- Window title text: base05
 - Error: base0F
 
 
 ## Notifications and Popups
-Notifications and popups are any application overlay intended to be displayed over other applications. examples include the mako notification daemon and avizo.
+
+Notifications and popups are any application overlay intended to be displayed
+over other applications. Examples include the mako notification daemon and
+avizo.
 
 - Default Background Color: base00
 - Alternate Background: base01
@@ -42,7 +62,11 @@ Notifications and popups are any application overlay intended to be displayed ov
 - High Urgency Background Color: base0F
 
 ## Desktop Helpers
-Applications that fall under this groups are applications that complement the window management facilities of whatever window manager the user is using. examples of this include waybar and polybar.
+
+Applications that fall under this group are applications that complement the
+window management facilities of whatever window manager the user is using.
+Examples of this include waybar and polybar, as well as the similar programs
+that are part of KDE and GNOME.
 
 - Default Background Color: base00
 - Alternate Background: base01
@@ -56,24 +80,26 @@ Applications that fall under this groups are applications that complement the wi
 - Item On: base0E
 - Error: base0F
 
-## colorable images
-for coloring images like wallpapers and icons
+## Images
 
-- Background Color: base00
-- Alternate Background Color: base01
-- Alternate Text Color: base04
+For creating modified versions of logos, icons, etc.
+
+- Background: base00
 - Text color: base05
+- Alternate text color: base04
 - Red: base08
-- orange: base09
-- yellow: base0A
-- green: base0B
-- cyan: base0C
-- blue: base0D
-- purple: base0E
-- brown: base0F
-
-
+- Orange: base09
+- Yellow: base0A
+- Green: base0B
+- Cyan: base0C
+- Blue: base0D
+- Purple: base0E
+- Brown: base0F
 
 ## Text Editors/Viewers
-text editors and viewers are any application that can view and/or edit program source code. examples include vim, helix, and bat.
-[for these applications see the base16 style guide](https://github.com/chriskempson/base16/blob/main/styling.md)
+
+Text editors are any application that can view or edit source code.
+Examples include vim, helix, and bat.
+
+For these please refer to the official
+[base16 style guide](https://github.com/chriskempson/base16/blob/main/styling.md).
