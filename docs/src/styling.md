@@ -11,6 +11,11 @@ applications that don't fit into any of the groups below. In this case it is up
 to the committer to make sure said application fits in stylistically with the
 rest of the themed applications.
 
+### Terms
+- Alternate: To use when to items need to contrast despite being the same type of item.
+- Item On/Off: This is for on off indicators in applications like a battery charging indicator.
+- List: A list of items to select between such as workspaces in a desktop bar.
+
 ## General Applications
 
 General applications are applications that do not fit into any of the more
@@ -19,9 +24,9 @@ unsure. Examples include zathura and sxiv.
 
 - Default Background: base00 
 - Alternate Background: base01
-- Selection Color: base03
-- Alternate Text Color: base04
 - Default Text Color: base05
+- Alternate Text Color: base04
+- Selection Color: base03
 - Urgent: base07
 - Error: base0F
 
@@ -69,22 +74,24 @@ Examples of this include waybar and polybar, as well as the similar programs
 that are part of KDE and GNOME.
 
 - Default Background Color: base00
-- Alternate Background: base01
-- Alternate Item Off: base02
-- Selected Item In List: base03
-- Alternate Text Color: base04
+- Alternate Background Color: base01
 - Default Text Color: base05
-- Urgent: base07
-- Alternate Item On: base09
-- Item Off, Default List Background: base0D
+- Alternate Text Color: base04
 - Item On: base0E
+- Item Off: base0D
+- Alternate Item On: base09
+- Alternate Item Off: base02
+- List Background: base0D
+- Selected Item In List Background: base03
+- Urgent: base07
 - Error: base0F
 
 ## Images
 
 For creating modified versions of logos, icons, etc.
 
-- Background: base00
+- Background Color: base00
+- Alternate Background Color: base01
 - Text color: base05
 - Alternate text color: base04
 - Red: base08
