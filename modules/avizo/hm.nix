@@ -1,4 +1,4 @@
-{pkgs, config, lib, ... }:
+{pkgs, config, lib, options, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
@@ -10,7 +10,7 @@ in
     config.lib.stylix.mkEnableTarget "Avizo" true;
 
   # Referenced https://github.com/stacyharper/base16-mako
-  config = lib.mkIf config.stylix.targets.avizo.enable {
+  config = lib.optionalAttrs (options.services ? avizo) (lib.mkIf config.stylix.targets.avizo.enable {
     services.avizo = {
         settings = {
             default = {
@@ -21,5 +21,5 @@ in
             };
         };
     }; 
-  };
+  });
 }

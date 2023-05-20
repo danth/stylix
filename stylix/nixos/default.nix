@@ -41,7 +41,7 @@ in {
     };
   };
 
-  config = lib.mkIf hm.autoImport {
+  config = lib.optionalAttrs (options ? home-manager) (lib.mkIf hm.autoImport {
     home-manager.sharedModules = [ homeManagerModule ];
-  };
+  });
 }
