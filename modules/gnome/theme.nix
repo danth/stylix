@@ -13,8 +13,8 @@ in pkgs.stdenv.mkDerivation {
     domain = "gitlab.gnome.org";
     owner = "GNOME";
     repo = "gnome-shell";
-    rev = "beb77f58243265a6cc62b720a5b0ecd66efd50a1";
-    sha256 = "7BKvv4j4YbfjXwCUeT7lZmXNljFhwoXO/Z9pqB091w0=";
+    rev = "44.1";
+    sha256 = "h9TBLGakXffEvuP+0dVHmG7+TV5J6CdM/3KHFNUuc70=";
   };
 
   patches = [ ./shell_colors.patch ];
