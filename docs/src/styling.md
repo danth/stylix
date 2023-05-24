@@ -46,6 +46,8 @@ case of larger desktop environments such as KDE and GNOME.
 - Focused window border: base0A
 - Urgent window border: base07
 - Window title text: base05
+- Focused Window in Group: base6
+- Unfocused Window in Group: base0D
 - Error: base0F
 
 
