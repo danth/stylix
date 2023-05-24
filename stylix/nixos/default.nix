@@ -8,6 +8,7 @@ in {
   imports = [
     ../pixel.nix
     ../target.nix
+    ../opacity.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
   ] ++ autoload;
@@ -40,7 +41,7 @@ in {
     };
   };
 
-  config = lib.mkIf hm.autoImport {
+  config = lib.optionalAttrs (options ? home-manager) (lib.mkIf hm.autoImport {
     home-manager.sharedModules = [ homeManagerModule ];
-  };
+  });
 }
