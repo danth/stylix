@@ -26,7 +26,7 @@ unsure. Examples include zathura and sxiv.
 - Alternate Background: base01
 - Default Text Color: base05
 - Alternate Text Color: base04
-- Selection Color: base03
+- Background of Sidebar Selection Color: base03
 - Urgent: base07
 - Error: base0F
 
@@ -75,10 +75,15 @@ window management facilities of whatever window manager the user is using.
 Examples of this include waybar and polybar, as well as the similar programs
 that are part of KDE and GNOME.
 
+### Light Text Color Widgets
 - Default Background Color: base00
 - Alternate Background Color: base01
 - Default Text Color: base05
 - Alternate Text Color: base04
+
+### dark Text Color Widgets
+- Default Text Color: base00
+- Alternate Text Color: base01
 - Item On: base0E
 - Item Off: base0D
 - Alternate Item On: base09
