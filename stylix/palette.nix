@@ -10,7 +10,7 @@ let
 
   paletteJSON = let
     generatedJSON = pkgs.runCommand "palette.json" { } ''
-      ${palette-generator}/bin/palette-generator ${cfg.polarity} ${cfg.image} $out
+      ${palette-generator}/bin/palette-generator ${cfg.polarity} ${cfg.wallpaper.image} $out
     '';
     palette = importJSON generatedJSON;
     scheme = base16.mkSchemeAttrs palette;
@@ -72,6 +72,16 @@ in {
       default = fromOs [ "image" ] null;
     };
 
+    wallpaper = mkOption {
+        type = with types; with config.lib.stylix; types.oneOf [static animation video slideshow];
+        description = ''
+        Wallpaper image.
+
+        This is set as the background of your desktop environment, if possible,
+        and used to generate a colour scheme if you don't set one manually.
+        '';
+    };
+
     generated = {
       json = mkOption {
         type = types.path;
@@ -98,7 +108,7 @@ in {
       '';
       type = with types; oneOf [ path lines attrs ];
       default =
-        if cfg.image != fromOs [ "image" ] null
+        if args ? "osConfig" && cfg.wallpaper.image != args.osConfig.stylix.image
           then generatedScheme
           else fromOs [ "base16Scheme" ] generatedScheme;
       defaultText = literalMD ''
