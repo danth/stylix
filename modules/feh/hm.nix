@@ -12,5 +12,5 @@
 
   config.xsession.initExtra =
     lib.mkIf config.stylix.targets.feh.enable
-    "${pkgs.feh}/bin/feh --no-fehbg --bg-scale ${config.stylix.image}";
+    "${pkgs.feh}/bin/feh --no-fehbg --bg-scale ${config.stylix.wallpaper.image}";
 }

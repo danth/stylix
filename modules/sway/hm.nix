@@ -54,7 +54,7 @@ in {
           };
         };
 
-        output."*".bg = "${config.stylix.image} fill";
+        output."*".bg = "${config.stylix.wallpaper.image} fill";
       };
     })
 
