@@ -48,12 +48,12 @@ in
 
 
   # constructors for the wallpaper types
-  config.lib.stylix.mkStatic = { image, polarity ? "dark", base16Scheme ? "" }: {
+  config.lib.stylix.mkStatic = { image, polarity ? "dark", base16Scheme ? null}: {
     type = "static";
     image = image;
     generatedColorScheme = {
-      json = paletteJSON polarity image;
-      palette = generateScheme polarity image;
+      json = if (base16Scheme == null) then (paletteJSON polarity image) else base16Scheme;
+      palette = if (base16Scheme == null) then (generateScheme polarity image) else (importJSON base16Scheme);
     };
   };
 
