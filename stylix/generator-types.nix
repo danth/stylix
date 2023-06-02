@@ -1,4 +1,5 @@
-{ config, lib, ... }@args:
+{ palette-generator, base16 }:
+{ config, lib, pkgs, ... }@args:
 with lib;
 
 let
@@ -6,7 +7,7 @@ let
 
   cfg = config.stylix;
 
-  paletteJSON = { polarity, image }:
+  paletteJSON = polarity: image:
     let
       generatedJSON = pkgs.runCommand "palette.json" { } ''
         ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
@@ -19,6 +20,7 @@ let
       };
     in
     json;
+    generateScheme = polarity: image: importJSON (paletteJSON polarity image);
 in
 {
 
@@ -50,8 +52,8 @@ in
     type = "static";
     image = image;
     generatedColorScheme = {
-      json = if (base16Scheme != "") then (paletteJSON polarity image) else (base16Scheme);
-      palette = if (base16Scheme != "") then (importJSON (paletteJSON polarity image)) else (importJSON base16Scheme);
+      json = paletteJSON polarity image;
+      palette = generateScheme polarity image;
     };
   };
 
@@ -64,10 +66,6 @@ in
     {
       type = "animation";
       image = image;
-      generatedColorScheme = {
-        json = if (base16Scheme != "") then (paletteJSON polarity image) else (null);
-        palette = if (base16Scheme != "") then (importJSON (paletteJSON polarity image)) else (null);
-      };
       animation = animation;
     };
 

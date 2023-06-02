@@ -8,7 +8,6 @@ in {
     ../pixel.nix
     ../target.nix
     ../opacity.nix
-    ../generator-types.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
   ] ++ autoload;

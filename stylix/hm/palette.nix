@@ -2,7 +2,10 @@ args:
 { config, ... }:
 
 {
-  imports = [ (import ../palette.nix args) ];
+  imports = [
+      (import ../palette.nix args)
+      (import ../generator-types.nix args)
+  ];
 
   config = {
     xdg.configFile = {
