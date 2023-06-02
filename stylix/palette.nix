@@ -135,7 +135,7 @@ in {
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix#mktheme
-    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
-    lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
+    lib.stylix.colors = (base16.mkSchemeAttrs cfg.wallpaper.generatedColorScheme.palette).override override;
+    lib.stylix.scheme = base16.mkSchemeAttrs cfg.wallpaper.generatedColorScheme.palette;
   };
 }
