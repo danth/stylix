@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 
@@ -22,6 +22,14 @@ in {
       wayland.windowManager.sway.config = {
         inherit fonts;
 
+          startup = if (config.lib.stylix.isStatic config.stylix.wallpaper) then [
+              { command = "${pkgs.wbg}/bin/wbg ${config.stylix.wallpaper.image}"; }
+          ] else if (config.lib.stylix.isAnimation config.stylix.wallpaper) then [
+              { command = "${pkgs.swww}/bin/swww-daemon"; }
+              { command = "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"; }
+          ] else [
+              { command = "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"; }
+          ];
         colors = let
           background = base00;
           indicator = base0B;
@@ -53,8 +61,6 @@ in {
             childBorder = unfocused;
           };
         };
-
-        output."*".bg = "${config.stylix.wallpaper.image} fill";
       };
     })
 

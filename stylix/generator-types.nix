@@ -46,6 +46,13 @@ in
     description = "slideshow Type";
   };
 
+  # boolean to check if object is type
+
+  config.lib.stylix.isStatic = object: if (object.type == "static") then true else false;
+  config.lib.stylix.isAnimation = object: if (object.type == "animation") then true else false;
+  config.lib.stylix.isVideo = object: if (object.type == "video") then true else false;
+  config.lib.stylix.isSlideshow = object: if (object.type == "slideshow") then true else false;
+
 
   # constructors for the wallpaper types
   config.lib.stylix.mkStatic = { image, polarity ? "dark", base16Scheme ? null}: {
@@ -57,38 +64,50 @@ in
     };
   };
 
-  config.lib.stylix.mkAnimation = { animation, polarity ? "dark", base16Scheme ? "" }:
+  config.lib.stylix.mkAnimation = { animation, polarity ? "dark", base16Scheme ? null}:
     let
       image = pkgs.runCommand "image" { } ''
-        ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 output_image.jpg
+        ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
       '';
     in
     {
       type = "animation";
       image = image;
+      generatedColorScheme = {
+        json = if (base16Scheme == null) then (paletteJSON polarity image) else base16Scheme;
+        palette = if (base16Scheme == null) then (generateScheme polarity image) else (importJSON base16Scheme);
+      };
       animation = animation;
     };
 
-  config.lib.stylix.mkVideo = { video, polarity ? "dark", base16Scheme ? "" }:
+  config.lib.stylix.mkVideo = { video, polarity ? "dark", base16Scheme ? null }:
     let
-      image = pkgs.runCommand "image" { } ''
-        ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 output_image.jpg
+      image = pkgs.runCommand "image.png" { } ''
+        ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
       '';
     in
     {
       type = "video";
       image = image;
+      generatedColorScheme = {
+        json = if (base16Scheme == null) then (paletteJSON polarity image) else base16Scheme;
+        palette = if (base16Scheme == null) then (generateScheme polarity image) else (importJSON base16Scheme);
+      };
       video = video;
     };
 
-  config.lib.stylix.mkSlideshow = { listOfImages, polarity ? "dark", base16Scheme ? "", delay ? 5 }:
+  config.lib.stylix.mkSlideshow = { imageDir, polarity ? "dark", base16Scheme ? null, delay ? 5 }:
     let
-      image = builtins.elemAt listOfImages 0;
+      image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
     in
     {
       type = "slideshow";
       image = image;
-      files = listOfImages;
+      generatedColorScheme = {
+        json = if (base16Scheme == null) then (paletteJSON polarity image) else base16Scheme;
+        palette = if (base16Scheme == null) then (generateScheme polarity image) else (importJSON base16Scheme);
+      };
+      imageDir = imageDir;
       delay = delay;
     };
 }
