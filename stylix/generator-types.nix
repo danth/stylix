@@ -96,7 +96,7 @@ in
       video = video;
     };
 
-  config.lib.stylix.mkSlideshow = { imageDir, polarity ? "dark", base16Scheme ? null, delay ? 5 }:
+  config.lib.stylix.mkSlideshow = { imageDir, polarity ? "dark", base16Scheme ? null, delay ? 300 }:
     let
       image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
     in
