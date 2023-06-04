@@ -30,7 +30,6 @@ in
     description = "Static Image Type";
   };
 
-
   config.lib.stylix.animation = mkOptionType {
     name = "animation";
     description = "Animation Type";

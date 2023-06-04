@@ -24,6 +24,7 @@ in {
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base0D" ] "Using stylix.palette to override scheme is not supported anymore")
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base0E" ] "Using stylix.palette to override scheme is not supported anymore")
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base0F" ] "Using stylix.palette to override scheme is not supported anymore")
+    (lib.mkRemovedOptionModule [ "stylix" "image" ] "Using stylix.image to override scheme is not supported anymore, use the constructor based approach described on the website instead")
   ];
 
   options.stylix = {
@@ -39,20 +40,12 @@ in {
       '';
     };
 
-    #image = mkOption {
-    #  type = types.coercedTo types.package toString types.path;
-    #  description = mdDoc ''
-    #    Wallpaper image.
-
-    #    This is set as the background of your desktop environment, if possible,
-    #    and used to generate a colour scheme if you don't set one manually.
-    #  '';
-    #  default = fromOs [ "image" ] null;
-    #};
-
     wallpaper = mkOption {
-        type = with types; with config.lib.stylix; types.oneOf [static animation video slideshow];
-        description = ''
+        type =
+        let
+          customTypes = config.lib.stylix;
+        in with types; oneOf [customTypes.static customTypes.animation customTypes.video customTypes.slideshow];
+        description = mdDoc ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
