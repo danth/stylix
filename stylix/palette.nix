@@ -42,9 +42,7 @@ in {
 
     wallpaper = mkOption {
         type =
-        let
-          customTypes = config.lib.stylix;
-        in with types; oneOf [customTypes.static customTypes.animation customTypes.video customTypes.slideshow];
+        with types; with config.lib.stylix; oneOf [static animation video slideshow];
         description = mdDoc ''
         Wallpaper image.
 
