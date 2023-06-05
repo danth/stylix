@@ -3,7 +3,7 @@ with lib;
 {
 
 
-  lib = {
+  lib.stylix = {
     static = mkOptionType {
       name = "static";
       description = "Static Image Type";
@@ -27,8 +27,8 @@ with lib;
 
   # boolean to check if object is type
 
-  lib.isStatic = object: if (object.type == "static") then true else false;
-  lib.isAnimation = object: if (object.type == "animation") then true else false;
-  lib.isVideo = object: if (object.type == "video") then true else false;
-  lib.isSlideshow = object: if (object.type == "slideshow") then true else false;
+  lib.stylix.isStatic = object: if (object.type == "static") then true else false;
+  lib.stylix.isAnimation = object: if (object.type == "animation") then true else false;
+  lib.stylix.isVideo = object: if (object.type == "video") then true else false;
+  lib.stylix.isSlideshow = object: if (object.type == "slideshow") then true else false;
 }
