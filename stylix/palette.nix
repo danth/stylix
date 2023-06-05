@@ -31,9 +31,9 @@ in {
         type = let
           tps = config.lib.stylix;
         in types.oneOf [tps.static tps.animation tps.video tps.slideshow];
-        default = if (stylix.image == null) then null else lib.warn "the image and polarity options are deprecieated" config.lib.stylix.mkStatic {
-            image = stylix.image;
-            polarity = stylix.polarity;
+        default = if (config.stylix.image == null) then null else lib.warn "the image and polarity options are deprecieated" config.lib.stylix.mkStatic {
+            image = config.stylix.image;
+            polarity = config.stylix.polarity;
         };
         description = mdDoc ''
         Wallpaper image.
@@ -41,6 +41,22 @@ in {
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
         '';
+    };
+
+    image = mkOption {
+      type = with types; coercedTo package toString path;
+      default = null;
+      description = mdDoc ''
+        Outdated method to set the wallpaper image
+      '';
+    };
+
+    polarity = mkOption {
+      type = types.enum [ "either" "light" "dark" ];
+      default = "either";
+      description = mdDoc ''
+         OutDated method to set polarity
+      '';
     };
   };
 
