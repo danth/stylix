@@ -1,5 +1,5 @@
 args:
-{ config, ... }:
+{ config, lib, ... }:
 
 {
   imports = [

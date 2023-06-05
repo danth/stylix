@@ -24,25 +24,17 @@ in {
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base0D" ] "Using stylix.palette to override scheme is not supported anymore")
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base0E" ] "Using stylix.palette to override scheme is not supported anymore")
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base0F" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "image" ] "Using stylix.image to override scheme is not supported anymore, use the constructor based approach described on the website instead")
   ];
 
   options.stylix = {
-    polarity = mkOption {
-      type = types.enum [ "either" "light" "dark" ];
-      default = fromOs [ "polarity" ] "either";
-      description = mdDoc ''
-        Use this option to force a light or dark theme.
-
-        By default we will select whichever is ranked better by the genetic
-        algorithm. This aims to get good contrast between the foreground and
-        background, as well as some variety in the highlight colours.
-      '';
-    };
-
     wallpaper = mkOption {
-        type =
-        with types; with config.lib.stylix; oneOf [static animation video slideshow];
+        type = let
+          tps = config.lib.stylix;
+        in types.oneOf [tps.static tps.animation tps.video tps.slideshow];
+        default = if (stylix.image == null) then null else lib.warn "the image and polarity options are deprecieated" config.lib.stylix.mkStatic {
+            image = stylix.image;
+            polarity = stylix.polarity;
+        };
         description = mdDoc ''
         Wallpaper image.
 
@@ -50,6 +42,22 @@ in {
         and used to generate a colour scheme if you don't set one manually.
         '';
     };
+  };
+
+  options.image = mkOption { 
+    type = with types; coercedTo package toString path;
+    default = null;
+    description = mdDoc ''
+      Outdated method to set the wallpaper image
+    '';
+  };
+
+  options.polarity = mkOption {
+    type = types.enum [ "either" "light" "dark" ];
+    default = "either";
+    description = mdDoc ''
+       OutDated method to set polarity
+    '';
   };
 
   config = {
