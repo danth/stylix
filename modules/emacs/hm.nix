@@ -3,9 +3,6 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 
-let
-  emacsOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
-in
 {
   options.stylix.targets.emacs.enable =
     config.lib.stylix.mkEnableTarget "Emacs" config.programs.emacs.enable;
@@ -66,7 +63,7 @@ in
         (set-face-attribute 'default t :font "${monospace.name}" )
         ;; -----------------------------
         ;; set opacity
-        (add-to-list 'default-frame-alist '(alpha-background . ${emacsOpacity}))
+        (add-to-list 'default-frame-alist '(alpha-background . ${config.lib.stylix.applicationsOpacity-int}))
         ;; -----------------------------
       '';
     };

@@ -1,9 +1,9 @@
-{lib, ...}@args:
+{config, lib, ...}@args:
 with lib;
 {
 
 
-  lib.stylix = {
+  config.lib.stylix = {
     static = mkOptionType {
       name = "static";
       description = "Static Image Type";
@@ -27,8 +27,8 @@ with lib;
 
   # boolean to check if object is type
 
-  lib.stylix.isStatic = object: if (object.type == "static") then true else false;
-  lib.stylix.isAnimation = object: if (object.type == "animation") then true else false;
-  lib.stylix.isVideo = object: if (object.type == "video") then true else false;
-  lib.stylix.isSlideshow = object: if (object.type == "slideshow") then true else false;
+  config.lib.stylix.isStatic = object: if (object.type == "static") then true else false;
+  config.lib.stylix.isAnimation = object: if (object.type == "animation") then true else false;
+  config.lib.stylix.isVideo = object: if (object.type == "video") then true else false;
+  config.lib.stylix.isSlideshow = object: if (object.type == "slideshow") then true else false;
 }

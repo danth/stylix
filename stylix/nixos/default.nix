@@ -6,7 +6,6 @@ let
   autoload = import ../autoload.nix { inherit lib; } "nixos";
 in {
   imports = [
-    ../pixel.nix
     ../target.nix
     ../opacity.nix
     ./fonts.nix

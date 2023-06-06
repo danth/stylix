@@ -2,9 +2,7 @@
 
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
-let
-  bemenuOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
-in {
+{
   options.stylix.targets.bemenu = {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
 
@@ -28,11 +26,11 @@ in {
   config = lib.mkIf config.stylix.targets.bemenu.enable {
     home.sessionVariables.BEMENU_OPTS = with config.stylix.targets.bemenu; builtins.concatStringsSep " " [
       # Inspired from https://git.sr.ht/~h4n1/base16-bemenu_opts
-      "--tb '${base01}${bemenuOpacity}'"
-      "--nb '${base01}${bemenuOpacity}'"
-      "--fb '${base01}${bemenuOpacity}'"
-      "--hb '${base03}${bemenuOpacity}'"
-      "--sb '${base03}${bemenuOpacity}'"
+      "--tb '${base01}${config.lib.stylix.popupsOpacity-hex}'"
+      "--nb '${base01}${config.lib.stylix.popupsOpacity-hex}'"
+      "--fb '${base01}${config.lib.stylix.popupsOpacity-hex}'"
+      "--hb '${base03}${config.lib.stylix.popupsOpacity-hex}'"
+      "--sb '${base03}${config.lib.stylix.popupsOpacity-hex}'"
       "--hf '${base0A}'"
       "--sf '${base0B}'"
       "--tf '${base05}'"

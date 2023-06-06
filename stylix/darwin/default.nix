@@ -6,7 +6,6 @@ let
   autoload = import ../autoload.nix { inherit lib; } "darwin";
 in {
   imports = [
-    ../pixel.nix
     ../target.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })

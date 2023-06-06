@@ -35,8 +35,8 @@ with config.stylix.fonts;
         font-size: ${builtins.toString sizes.desktop}pt;
     }
 
-    window#waybar, tooltip {
-        background: alpha(@base00, ${with config.stylix.opacity; builtins.toString desktop});
+    window#waybar {
+        background: alpha(@base00, ${config.lib.stylix.desktopOpacity-float});
         color: @base05;
     }
 

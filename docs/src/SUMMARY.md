@@ -14,3 +14,4 @@
 # Contributing
 
 - [Style guide](styling.md)
+- [Wallpaper Constructors](lib/wallpaper-constructors.md)

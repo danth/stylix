@@ -28,10 +28,13 @@ in {
 
   options.stylix = {
     wallpaper = mkOption {
-        type = let
-          tps = config.lib.stylix;
-        in types.oneOf [tps.static tps.animation tps.video tps.slideshow];
-        default = if (config.stylix.image == null) then null else lib.warn "the image and polarity options are deprecieated" config.lib.stylix.mkStatic {
+        type = with config.lib.stylix; types.oneOf [static animation video slideshow];
+        default = let
+          message = ''
+              the image and polarity options are deprecieated
+              it is recommended to use the constructor based approach instead
+          '';
+        in if (config.stylix.image == null) then null else lib.warn message config.lib.stylix.mkStatic {
             image = config.stylix.image;
             polarity = config.stylix.polarity;
         };
@@ -58,22 +61,6 @@ in {
          OutDated method to set polarity
       '';
     };
-  };
-
-  options.image = mkOption { 
-    type = with types; coercedTo package toString path;
-    default = null;
-    description = mdDoc ''
-      Outdated method to set the wallpaper image
-    '';
-  };
-
-  options.polarity = mkOption {
-    type = types.enum [ "either" "light" "dark" ];
-    default = "either";
-    description = mdDoc ''
-       OutDated method to set polarity
-    '';
   };
 
   config = {

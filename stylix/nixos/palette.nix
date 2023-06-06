@@ -2,7 +2,9 @@ args:
 { config, ... }:
 
 {
-  imports = [ (import ../palette.nix args) ];
+  imports = [
+      (import ../palette.nix args)
+  ];
 
   config = {
     environment.etc = {

@@ -10,7 +10,7 @@ let
       palette = importJSON generatedJSON;
       scheme = base16.mkSchemeAttrs palette;
       json = scheme {
-        template = builtins.readFile ./palette.json.mustache;
+        template = builtins.readFile ../stylix/palette.json.mustache;
         extension = ".json";
       };
     in
@@ -19,7 +19,7 @@ let
 in
 {
   # constructors for the wallpaper types
-  lib.stylix.mkStatic = { image, polarity ? "dark", base16Scheme ? null}: {
+  config.lib.stylix.mkStatic = { image, polarity ? "dark", base16Scheme ? null}: {
     type = "static";
     image = image;
     generatedColorScheme = {
@@ -28,7 +28,7 @@ in
     };
   };
 
-  lib.stylix.mkAnimation = { animation, polarity ? "dark", base16Scheme ? null}:
+  config.lib.stylix.mkAnimation = { animation, polarity ? "dark", base16Scheme ? null}:
     let
       image = pkgs.runCommand "image" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
@@ -44,7 +44,7 @@ in
       animation = animation;
     };
 
-  lib.stylix.mkVideo = { video, polarity ? "dark", base16Scheme ? null }:
+  config.lib.stylix.mkVideo = { video, polarity ? "dark", base16Scheme ? null }:
     let
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
@@ -60,7 +60,7 @@ in
       video = video;
     };
 
-  lib.stylix.mkSlideshow = { imageDir, polarity ? "dark", base16Scheme ? null, delay ? 300 }:
+  config.lib.stylix.mkSlideshow = { imageDir, polarity ? "dark", base16Scheme ? null, delay ? 300 }:
     let
       image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
     in

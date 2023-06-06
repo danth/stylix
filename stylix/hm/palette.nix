@@ -4,7 +4,6 @@ args:
 {
   imports = [
       (import ../palette.nix args)
-      (import ../generator-types.nix args)
   ];
 
   config = {
