@@ -7,21 +7,25 @@ with lib;
     static = mkOptionType {
       name = "static";
       description = "Static Image Type";
+      descriptionClass = "image";
     };
 
     animation = mkOptionType {
       name = "animation";
       description = "Animation Type";
+      descriptionClass = "non video animation";
     };
 
     video = mkOptionType {
       name = "video";
       description = "Video Type supporting all of the formats that the animation type does not";
+      descriptionClass = "video";
     };
 
     slideshow = mkOptionType {
       name = "slideshow";
       description = "slideshow Type";
+      descriptionClass = "collection of images";
     };
   };
 

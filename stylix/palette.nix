@@ -29,15 +29,25 @@ in {
   options.stylix = {
     wallpaper = mkOption {
         type = with config.lib.stylix; types.oneOf [static animation video slideshow];
+        #god damn it i wish nix had case statements
         default = let
           message = ''
-              the image and polarity options are deprecieated
+              the image, polarity and base16Scheme options are deprecieated
               it is recommended to use the constructor based approach instead
           '';
-        in if (config.stylix.image == null) then null else lib.warn message config.lib.stylix.mkStatic {
+          onlyWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
             image = config.stylix.image;
             polarity = config.stylix.polarity;
-        };
+          };
+          onlyScheme = lib.warn message config.lib.stylix.mkStaticFill config.stylix.base16Scheme;
+          bothSchemeAndWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
+            image = config.stylix.image;
+            override = config.stylix.base16Scheme;
+            polarity = config.stylix.polarity;
+          }; 
+        in if (config.stylix.image != null && config.stylix.base16Scheme != null) then bothSchemeAndWallpaper else 
+        (if (config.stylix.image == null && config.stylix.base16Scheme != null) then onlyScheme else 
+        (if (config.stylix.image != null && config.stylix.base16Scheme == null) then onlyWallpaper else (throw "you have not set a wallpaper or a scheme")));
         description = mdDoc ''
         Wallpaper image.
 
@@ -47,7 +57,7 @@ in {
     };
 
     image = mkOption {
-      type = with types; coercedTo package toString path;
+      type = with types; nullOr (coercedTo package toString path);
       default = null;
       description = mdDoc ''
         Outdated method to set the wallpaper image
@@ -59,6 +69,22 @@ in {
       default = "either";
       description = mdDoc ''
          OutDated method to set polarity
+      '';
+    };
+
+    base16Scheme = mkOption {
+      description = mdDoc ''
+        A scheme following the base16 standard.
+
+        This can be a path to a file, a string of YAML, or an attribute set.
+      '';
+      type = with types; nullOr (oneOf [ path lines attrs null ]);
+      default = null;
+      defaultText = literalMD ''
+        The colors used in the theming.
+
+        Those are automatically selected from the background image by default,
+        but could be overridden manually.
       '';
     };
   };

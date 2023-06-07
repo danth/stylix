@@ -2,7 +2,7 @@
 
 {
   stylix = {
-    image = "/a/b/c";
+    image = null;
 
     base16Scheme = {
       base00 = "ffffff";
