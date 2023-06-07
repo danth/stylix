@@ -78,7 +78,7 @@ in {
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type = with types; nullOr (oneOf [ path lines attrs null ]);
+      type = with types; nullOr (oneOf [ path lines attrs]);
       default = null;
       defaultText = literalMD ''
         The colors used in the theming.
