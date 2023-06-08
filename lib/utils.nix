@@ -29,5 +29,9 @@
   in if (red + green + blue >= 150) then "light" else "dark";
 
   # Generate a PNG image containing a named color
-  config.lib.stylix.pixel = color: pkgs.runCommand "${color}-pixel.png" {} "${pkgs.imagemagick}/bin/convert xc:#${color} png32:$out";
+  #config.lib.stylix.pixel = color: pkgs.runCommand "${color}-pixel.png" {} "${pkgs.imagemagick}/bin/convert xc:#${color} png32:$out";
+    config.lib.stylix.pixel = color:
+        pkgs.runCommand "${color}-pixel.png" {
+                  color = config.lib.stylix.colors.withHashtag.${color};
+        } "${pkgs.imagemagick}/bin/convert xc:$color png32:$out";
 }

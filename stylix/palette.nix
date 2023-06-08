@@ -5,6 +5,7 @@ with lib;
 
 let
   cfg = config.stylix;
+  fromOs = import ./fromos.nix { inherit lib args; };
 in {
   # TODO link to doc on how to do instead
   imports = [
@@ -39,15 +40,7 @@ in {
             image = config.stylix.image;
             polarity = config.stylix.polarity;
           };
-          onlyScheme = lib.warn message config.lib.stylix.mkStaticFill config.stylix.base16Scheme;
-          bothSchemeAndWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
-            image = config.stylix.image;
-            override = config.stylix.base16Scheme;
-            polarity = config.stylix.polarity;
-          }; 
-        in if (config.stylix.image != null && config.stylix.base16Scheme != null) then bothSchemeAndWallpaper else 
-        (if (config.stylix.image == null && config.stylix.base16Scheme != null) then onlyScheme else 
-        (if (config.stylix.image != null && config.stylix.base16Scheme == null) then onlyWallpaper else (throw "you have not set a wallpaper or a scheme")));
+        in fromOs [ "wallpaper" ] (if (config.stylix.image != null ) then onlyWallpaper else (throw "wallpaper was not set"));
         description = mdDoc ''
         Wallpaper image.
 
@@ -58,7 +51,7 @@ in {
 
     image = mkOption {
       type = with types; nullOr (coercedTo package toString path);
-      default = null;
+      default = fromOs [ "image" ] null;
       description = mdDoc ''
         Outdated method to set the wallpaper image
       '';
@@ -79,7 +72,7 @@ in {
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
       type = with types; nullOr (oneOf [ path lines attrs]);
-      default = null;
+      default = fromOs [ "base16Scheme" ] null;
       defaultText = literalMD ''
         The colors used in the theming.
 

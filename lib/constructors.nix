@@ -16,24 +16,6 @@ let
     in
     json;
     generateScheme = polarity: image: importJSON (paletteJSON polarity image);
-    defaultScheme = {
-      base00 = "ffffff";
-      base01 = "ffffff";
-      base02 = "ffffff";
-      base03 = "ffffff";
-      base04 = "ffffff";
-      base05 = "ffffff";
-      base06 = "ffffff";
-      base07 = "ffffff";
-      base08 = "ffffff";
-      base09 = "ffffff";
-      base0A = "ffffff";
-      base0B = "ffffff";
-      base0C = "ffffff";
-      base0D = "ffffff";
-      base0E = "ffffff";
-      base0F = "ffffff";
-    };
 in
 {
   # constructors for the wallpaper types
@@ -49,21 +31,21 @@ in
     };
   };
 
-  config.lib.stylix.mkStaticFill = colorScheme: let
-    scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
-    schemeJson = if (builtins.isAttrs colorScheme) then (builtins.toJSON colorScheme) else colorScheme; 
-  in {
-      type = "static";
-      image = config.lib.stylix.pixel scheme.base00;
-      generatedColorScheme = {
-        json = schemeJson;
-        palette =  scheme;
-      };
-  };
+  #config.lib.stylix.mkStaticFill = colorScheme: let
+  #  scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
+  #  schemeJson = if (builtins.isAttrs colorScheme) then (builtins.toJSON colorScheme) else colorScheme; 
+  #in {
+  #    type = "static";
+  #    image = config.lib.stylix.pixel scheme.base00;
+  #    generatedColorScheme = {
+  #      json = schemeJson;
+  #      palette =  scheme;
+  #    };
+  #};
 
   config.lib.stylix.mkAnimation = { animation, polarity ? "dark", override ? null}:
     let
-      image = pkgs.runCommand "image" { } ''
+      image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
       '';
     in

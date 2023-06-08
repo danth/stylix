@@ -21,7 +21,6 @@ in {
     (lib.mkIf config.stylix.targets.sway.enable {
       wayland.windowManager.sway.config = {
         inherit fonts;
-
           startup =
           let
             slideshowScript = pkgs.writeScript "script.sh" ''

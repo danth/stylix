@@ -6,25 +6,25 @@ with lib;
   config.lib.stylix = {
     static = mkOptionType {
       name = "static";
-      description = "Static Image Type";
-      descriptionClass = "image";
+      description = "static";
+      descriptionClass = "static image";
     };
 
     animation = mkOptionType {
       name = "animation";
-      description = "Animation Type";
+      description = "animation";
       descriptionClass = "non video animation";
     };
 
     video = mkOptionType {
       name = "video";
-      description = "Video Type supporting all of the formats that the animation type does not";
+      description = "video";
       descriptionClass = "video";
     };
 
     slideshow = mkOptionType {
       name = "slideshow";
-      description = "slideshow Type";
+      description = "slideshow";
       descriptionClass = "collection of images";
     };
   };
