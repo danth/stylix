@@ -31,17 +31,17 @@ in
     };
   };
 
-  #config.lib.stylix.mkStaticFill = colorScheme: let
-  #  scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
-  #  schemeJson = if (builtins.isAttrs colorScheme) then (builtins.toJSON colorScheme) else colorScheme; 
-  #in {
-  #    type = "static";
-  #    image = config.lib.stylix.pixel scheme.base00;
-  #    generatedColorScheme = {
-  #      json = schemeJson;
-  #      palette =  scheme;
-  #    };
-  #};
+  config.lib.stylix.mkStaticFill = colorScheme: let
+    scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
+    schemeJson = if (builtins.isAttrs colorScheme) then (builtins.toJSON colorScheme) else colorScheme; 
+  in {
+      type = "static";
+      image = config.lib.stylix.solid scheme.base00;
+      generatedColorScheme = {
+        json = schemeJson;
+        palette =  scheme;
+      };
+  };
 
   config.lib.stylix.mkAnimation = { animation, polarity ? "dark", override ? null}:
     let

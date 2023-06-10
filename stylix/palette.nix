@@ -39,8 +39,11 @@ in {
           onlyWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
             image = config.stylix.image;
             polarity = config.stylix.polarity;
+            override = config.stylix.override;
           };
-        in fromOs [ "wallpaper" ] (if (config.stylix.image != null ) then onlyWallpaper else (throw "wallpaper was not set"));
+          onlyScheme = lib.warn message config.lib.stylix.mkStaticFill config.stylix.base16Scheme;
+        in fromOs [ "wallpaper" ] (if (config.stylix.image != null ) then onlyWallpaper else
+        (if (config.stylix.base16Scheme != null) then onlyScheme else (throw "")));
         description = mdDoc ''
         Wallpaper image.
 
@@ -66,6 +69,22 @@ in {
     };
 
     base16Scheme = mkOption {
+      description = mdDoc ''
+        A scheme following the base16 standard.
+
+        This can be a path to a file, a string of YAML, or an attribute set.
+      '';
+      type = with types; nullOr (oneOf [ path lines attrs]);
+      default = fromOs [ "base16Scheme" ] null;
+      defaultText = literalMD ''
+        The colors used in the theming.
+
+        Those are automatically selected from the background image by default,
+        but could be overridden manually.
+      '';
+    };
+
+    override = mkOption {
       description = mdDoc ''
         A scheme following the base16 standard.
 
