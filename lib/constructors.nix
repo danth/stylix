@@ -26,8 +26,8 @@ in
     type = "static";
     image = image;
     generatedColorScheme = {
-      json = if (override != null) then schemeJson else (paletteJSON polarity image);
-      palette =  if (override != null) then scheme else (generateScheme polarity image);
+      json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
+      palette =  if (override != null) then (paletteJSON polarity image).override scheme else (generateScheme polarity image);
     };
   };
 
@@ -53,8 +53,8 @@ in
       type = "animation";
       image = image;
       generatedColorScheme = {
-        json = if (override == null) then (paletteJSON polarity image) else override;
-        palette = if (override == null) then (generateScheme polarity image) else (importJSON override);
+        json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
+        palette =  if (override != null) then (generateScheme polarity image).overrideAttrs scheme else (generateScheme polarity image);
       };
       animation = animation;
     };
@@ -69,8 +69,8 @@ in
       type = "video";
       image = image;
       generatedColorScheme = {
-        json = if (override == null) then (paletteJSON polarity image) else override;
-        palette = if (override == null) then (generateScheme polarity image) else (importJSON override);
+        json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
+        palette =  if (override != null) then (paletteJSON polarity image).override scheme else (generateScheme polarity image);
       };
       video = video;
     };
@@ -83,8 +83,8 @@ in
       type = "slideshow";
       image = image;
       generatedColorScheme = {
-        json = if (override == null) then (paletteJSON polarity image) else override;
-        palette = if (override == null) then (generateScheme polarity image) else (importJSON override);
+        json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
+        palette =  if (override != null) then (paletteJSON polarity image).override scheme else (generateScheme polarity image);
       };
       imageDir = imageDir;
       delay = delay;

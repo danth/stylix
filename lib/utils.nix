@@ -21,8 +21,6 @@
   config.lib.stylix.popupsOpacity-int = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
   config.lib.stylix.popupsOpacity-float = builtins.toString config.stylix.opacity.popups;
 
-  config.lib.stylix.overrideScheme = inputScheme: toOverride: ;
-
   # determine polarity for things like web browsers and gnome
   config.lib.stylix.backgroundPolarity = let
     red = lib.toInt config.lib.stylix.colors.base00-rgb-r;
