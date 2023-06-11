@@ -59,14 +59,14 @@ in
       video = video;
     };
 
-  config.lib.stylix.mkSlideshow = { imageDir, polarity ? "dark", override ? null, delay ? 300 }:
+  config.lib.stylix.mkSlideshow = { images, polarity ? "dark", override ? null, delay ? 300 }:
     let
       image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
     in
     {
       image = image;
       colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
-      imageDir = imageDir;
+      images = images;
       delay = delay;
     };
 }
