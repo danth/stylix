@@ -21,26 +21,18 @@ in
   # constructors for the wallpaper types
   config.lib.stylix.mkStaticImage = { image, polarity ? "dark", override ? null}: let
     scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override; 
-    schemeJson = if (builtins.isAttrs override) then (builtins.toJSON override) else override; 
   in {
     type = "static";
     image = image;
-    generatedColorScheme = {
-      json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
-      palette =  if (override != null) then (paletteJSON polarity image).override scheme else (generateScheme polarity image);
-    };
+    colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
   };
 
   config.lib.stylix.mkStaticFill = colorScheme: let
     scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
-    schemeJson = if (builtins.isAttrs colorScheme) then (builtins.toJSON colorScheme) else colorScheme; 
   in {
       type = "static";
       image = config.lib.stylix.solid scheme.base00;
-      generatedColorScheme = {
-        json = schemeJson;
-        palette =  scheme;
-      };
+      colors = base16.mkSchemeAttrs scheme;
   };
 
   config.lib.stylix.mkAnimation = { animation, polarity ? "dark", override ? null}:
@@ -48,14 +40,12 @@ in
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
       '';
+      scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
     in
     {
       type = "animation";
       image = image;
-      generatedColorScheme = {
-        json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
-        palette =  if (override != null) then (generateScheme polarity image).overrideAttrs scheme else (generateScheme polarity image);
-      };
+      colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
       animation = animation;
     };
 
@@ -64,14 +54,12 @@ in
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
       '';
+      scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
     in
     {
       type = "video";
       image = image;
-      generatedColorScheme = {
-        json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
-        palette =  if (override != null) then (paletteJSON polarity image).override scheme else (generateScheme polarity image);
-      };
+      colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
       video = video;
     };
 
@@ -82,10 +70,7 @@ in
     {
       type = "slideshow";
       image = image;
-      generatedColorScheme = {
-        json = if (override != null) then (paletteJSON polarity image).override schemeJson else (paletteJSON polarity image);
-        palette =  if (override != null) then (paletteJSON polarity image).override scheme else (generateScheme polarity image);
-      };
+      colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
       imageDir = imageDir;
       delay = delay;
     };

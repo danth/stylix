@@ -33,7 +33,7 @@ in {
         #god damn it i wish nix had case statements
         default = let
           message = ''
-              the image, polarity and base16Scheme options are deprecieated
+              the image, polarity, overide and base16Scheme options are deprecieated
               it is recommended to use the constructor based approach instead
           '';
           onlyWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
@@ -43,7 +43,7 @@ in {
           };
           onlyScheme = lib.warn message config.lib.stylix.mkStaticFill config.stylix.base16Scheme;
         in fromOs [ "wallpaper" ] (if (config.stylix.image != null ) then onlyWallpaper else
-        (if (config.stylix.base16Scheme != null) then onlyScheme else (throw "")));
+        (if (config.stylix.base16Scheme != null) then onlyScheme else (throw "the wallpaper option or one of the legacy methods was not set")));
         description = mdDoc ''
         Wallpaper image.
 
@@ -105,7 +105,7 @@ in {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix#mktheme
     #lib.stylix.colors = (base16.mkSchemeAttrs cfg.wallpaper.generatedColorScheme.palette).override override;
-    lib.stylix.scheme = base16.mkSchemeAttrs cfg.wallpaper.generatedColorScheme.palette;
-    lib.stylix.colors = base16.mkSchemeAttrs cfg.wallpaper.generatedColorScheme.palette;
+    lib.stylix.scheme = cfg.wallpaper.colors;
+    lib.stylix.colors = cfg.wallpaper.colors;
   };
 }
