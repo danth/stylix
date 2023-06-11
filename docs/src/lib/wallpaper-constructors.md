@@ -26,6 +26,9 @@ takes an animation (gif or similar format), as well as polarity and an override 
 ```nix
 stylix.wallpaper = config.lib.stylix.mkAnimation {
   animation = /path/to/animation.gif;
+  override = {
+    base00 = "ffffff";
+  };
 };
 ```
 ## mkVideo

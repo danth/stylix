@@ -22,7 +22,6 @@ in
   config.lib.stylix.mkStaticImage = { image, polarity ? "dark", override ? null}: let
     scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override; 
   in {
-    type = "static";
     image = image;
     colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
   };
@@ -30,7 +29,6 @@ in
   config.lib.stylix.mkStaticFill = colorScheme: let
     scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
   in {
-      type = "static";
       image = config.lib.stylix.solid scheme.base00;
       colors = base16.mkSchemeAttrs scheme;
   };
@@ -43,7 +41,6 @@ in
       scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
     in
     {
-      type = "animation";
       image = image;
       colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
       animation = animation;
@@ -57,7 +54,6 @@ in
       scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
     in
     {
-      type = "video";
       image = image;
       colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
       video = video;
@@ -68,7 +64,6 @@ in
       image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
     in
     {
-      type = "slideshow";
       image = image;
       colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
       imageDir = imageDir;
