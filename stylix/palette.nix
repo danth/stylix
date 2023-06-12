@@ -75,11 +75,6 @@ in
     };
 
     base16Scheme = mkOption {
-      description = mdDoc ''
-        A scheme following the base16 standard.
-
-        This can be a path to a file, a string of YAML, or an attribute set.
-      '';
       type = with types; nullOr (oneOf [ path lines attrs ]);
       default = fromOs [ "base16Scheme" ] null;
       description = mdDoc ''
