@@ -70,7 +70,7 @@ in
       type = types.enum [ "either" "light" "dark" ];
       default = "either";
       description = mdDoc ''
-        OutDated method to set polarity
+        Outdated method to set polarity, see the wallpaper option instead
       '';
     };
 
@@ -82,16 +82,14 @@ in
       '';
       type = with types; nullOr (oneOf [ path lines attrs ]);
       default = fromOs [ "base16Scheme" ] null;
-      defaultText = literalMD ''
-        The colors used in the theming.
-
-        Those are automatically selected from the background image by default,
-        but could be overridden manually.
+      description = mdDoc ''
+        Outdated method to set base16 scheme, see the wallpaper option instead
       '';
     };
 
     override = mkOption {
       description = mdDoc ''
+        Outdated, set this using the wallpaper option instead
         A scheme following the base16 standard.
 
         This can be a path to a file, a string of YAML, or an attribute set.
