@@ -30,8 +30,9 @@ unsure. Examples include zathura and sxiv.
 - Default Text Color: base05
 - Alternate Text Color: base04
 - Background of Sidebar Selection Color: base03
-- Urgent: base07
-- Error: base0F
+- Warning: base0A
+- Urgent: base09
+- Error: base08
 
 ## Window Managers
 
