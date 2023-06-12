@@ -15,25 +15,29 @@ let
       };
     in
     json;
-    generateScheme = polarity: image: importJSON (paletteJSON polarity image);
+  generateScheme = polarity: image: importJSON (paletteJSON polarity image);
 in
 {
   # constructors for the wallpaper types
-  config.lib.stylix.mkStaticImage = { image, polarity ? "dark", override ? null}: let
-    scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override; 
-  in {
-    image = image;
-    colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
-  };
+  config.lib.stylix.mkStaticImage = { image, polarity ? "either", override ? { } }:
+    let
+      scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
+    in
+    {
+      image = image;
+      colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
+    };
 
-  config.lib.stylix.mkStaticFill = colorScheme: let
-    scheme = if (builtins.isAttrs colorScheme) then (colorScheme) else builtins.fromJSON colorScheme;
-  in {
+  config.lib.stylix.mkStaticFill = {colorscheme, override ? {}}:
+    let
+      scheme = if (builtins.isAttrs colorscheme) then (colorscheme) else builtins.fromJSON colorscheme;
+    in
+    {
       image = config.lib.stylix.solid scheme.base00;
-      colors = base16.mkSchemeAttrs scheme;
-  };
+      colors = (base16.mkSchemeAttrs scheme).override override;
+    };
 
-  config.lib.stylix.mkAnimation = { animation, polarity ? "dark", override ? null}:
+  config.lib.stylix.mkAnimation = { animation, polarity ? "either", override ? { } }:
     let
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
@@ -46,7 +50,7 @@ in
       animation = animation;
     };
 
-  config.lib.stylix.mkVideo = { video, polarity ? "dark", override ? null }:
+  config.lib.stylix.mkVideo = { video, polarity ? "either", override ? { } }:
     let
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
@@ -59,7 +63,7 @@ in
       video = video;
     };
 
-  config.lib.stylix.mkSlideshow = { images, polarity ? "dark", override ? null, delay ? 300 }:
+  config.lib.stylix.mkSlideshow = { images, polarity ? "either", override ? { }, delay ? 300 }:
     let
       image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
     in

@@ -3,8 +3,8 @@
 
 {
   imports = [
-      ./utils.nix
-      ./types.nix
-      (import ./constructors.nix { inherit palette-generator base16; })
+    ./utils.nix
+    ./types.nix
+    (import ./constructors.nix { inherit palette-generator base16; })
   ];
 }

@@ -1,4 +1,4 @@
-{config, lib, ...}@args:
+{ config, lib, ... }@args:
 with lib;
 with config.lib.stylix;
 {
@@ -34,8 +34,8 @@ with config.lib.stylix;
 
   # boolean to check if object is type
 
-  config.lib.stylix.isStatic = value: (builtins.attrNames value == ["colors" "image"]);
-  config.lib.stylix.isAnimation = value: (builtins.attrNames value == ["animation" "colors" "image"]);
-  config.lib.stylix.isVideo = value: (builtins.attrNames value == ["colors" "image" "video"]);
-  config.lib.stylix.isSlideshow = value: (builtins.attrName value == ["colors" "delay" "image" "images"]);
+  config.lib.stylix.isStatic = value: (builtins.attrNames value == [ "colors" "image" ]);
+  config.lib.stylix.isAnimation = value: (builtins.attrNames value == [ "animation" "colors" "image" ]);
+  config.lib.stylix.isVideo = value: (builtins.attrNames value == [ "colors" "image" "video" ]);
+  config.lib.stylix.isSlideshow = value: (builtins.attrNames value == [ "colors" "delay" "image" "images" ]);
 }

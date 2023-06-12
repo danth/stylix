@@ -6,7 +6,8 @@ with lib;
 let
   cfg = config.stylix;
   fromOs = import ./fromos.nix { inherit lib args; };
-in {
+in
+{
   # TODO link to doc on how to do instead
   imports = [
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "Using stylix.palette to override scheme is not supported anymore")
@@ -29,27 +30,32 @@ in {
 
   options.stylix = {
     wallpaper = mkOption {
-        type = with config.lib.stylix; types.oneOf [static animation video slideshow];
-        #god damn it i wish nix had case statements
-        default = let
+      type = with config.lib.stylix; types.oneOf [ static animation video slideshow ];
+      #god damn it i wish nix had case statements
+      default =
+        let
           message = ''
-              the image, polarity, overide and base16Scheme options are deprecieated
-              it is recommended to use the constructor based approach instead
+            the image, polarity, overide and base16Scheme options are deprecieated
+            it is recommended to use the constructor based approach instead which is documented on the stylix website
           '';
           onlyWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
             image = config.stylix.image;
             polarity = config.stylix.polarity;
             override = config.stylix.override;
           };
-          onlyScheme = lib.warn message config.lib.stylix.mkStaticFill config.stylix.base16Scheme;
-        in fromOs [ "wallpaper" ] (if (config.stylix.image != null ) then onlyWallpaper else
+          onlyScheme = lib.warn message config.lib.stylix.mkStaticFill {
+              colorscheme = config.stylix.base16Scheme;
+              override = config.stylix.override;
+          };
+        in
+        fromOs [ "wallpaper" ] (if (config.stylix.image != null) then onlyWallpaper else
         (if (config.stylix.base16Scheme != null) then onlyScheme else (throw "the wallpaper option or one of the legacy methods was not set")));
-        description = mdDoc ''
+      description = mdDoc ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
-        '';
+      '';
     };
 
     image = mkOption {
@@ -64,7 +70,7 @@ in {
       type = types.enum [ "either" "light" "dark" ];
       default = "either";
       description = mdDoc ''
-         OutDated method to set polarity
+        OutDated method to set polarity
       '';
     };
 
@@ -74,7 +80,7 @@ in {
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type = with types; nullOr (oneOf [ path lines attrs]);
+      type = with types; nullOr (oneOf [ path lines attrs ]);
       default = fromOs [ "base16Scheme" ] null;
       defaultText = literalMD ''
         The colors used in the theming.
@@ -90,8 +96,8 @@ in {
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type = with types; nullOr (oneOf [ path lines attrs]);
-      default = fromOs [ "base16Scheme" ] null;
+      type = with types; oneOf [ path lines attrs ];
+      default = fromOs [ "base16Scheme" ] { };
       defaultText = literalMD ''
         The colors used in the theming.
 

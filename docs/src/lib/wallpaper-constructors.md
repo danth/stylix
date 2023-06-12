@@ -1,5 +1,5 @@
 ## mkStaticImage
-takes an image, as well as optionally polarity, and an override, which can either be a path to a base16 yaml file or and attrset.
+takes an image, as well as optionally polarity and an override, which can either be a path to a base16 yaml file or and attrset.
 example
 ```nix
 stylix.wallpaper = config.lib.stylix.mkStaticImage {
@@ -9,7 +9,7 @@ stylix.wallpaper = config.lib.stylix.mkStaticImage {
 }
 ```
 ## mkStaticFill
-takes a colorscheme as an input.
+takes a set containing a colorscheme as an input as well as optionally an override.
 ```nix
 stylix.wallpaper = config.lib.stylix.mkStaticFill /path/to/scheme.yml;
 ```
