@@ -1,5 +1,9 @@
+## notes
+- only static images are currently functioning for the gnome desktop enviornment as well as kde on wayland
+- applications that can not display a dynamic image like a gif or slideshow will default to a static image
+
 ## mkStaticImage
-takes an image, as well as optionally polarity and an override, which can either be a path to a base16 yaml file or and attrset.
+takes a set containing an image, as well as optionally polarity and an override, which can either be a path to a base16 yaml file or and attrset.
 example
 ```nix
 stylix.wallpaper = config.lib.stylix.mkStaticImage {
@@ -22,7 +26,7 @@ stylix.wallpaper = config.lib.stylix.mkSlideshow {
 };
 ```
 ## mkAnimation
-takes an animation (gif or similar format), as well as polarity and an override as an input.
+takes a set containing animation (gif or similar format), as well as optionally polarity and an override as an input.
 ```nix
 stylix.wallpaper = config.lib.stylix.mkAnimation {
   animation = /path/to/animation.gif;
@@ -32,7 +36,7 @@ stylix.wallpaper = config.lib.stylix.mkAnimation {
 };
 ```
 ## mkVideo
-takes an video (mp4 or similar format), as well as polarity and an override as an input.
+takes a set containing a video (mp4 or similar format), as well as optionally polarity and an override as an input.
 ```nix
 stylix.wallpaper = config.lib.stylix.mkAnimation {
   video = /path/to/video.mp4;
