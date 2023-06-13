@@ -1,5 +1,5 @@
 ## notes
-- only static images are currently functioning for the gnome desktop enviornment as well as kde on wayland
+- only static images and slideshows are currently functioning for the gnome desktop enviornment
 - applications that can not display a dynamic image like a gif or slideshow will default to a static image
 
 ## mkStaticImage
