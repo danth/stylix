@@ -14,22 +14,41 @@ rest of the themed applications.
 It is also importent to note that this is a growing theming guide and when theming an application and you find the guide to be lacking in any way in
 terms of direction, you are encouraged to open an issue regarding what you would like to see added to the style guide.
 
-### Terms
-- Alternate: To use when to items need to contrast despite being the same type of item.
-- Item On/Off: This is for on off indicators in applications like a battery charging indicator.
-- List: A list of items to select between such as workspaces in a desktop bar.
+## Terms
 
-## General Applications
+### Alternate
 
-General applications are applications that do not fit into any of the more
-specific categories below. This is the scheme you should default to if you are
-unsure. Examples include zathura and sxiv.
+An alternate color should be used when something needs to look separate while not
+being drastically different. The smaller or less common element should use the
+alternate color.
 
-- Default Background: base00 
-- Alternate Background: base01
-- Default Text Color: base05
-- Alternate Text Color: base04
-- Background of Sidebar Selection Color: base03
+![Appearance tab in GNOME settings](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/e29f9fec-7b68-45ce-95ef-90d8e787c991)
+
+For example, each section in this settings menu uses the alternate background color
+to separate it from the rest of the window, which is using the default background.
+
+### On/Off
+
+This is for toggles or simple status indicators which have an obvious on and off state.
+
+![Toggles in GNOME quick settings](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/710056f6-26f7-47d4-bd2f-1384185fb46a)
+
+In the screenshot above the Wired and Night Light buttons are on, Power Mode is off.
+
+### Lists and selections
+
+A list of items to select between, such as tabs in a web browser. The selection is
+the currently active item, or there could be multiple selected depending on the use case.
+
+![Sidebar of Nautilus file manager](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/3b893677-75e1-4190-b3ab-b07d10930b19)
+
+## General colors
+
+- Default background: base00
+- Alternate background: base01
+- Selection background: base03
+- Default text: base05
+- Alternate text: base04
 - Warning: base0A
 - Urgent: base09
 - Error: base08
@@ -40,20 +59,19 @@ Window Managers arrange windows and provide decorations like title bars and
 borders. Examples include Sway and i3.
 
 This does not include applications bundled with the desktop environment such as
-file managers, which would fall into the general category.
+file managers, which would fall into the general category. Desktop helpers such as
+taskbars and menus are not technically part of the window manager, although they're
+often configured in the same place.
 
-It also does not include desktop helpers such as taskbars and menus. However,
-these are often configured together with the window manager, especially in the
-case of larger desktop environments such as KDE and GNOME.
+An urgent window is one which is grabbing for attention - Windows shows this by
+a flashing orange taskbar icon.
 
 - Unfocused window border: base03
 - Focused window border: base0A
+- Unfocused window border in group: base0D
+- Focused window border in group: base06
 - Urgent window border: base07
 - Window title text: base05
-- Focused Window in Group: base6
-- Unfocused Window in Group: base0D
-- Error: base0F
-
 
 ## Notifications and Popups
 
@@ -61,16 +79,13 @@ Notifications and popups are any application overlay intended to be displayed
 over other applications. Examples include the mako notification daemon and
 avizo.
 
-- Default Background Color: base00
-- Alternate Background: base01
-- Progress/Percentage Bar Color: base02
-- Alternate Text Color: base04
-- Default Text Color: base05
-- low Urgency Background Color: base06
-- High Urgency Text Color: base08
-- Low Urgency Text Color: base0A
-- Border Color: base0D
-- High Urgency Background Color: base0F
+- Window border: base0D
+- Low urgency background color: base06
+- Low urgency text color: base0A
+- High urgency background color: base0F
+- High urgency text color: base08
+- Incomplete part of progress bar: base01
+- Complete part of progress bar: base02
 
 ## Desktop Helpers
 
@@ -79,32 +94,36 @@ window management facilities of whatever window manager the user is using.
 Examples of this include waybar and polybar, as well as the similar programs
 that are part of KDE and GNOME.
 
-### Light Text Color Widgets
-- Default Background Color: base00
-- Alternate Background Color: base01
-- Default Text Color: base05
-- Alternate Text Color: base04
+### Light text color widgets
 
-### dark Text Color Widgets
-- Default Text Color: base00
-- Alternate Text Color: base01
-- Item On: base0E
-- Item Off: base0D
-- Alternate Item On: base09
-- Alternate Item Off: base02
-- List Background: base0D
-- Selected Item In List Background: base03
-- Urgent: base07
-- Error: base0F
+Refer to general colors above.
+
+### Dark text color widgets
+
+These widgets use a different text color than usual to ensure it's still
+readable when the background is more vibrant.
+
+- Default text color: base00
+- Alternate text color: base01
+- Item on background color: base0E
+- Item off background color: base0D
+- Alternate item on background color: base09
+- Alternate item off background color: base02
+- List unselected background: base0D
+- List selected background: base03
 
 ## Images
 
-For creating modified versions of logos, icons, etc.
+For creating modified versions of logos, icons, etc; where we would rather the
+colors be similar to the original.
 
-- Background Color: base00
-- Alternate Background Color: base01
-- Text color: base05
-- Alternate text color: base04
+Note that the colors provided by the scheme won't necessarily match the names given
+below, although most handmade schemes do.
+
+- Background color: base00
+- Alternate background color: base01
+- Main color: base05
+- Alternate main color: base04
 - Red: base08
 - Orange: base09
 - Yellow: base0A
@@ -113,6 +132,11 @@ For creating modified versions of logos, icons, etc.
 - Blue: base0D
 - Purple: base0E
 - Brown: base0F
+
+![Recolored systemd logo](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/00ba9b23-c7eb-4cbf-9f3d-aa8de159d6dd)
+
+Example of a modified systemd logo. The square brackets are using the main color,
+which is usually be white or black depending on the polarity of the scheme.
 
 ## Text Editors/Viewers
 
