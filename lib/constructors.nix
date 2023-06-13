@@ -37,7 +37,7 @@ in
       colors = (base16.mkSchemeAttrs scheme).override override;
     };
 
-  config.lib.stylix.mkAnimation = { animation, polarity ? "either", override ? { } }:
+  config.lib.stylix.mkAnimation = { animation, polarity ? "either", override ? null }:
     let
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
@@ -50,7 +50,7 @@ in
       animation = animation;
     };
 
-  config.lib.stylix.mkVideo = { video, polarity ? "either", override ? { } }:
+  config.lib.stylix.mkVideo = { video, polarity ? "either", override ? null }:
     let
       image = pkgs.runCommand "image.png" { } ''
         ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
@@ -63,13 +63,13 @@ in
       video = video;
     };
 
-  config.lib.stylix.mkSlideshow = { images, polarity ? "either", override ? { }, delay ? 300 }:
+  config.lib.stylix.mkSlideshow = { images, polarity ? "either", override ? null, delay ? 300 }:
     let
-      image = imageDir + ("/" + (builtins.elemAt (builtins.attrNames (builtins.readDir imageDir)) 0));
+      image = builtins.elemAt images 0;
     in
     {
       image = image;
-      colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
+      colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override override else (generateScheme polarity image));
       images = images;
       delay = delay;
     };

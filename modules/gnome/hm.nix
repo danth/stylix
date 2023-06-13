@@ -2,17 +2,41 @@
 
 with lib;
 
-{
+let
+  slide = image: ''
+    <static>
+      <duration>${toString config.stylix.wallpaper.delay}</duration>
+      <file>${image}</file>
+    </static>
+  '';
+
+  slideshow = pkgs.writeText "slideshow.xml" ''
+    <?xml version="1.0"?>
+    <background>
+    ${concatMapStrings slide config.stylix.wallpaper.images}
+    </background>
+  '';
+
+  wallpaper =
+    if config.lib.stylix.isSlideshow config.stylix.wallpaper
+    then slideshow
+    else config.stylix.wallpaper.image;
+
+  wallpaperUri = "file://${wallpaper}";
+
+in {
   options.stylix.targets.gnome.enable =
     config.lib.stylix.mkEnableTarget "GNOME" true;
 
   config = mkIf config.stylix.targets.gnome.enable {
     dconf.settings = {
       "org/gnome/desktop/background" = {
-        color-shading-type = "solid";
+        picture-uri = wallpaperUri;
+        picture-uri-dark = wallpaperUri;
         picture-options = "zoom";
-        picture-uri = "file://${config.stylix.wallpaper.image}";
-        picture-uri-dark = "file://${config.stylix.wallpaper.image}";
+        color-shading-type = "solid";
+        primary-color = config.lib.stylix.colors.withHashtag.base00;
+        secondary-color = config.lib.stylix.colors.withHashtag.base01;
       };
       
       "org/gnome/desktop/interface" = with config.stylix.fonts ; {
