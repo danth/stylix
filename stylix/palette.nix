@@ -98,7 +98,7 @@ in {
       '';
       type = with types; oneOf [ path lines attrs ];
       default =
-        if args ? "osConfig" && cfg.image != args.osConfig.stylix.image
+        if cfg.image != fromOs [ "image" ] null
           then generatedScheme
           else fromOs [ "base16Scheme" ] generatedScheme;
       defaultText = literalMD ''
