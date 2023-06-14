@@ -1,6 +1,21 @@
-## notes
-- only static images and slideshows are currently functioning for the gnome desktop enviornment
-- applications that can not display a dynamic image like a gif or slideshow will default to a static image
+# Wallpaper constructors
+
+Moving wallpapers are only supported for certain environments, as shown in the table below.
+
+|              | Static | Slideshow | Animation | Video |
+|--------------|--------|-----------|-----------|-------|
+| bspwm        | ✔️      | ❌         | ✔️         | ❌     |
+| GNOME        | ✔️      | ✔️         | ❌         | ❌     |
+| GRUB         | ✔️      | ❌         | ❌         | ❌     |
+| herbstluftwm | ✔️      | ❌         | ✔️         | ❌     |
+| i3           | ✔️      | ❌         | ✔️         | ❌     |
+| LightDM      | ✔️      | ❌         | ❌         | ❌     |
+| spectrwm     | ✔️      | ❌         | ✔️         | ❌     |
+| Sway         | ✔️      | ✔️         | ✔️         | ✔️     |
+| XMonad       | ✔️      | ❌         | ✔️         | ❌     |
+
+If an unsupported wallpaper is used, Stylix will fall back to a static image created
+from the first frame of the wallpaper.
 
 ## mkStaticImage
 takes a set containing an image, as well as optionally polarity and an override, which can either be a path to a base16 yaml file or and attrset.
