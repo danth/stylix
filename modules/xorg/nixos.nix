@@ -1,5 +1,6 @@
 { pkgs, config, lib, ... }:
 
+with config.lib.stylix;
 {
   options.stylix.targets.xorg.enable =
     config.lib.stylix.mkEnableTarget
