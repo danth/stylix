@@ -12,15 +12,15 @@ in
     programs.zellij.settings = {
         theme = "stylix";
         themes.stylix = {
-            bg = "#${colors.base04}";
+            bg = "#${colors.base00}";
             fg = "#${colors.base05}";
             red = "#${colors.base08}";
-            green = "#${colors.base0A}";
+            green = "#${colors.base0B}";
             blue = "#${colors.base0D}";
-            yellow = "#${colors.base0B}";
+            yellow = "#${colors.base0A}";
             magenta = "#${colors.base0E}";
             orange = "#${colors.base09}";
-            cyan = "#${colors.base07}";
+            cyan = "#${colors.base0C}";
             black = "#${colors.base03}";
             white = "#${colors.base05}";
         };
