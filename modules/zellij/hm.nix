@@ -1,28 +1,24 @@
 { pkgs, config, lib, ... }:
 
-let
-  colors = config.lib.stylix.colors; 
-in
 {
-
   options.stylix.targets.zellij.enable =
     config.lib.stylix.mkEnableTarget "zellij" config.programs.zellij.enable ;
 
   config = lib.mkIf config.stylix.targets.zellij.enable {
     programs.zellij.settings = {
         theme = "stylix";
-        themes.stylix = {
-            bg = "#${colors.base00}";
-            fg = "#${colors.base05}";
-            red = "#${colors.base08}";
-            green = "#${colors.base0B}";
-            blue = "#${colors.base0D}";
-            yellow = "#${colors.base0A}";
-            magenta = "#${colors.base0E}";
-            orange = "#${colors.base09}";
-            cyan = "#${colors.base0C}";
-            black = "#${colors.base03}";
-            white = "#${colors.base05}";
+        themes.stylix = with config.lib.stylix.colors.withHashtag; {
+            bg = base00;
+            fg = base05;
+            red = base08;
+            green = base0B;
+            blue = base0D;
+            yellow = base0A;
+            magenta = base0E;
+            orange = base09;
+            cyan = base0C;
+            black = base03;
+            white = base05;
         };
     };
   };
