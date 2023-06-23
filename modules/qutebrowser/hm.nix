@@ -22,7 +22,6 @@ in {
     programs.qutebrowser.settings = {
       hints.border = background;
       colors = {
-        webpage.darkmode.enabled = if (config.lib.stylix.backgroundPolarity == "dark") then true else false;
         completion = {
           fg = foreground;
           odd.bg = secondary-background;
