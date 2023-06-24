@@ -13,7 +13,7 @@ in {
       description = lib.mdDoc "Whether to style GNOME";
       type = lib.types.bool;
       default = config.stylix.autoEnable 
-             && config.services.xserver.desktopManager.gnome.enable;
+             && (config.services.xserver.desktopManager.gnome.enable or false);
     };
 
   config = lib.mkIf config.stylix.targets.gnome.enable {
