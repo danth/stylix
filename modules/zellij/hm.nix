@@ -8,7 +8,7 @@
     programs.zellij.settings = {
         theme = "stylix";
         themes.stylix = with config.lib.stylix.colors.withHashtag; {
-            bg = base00;
+            bg = base03;
             fg = base05;
             red = base08;
             green = base0B;
