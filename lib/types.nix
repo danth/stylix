@@ -13,7 +13,7 @@ with config.lib.stylix;
     animation = mkOptionType {
       name = "animation";
       description = "animation";
-      descriptionClass = "non video animation";
+      descriptionClass = "animated image such as a GIF";
       check = isAnimation;
     };
 
