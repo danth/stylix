@@ -25,7 +25,10 @@ in
     in
     {
       image = image;
-      colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
+      colors =
+        if (override != null)
+        then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme
+        else (base16.mkSchemeAttrs (generateScheme polarity image));
     };
 
   config.lib.stylix.mkStaticFill = {colorscheme, override ? {}}:
