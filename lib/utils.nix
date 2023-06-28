@@ -23,33 +23,33 @@
     popupsOpacity-float = builtins.toString config.stylix.opacity.popups;
 
     backgroundPolarity =
-    let
-      red = lib.toInt config.lib.stylix.colors.base00-rgb-r;
-      green = lib.toInt config.lib.stylix.colors.base00-rgb-g;
-      blue = lib.toInt config.lib.stylix.colors.base00-rgb-b;
-    in
-    if (red + green + blue >= 150) then "light" else "dark";
+      let
+        red = lib.toInt config.lib.stylix.colors.base00-rgb-r;
+        green = lib.toInt config.lib.stylix.colors.base00-rgb-g;
+        blue = lib.toInt config.lib.stylix.colors.base00-rgb-b;
+      in
+      if (red + green + blue >= 150) then "light" else "dark";
 
-  # Generate a PNG image containing a named color
-  waylandSlideshowScript = pkgs.writeScript "script.sh" ''
-  export SWWW_TRANSITION_FPS=60
-  export SWWW_TRANSITION_STEP=2
+    # Generate a PNG image containing a named color
+    waylandSlideshowScript = pkgs.writeScript "script.sh" ''
+      export SWWW_TRANSITION_FPS=60
+      export SWWW_TRANSITION_STEP=2
 
-  # This controls (in seconds) when to switch to the next image
-  INTERVAL=${builtins.toString config.stylix.wallpaper.delay}
-  imagearray=(${builtins.toString config.stylix.wallpaper.images})
+      # This controls (in seconds) when to switch to the next image
+      INTERVAL=${builtins.toString config.stylix.wallpaper.delay}
+      imagearray=(${builtins.toString config.stylix.wallpaper.images})
   
-  while true; do
-  	${pkgs.swww}/bin/swww img ''${imagearray[ $RANDOM % ''${#imagearray[@]} ]}
-  	sleep $INTERVAL
-  done
-  '';
+      while true; do
+      	${pkgs.swww}/bin/swww img ''${imagearray[ $RANDOM % ''${#imagearray[@]} ]}
+      	sleep $INTERVAL
+      done
+    '';
 
-  solid = color: pkgs.runCommand "${color}-pixel.png" { } "${pkgs.imagemagick}/bin/convert xc:#${color} png32:$out";
-  pixel = color:
-    pkgs.runCommand "${color}-pixel.png"
-      {
-        color = config.lib.stylix.colors.withHashtag.${color};
-      } "${pkgs.imagemagick}/bin/convert xc:$color png32:$out";
+    solid = color: pkgs.runCommand "${color}-pixel.png" { } "${pkgs.imagemagick}/bin/convert xc:#${color} png32:$out";
+    pixel = color:
+      pkgs.runCommand "${color}-pixel.png"
+        {
+          color = config.lib.stylix.colors.withHashtag.${color};
+        } "${pkgs.imagemagick}/bin/convert xc:$color png32:$out";
   };
 }
