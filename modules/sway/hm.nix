@@ -22,42 +22,16 @@ in {
       wayland.windowManager.sway.config = {
         inherit fonts;
           startup =
-          let
-            slideshowScript = pkgs.writeScript "script.sh" ''
-            if [[ $# -lt 1 ]] || [[ ! -d $1 ]]; then
-              echo "Usage:
-              $0 <dir containing images>"
-              exit 1
-            fi
-
-            export SWWW_TRANSITION_FPS=60
-            export SWWW_TRANSITION_STEP=2
-
-            # This controls (in seconds) when to switch to the next image
-            INTERVAL=${builtins.toString config.stylix.wallpaper.delay}
-            
-            while true; do
-            	find "$1" \
-            		| while read -r img; do
-            			echo "$((RANDOM % 1000)):$img"
-            		done \
-            		| sort -n | cut -d':' -f2- \
-            		| while read -r img; do
-            			${pkgs.swww}/bin/swww img "$img"
-            			sleep $INTERVAL
-            		done
-            done
-            '';
-          in if (config.lib.stylix.isAnimation config.stylix.wallpaper) then [
+          if (config.lib.stylix.isAnimation config.stylix.wallpaper) then [
               { command = "${pkgs.swww}/bin/swww-daemon"; }
-              { command = "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"; }
+              { command = "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"; always = true;}
           ] else if (config.lib.stylix.isSlideshow config.stylix.wallpaper) then [
               { command = "${pkgs.swww}/bin/swww-daemon"; }
-              { command = "${slideshowScript} ${config.stylix.wallpaper.imageDir}"; }
+              { command = "${config.lib.stylix.waylandSlideshowScript}"; always = true; }
           ] else if (config.lib.stylix.isVideo config.stylix.wallpaper) then [
-              { command = "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"; }
+              { command = "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"; always = true; }
           ] else [
-              { command = "${pkgs.wbg}/bin/wbg ${config.stylix.wallpaper.image}"; }
+              { command = "${pkgs.wbg}/bin/wbg ${config.stylix.wallpaper.image}"; always = true; }
           ];
         colors = let
           background = base00;
