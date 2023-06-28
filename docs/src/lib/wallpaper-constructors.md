@@ -36,7 +36,10 @@ stylix.wallpaper = config.lib.stylix.mkStaticFill /path/to/scheme.yml;
 takes an image directory, polarity, override, and a delay rate in seconds as an input.
 ```nix
 stylix.wallpaper = config.lib.stylix.mkSlideshow {
-  imageDir = /path/to/dir;
+  images = [
+    ./path/to/image
+    ./path/to/other/image
+  ];
   delay = 300;
 };
 ```
@@ -53,7 +56,7 @@ stylix.wallpaper = config.lib.stylix.mkAnimation {
 ## mkVideo
 takes a set containing a video (mp4 or similar format), as well as optionally polarity and an override as an input.
 ```nix
-stylix.wallpaper = config.lib.stylix.mkAnimation {
+stylix.wallpaper = config.lib.stylix.mkVideo{
   video = /path/to/video.mp4;
 };
 ```
