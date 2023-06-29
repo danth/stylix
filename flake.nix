@@ -1,10 +1,10 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    base16 = {
-      url = "github:SenchoPens/base16.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #base16 = {
+    #  url = "github:SenchoPens/base16.nix";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
 
     # Used for documentation
     home-manager = {
