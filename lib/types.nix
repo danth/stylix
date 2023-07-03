@@ -9,7 +9,10 @@ with config.lib.stylix;
       descriptionClass = "static image";
       check = isStatic;
     };
-    isStatic = value: (builtins.attrNames value == [ "colors" "image" ]);
+    isStatic = value: let
+      imageType = builtins.isNull value.image || builtins.isPath value.image;
+      colorsType = builtins.isAttrs value.colors;
+    in (builtins.attrNames value == [ "colors" "image" ]) && imageType && colorsType;
 
     animation = mkOptionType {
       name = "animation";
@@ -17,7 +20,11 @@ with config.lib.stylix;
       descriptionClass = "animated image such as a GIF";
       check = isAnimation;
     };
-    isAnimation = value: (builtins.attrNames value == [ "animation" "colors" "image" ]);
+    isAnimation = value: let
+      imageType = builtins.isNull value.image || builtins.isPath value.image;
+      animationType = builtins.isNull value.animation || builtins.isPath value.animation;
+      colorsType = builtins.isAttrs value.colors;
+    in (builtins.attrNames value == [ "animation" "colors" "image" ]) && imageType && animationType && colorsType;
 
     video = mkOptionType {
       name = "video";
@@ -25,7 +32,11 @@ with config.lib.stylix;
       descriptionClass = "video";
       check = isVideo;
     };
-    isVideo = value: (builtins.attrNames value == [ "colors" "image" "video" ]);
+    isVideo = value: let
+      imageType = builtins.isNull value.image || builtins.isPath value.image;
+      videoType = builtins.isNull value.video || builtins.isPath value.video;
+      colorsType = builtins.isAttrs value.colors;
+    in (builtins.attrNames value == [ "colors" "image" "video" ]) && imageType && videoType && colorsType;
 
     slideshow = mkOptionType {
       name = "slideshow";
@@ -33,6 +44,11 @@ with config.lib.stylix;
       descriptionClass = "collection of images";
       check = isSlideshow;
     };
-    isSlideshow = value: (builtins.attrNames value == [ "colors" "delay" "image" "images" ]);
+    isSlideshow = value: let
+      imageType = builtins.isNull value.image || builtins.isPath value.image;
+      imagesType = builtins.isList value.images;
+      colorsType = builtins.isAttrs value.colors;
+      delayType = builtins.isInt value.delay;
+    in (builtins.attrNames value == [ "colors" "delay" "image" "images" ]) && imageType && imagesType && colorsType && delayType;
   };
 }
