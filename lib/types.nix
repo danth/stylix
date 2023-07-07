@@ -9,10 +9,7 @@ with config.lib.stylix;
       descriptionClass = "static image";
       check = isStatic;
     };
-    isStatic = value: let
-      imageType = builtins.isNull value.image || builtins.isPath value.image;
-      colorsType = builtins.isAttrs value.colors;
-    in (builtins.attrNames value == [ "colors" "image" ]) && imageType && colorsType;
+    isStatic = value: (builtins.attrNames value == [ "colors" "image" ]);
 
     animation = mkOptionType {
       name = "animation";
@@ -20,11 +17,7 @@ with config.lib.stylix;
       descriptionClass = "animated image such as a GIF";
       check = isAnimation;
     };
-    isAnimation = value: let
-      imageType = builtins.isNull value.image || builtins.isPath value.image;
-      animationType = builtins.isNull value.animation || builtins.isPath value.animation;
-      colorsType = builtins.isAttrs value.colors;
-    in (builtins.attrNames value == [ "animation" "colors" "image" ]) && imageType && animationType && colorsType;
+    isAnimation = value: (builtins.attrNames value == [ "animation" "colors" "image" ]);
 
     video = mkOptionType {
       name = "video";
@@ -32,11 +25,7 @@ with config.lib.stylix;
       descriptionClass = "video";
       check = isVideo;
     };
-    isVideo = value: let
-      imageType = builtins.isNull value.image || builtins.isPath value.image;
-      videoType = builtins.isNull value.video || builtins.isPath value.video;
-      colorsType = builtins.isAttrs value.colors;
-    in (builtins.attrNames value == [ "colors" "image" "video" ]) && imageType && videoType && colorsType;
+    isVideo = value: (builtins.attrNames value == [ "colors" "image" "video" ]);
 
     slideshow = mkOptionType {
       name = "slideshow";
@@ -44,11 +33,6 @@ with config.lib.stylix;
       descriptionClass = "collection of images";
       check = isSlideshow;
     };
-    isSlideshow = value: let
-      imageType = builtins.isNull value.image || builtins.isPath value.image;
-      imagesType = builtins.isList value.images;
-      colorsType = builtins.isAttrs value.colors;
-      delayType = builtins.isInt value.delay;
-    in (builtins.attrNames value == [ "colors" "delay" "image" "images" ]) && imageType && imagesType && colorsType && delayType;
+    isSlideshow = value: (builtins.attrNames value == [ "colors" "delay" "image" "images" ]);
   };
 }
