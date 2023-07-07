@@ -6,6 +6,7 @@ import Ai.Evolutionary ( Species(..) )
 import Codec.Picture ( Image(imageWidth, imageHeight), PixelRGB8(PixelRGB8), pixelAt )
 import Data.Bifunctor ( second )
 import Data.Colour ( LAB(lightness), RGB(RGB), deltaE, rgb2lab )
+import Data.List ( delete )
 import Data.Vector ( (//) )
 import qualified Data.Vector as V
 import System.Random ( RandomGen, randomR )
@@ -71,9 +72,11 @@ instance (Floating a, Real a) => Species (String, (Image PixelRGB8)) (V.Vector (
 
         -- The accent colours should be as different as possible.
         accentDifference = minimum $ do
-          a <- accent palette
-          b <- accent palette
-          return $ deltaE a b
+          index_x <- [0 .. (V.length $ accent palette) - 1]
+          index_y <- delete index_x [0 .. (V.length $ accent palette) - 1]
+          let x = (V.!) (accent palette) index_x
+          let y = (V.!) (accent palette) index_y
+          return $ (deltaE x y)
 
         -- Helpers for the function below.
         lightnesses = V.map lightness palette
