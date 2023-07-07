@@ -55,7 +55,7 @@ in {
       # We show the same colours regardless of this setting, and the quick
       # settings tile is removed. The value is still used by Epiphany to
       # request dark mode for websites which support it.
-      "org/gnome/desktop/interface" = {
+      "org/gnome/desktop/interface" = with config.stylix.fonts; {
         color-scheme = if config.lib.stylix.backgroundPolarity == "dark"
         then "prefer-dark"
         else "default";
