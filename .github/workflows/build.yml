@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Install Nix
-        uses: cachix/install-nix-action@v19
+        uses: cachix/install-nix-action@v22
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Install Nix
-        uses: cachix/install-nix-action@v19
+        uses: cachix/install-nix-action@v22
 
       - name: Checkout repository
         uses: actions/checkout@v3
