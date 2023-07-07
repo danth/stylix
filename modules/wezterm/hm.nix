@@ -58,6 +58,9 @@ in {
         local stylix_base_config = wezterm.config_builder()
         local stylix_user_config = stylix_wrapped_config()
         stylix_base_config = {
+            -- Set due to the default fancy tabs not respecting colorschemes
+            -- See https://github.com/wez/wezterm/issues/2615
+            use_fancy_tab_bar = false,
             color_scheme = "stylix",
             font = wezterm.font_with_fallback {
                 "${monospace.name}",
@@ -86,7 +89,6 @@ in {
             command_palette_bg_color = "${base01}",
             command_palette_fg_color = "${base05}",
             command_palette_font_size = ${builtins.toString sizes.popups},
-
         }
         for key, value in pairs(stylix_user_config) do
             stylix_base_config[key] = value
