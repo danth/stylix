@@ -5,6 +5,7 @@ let
     JuicyPixels
     json
     random
+    vector-algorithms
   ]);
 
   # `nix build .#palette-generator.passthru.docs` and open in a web browser

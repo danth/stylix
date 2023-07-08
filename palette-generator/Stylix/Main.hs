@@ -1,20 +1,13 @@
-import Ai.Evolutionary ( EvolutionConfig(EvolutionConfig), evolve )
-import Codec.Picture ( DynamicImage, Image, PixelRGB8, convertRGB8, readImage )
-import Data.Colour ( LAB, RGB(RGB), lab2rgb )
+import Ai.Evolutionary ( evolve )
+import Codec.Picture ( DynamicImage, convertRGB8, readImage )
+import Data.Colour ( lab2rgb )
 import qualified Data.Vector as V
 import Stylix.Output ( makeOutputTable )
 import Stylix.Palette ( )
 import System.Environment ( getArgs )
 import System.Exit ( die )
+import System.Random ( setStdGen, mkStdGen )
 import Text.JSON ( encode )
-
--- | Run the genetic algorithm to generate a palette from the given image.
-selectColours :: (Floating a, Real a)
-              => String -- ^ Scheme type: "either", "light" or "dark"
-              -> Image PixelRGB8 -- ^ Source image
-              -> IO (V.Vector (LAB a)) -- ^ Generated palette
-selectColours polarity image
-  = evolve (polarity, image) (EvolutionConfig 1000 100 0.5 0.01)
 
 -- | Load an image file.
 loadImage :: String -- ^ Path to the file
@@ -25,8 +18,11 @@ mainProcess :: (String, String, String) -> IO ()
 mainProcess (polarity, input, output) = do
   putStrLn $ "Processing " ++ input
 
+  -- Random numbers must be deterministic when running inside Nix.
+  setStdGen $ mkStdGen 0
+
   image <- loadImage input
-  palette <- selectColours polarity (convertRGB8 image)
+  palette <- evolve (polarity, convertRGB8 image)
   let outputTable = makeOutputTable $ V.map lab2rgb palette
 
   writeFile output $ encode outputTable
