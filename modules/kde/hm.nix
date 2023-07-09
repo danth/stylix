@@ -13,12 +13,23 @@ let
 
     ForegroundNormal = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
     ForegroundActive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundInactive = "${base03-rgb-r},${base03-rgb-g},${base03-rgb-b}";
+    ForegroundInactive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
     ForegroundLink = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
     ForegroundNegative = "${base08-rgb-r},${base08-rgb-g},${base08-rgb-b}";
     ForegroundNeutral = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
     ForegroundPositive = "${base0B-rgb-r},${base0B-rgb-g},${base0B-rgb-b}";
     ForegroundVisited = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
+  };
+
+  colorEffect = {
+    ColorEffect = 0;
+    ColorAmount = 0;
+
+    ContrastEffect = 1;
+    ContrastAmount = 0.5;
+
+    IntensityEffect = 0;
+    IntensityAmount = 0;
   };
 
   icons = {
@@ -67,8 +78,8 @@ let
       smallestReadableFont = desktopFont;
     };
 
-    "ColorEffects:Disabled".Enable = false;
-    "ColorEffects:Inactive".Enable = false;
+    "ColorEffects:Disabled" = colorEffect;
+    "ColorEffects:Inactive" = colorEffect;
 
     "Colors:Button" = colors;
     "Colors:Complementary" = colors;
