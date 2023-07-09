@@ -83,7 +83,9 @@ let
 
     "Colors:Button" = colors;
     "Colors:Complementary" = colors;
-    "Colors:Selection" = colors;
+    "Colors:Selection" = colors // {
+      BackgroundNormal = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
+    };
     "Colors:Tooltip" = colors;
     "Colors:View" = colors;
     "Colors:Window" = colors;
