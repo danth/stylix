@@ -138,6 +138,15 @@ in {
         --group 'General' \
         --key 'Image' \
         ${lib.escapeShellArg config.stylix.image}
+
+      $DRY_RUN_CMD ${pkgs.libsForQt5.kconfig.bin}/bin/kwriteconfig5 \
+        --file "$HOME/.config/kscreenlockerrc" \
+        --group 'Greeter' \
+        --group 'Wallpaper' \
+        --group 'org.kde.image' \
+        --group 'General' \
+        --key 'Image' \
+        ${lib.escapeShellArg config.stylix.image}
     '';
   };
 }
