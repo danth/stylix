@@ -20,5 +20,10 @@ in {
         selection-match = "${base0A-hex}ff";
         border = "${base0D-hex}ff";
       };
+
+      main = {
+        font = "${config.stylix.fonts.sansSerif.name}:size=${toString config.stylix.fonts.sizes.popups}";
+        dpi-aware = "no";
+      };
     };
 }
