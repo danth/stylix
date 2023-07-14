@@ -2,7 +2,7 @@
 
 let
   colors = config.lib.stylix.colors {
-    template = builtins.readFile ./colors.mustache;
+    template = ./colors.mustache;
     extension = "scss";
   };
 

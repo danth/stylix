@@ -2,7 +2,7 @@
 
 let
   themeFile = config.lib.stylix.colors {
-    template = builtins.readFile ./base16-stylix.mustache;
+    template = ./base16-stylix.mustache;
     extension = ".tmTheme";
   };
 in
