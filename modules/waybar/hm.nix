@@ -29,16 +29,19 @@ with config.stylix.fonts;
 
     @define-color base08 ${base08}; @define-color base09 ${base09}; @define-color base0A ${base0A}; @define-color base0B ${base0B};
     @define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
+
     * {
-        border: none;
-        border-radius: 0;
         font-family: ${sansSerif.name};
-        font-size: ${builtins.toString sizes.desktop};
+        font-size: ${builtins.toString sizes.desktop}px;
     }
 
-    window#waybar {
+    window#waybar, tooltip {
         background: alpha(@base00, ${with config.stylix.opacity; builtins.toString desktop});
         color: @base05;
+    }
+
+    tooltip {
+        border-color: @base0D;
     }
     ''
     + (builtins.readFile ./base.css)
