@@ -14,19 +14,19 @@ args:
       # when the theme is manually specified. generated.json is necessary in
       # the presence of overrides.
       "stylix/generated.json".source = config.lib.stylix.scheme {
-        template = builtins.readFile ../palette.json.mustache;
+        template = ../palette.json.mustache;
         extension = ".json";
       };
 
       "stylix/palette.json".source = config.lib.stylix.colors {
-        template = builtins.readFile ../palette.json.mustache;
+        template = ../palette.json.mustache;
         extension = ".json";
       };
 
       # We also provide a HTML version which is useful for viewing the colors
       # during development.
       "stylix/palette.html".source = config.lib.stylix.colors {
-        template = builtins.readFile ../palette.html.mustache;
+        template = ../palette.html.mustache;
         extension = ".html";
       };
     };

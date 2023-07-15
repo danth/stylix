@@ -15,7 +15,7 @@ let
     palette = importJSON generatedJSON;
     scheme = base16.mkSchemeAttrs palette;
     json = scheme {
-      template = builtins.readFile ./palette.json.mustache;
+      template = ./palette.json.mustache;
       extension = ".json";
     };
   in json;

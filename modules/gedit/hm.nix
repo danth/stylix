@@ -2,7 +2,7 @@
 
 let
   style = config.lib.stylix.colors {
-    template = builtins.readFile ./template.mustache;
+    template = ./template.mustache;
     extension = "xml";
   };
 

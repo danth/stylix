@@ -108,6 +108,30 @@ let
     ToolbarIcons = icons;
   };
 
+  kscreenlockerrc = ''
+    [Greeter][Wallpaper][org.kde.image][General][$i]
+    Image=${config.stylix.image}
+  '';
+
+  configDir = pkgs.runCommandLocal "stylix-kde"
+    {
+      kdeglobals = (pkgs.formats.ini {}).generate "kdeglobals" kdeglobals;
+      inherit kscreenlockerrc;
+    }
+    ''
+      mkdir $out
+      cp $kdeglobals $out/kdeglobals
+      echo "$kscreenlockerrc" >$out/kscreenlockerrc
+    '';
+
+  script = ''
+    for (desktop of desktops()) {
+      desktop.wallpaperPlugin = "org.kde.image";
+      desktop.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
+      desktop.writeConfig("Image", "${config.stylix.image}");
+    }
+  '';
+
 in {
   options.stylix.targets.kde.enable =
     config.lib.stylix.mkEnableTarget "KDE" true;
@@ -118,26 +142,19 @@ in {
       style.name = "breeze";
     };
 
-    xdg.configFile."system.kdeglobals".source =
-      (pkgs.formats.ini {}).generate "kdeglobals" kdeglobals;
+    # We can't just link config files within the home directory because
+    # they're expected to be writeable.
+    xdg.systemDirs.config = [ "${configDir}" ];
 
-    home.activation.kdeWallpaper = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      $DRY_RUN_CMD ${pkgs.libsForQt5.kconfig.bin}/bin/kwriteconfig5 \
-        --file "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" \
-        --group 'Containments' \
-        --group '1' \
-        --key 'wallpaperplugin' \
-        'org.kde.image'
-
-      $DRY_RUN_CMD ${pkgs.libsForQt5.kconfig.bin}/bin/kwriteconfig5 \
-        --file "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" \
-        --group 'Containments' \
-        --group '1' \
-        --group 'Wallpaper' \
-        --group 'org.kde.image' \
-        --group 'General' \
-        --key 'Image' \
-        ${lib.escapeShellArg config.stylix.image}
-    '';
+    # This fails silently unless Plasma is running.
+    home.activation.kdeWallpaper =
+      lib.hm.dag.entryAfter ["writeBoundary"] ''
+        ${pkgs.dbus}/bin/dbus-send \
+          --type=method_call \
+          --dest=org.kde.plasmashell \
+          /PlasmaShell \
+          org.kde.PlasmaShell.evaluateScript \
+          string:${lib.escapeShellArg script}
+      '';
   };
 }
