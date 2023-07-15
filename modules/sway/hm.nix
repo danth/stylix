@@ -31,7 +31,8 @@ in {
           ] else if (config.lib.stylix.isVideo config.stylix.wallpaper) then [
               { command = "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"; always = true; }
           ] else [
-              { command = "${pkgs.wbg}/bin/wbg ${config.stylix.wallpaper.image}"; always = true; }
+              { command = "${pkgs.swww}/bin/swww-daemon"; }
+              { command = "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.image}"; always = true;}
           ];
         colors = let
           background = base00;
