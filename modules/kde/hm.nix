@@ -154,7 +154,8 @@ in {
           --dest=org.kde.plasmashell \
           /PlasmaShell \
           org.kde.PlasmaShell.evaluateScript \
-          string:${lib.escapeShellArg script}
+          string:${lib.escapeShellArg script} \
+          || true
       '';
   };
 }
