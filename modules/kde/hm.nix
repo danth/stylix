@@ -134,7 +134,7 @@ let
 
 in {
   options.stylix.targets.kde.enable =
-    config.lib.stylix.mkEnableTarget "KDE" true;
+    config.lib.stylix.mkEnableTarget "KDE" (!pkgs.stdenv.hostPlatform.isDarwin);
 
   config = lib.mkIf config.stylix.targets.kde.enable {
     qt = {
