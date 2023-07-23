@@ -5,6 +5,7 @@ Moving wallpapers are only supported for certain environments, as shown in the t
 |              | Static | Slideshow | Animation | Video |
 |--------------|--------|-----------|-----------|-------|
 | GNOME        | ✔️      | ✔️         | ❌         | ❌     |
+| KDE          | ✔️      | ❌         | ❌         | ❌     |
 | GRUB         | ✔️      | ❌         | ❌         | ❌     |
 | LightDM      | ✔️      | ❌         | ❌         | ❌     |
 | Sway         | ✔️      | ✔️         | ✔️         | ✔️     |
