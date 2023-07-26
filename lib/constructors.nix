@@ -1,81 +1,69 @@
 { palette-generator, base16 }:
 { config, lib, pkgs, ... }@args:
+
 with lib;
-let
-  paletteJSON = polarity: image:
-    let
-      generatedJSON = pkgs.runCommand "palette.json" { } ''
-        ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
-      '';
-      palette = importJSON generatedJSON;
-      scheme = base16.mkSchemeAttrs palette;
-      json = scheme {
-        template = builtins.readFile ../stylix/palette.json.mustache;
-        extension = ".json";
-      };
-    in
-    json;
-  generateScheme = polarity: image: importJSON (paletteJSON polarity image);
-in
-{
+
+let generatePalette =
+  { image, polarity, override }:
+  let
+    palette-json = pkgs.runCommand "palette.json" { } ''
+      ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
+    '';
+    palette = (importJSON palette-json) // {
+      author = "Stylix";
+      scheme = "Stylix";
+      slug = "stylix";
+    };
+  in
+    (base16.mkSchemeAttrs palette).override override;
+
+in {
   config.lib.stylix = {
-    # constructors for the wallpaper types
-    mkStaticImage = { image, polarity ? "either", override ? { } }:
-      let
-        scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
-      in
+    mkStaticImage =
+      { image, polarity ? "either", override ? { } }:
       {
-        image = image;
-        colors =
-          if (override != null)
-          then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme
-          else (base16.mkSchemeAttrs (generateScheme polarity image));
+        inherit image;
+        colors = generatePalette { inherit image polarity override; };
       };
 
-    mkStaticFill = { colorscheme, override ? { } }:
+    mkStaticFill =
+      { colorscheme, override ? { } }:
       let
-        scheme = if (builtins.isAttrs colorscheme) then (colorscheme) else builtins.fromJSON colorscheme;
-      in
-      {
-        image = config.lib.stylix.solid scheme.base00;
-        colors = (base16.mkSchemeAttrs scheme).override override;
+        colors = (base16.mkSchemeAttrs colorscheme).override override;
+      in {
+        image = config.lib.stylix.solid colors.base00;
+        inherit colors;
       };
 
-    mkAnimation = { animation, polarity ? "either", override ? null }:
+    mkAnimation =
+      { animation, polarity ? "either", override ? { } }:
       let
         image = pkgs.runCommand "image.png" { } ''
           ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
         '';
-        scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
-      in
-      {
-        image = image;
-        colors = if (override != null) then (base16.mkSchemeAttrs (generateScheme polarity image)).override scheme else (base16.mkSchemeAttrs (generateScheme polarity image));
-        animation = animation;
+      in {
+        inherit image animation;
+        colors = generatePalette { inherit image polarity override; };
       };
 
-    mkVideo = { video, polarity ? "either", override ? null }:
+    mkVideo =
+      { video, polarity ? "either", override ? { } }:
       let
         image = pkgs.runCommand "image.png" { } ''
           ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
         '';
-        scheme = if (builtins.isAttrs override) then (override) else builtins.fromJSON override;
-      in
-      {
-        image = image;
-        colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override scheme else (generateScheme polarity image));
-        video = video;
+      in {
+        inherit image video;
+        colors = generatePalette { inherit image polarity override; };
       };
 
-    mkSlideshow = { images, polarity ? "either", override ? null, delay ? 300 }:
+    mkSlideshow =
+      { images, delay ? 300, polarity ? "either", override ? { } }:
       let
         image = builtins.elemAt images 0;
-      in
-      {
-        image = image;
-        colors = base16.mkSchemeAttrs (if (override != null) then (generateScheme polarity image).override override else (generateScheme polarity image));
-        images = images;
-        delay = delay;
+      in {
+        inherit image images delay;
+        colors = generatePalette { inherit image polarity override; };
       };
   };
 }
