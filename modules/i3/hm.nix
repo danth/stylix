@@ -11,7 +11,8 @@ let
   fonts = let
     fonts = config.stylix.fonts;
   in {
-    names = [ "${fonts.sansSerif.name} ${toString fonts.sizes.desktop}" ];
+    names = [ fonts.sansSerif.name ];
+    size = fonts.sizes.desktop * 1.0;
   };
 
 in {
