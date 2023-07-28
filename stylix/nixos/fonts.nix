@@ -5,7 +5,7 @@ let
 in {
   imports = [ ../fonts.nix ];
   config.fonts = {
-    fonts = [
+    packages = [
       cfg.monospace.package
       cfg.serif.package
       cfg.sansSerif.package
