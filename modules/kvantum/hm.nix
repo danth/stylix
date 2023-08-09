@@ -24,21 +24,19 @@
   in {
     home.packages = with pkgs; [
       qt5ct
+      libsForQt5.qtstyleplugin-kvantum
+      qt6Packages.qtstyleplugin-kvantum
+      qtstyleplugin-kvantum-qt4
       kvantumPackage
     ];
 
     qt = {
       enable = true;
       platformTheme = "qtct";
-      style.name = "kvantum";
     };
 
     xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
       General.theme = "Base16Kvantum";
-    };
-
-    home.sessionVariables = {
-      QT_QPA_PLATFORMTHEME = "qt5ct";
     };
   });
 }
