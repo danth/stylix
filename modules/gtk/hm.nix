@@ -11,8 +11,8 @@ let
   };
 
   finalCss = pkgs.runCommandLocal "gtk.css" {} ''
-    echo ${escapeShellArg cfg.extraCss} >>$out
     cat ${baseCss} >>$out
+    echo ${escapeShellArg cfg.extraCss} >>$out
   '';
 
 in {
