@@ -21,3 +21,26 @@ in
   '';
 }
 ```
+
+## Dynamic wallpaper generation based on selected theme
+
+With imagemagick, you can also dynamically generate wallpapers based on the selected theme.  
+Similarly, you can use a template image and repaint it for the current theme.
+
+```nix
+{ pkgs, ... }:
+
+let
+  theme = "${pkgs.base16-schemes}/share/themes/catppuccin.yaml";
+  wallpaper = pkgs.runCommand "image.png" {} ''
+        COLOR=$(${pkgs.yq}/bin/yq -r .base00 ${theme})
+        COLOR="#"$COLOR
+        ${pkgs.imagemagick}/bin/magick convert -size 1920x1080 xc:$COLOR $out
+  '';
+in {
+  stylix = {
+    image = wallpaper;
+    base16Scheme = theme;
+  };
+}
+```

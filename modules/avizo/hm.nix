@@ -1,9 +1,9 @@
-{pkgs, config, lib, options, ... }:
+{ config, lib, options, ... }:
 
-with config.lib.stylix.colors.withHashtag;
+with config.lib.stylix.colors;
 with config.stylix.fonts;
 let
-  aviOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
+  aviOpacity = toString config.stylix.opacity.popups;
 in
 {
   options.stylix.targets.avizo.enable =
@@ -14,10 +14,11 @@ in
     services.avizo = {
         settings = {
             default = {
-                background=base00 + aviOpacity;
-                border-color=base0D;
-                bar-fg-color=base05;
-                bar-bg-color=base00 + aviOpacity;
+              background = "rgba(${base01-rgb-r}, ${base01-rgb-g}, ${base01-rgb-b}, ${aviOpacity})";
+              border-color = "rgba(${base0D-rgb-r}, ${base0D-rgb-g}, ${base0D-rgb-b}, ${aviOpacity})";
+              bar-fg-color = "rgba(${base05-rgb-r}, ${base05-rgb-g}, ${base05-rgb-b}, ${aviOpacity})";
+              bar-bg-color = "rgba(${base01-rgb-r}, ${base01-rgb-g}, ${base01-rgb-b}, ${aviOpacity})";
+              image-opacity = aviOpacity;
             };
         };
     }; 

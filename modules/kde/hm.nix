@@ -134,7 +134,7 @@ let
 
 in {
   options.stylix.targets.kde.enable =
-    config.lib.stylix.mkEnableTarget "KDE" true;
+    config.lib.stylix.mkEnableTarget "KDE" pkgs.stdenv.hostPlatform.isLinux;
 
   config = lib.mkIf config.stylix.targets.kde.enable {
     qt = {
@@ -154,7 +154,8 @@ in {
           --dest=org.kde.plasmashell \
           /PlasmaShell \
           org.kde.PlasmaShell.evaluateScript \
-          string:${lib.escapeShellArg script}
+          string:${lib.escapeShellArg script} \
+          || true
       '';
   };
 }

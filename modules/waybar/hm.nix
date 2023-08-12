@@ -32,7 +32,7 @@ with config.stylix.fonts;
 
     * {
         font-family: ${sansSerif.name};
-        font-size: ${builtins.toString sizes.desktop}px;
+        font-size: ${builtins.toString sizes.desktop}pt;
     }
 
     window#waybar, tooltip {

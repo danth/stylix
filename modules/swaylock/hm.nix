@@ -1,4 +1,4 @@
-{ options, config, lib, ... }:
+{ pkgs, options, config, lib, ... }:
 
 with config.lib.stylix.colors;
 
@@ -12,7 +12,7 @@ let
 
 in {
   options.stylix.targets.swaylock = {
-    enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
+    enable = config.lib.stylix.mkEnableTarget "Swaylock" pkgs.stdenv.hostPlatform.isLinux;
     useImage = lib.mkOption {
       description = lib.mdDoc ''
         Whether to use your wallpaper image for the Swaylock background.
