@@ -26,7 +26,6 @@
       qt5ct
       libsForQt5.qtstyleplugin-kvantum
       qt6Packages.qtstyleplugin-kvantum
-      qtstyleplugin-kvantum-qt4
       kvantumPackage
     ];
 
