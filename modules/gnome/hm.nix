@@ -49,9 +49,9 @@ in {
         color-scheme = if config.lib.stylix.backgroundPolarity == "dark"
         then "prefer-dark"
         else "default";
-
-        "org/gnome/shell/extensions/user-theme".name = "Stylix";
       };
+      
+      "org/gnome/shell/extensions/user-theme".name = "Stylix";
     };
 
     xdg.dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
