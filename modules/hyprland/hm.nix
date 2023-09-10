@@ -3,28 +3,25 @@
 with config.lib.stylix.colors;
 
 let
-  text = base05;
-  urgent = base08;
-  focused = base0A;
-  unfocused = base03;
+  rgb = color: "rgb(${color})";
+  rgba = color: alpha: "rgba(${color}${alpha})";
 
-  fonts = {
-    names = [ config.stylix.fonts.sansSerif.name ];
-    size = config.stylix.fonts.sizes.desktop + 0.0;
+  settings = {
+    decoration."col.shadow" = rgba base00 "99";
+    general = {
+      "col.active_border" = rgb base0A;
+      "col.inactive_border" = rgb base03;
+      "col.group_border" = rgb base0D;
+      "col.group_border_active" = rgb base06;
+      "col.group_border_locked_active" = rgb base06;
+    };
+    misc.background_color = rgb base00;
   };
 
 in {
-    options.stylix.targets.hyprland.enable = 
-      config.lib.stylix.mkEnableTarget "Hyprland" true;
-    config = lib.mkMerge [
-      (lib.mkIf config.stylix.targets.hyprland.enable {
-        wayland.windowManager.hyprland.settings = {
-          general = {
-            "col.active_border" = "rgb(${focused})";
-            "col.inactive_border" = "rgb(${unfocused})";
-            # "col.active_border" = "rgb(${focused})";
-          };
-        };
-      })
-    ];
-  }
+  options.stylix.targets.hyprland.enable =
+    config.lib.stylix.mkEnableTarget "Hyprland" true;
+
+  config.wayland.windowManager.hyprland.settings =
+    lib.mkIf config.stylix.targets.hyprland.enable settings;
+}
