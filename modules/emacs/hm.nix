@@ -13,6 +13,7 @@ with config.stylix.fonts;
         [
           (epkgs.trivialBuild {
             pname = "base16-stylix-theme";
+            version = "0.1.0";
             src = pkgs.writeText "base16-stylix-theme.el" ''
               (require 'base16-theme)
 
