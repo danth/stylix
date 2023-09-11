@@ -7,6 +7,16 @@ let
   rgba = color: alpha: "rgba(${color}${alpha})";
 
   settings = {
+    exec-once = if !(config.lib.stylix.isVideo config.stylix.wallpaper) then [      
+      "${pkgs.swww}/bin/swww-daemon" 
+    ];
+    exec = if (config.lib.stylix.isVideo config.stylix.wallpaper) then [
+      "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"              
+    ] else if (config.lib.stylix.isSlideshow config.stylix.wallpaper) then [
+      "${config.lib.stylix.waylandSlideshowScript}"
+    ] else[
+      "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"
+    ];
     decoration."col.shadow" = rgba base00 "99";
     general = {
       "col.active_border" = rgb base0A;
