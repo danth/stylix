@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with config.lib.stylix.colors;
 
@@ -9,12 +9,12 @@ let
   settings = {
     exec-once = if !(config.lib.stylix.isVideo config.stylix.wallpaper) then [      
       "${pkgs.swww}/bin/swww-daemon" 
-    ];
+    ] else [];
     exec = if (config.lib.stylix.isVideo config.stylix.wallpaper) then [
       "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"              
     ] else if (config.lib.stylix.isSlideshow config.stylix.wallpaper) then [
       "${config.lib.stylix.waylandSlideshowScript}"
-    ] else[
+    ] else [
       "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"
     ];
     decoration."col.shadow" = rgba base00 "99";
