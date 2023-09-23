@@ -17,6 +17,7 @@ let
     ] else [
       "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"
     ];
+
     decoration."col.shadow" = rgba base00 "99";
     general = {
       "col.active_border" = rgb base0A;
