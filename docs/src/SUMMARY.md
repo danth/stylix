@@ -10,8 +10,8 @@
 
 - [NixOS options](options/nixos.md)
 - [Home Manager options](options/hm.md)
+- [Wallpaper support](wallpaper-support.md)
 
 # Contributing
 
 - [Style guide](styling.md)
-- [Wallpaper Constructors](lib/wallpaper-constructors.md)

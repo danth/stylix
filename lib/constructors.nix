@@ -4,66 +4,56 @@
 with lib;
 
 let generatePalette =
-  { image, polarity, override }:
-  let
-    palette-json = pkgs.runCommand "palette.json" { } ''
-      ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
-    '';
-    palette = (importJSON palette-json) // {
-      author = "Stylix";
-      scheme = "Stylix";
-      slug = "stylix";
-    };
-  in
-    (base16.mkSchemeAttrs palette).override override;
+  { image, polarity }:
+  # TODO: make base16.nix able to load this file directly, rather than importing it here
+  let palette = pkgs.runCommand "palette.json" { } ''
+    ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
+  '';
+  in importJSON palette;
 
 in {
   config.lib.stylix = {
     mkStaticImage =
-      { image, polarity ? "either", override ? { } }:
+      { image, polarity ? "either" }:
       {
         inherit image;
-        colors = generatePalette { inherit image polarity override; };
+        colors = generatePalette { inherit image polarity; };
       };
 
     mkStaticFill =
-      { colorscheme, override ? { } }:
-      let
-        colors = (base16.mkSchemeAttrs colorscheme).override override;
+      { colors }:
+      let scheme = base16.mkSchemeAttrs colors;
       in {
-        image = config.lib.stylix.solid colors.base00;
+        image = config.lib.stylix.solid scheme.base00;
         inherit colors;
       };
 
     mkAnimation =
-      { animation, polarity ? "either", override ? { } }:
-      let
-        image = pkgs.runCommand "image.png" { } ''
-          ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
-        '';
+      { animation, polarity ? "either" }:
+      let image = pkgs.runCommand "image.png" { } ''
+        ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
+      '';
       in {
         inherit image animation;
-        colors = generatePalette { inherit image polarity override; };
+        colors = generatePalette { inherit image polarity; };
       };
 
     mkVideo =
-      { video, polarity ? "either", override ? { } }:
-      let
-        image = pkgs.runCommand "image.png" { } ''
-          ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
-        '';
+      { video, polarity ? "either" }:
+      let image = pkgs.runCommand "image.png" { } ''
+        ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
+      '';
       in {
         inherit image video;
-        colors = generatePalette { inherit image polarity override; };
+        colors = generatePalette { inherit image polarity; };
       };
 
     mkSlideshow =
-      { images, delay ? 300, polarity ? "either", override ? { } }:
-      let
-        image = builtins.elemAt images 0;
+      { images, delay ? 300, polarity ? "either" }:
+      let image = builtins.elemAt images 0;
       in {
         inherit image images delay;
-        colors = generatePalette { inherit image polarity override; };
+        colors = generatePalette { inherit image polarity; };
       };
   };
 }

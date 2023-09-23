@@ -4,102 +4,164 @@
 with lib;
 
 let
-  cfg = config.stylix;
   fromOs = import ./fromos.nix { inherit lib args; };
-in
-{
+
+in {
   imports = [
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base01" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base02" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base03" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base04" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base05" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base06" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base07" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base08" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base09" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0A" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0B" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0C" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0D" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0E" ] "The palette option has been removed.")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0F" ] "The palette option has been removed.")
+    # Originally, the scheme was always automatically generated and options
+    # like `stylix.palette.base00' would override individual colors.
+    # That was removed, and instead `stylix.base16Scheme' would accept an
+    # entire scheme as either as an attrset or YAML file.
+    # Then `stylix.override' was added to change part of that scheme,
+    # similar to `stylix.palette' but as a single option taking an attrset.
+    # Now `stylix.colors' combines all of this functionality.
+    (mkRenamedOptionModule [ "stylix" "palette" ] [ "stylix" "colors" ])
+    (mkRenamedOptionModule [ "stylix" "base16Scheme" ] [ "stylix" "colors" ])
+    (mkRenamedOptionModule [ "stylix" "override" ] [ "stylix" "colors" ])
+
+    (mkMergedOptionModule
+      [ [ "stylix" "image" ] [ "stylix" "polarity" ] ]
+      [ "stylix" "wallpaper" ]
+      (values:
+        with values.stylix;
+        mkIf (image != "_mkMergedOptionModule") (
+          if polarity == "_mkMergedOptionModule"
+          then config.lib.stylix.mkStaticImage {
+            inherit image;
+          }
+          else config.lib.stylix.mkStaticImage {
+            inherit image polarity;
+          }
+        ))) 
   ];
 
   options.stylix = {
     wallpaper = mkOption {
-      type = with config.lib.stylix; types.oneOf [ static animation video slideshow ];
-
-      default =
-        let
-          message = ''
-            The image, polarity, override and base16Scheme options are deprecated.
-            Please use the new options documented at
-            https://danth.github.io/stylix/configuration.html#wallpaper
-          '';
-          onlyWallpaper = lib.warn message config.lib.stylix.mkStaticImage {
-            image = config.stylix.image;
-            polarity = config.stylix.polarity;
-            override = config.stylix.override;
-          };
-          onlyScheme = lib.warn message config.lib.stylix.mkStaticFill {
-            colorscheme = config.stylix.base16Scheme;
-            override = config.stylix.override;
-          };
-          default =
-            if (config.stylix.image != null)
-            then onlyWallpaper
-            else if (config.stylix.base16Scheme != null)
-            then onlyScheme
-            else throw ''
-              Please set a wallpaper following the instructions at
-              https://danth.github.io/stylix/configuration.html#wallpaper
-            '';
-        in
-        fromOs [ "wallpaper" ] default;
+      type = with config.lib.stylix;
+        types.oneOf [ static slideshow animation video ];
 
       description = mdDoc ''
-        Object containing a desktop wallpaper and matching color scheme.
+        This option defines the desktop wallpaper.
 
-        This should be created using one of the constructors provided.
+        The easiest choice is a static image:
+
+        ```nix
+        { config, ... }:
+        {
+          stylix.wallpaper = config.lib.stylix.mkStaticImage {
+            image = ./path/to/image.png;
+          };
+        }
+        ```
+
+        [This table](https://danth.github.io/stylix/wallpaper-support.html)
+        shows where other choices are possible. These choices include slideshows:
+
+        ```nix
+        { config, ... }:
+        {
+          stylix.wallpaper = config.lib.stylix.mkSlideshow {
+            images = [
+              ./path/to/image/1.webp
+              ./path/to/image/2.jpg
+            ];
+            delay = 60;
+          };
+        }
+        ```
+
+        Animated images:
+
+        ```nix
+        { config, ... }:
+        {
+          stylix.wallpaper = config.lib.stylix.mkAnimation {
+            animation = ./path/to/animation.gif;
+          };
+        }
+        ````
+
+        And videos:
+
+        ```nix
+        { config, ... }:
+        {
+          stylix.wallpaper = config.lib.stylix.mkVideo {
+            video = ./path/to/video.mp4;
+          };
+        }
+        ````
+
+        For all of the examples above, you can also set a `polarity`. This locks
+        down whether the wallpaper is considered to be `light` or `dark` by the
+        color scheme generator. Polarity is not relevant if you choose your own
+        color scheme.
+
+        ```nix
+        { config, ... }:
+        {
+          stylix.wallpaper = config.lib.stylix.mkStaticImage {
+            image = ./night-sky.jpg;
+            polarity = "dark";
+          };
+        }
+        ```
       '';
     };
 
-    image = mkOption {
-      type = with types; nullOr (coercedTo package toString path);
-      default = fromOs [ "image" ] null;
-      description = mdDoc "This option is deprecated.";
-      visible = false;
-    };
+    colors = mkOption {
+      type = config.lib.stylix.overridableScheme;
+      default = config.stylix.wallpaper.colors;
 
-    polarity = mkOption {
-      type = types.enum [ "either" "light" "dark" ];
-      default = "either";
-      description = mdDoc "This option is deprecated.";
-      visible = false;
-    };
+      defaultText = literalMD ''
+        A whole color scheme, automatically generated using colors from
+        `stylix.wallpaper`.
+      '';
 
-    base16Scheme = mkOption {
-      type = with types; nullOr (oneOf [ path lines attrs ]);
-      default = fromOs [ "base16Scheme" ] null;
-      description = mdDoc "This option is deprecated.";
-      visible = false;
-    };
+      description = ''
+        This option accepts either a whole color scheme, or an override which
+        changes part of the color scheme.
 
-    override = mkOption {
-      type = with types; oneOf [ path lines attrs ];
-      default = fromOs [ "base16Scheme" ] { };
-      description = mdDoc "This option is deprecated.";
-      visible = false;
+        A whole color scheme is either:
+
+        - An attribute set containing `base00` to `base0F`, and optionally
+          `scheme`, `author`, `description` or `slug`.
+        - A path to a scheme file.
+
+        Popular scheme files are available through `pkgs.base16-schemes`:
+
+        ```nix
+        { pkgs, ... }:
+        {
+          stylix.colors = "''${pkgs.base16-schemes}/share/themes/ayu-mirage.yaml";
+        }
+        ```
+
+        An override is an attribute set containing some but not all of `base00`
+        to `base0F`, `scheme`, `author`, `description` or `slug`. These values
+        will replace those from the original color scheme.
+
+        To choose a scheme and override it in the same file, use `mkMerge`:
+
+        ```nix
+        { pkgs, lib, ... }:
+        {
+          stylix.colors = lib.mkMerge [
+            "''${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml"
+            { base00 = "000000"; }
+          ];
+        }
+        ```
+      '';
     };
   };
 
   config = {
-    # This attrset can be used like a function too, see
-    # https://github.com/SenchoPens/base16.nix#mktheme
-    #lib.stylix.colors = (base16.mkSchemeAttrs cfg.wallpaper.generatedColorScheme.palette).override override;
-    lib.stylix.scheme = cfg.wallpaper.colors;
-    lib.stylix.colors = cfg.wallpaper.colors;
+    stylix.wallpaper =
+      let default = fromOs [ "wallpaper" ] null;
+      in mkIf (default != null) (mkDefault default);
+
+    # TODO: Deprecate config.lib.stylix.colors in favor of config.stylix.colors
+    lib.stylix.colors = config.stylix.colors;
   };
 }

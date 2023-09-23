@@ -4,7 +4,7 @@
 {
   imports = [
     ./utils.nix
-    ./types.nix
+    (import ./types.nix { inherit base16; })
     (import ./constructors.nix { inherit palette-generator base16; })
   ];
 }

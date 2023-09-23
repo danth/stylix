@@ -1,26 +1,26 @@
-# Dummy values to avoid errors when generating the documentation.
+# Dummy wallpaper to avoid errors when generating the documentation.
+
+{ config, ... }:
 
 {
-  stylix = {
-    image = null;
-
-    base16Scheme = {
-      base00 = "ffffff";
-      base01 = "ffffff";
-      base02 = "ffffff";
-      base03 = "ffffff";
-      base04 = "ffffff";
-      base05 = "ffffff";
-      base06 = "ffffff";
-      base07 = "ffffff";
-      base08 = "ffffff";
-      base09 = "ffffff";
-      base0A = "ffffff";
-      base0B = "ffffff";
-      base0C = "ffffff";
-      base0D = "ffffff";
-      base0E = "ffffff";
-      base0F = "ffffff";
+  stylix.wallpaper = config.lib.stylix.mkStaticFill {
+    colors = {
+      base00 = "000000";
+      base01 = "000000";
+      base02 = "000000";
+      base03 = "000000";
+      base04 = "000000";
+      base05 = "000000";
+      base06 = "000000";
+      base07 = "000000";
+      base08 = "000000";
+      base09 = "000000";
+      base0A = "000000";
+      base0B = "000000";
+      base0C = "000000";
+      base0D = "000000";
+      base0E = "000000";
+      base0F = "000000";
     };
   };
 }
