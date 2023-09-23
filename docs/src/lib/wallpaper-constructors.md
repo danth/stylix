@@ -14,6 +14,7 @@ Moving wallpapers are only supported for certain environments, as shown in the t
 | i3           | ✔️      | ✔️         | ✔️         | ✔️     |
 | herbstluftwm | ✔️      | ✔️         | ✔️         | ✔️     |
 | bspwm        | ✔️      | ✔️         | ✔️         | ✔️     |
+| Hyprland     | ✔️      | ✔️         | ✔️         | ✔️     |
 
 If an unsupported wallpaper is used, Stylix will fall back to a static image created
 from the first frame of the wallpaper.
