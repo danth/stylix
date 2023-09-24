@@ -55,7 +55,8 @@ in {
         ```
 
         [This table](https://danth.github.io/stylix/wallpaper-support.html)
-        shows where other choices are possible. These choices include slideshows:
+        shows which software is compatible with the more interesting choices.
+        These include slideshows:
 
         ```nix
         { config, ... }:
@@ -92,10 +93,11 @@ in {
         }
         ````
 
-        For all of the examples above, you can also set a `polarity`. This locks
-        down whether the wallpaper is considered to be `light` or `dark` by the
-        color scheme generator. Polarity is not relevant if you choose your own
-        color scheme.
+        For any of the examples above, you may also give a `polarity`. This
+        locks down whether the wallpaper is considered to be `light` or `dark`
+        by the color scheme generator, so you will get a `light` or `dark` theme
+        by default. Polarity is not relevant if you are choosing your own color
+        scheme.
 
         ```nix
         { config, ... }:
@@ -114,21 +116,19 @@ in {
       default = config.stylix.wallpaper.colors;
 
       defaultText = literalMD ''
-        A whole color scheme, automatically generated using colors from
-        `stylix.wallpaper`.
+        A scheme generated using colors from `stylix.wallpaper`.
       '';
 
       description = ''
-        This option accepts either a whole color scheme, or an override which
-        changes part of the color scheme.
+        Color scheme to be used throughout the configuration.
 
-        A whole color scheme is either:
+        This option accepts either a whole scheme, or an override which changes
+        part of the scheme.
 
-        - An attribute set containing `base00` to `base0F`, and optionally
-          `scheme`, `author`, `description` or `slug`.
-        - A path to a scheme file.
-
-        Popular scheme files are available through `pkgs.base16-schemes`:
+        A whole scheme can be either a path to a file, or an attribute set
+        containing `base00` to `base0F`, and optionally `scheme`, `author`,
+        `description` or `slug`. Popular schemes are available through
+        `pkgs.base16-schemes`:
 
         ```nix
         { pkgs, ... }:
@@ -139,7 +139,8 @@ in {
 
         An override is an attribute set containing some but not all of `base00`
         to `base0F`, `scheme`, `author`, `description` or `slug`. These values
-        will replace those from the original color scheme.
+        will replace those from the original color scheme. If you have multiple
+        overrides, they may be applied in any order.
 
         To choose a scheme and override it in the same file, use `mkMerge`:
 

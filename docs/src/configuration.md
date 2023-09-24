@@ -1,3 +1,5 @@
+# Configuration
+
 ## Getting started
 
 The options you will be most interested in are as follows:
