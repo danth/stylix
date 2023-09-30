@@ -1,6 +1,6 @@
 { pkgs, config, lib, ... }:
 
-with config.lib.stylix.colors.withHashtag;
+with config.stylix.colors.withHashtag;
 with config.stylix.fonts;
 
 {

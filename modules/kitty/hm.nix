@@ -2,7 +2,7 @@
 
 let
   cfg = config.stylix.targets.kitty;
-  theme = config.lib.stylix.colors {
+  theme = config.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
       owner = "kdrag0n";
       repo = "base16-kitty";

@@ -162,7 +162,7 @@ in {
       let default = fromOs [ "wallpaper" ] null;
       in mkIf (default != null) (mkDefault default);
 
-    # TODO: Deprecate config.lib.stylix.colors in favor of config.stylix.colors
-    lib.stylix.colors = config.stylix.colors;
+    lib.stylix.colors =
+      lib.warn "`config.lib.stylix.colors' has been renamed to `config.stylix.colors'. Please update your configuration accordingly." config.stylix.colors;
   };
 }

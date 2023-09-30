@@ -2,7 +2,7 @@
 
 with config.lib.stylix;
 with config.stylix.fonts;
-with config.lib.stylix.colors.withHashtag;
+with config.stylix.colors.withHashtag;
 
 let
   # Grub requires fonts to be converted to "PFF2 format"

@@ -3,7 +3,7 @@
 let
   cfg = config.stylix.targets.foot;
 
-  theme = config.lib.stylix.colors {
+  theme = config.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
       owner = "tinted-theming";
       repo = "base16-foot";

@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-let colors = config.lib.stylix.colors.withHashtag;
+let colors = config.stylix.colors.withHashtag;
 in {
   options.stylix.targets.wezterm.enable =
     config.lib.stylix.mkEnableTarget "wezterm" config.programs.wezterm.enable;

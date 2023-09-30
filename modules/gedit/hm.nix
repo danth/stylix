@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 
 let
-  style = config.lib.stylix.colors {
+  style = config.stylix.colors {
     template = ./template.mustache;
     extension = "xml";
   };

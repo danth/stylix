@@ -35,8 +35,8 @@ in {
         picture-uri-dark = wallpaperUri;
         picture-options = "zoom";
         color-shading-type = "solid";
-        primary-color = config.lib.stylix.colors.withHashtag.base00;
-        secondary-color = config.lib.stylix.colors.withHashtag.base01;
+        primary-color = config.stylix.colors.withHashtag.base00;
+        secondary-color = config.stylix.colors.withHashtag.base01;
       };
       
       "org/gnome/desktop/interface" = with config.stylix.fonts ; {

@@ -2,7 +2,7 @@
 let
   mkFzfKeyValue = lib.generators.mkKeyValueDefault { } ":";
 
-  colorConfig = with config.lib.stylix.colors.withHashtag;
+  colorConfig = with config.stylix.colors.withHashtag;
     lib.concatStringsSep "," (lib.mapAttrsToList mkFzfKeyValue {
       "bg" = base00;
       "bg+" = base01;

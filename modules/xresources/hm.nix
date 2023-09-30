@@ -3,7 +3,7 @@
 with config.stylix.fonts;
 
 let
-  themeFile = config.lib.stylix.colors {
+  themeFile = config.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
       owner = "tinted-theming";
       repo = "base16-xresources";

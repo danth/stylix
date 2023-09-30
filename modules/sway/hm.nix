@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 
-with config.lib.stylix.colors.withHashtag;
+with config.stylix.colors.withHashtag;
 
 let
   text = base05;

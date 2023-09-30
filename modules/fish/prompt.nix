@@ -1,7 +1,7 @@
 { pkgs, config }:
 
 let
-  theme = config.lib.stylix.colors {
+  theme = config.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
       owner = "tomyun";
       repo = "base16-fish";
@@ -11,5 +11,5 @@ let
   };
 in ''
   source ${theme}
-  base16-${config.lib.stylix.colors.slug}
+  base16-${config.stylix.colors.slug}
 ''

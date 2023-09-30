@@ -10,7 +10,7 @@ let
        foreground: rgba ( {{base05-rgb-r}}, {{base05-rgb-g}}, {{base05-rgb-b}}, ${config.lib.stylix.popupsOpacity-int} % );
    }
    '' + builtins.toString (builtins.readFile ./template.mustache);
-  finalFile = config.lib.stylix.colors {
+  finalFile = config.stylix.colors {
       template = finalString;
       extension = ".rasi";
   };

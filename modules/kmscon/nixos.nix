@@ -7,7 +7,7 @@
     let
       formatBase = name:
         let
-          getComponent = comp: config.lib.stylix.colors."${name}-rgb-${comp}";
+          getComponent = comp: config.stylix.colors."${name}-rgb-${comp}";
         in
         "${getComponent "r"},${getComponent "g"},${getComponent "b"}";
     in

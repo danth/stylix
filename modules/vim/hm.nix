@@ -3,7 +3,7 @@
 with lib;
 
 let
-  themeFile = config.lib.stylix.colors {
+  themeFile = config.stylix.colors {
     templateRepo = pkgs.fetchFromGitHub {
       owner = "chriskempson";
       repo = "base16-vim";

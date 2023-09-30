@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 
 with config.stylix.fonts;
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   colors = {

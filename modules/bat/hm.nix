@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 
 let
-  themeFile = config.lib.stylix.colors {
+  themeFile = config.stylix.colors {
     template = ./base16-stylix.mustache;
     extension = ".tmTheme";
   };

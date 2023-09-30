@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 with config.stylix.fonts;
-with config.lib.stylix.colors.withHashtag;
+with config.stylix.colors.withHashtag;
 
 let
   background = base00;

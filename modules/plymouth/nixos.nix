@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 with lib;
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   cfg = config.stylix.targets.plymouth;

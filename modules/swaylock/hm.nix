@@ -1,6 +1,6 @@
 { pkgs, options, config, lib, ... }:
 
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   inside = base01-hex;

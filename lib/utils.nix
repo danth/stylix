@@ -24,9 +24,9 @@
 
     backgroundPolarity =
       let
-        red = lib.toInt config.lib.stylix.colors.base00-rgb-r;
-        green = lib.toInt config.lib.stylix.colors.base00-rgb-g;
-        blue = lib.toInt config.lib.stylix.colors.base00-rgb-b;
+        red = lib.toInt config.stylix.colors.base00-rgb-r;
+        green = lib.toInt config.stylix.colors.base00-rgb-g;
+        blue = lib.toInt config.stylix.colors.base00-rgb-b;
       in
       if (red + green + blue >= 150) then "light" else "dark";
 
@@ -49,7 +49,7 @@
     pixel = color:
       pkgs.runCommand "${color}-pixel.png"
         {
-          color = config.lib.stylix.colors.withHashtag.${color};
+          color = config.stylix.colors.withHashtag.${color};
         } "${pkgs.imagemagick}/bin/convert xc:$color png32:$out";
   };
 }

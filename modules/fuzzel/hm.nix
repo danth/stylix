@@ -1,6 +1,6 @@
 { pkgs, config, lib, ... }:
 
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   opacity = lib.toHexString (builtins.ceil (config.stylix.opacity.popups * 255));

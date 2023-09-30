@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   rgb = color: "rgb(${color})";

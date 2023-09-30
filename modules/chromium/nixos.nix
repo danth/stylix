@@ -9,6 +9,6 @@
     # negligible amount of space, so it's reasonable to have this always on.
     enable = true;
 
-    extraOpts.BrowserThemeColor = config.lib.stylix.colors.withHashtag.base00;
+    extraOpts.BrowserThemeColor = config.stylix.colors.withHashtag.base00;
   };
 }
