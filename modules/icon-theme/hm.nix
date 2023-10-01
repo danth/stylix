@@ -7,7 +7,7 @@ in
   options.stylix.targets.iconTheme = {
     enable = config.lib.stylix.mkEnableTarget "iconTheme" true;
     name = lib.mkOption {
-      description = "The iconn theme name";
+      description = "The icon theme name";
       type = lib.types.str;
       default = "Numix-Circle";
     };
