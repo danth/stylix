@@ -2,6 +2,12 @@
 
 let
   cfg = config.stylix.targets.iconTheme;
+  pythonEnv = pkgs.python3.withPackages
+    (ps: with ps; [
+      colormath
+      tqdm
+      pillow
+    ]);
 in
 {
   options.stylix.targets.iconTheme = {
@@ -90,17 +96,8 @@ in
             (lib.mkIf (cfg.recolor.enable) {
               package = cfg.package.overrideAttrs
                 (oldAttrs: rec {
-                  propagatedBuildInputs = oldAttrs.propagatedBuildInputs ++ [
-                    (pkgs.python3.withPackages
-                      (ps: with ps; [
-                        colormath
-                        tqdm
-                        pillow
-                      ])
-                    )
-                  ];
                   postInstall = (oldAttrs.postInstall or "") + ''
-                    python3 ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
+                    ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
                     ${if cfg.recolor.mode == "color" then
                       "--color '${builtins.head cfg.recolor.colors}'"
                     else if cfg.recolor.mode == "color-from-palette" then
