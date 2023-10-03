@@ -5,7 +5,7 @@ let
 in
 {
   options.stylix.targets.iconTheme = {
-    enable = config.lib.stylix.mkEnableTarget "iconTheme" true;
+    enable = config.lib.stylix.mkEnableTarget "the icon theme" true;
     name = lib.mkOption {
       description = "The icon theme name";
       type = lib.types.str;
