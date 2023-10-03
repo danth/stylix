@@ -26,7 +26,7 @@ in
         description = ''The mode to use:
           color = single color
           color-from-palette = uses a random single color from the palette for each icon
-          palette = uses the entire colorscheme for each icon"
+          palette = uses the entire colorscheme for each icon
         '';
         type = lib.types.enum [ "color" "color-from-palette" "palette" ];
         default = "palette";
