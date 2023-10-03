@@ -16,7 +16,7 @@ in
       type = lib.types.package;
       default = pkgs.numix-icon-theme-circle;
     };
-    adjustColorScheme = {
+    recolor = {
       enable = lib.mkOption {
         description = "Whether to adjust the icon theme colors.";
         type = lib.types.bool;
@@ -35,9 +35,9 @@ in
         description = "The color to use when mode is set to color";
         type = lib.types.listOf (lib.types.str);
         default =
-          if cfg.adjustColorScheme.mode == "color" then
+          if cfg.recolor.mode == "color" then
             config.lib.stylix.colors.withHashtag.base09
-          else if cfg.adjustColorScheme.mode == "color-from-palette" then
+          else if cfg.recolor.mode == "color-from-palette" then
             with config.lib.stylix.colors.withHashtag; [
               base08
               base09
@@ -84,10 +84,10 @@ in
               name = cfg.name;
             }
 
-            (lib.mkIf (!cfg.adjustColorScheme.enable) {
+            (lib.mkIf (!cfg.recolor.enable) {
               package = cfg.package;
             })
-            (lib.mkIf (cfg.adjustColorScheme.enable) {
+            (lib.mkIf (cfg.recolor.enable) {
               package = cfg.package.overrideAttrs
                 (oldAttrs: rec {
                   propagatedBuildInputs = oldAttrs.propagatedBuildInputs ++ [
@@ -100,13 +100,13 @@ in
                     )
                   ];
                   postInstall = (oldAttrs.postInstall or "") + ''
-                    python3 ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.adjustColorScheme.smooth}' \
-                    ${if cfg.adjustColorScheme.mode == "color" then
-                      "--color '${builtins.head cfg.adjustColorScheme.colors}'"
-                    else if cfg.adjustColorScheme.mode == "color-from-palette" then
-                      "--color-from-palette '${builtins.concatStringsSep "," cfg.adjustColorScheme.colors}'"
+                    python3 ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
+                    ${if cfg.recolor.mode == "color" then
+                      "--color '${builtins.head cfg.recolor.colors}'"
+                    else if cfg.recolor.mode == "color-from-palette" then
+                      "--color-from-palette '${builtins.concatStringsSep "," cfg.recolor.colors}'"
                     else
-                      "--palette ''${builtins.concatStringsSep "," cfg.adjustColorScheme.colors}''"}
+                      "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
 
                     for theme in $out/share/icons/*; do
                       gtk-update-icon-cache $theme
