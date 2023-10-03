@@ -99,7 +99,7 @@ in
                       ])
                     )
                   ];
-                  postInstall = ''
+                  postInstall = (oldAttrs.postInstall or "") + ''
                     python3 ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.adjustColorScheme.smooth}' \
                     ${if cfg.adjustColorScheme.mode == "color" then
                       "--color '${builtins.head cfg.adjustColorScheme.colors}'"
