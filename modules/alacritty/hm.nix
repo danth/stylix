@@ -26,7 +26,9 @@ in
         size = sizes.terminal;
       };
       window.opacity = with config.stylix.opacity; terminal;
-      import = [ themeFile ];
+      import = [ "${xdg.configHome}/alacritty/stylix.yml" ];
     };
+
+    xdg.configFile."alacritty/stylix.yml".source = themeFile;
   };
 }
