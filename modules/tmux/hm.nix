@@ -16,7 +16,8 @@ in {
 
   config = lib.mkIf config.stylix.targets.tmux.enable {
     programs.tmux.extraConfig = ''
-    source-file ${theme}
+      source-file ${config.xdg.configHome}/tmux/stylix.conf
     '';
+    xdg.configFile."tmux/stylix.conf".source = theme;
   };
 }
