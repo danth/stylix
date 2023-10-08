@@ -4,12 +4,7 @@ let
   cfg = config.stylix.targets.foot;
 
   theme = config.lib.stylix.colors {
-    templateRepo = pkgs.fetchFromGitHub {
-      owner = "tinted-theming";
-      repo = "base16-foot";
-      rev = "22579065fbe21361b64d80bae798666efaa85ce0";
-      sha256 = "gb43UufuN6iRu6MfTZP+a3GUUQ+hKa5e6G4IiWEc68A=";
-    };
+    templateRepo = config.lib.stylix.templates.base16-foot;
   };
 
 in {

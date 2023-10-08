@@ -2,12 +2,7 @@
 
 let
   theme = config.lib.stylix.colors {
-    templateRepo = pkgs.fetchFromGitHub {
-      owner = "tinted-theming";
-      repo = "base16-helix";
-      rev = "3e391da3aaf2fa43dc9cfb67e4e6216c7ce163dc";
-      sha256 = "elhPirlFx9UaZGTht9jFl8lLfT4Af38ITTPJT90yrHs=";
-    };
+    templateRepo = config.lib.stylix.templates.base16-helix;
   };
 
   # Removing the background exposes transparency from the terminal. The

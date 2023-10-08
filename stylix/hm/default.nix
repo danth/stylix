@@ -1,3 +1,4 @@
+inputs:
 { palette-generator, base16 }:
 { config, lib, ... }:
 
@@ -10,5 +11,6 @@ in {
     ../opacity.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
+    (import ../templates.nix inputs)
   ] ++ autoload;
 }
