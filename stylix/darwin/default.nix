@@ -8,7 +8,7 @@ in {
   imports = [
     ../target.nix
     ./fonts.nix
-    (import ./palette.nix { inherit palette-generator base16; })
+    (import ./etc.nix { inherit palette-generator base16; })
   ] ++ autoload;
 
   options.stylix.homeManagerIntegration = {
