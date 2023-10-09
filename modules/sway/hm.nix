@@ -21,16 +21,6 @@ in {
     (lib.mkIf config.stylix.targets.sway.enable {
       wayland.windowManager.sway.config = {
         inherit fonts;
-          startup =
-          if (config.lib.stylix.isVideo config.stylix.wallpaper) then [
-              { command = "${pkgs.mpvpaper}/bin/mpvpaper '*' -o 'no-audio --loop' ${config.stylix.wallpaper.video}"; always = true; }              
-          ] else if (config.lib.stylix.isSlideshow config.stylix.wallpaper) then [
-              { command = "${pkgs.swww}/bin/swww-daemon"; }
-              { command = "${config.lib.stylix.waylandSlideshowScript}"; always = true;}
-          ] else [            
-              { command = "${pkgs.swww}/bin/swww-daemon"; }
-              { command = "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"; always = true;}
-          ];
         colors = let
           background = base00;
           indicator = base0B;

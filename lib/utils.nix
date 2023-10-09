@@ -31,19 +31,6 @@
       if (red + green + blue >= 150) then "light" else "dark";
 
     # Generate a PNG image containing a named color
-    waylandSlideshowScript = pkgs.writeScript "script.sh" ''
-      export SWWW_TRANSITION_FPS=60
-      export SWWW_TRANSITION_STEP=2
-
-      # This controls (in seconds) when to switch to the next image
-      INTERVAL=${builtins.toString config.stylix.wallpaper.delay}
-      imagearray=(${builtins.toString config.stylix.wallpaper.images})
-  
-      while true; do
-      	${pkgs.swww}/bin/swww img ''${imagearray[ $RANDOM % ''${#imagearray[@]} ]}
-      	sleep $INTERVAL
-      done
-    '';
 
     solid = color: pkgs.runCommand "${color}-pixel.png" { } "${pkgs.imagemagick}/bin/convert xc:#${color} png32:$out";
     pixel = color:
