@@ -4,12 +4,7 @@ with config.stylix.fonts;
 
 let
   themeFile = config.lib.stylix.colors {
-    templateRepo = pkgs.fetchFromGitHub {
-      owner = "tinted-theming";
-      repo = "base16-xresources";
-      rev = "6711cf4fa61e903e52ef6eac186b83e04a0397d8";
-      sha256 = "sha256-WazWviLhQRCyF9EBi2IDn9h8wrKc00PpqtltFDpUP5Q=";
-    };
+    templateRepo = config.lib.stylix.templates.base16-xresources;
   };
 in
 {

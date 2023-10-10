@@ -4,12 +4,7 @@ with lib;
 
 let
   themeFile = config.lib.stylix.colors {
-    templateRepo = pkgs.fetchFromGitHub {
-      owner = "chriskempson";
-      repo = "base16-vim";
-      rev = "6191622d5806d4448fa2285047936bdcee57a098";
-      sha256 = "6FsT87qcl9GBxgxrPx2bPULIMA/O8TRxHaN49qMM4uM=";
-    };
+    templateRepo = config.lib.stylix.templates.base16-vim;
   };
 
   themePlugin = pkgs.vimUtils.buildVimPlugin {
