@@ -15,10 +15,13 @@ let
 
 in {
   options.stylix.targets.sway.enable =
-    config.lib.stylix.mkEnableTarget "Sway" true;
+    config.lib.stylix.mkEnableTarget "Sway"
+    config.wayland.windowManager.sway.enable;
 
   config = lib.mkMerge [
     (lib.mkIf config.stylix.targets.sway.enable {
+      stylix.targets.wlroots.enable = true;
+
       wayland.windowManager.sway.config = {
         inherit fonts;
         colors = let
