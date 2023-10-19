@@ -2,7 +2,7 @@
 
 {
   options.stylix.targets.xfce.enable =
-    config.lib.stylix.mkEnableTarget "Xfce" true;
+    config.lib.stylix.mkEnableTarget "Xfce" pkgs.stdenv.hostPlatform.isLinux;
 
   config = lib.mkIf config.stylix.targets.xfce.enable {
     xfconf.settings = with config.stylix.fonts; {
