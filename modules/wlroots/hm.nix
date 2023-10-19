@@ -35,21 +35,25 @@ let
       WantedBy = [ "graphical-session.target" ];
     };
     Unit = {
-      Description = "Apply wallpaper settings";
+      Description = "Apply wallpaper";
       BindsTo = [ "swww.service" ];
       After = [ "swww.service" ];
       PartOf = [ "graphical-session.target" ];
     };
-    Service = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart =
-        if config.lib.stylix.isAnimation config.stylix.wallpaper
-        then "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"
-        else if config.lib.stylix.isSlideshow config.stylix.wallpaper
-        then "${slideshow}/bin/slideshow"
-        else "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.image}";
-    };
+    Service =
+      if config.lib.stylix.isSlideshow config.stylix.wallpaper
+      then {
+        ExecStart = "${slideshow}/bin/slideshow";
+      }
+      else {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart =
+          if config.lib.stylix.isAnimation config.stylix.wallpaper
+          then "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"
+          else "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.image}";
+        Environment = [ "SWWW_TRANSITION=none" ];
+      };
   };
 
   mpv-wallpaper = {
