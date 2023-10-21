@@ -12,7 +12,7 @@ in {
       brights = [ base03 base08 base0B base0A base0D base0E base0C base07 ];
       background = base00;
       cursor_bg = base05;
-      cursor_fg = base05;
+      cursor_fg = base00;
       compose_cursor = base06;
       foreground = base05;
       scrollbar_thumb = base01;
