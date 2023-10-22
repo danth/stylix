@@ -7,14 +7,14 @@ let
 in {
   imports = [ ../cursor.nix ];
 
-  config = mkIf ((builtins.match ".*-linux" "${pkgs.system}") != null) {
+  config = mkIf pkgs.stdenv.hostPlatform.isLinux {
     home.pointerCursor = {
-      name = "${cfg.name}";
+      name = cfg.name;
       package = cfg.package;
       size = cfg.size;
       x11 = {
         enable = true;
-        defaultCursor = "${cfg.name}";
+        defaultCursor = cfg.name;
       };
       gtk.enable = true;
     };
