@@ -1,7 +1,8 @@
 # Stylix
 
 Stylix is a module which applies a chosen color scheme, font and
-wallpaper to various software.
+wallpaper to [supported 
+software](https://github.com/danth/stylix/tree/master/modules).
 
 For those not familiar with [NixOS](https://nixos.org/) and
 [Home Manager](https://github.com/nix-community/home-manager#readme):
