@@ -29,8 +29,6 @@ with config.lib.stylix.colors;
       completion-highlight-bg = "#${base0D}";
       recolor-lightcolor = "#${base00}";
       recolor-darkcolor = "#${base06}";
-      recolor = false;
-      recolor-keephue = false;
     };
   };
 }
