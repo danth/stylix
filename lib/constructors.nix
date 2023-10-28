@@ -3,13 +3,20 @@
 
 with lib;
 
-let generatePalette =
-  { image, polarity }:
-  # TODO: make base16.nix able to load this file directly, rather than importing it here
-  let palette = pkgs.runCommand "palette.json" { } ''
-    ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
-  '';
-  in importJSON palette;
+let
+  generatePalette =
+    { image, polarity }:
+    # TODO: make base16.nix able to load this file directly, rather than importing it here
+    let palette = pkgs.runCommand "palette.json" { } ''
+      ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
+    '';
+    in importJSON palette;
+
+  extractFirstFrame =
+    input:
+    pkgs.runCommand "first-frame.png" { } ''
+      ${pkgs.ffmpeg}/bin/ffmpeg -i ${input} -vf 'select=eq(n\,0)' -vframes 1 $out
+    '';
 
 in {
   config.lib.stylix = {
@@ -30,29 +37,25 @@ in {
 
     mkAnimation =
       { animation, polarity ? "either" }:
-      let image = pkgs.runCommand "image.png" { } ''
-        ${pkgs.ffmpeg}/bin/ffmpeg -i ${animation} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
-      '';
-      in {
-        inherit image animation;
+      rec {
+        inherit animation;
+        image = extractFirstFrame animation;
         colors = generatePalette { inherit image polarity; };
       };
 
     mkVideo =
       { video, polarity ? "either" }:
-      let image = pkgs.runCommand "image.png" { } ''
-        ${pkgs.ffmpeg}/bin/ffmpeg -i ${video} -vf "select=eq(n\,0)" -q:v 3 -f image2 $out
-      '';
-      in {
-        inherit image video;
+      rec {
+        inherit video;
+        image = extractFirstFrame video;
         colors = generatePalette { inherit image polarity; };
       };
 
     mkSlideshow =
       { images, delay ? 300, polarity ? "either" }:
-      let image = builtins.elemAt images 0;
-      in {
-        inherit image images delay;
+      rec {
+        inherit images delay;
+        image = builtins.elemAt images 0;
         colors = generatePalette { inherit image polarity; };
       };
   };
