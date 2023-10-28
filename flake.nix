@@ -43,10 +43,6 @@
       url = "github:chriskempson/base16-vim";
       flake = false;
     };
-    base16-xresources = {
-      url = "github:tinted-theming/base16-xresources";
-      flake = false;
-    };
   };
 
   outputs =
