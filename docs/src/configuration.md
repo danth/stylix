@@ -10,22 +10,19 @@ The options you will be most interested in are as follows:
 - Making apps transparent: [`stylix.opacity.*`](./options/nixos.html#stylixopacityapplications)
 
 Only the wallpaper is required as the others default to something reasonable.
-This includes the color scheme, which can be automatically generated to suit
-the wallpaper.
 
-Rebuild the configuration to apply your settings. Most software needs to be
-restarted for a new theme to take effect, so you may wish to reboot.
+Rebuild the configuration to apply any changed settings. Most software needs to
+be restarted for a new theme to take effect, so you may wish to reboot too.
 
 ## Turning targets on and off
 
-In Stylix terms, a target is anything which can have colors, fonts or a
-wallpaper applied to it. Each target has an option like
-`stylix.targets.«target».enable` to turn its styling on or off.
+A target is anything which can have colors, fonts or a wallpaper applied to
+it.
 
-Usually these options are enabled automatically when the target is enabled. You
-can turn off [`stylix.autoEnable`](./options/nixos.html#stylixautoenable) to opt
-out of this behaviour, in which case you'll need to manually select each target
-you want to be themed.
+Each target has an option like `stylix.targets.«target».enable` to choose
+whether it gets themed. By default, targets are enabled automatically when
+they are installed - you can opt out of this via
+[`stylix.autoEnable`](./options/nixos.html#stylixautoenable).
 
 The available targets differ between Home Manager and NixOS. If a target
 is available in both, it is always fine to enable both.

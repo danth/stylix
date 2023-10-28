@@ -39,11 +39,10 @@ in {
     wallpaper = mkOption {
       type = with config.lib.stylix;
         types.oneOf [ static slideshow animation video ];
-
       description = mdDoc ''
         This option defines the desktop wallpaper.
 
-        The easiest choice is a static image:
+        The simplest choice is a static image:
 
         ```nix
         { config, ... }:
@@ -54,8 +53,10 @@ in {
         }
         ```
 
+        Static wallpapers work everywhere.
         [This table](https://danth.github.io/stylix/wallpaper-support.html)
-        shows which software is compatible with the more interesting choices.
+        shows which software supports the other wallpaper types.
+
         These include slideshows:
 
         ```nix
@@ -93,11 +94,10 @@ in {
         }
         ````
 
-        For any of the examples above, you may also give a `polarity`. This
-        locks down whether the wallpaper is considered to be `light` or `dark`
-        by the color scheme generator, so you will get a `light` or `dark` theme
-        by default. Polarity is not relevant if you are choosing your own color
-        scheme.
+        For any of the examples above, you may also give a `polarity`.
+        This affects whether the color scheme based on that wallpaper
+        will be `light` or `dark`; by default it could be either.
+        This is irrelevant if you plan to choose your own color scheme.
 
         ```nix
         { config, ... }:
@@ -114,21 +114,22 @@ in {
     colors = mkOption {
       type = config.lib.stylix.overridableScheme;
       default = config.stylix.wallpaper.colors;
-
-      defaultText = literalMD ''
-        A scheme generated using colors from `stylix.wallpaper`.
-      '';
-
+      defaultText = literalMD "generated scheme based on `stylix.wallpaper`";
       description = ''
         Color scheme to be used throughout the configuration.
 
-        This option accepts either a whole scheme, or an override which changes
-        part of the scheme.
+        This option can accept:
 
-        A whole scheme can be either a path to a file, or an attribute set
-        containing `base00` to `base0F`, and optionally `scheme`, `author`,
-        `description` or `slug`. Popular schemes are available through
-        `pkgs.base16-schemes`:
+        - A whole scheme as a file
+        - A whole scheme as an attribute set:
+          - All of `base00` to `base0F`
+          - Optionally `scheme`, `author`, `description` or `slug`
+        - An override as an attribute set:
+          - Anything from `base00` to `base0F`, but not all of them
+          - Optionally `scheme`, `author`, `description` or `slug`
+
+        Popular files can be imported from
+        [`base16-schemes`](https://github.com/tinted-theming/base16-schemes):
 
         ```nix
         { pkgs, ... }:
@@ -137,12 +138,7 @@ in {
         }
         ```
 
-        An override is an attribute set containing some but not all of `base00`
-        to `base0F`, `scheme`, `author`, `description` or `slug`. These values
-        will replace those from the original color scheme. If you have multiple
-        overrides, they may be applied in any order.
-
-        To choose a scheme and override it in the same file, use `mkMerge`:
+        To choose a scheme and override it from the same place, use `mkMerge`:
 
         ```nix
         { pkgs, lib, ... }:
@@ -153,6 +149,8 @@ in {
           ];
         }
         ```
+
+        If you have multiple overrides, they could be applied in any order.
       '';
     };
   };
