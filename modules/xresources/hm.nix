@@ -5,7 +5,7 @@
     config.lib.stylix.mkEnableTarget "Xresources" true;
 
   config = lib.mkIf config.stylix.targets.xresources.enable {
-    xresources.properties = with config.lib.stylix.colors.withHashtag; with config.stylix.fonts; {
+    xresources.properties = with config.stylix.colors.withHashtag; with config.stylix.fonts; {
       "*.faceName" = monospace.name;
       "*.faceSize" = sizes.terminal;
       "*.renderFont" = true;
