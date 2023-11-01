@@ -1,8 +1,9 @@
 { pkgs, config, lib, ... }@args:
 
 {
+  # Disabled by default due to https://github.com/danth/stylix/issues/180
   options.stylix.targets.xfce.enable =
-    config.lib.stylix.mkEnableTarget "Xfce" pkgs.stdenv.hostPlatform.isLinux;
+    config.lib.stylix.mkEnableTarget "Xfce" false;
 
   config = lib.mkIf config.stylix.targets.xfce.enable {
     xfconf.settings = with config.stylix.fonts; {

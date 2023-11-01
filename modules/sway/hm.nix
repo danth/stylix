@@ -55,6 +55,10 @@ in {
             childBorder = unfocused;
           };
         };
+
+        seat."*" = {
+          xcursor_theme = "${config.stylix.cursor.name} ${toString config.stylix.cursor.size}";
+        };
       };
     })
 

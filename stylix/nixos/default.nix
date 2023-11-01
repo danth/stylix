@@ -9,6 +9,7 @@ in {
   imports = [
     ../target.nix
     ../opacity.nix
+    ./cursor.nix
     ./fonts.nix
     (import ./etc.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)

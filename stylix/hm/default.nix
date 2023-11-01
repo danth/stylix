@@ -8,6 +8,7 @@ in {
   imports = [
     ../target.nix
     ../opacity.nix
+    ./cursor.nix
     ./fonts.nix
     (import ./xdg.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)
