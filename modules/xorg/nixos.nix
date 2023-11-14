@@ -1,4 +1,4 @@
-{ config, lib, ... }@args:
+{pkgs, config, lib, ... }@args:
 
 let command = import ./command.nix args;
 
