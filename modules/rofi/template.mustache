@@ -1,11 +1,3 @@
-/**
- * Base16 {{scheme-name}} ROFI Color theme
- *
- * Authors
- *  Scheme: {{scheme-author}}
- *  Template: Tinted Theming (https://github.com/tinted-theming)
- */
-
 * {
     background-color:            rgba ( {{base00-rgb-r}}, {{base00-rgb-g}}, {{base00-rgb-b}}, 0 % );
     separatorcolor:              @foreground;
@@ -40,41 +32,22 @@
     alternate-normal-text: rgba ( {{base05-rgb-r}}, {{base05-rgb-g}}, {{base05-rgb-b}}, 100 % );
     alternate-active-text: rgba ( {{base0D-rgb-r}}, {{base0D-rgb-g}}, {{base0D-rgb-b}}, 100 % );
     alternate-urgent-text: rgba ( {{base08-rgb-r}}, {{base08-rgb-g}}, {{base08-rgb-b}}, 100 % );
-
-    spacing: 2;
 }
 window {
     background-color: @background;
-    border:           1;
-    padding:          5;
-}
-mainbox {
-    border:           0;
-    padding:          0;
 }
 message {
-    border:           1px dash 0px 0px ;
     border-color:     @separatorcolor;
-    padding:          1px ;
 }
 textbox {
     text-color:       @base-text;
 }
 listview {
-    fixed-height:     0;
-    border:           2px dash 0px 0px ;
     border-color:     @separatorcolor;
-    spacing:          2px ;
-    scrollbar:        true;
-    padding:          2px 0px 0px ;
 }
 element-text, element-icon {
     background-color: inherit;
     text-color:       inherit;
-}
-element {
-    border:           0;
-    padding:          1px ;
 }
 element normal.normal {
     background-color: @normal-background;
@@ -113,18 +86,12 @@ element alternate.active {
     text-color:       @alternate-active-text;
 }
 scrollbar {
-    width:            4px ;
-    border:           0;
     handle-color:     @normal-foreground;
-    handle-width:     8px ;
-    padding:          0;
 }
 sidebar {
-    border:           2px dash 0px 0px ;
     border-color:     @separatorcolor;
 }
 button {
-    spacing:          0;
     text-color:       @normal-text;
 }
 button selected {
@@ -132,26 +99,17 @@ button selected {
     text-color:       @selected-normal-text;
 }
 inputbar {
-    spacing:          0px;
     text-color:       @normal-text;
-    padding:          1px ;
-    children:         [ prompt,textbox-prompt-colon,entry,case-indicator ];
 }
 case-indicator {
-    spacing:          0;
     text-color:       @normal-text;
 }
 entry {
-    spacing:          0;
     text-color:       @normal-text;
 }
 prompt {
-    spacing:          0;
     text-color:       @normal-text;
 }
 textbox-prompt-colon {
-    expand:           false;
-    str:              ":";
-    margin:           0px 0.3000em 0.0000em 0.0000em ;
     text-color:       inherit;
 }

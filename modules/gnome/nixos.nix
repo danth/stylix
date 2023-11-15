@@ -3,14 +3,14 @@
 let 
   # We use this imported lib instead of the one from the module arguments
   # to avoid infinite loops if the lib in arguments depends on nixpkgs.overlays
-  lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/c9d4f2476046c6a7a2ce3c2118c48455bf0272ea").lib;
+  lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/174d7dc67189bc4a53f1bffb4fb9d0f13b79cd3c").lib;
 
   theme = import ./theme.nix args;
 
 in {
   options.stylix.targets.gnome.enable =
     lib.mkOption {
-      description = lib.mdDoc "Whether to style GNOME";
+      description = lib.mdDoc "Whether to style GNOME and GDM";
       type = lib.types.bool;
       default = config.stylix.autoEnable 
              && config.services.xserver.desktopManager.gnome.enable;
@@ -27,6 +27,9 @@ in {
     nixpkgs.overlays = [(self: super: {
       gnome = super.gnome.overrideScope' (gnomeSelf: gnomeSuper: {
         gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
+          # Themes are usually applied via an extension, but extensions are
+          # not available on the login screen. The only way to change the
+          # theme there is by replacing the default.
           postFixup = (oldAttrs.postFixup or "") + ''
             cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
               $out/share/gnome-shell/gnome-shell-theme.gresource
@@ -37,5 +40,16 @@ in {
         });
       });
     })];
+
+    # Cursor settings are usually applied via Home Manager,
+    # but the login screen uses a separate database.
+    environment.systemPackages = [ config.stylix.cursor.package ];
+    programs.dconf.profiles.gdm.databases = [{
+      lockAll = true;
+      settings."org/gnome/desktop/interface" = {
+        cursor-theme = config.stylix.cursor.name;
+        cursor-size = lib.gvariant.mkInt32 config.stylix.cursor.size;
+      };
+    }];
   };
 }

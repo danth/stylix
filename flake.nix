@@ -13,6 +13,36 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+
+    # Templates
+    base16-alacritty = {
+      url = "github:aarowill/base16-alacritty";
+      flake = false;
+    };
+    base16-fish = {
+      url = "github:tomyun/base16-fish";
+      flake = false;
+    };
+    base16-foot = {
+      url = "github:tinted-theming/base16-foot";
+      flake = false;
+    };
+    base16-helix = {
+      url = "github:tinted-theming/base16-helix";
+      flake = false;
+    };
+    base16-kitty = {
+      url = "github:kdrag0n/base16-kitty";
+      flake = false;
+    };
+    base16-tmux = {
+      url = "github:tinted-theming/base16-tmux";
+      flake = false;
+    };
+    base16-vim = {
+      url = "github:chriskempson/base16-vim";
+      flake = false;
+    };
   };
 
   outputs =
@@ -39,7 +69,7 @@
 
       nixosModules.stylix = { pkgs, ... }@args: {
         imports = [
-          (import ./stylix/nixos {
+          (import ./stylix/nixos inputs {
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
             homeManagerModule = self.homeManagerModules.stylix;
@@ -49,7 +79,7 @@
 
       homeManagerModules.stylix = { pkgs, ... }@args: {
         imports = [
-          (import ./stylix/hm {
+          (import ./stylix/hm inputs {
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
           })
@@ -58,7 +88,7 @@
 
       darwinModules.stylix = { pkgs, ... }@args: {
         imports = [
-          (import ./stylix/darwin {
+          (import ./stylix/darwin inputs {
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
             homeManagerModule = self.homeManagerModules.stylix;

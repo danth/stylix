@@ -1,3 +1,4 @@
+inputs:
 { palette-generator, base16, homeManagerModule }:
 { options, config, lib, ... }:
 
@@ -9,8 +10,10 @@ in {
     ../pixel.nix
     ../target.nix
     ../opacity.nix
+    ./cursor.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
+    (import ../templates.nix inputs)
   ] ++ autoload;
 
   options.stylix.homeManagerIntegration = {
