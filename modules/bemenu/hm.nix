@@ -23,10 +23,18 @@ in {
       type = lib.types.bool;
       default = false;
     };
+
+    extraOpts = lib.mkOption {
+      description = lib.mdDoc ''
+        Extra options that can be used with bemenu
+      '';
+      type = with lib.types; listOf str;
+      default = [ ];
+    };
   };
 
   config = lib.mkIf config.stylix.targets.bemenu.enable {
-    home.sessionVariables.BEMENU_OPTS = with config.stylix.targets.bemenu; builtins.concatStringsSep " " [
+    home.sessionVariables.BEMENU_OPTS = with config.stylix.targets.bemenu; builtins.concatStringsSep " " ([
       # Inspired from https://git.sr.ht/~h4n1/base16-bemenu_opts
       "--tb '${base01}${bemenuOpacity}'"
       "--nb '${base01}${bemenuOpacity}'"
@@ -43,6 +51,6 @@ in {
       "--ab '${if alternate then base00 else base01}'"
       "--af '${if alternate then base04 else base05}'"
       "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'" 
-    ];
+    ] ++ extraOpts);
   };
 }
