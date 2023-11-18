@@ -111,7 +111,7 @@ in {
     };
 
     colors = mkOption {
-      type = config.lib.stylix.types.overridableScheme;
+      type = config.lib.stylix.types.scheme;
       default = config.stylix.wallpaper.colors;
       defaultText = literalMD "generated scheme based on `stylix.wallpaper`";
       description = ''
@@ -127,6 +127,8 @@ in {
           - Anything from `base00` to `base0F`, but not all of them
           - Optionally `scheme`, `author`, `description` or `slug`
 
+        There must be exactly one whole scheme.
+
         Popular files can be imported from
         [`base16-schemes`](https://github.com/tinted-theming/base16-schemes):
 
@@ -137,7 +139,7 @@ in {
         }
         ```
 
-        To choose a scheme and override it from the same place, use `mkMerge`:
+        To choose a scheme and override it from the same file, use `mkMerge`:
 
         ```nix
         { pkgs, lib, ... }:
