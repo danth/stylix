@@ -4,18 +4,37 @@
 with lib;
 
 let
-  typeModule =
-    args:
-    {
-      types.${args.name} = mkOptionType args;
-    };
-
+  # Exports the given constructor function as `config.lib.stylix.make.«name»`,
+  # and generates a type `config.lib.stylix.types.«name»`. The function must
+  # return an attribute set for this to work. The generated type can be used to
+  # create options which accept the output of the function.
   objectModule =
-    args:
-    let typeArgs = builtins.removeAttrs args [ "constructor" ];
-    in {
-      make.${args.name} = args.constructor;
-      types.${args.name} = mkOptionType typeArgs;
+    {
+      # Name of the type in camelCase.
+      name,
+      # Name of the type in human readable format.
+      description,
+      # Used to add brackets around the description where needed.
+      # "noun" - A simple noun phrase such as "positive integer"
+      # "conjunction" - A phrase with an "or" connective
+      # "composite" - A phrase with an "of" connective
+      descriptionClass,
+      # Constructor function.
+      constructor
+    }:
+    {
+      # The type of objects is tracked via the `_object` attribute.
+      # We cannot use `_type` because that is already used by `mkIf`,
+      # `mkMerge`, and `mkForce` from the standard library.
+      make.${name} = args: constructor args // { _object = name; };
+
+      types.${name} = mkOptionType {
+        inherit name description descriptionClass;
+        check = value:
+          builtins.isAttrs value &&
+          value?_object &&
+          value._object == name;
+      };
     };
 
   # The definition for `config.lib` only merges the first level of attrsets
@@ -43,10 +62,6 @@ in mergeModules [
     name = "static";
     description = "static wallpaper";
     descriptionClass = "noun";
-
-    check = value:
-      builtins.attrNames value == [ "colors" "image" ];
-
     constructor =
       { image, polarity ? "either" }:
       {
@@ -59,10 +74,6 @@ in mergeModules [
     name = "slideshow";
     description = "slideshow wallpaper";
     descriptionClass = "noun";
-
-    check = value:
-      builtins.attrNames value == [ "colors" "delay" "image" "images" ];
-
     constructor =
       { images, delay ? 300, polarity ? "either" }:
       rec {
@@ -76,10 +87,6 @@ in mergeModules [
     name = "animation";
     description = "animated wallpaper";
     descriptionClass = "noun";
-
-    check = value:
-      builtins.attrNames value == [ "animation" "colors" "image" ];
-
     constructor =
       { animation, polarity ? "either" }:
       rec {
@@ -93,10 +100,6 @@ in mergeModules [
     name = "video";
     description = "video wallpaper";
     descriptionClass = "noun";
-
-    check = value:
-      builtins.attrNames value == [ "colors" "image" "video" ];
-
     constructor =
       { video, polarity ? "either" }:
       rec {
@@ -161,11 +164,13 @@ in mergeModules [
 
       in foldr (o: s: s.override o) scheme overrides;
 
-  in typeModule {
-    name = "scheme";
-    description = "base16 scheme";
-    descriptionClass = "noun";
-    check = isSchemeOrOverride;
-    inherit merge;
+  in {
+    types.scheme = mkOptionType {
+      name = "scheme";
+      description = "base16 scheme";
+      descriptionClass = "noun";
+      check = isSchemeOrOverride;
+      inherit merge;
+    };
   })
 ]
