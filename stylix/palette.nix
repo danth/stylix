@@ -26,10 +26,10 @@ in {
         with values.stylix;
         mkIf (image != "_mkMergedOptionModule") (
           if polarity == "_mkMergedOptionModule"
-          then config.lib.stylix.make.static {
+          then config.lib.stylix.make.image {
             inherit image;
           }
-          else config.lib.stylix.make.static {
+          else config.lib.stylix.make.image {
             inherit image polarity;
           }
         ))) 
@@ -46,13 +46,13 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.static {
+          stylix.wallpaper = config.lib.stylix.make.image {
             image = ./path/to/image.png;
           };
         }
         ```
 
-        Static wallpapers work everywhere.
+        Image wallpapers work everywhere.
         [This table](https://danth.github.io/stylix/wallpaper-support.html)
         shows which software supports the other wallpaper types.
 
@@ -101,7 +101,7 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.static {
+          stylix.wallpaper = config.lib.stylix.make.image {
             image = ./night-sky.jpg;
             polarity = "dark";
           };

@@ -59,8 +59,8 @@ let
 
 in mergeModules [
   (objectModule {
-    name = "static";
-    description = "static wallpaper";
+    name = "image";
+    description = "image wallpaper";
     descriptionClass = "noun";
     constructor =
       { image, polarity ? "either" }:
@@ -112,7 +112,7 @@ in mergeModules [
   {
     types.wallpaper =
       with config.lib.stylix.types;
-      types.oneOf [ static slideshow animation video ];
+      types.oneOf [ image slideshow animation video ];
   }
 
   (let

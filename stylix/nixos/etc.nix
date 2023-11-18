@@ -5,7 +5,7 @@ args:
   imports = [ (import ../palette.nix args) ];
 
   config.environment.etc = {
-    "stylix/wallpaper".source = if (config.lib.stylix.types.static.check config.stylix.wallpaper) then config.stylix.wallpaper.image
+    "stylix/wallpaper".source = if (config.lib.stylix.types.image.check config.stylix.wallpaper) then config.stylix.wallpaper.image
     else if (config.lib.stylix.types.animation.check config.stylix.wallpaper) then config.stylix.wallpaper.animation 
     else if (config.lib.stylix.types.video.check config.stylix.wallpaper) then config.stylix.wallpaper.video 
     else config.stylix.wallpaper.images;
