@@ -18,7 +18,7 @@ let
   '';
 
   wallpaper =
-    if config.lib.stylix.isSlideshow config.stylix.wallpaper
+    if config.lib.stylix.types.slideshow.check config.stylix.wallpaper
     then slideshow
     else config.stylix.wallpaper.image;
 

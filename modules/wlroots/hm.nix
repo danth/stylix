@@ -41,7 +41,7 @@ let
       PartOf = [ "graphical-session.target" ];
     };
     Service =
-      if config.lib.stylix.isSlideshow config.stylix.wallpaper
+      if config.lib.stylix.types.slideshow.check config.stylix.wallpaper
       then {
         ExecStart = "${slideshow}/bin/slideshow";
       }
@@ -49,7 +49,7 @@ let
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStart =
-          if config.lib.stylix.isAnimation config.stylix.wallpaper
+          if config.lib.stylix.types.animation.check config.stylix.wallpaper
           then "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.animation}"
           else "${pkgs.swww}/bin/swww img ${config.stylix.wallpaper.image}";
         Environment = [ "SWWW_TRANSITION=none" ];
@@ -82,9 +82,9 @@ in {
   };
 
   config.systemd.user.services = lib.mkIf config.stylix.targets.wlroots.enable {
-    swww = lib.mkIf (!config.lib.stylix.isVideo config.stylix.wallpaper) swww;
+    swww = lib.mkIf (!config.lib.stylix.types.video.check config.stylix.wallpaper) swww;
     wallpaper =
-      if config.lib.stylix.isVideo config.stylix.wallpaper
+      if config.lib.stylix.types.video.check config.stylix.wallpaper
       then mpv-wallpaper
       else swww-wallpaper;
   };

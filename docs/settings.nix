@@ -1,26 +1,12 @@
 # Dummy wallpaper to avoid errors when generating the documentation.
 
-{ config, ... }:
+{ pkgs, config, ... }:
 
 {
-  stylix.wallpaper = config.lib.stylix.mkStaticFill {
-    colors = {
-      base00 = "000000";
-      base01 = "000000";
-      base02 = "000000";
-      base03 = "000000";
-      base04 = "000000";
-      base05 = "000000";
-      base06 = "000000";
-      base07 = "000000";
-      base08 = "000000";
-      base09 = "000000";
-      base0A = "000000";
-      base0B = "000000";
-      base0C = "000000";
-      base0D = "000000";
-      base0E = "000000";
-      base0F = "000000";
+  stylix.wallpaper = config.lib.stylix.make.static {
+    image = pkgs.fetchurl {
+      url = "https://picsum.photos/seed/stylix/1920/1080.jpg";
+      sha256 = "tow7DBO+/tgkDDD8diif+0V/6aDzrYl02/J7SCA8RCU=";
     };
   };
 }
