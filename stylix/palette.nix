@@ -112,8 +112,30 @@ in {
 
     colors = mkOption {
       type = config.lib.stylix.types.scheme;
-      default = config.stylix.wallpaper.colors;
+
+      # Does this account have a different wallpaper to the system level?
+      # Yes → Fall back to color scheme generated from that wallpaper
+      # No → Fall back to color scheme from the system level
+      default =
+        let
+          osWallpaper = fromOs [ "wallpaper" ] null;
+          osColors = fromOs [ "colors" ] null;
+        in
+          # This is never true when evaluated at the system level,
+          # because the wallpaper is never null
+          if config.stylix.wallpaper == osWallpaper
+          then {
+            # osColors has been processed by `base16.mkSchemeAttrs`,
+            # but this option wants the unprocessed version.
+            inherit (osColors)
+              base00 base01 base02 base03 base04 base05 base06 base07
+              base08 base09 base0A base0B base0C base0D base0E base0F
+              scheme author description slug;
+          }
+          else config.stylix.wallpaper.colors;
+
       defaultText = literalMD "generated scheme based on `stylix.wallpaper`";
+
       description = ''
         Color scheme to be used throughout the configuration.
 
