@@ -1,45 +1,47 @@
 diff --git a/data/gnome-shell-theme.gresource.xml b/data/gnome-shell-theme.gresource.xml
-index 24b3be8db..3ec37da33 100644
+index 8a4948e41..955ed5b13 100644
 --- a/data/gnome-shell-theme.gresource.xml
 +++ b/data/gnome-shell-theme.gresource.xml
-@@ -10,7 +10,6 @@
-     <file>checkbox-off-light.svg</file>
+@@ -11,7 +11,6 @@
      <file>checkbox-off.svg</file>
-     <file>gnome-shell.css</file>
+     <file>gnome-shell-dark.css</file>
+     <file>gnome-shell-light.css</file>
 -    <file>gnome-shell-high-contrast.css</file>
      <file>gnome-shell-start.svg</file>
      <file>pad-osd.css</file>
      <file>process-working.svg</file>
 diff --git a/data/theme/gnome-shell-sass/_common.scss b/data/theme/gnome-shell-sass/_common.scss
-index 953bee598..36ce19a4d 100644
+index 5b117ea71..67e7ce756 100644
 --- a/data/theme/gnome-shell-sass/_common.scss
 +++ b/data/theme/gnome-shell-sass/_common.scss
-@@ -166,8 +166,8 @@ stage {
+@@ -168,9 +168,9 @@ stage {
  
  // tooltip
  %tooltip {
 -  background-color: transparentize(black, 0.1);
+-  border: 1px solid transparentize($light_1, 0.9);
 -  color: $light_1;
 +  background-color: transparentize($bg_color, 0.1);
++  border: 1px solid transparentize($base_color, 0.9);
 +  color: $fg_color;
  
    border-radius: 99px;
    padding: $base_padding $base_padding * 2;
 diff --git a/data/theme/gnome-shell-sass/_drawing.scss b/data/theme/gnome-shell-sass/_drawing.scss
-index a69d38175..e79dc0c28 100644
+index 404c4dc81..f006b9347 100644
 --- a/data/theme/gnome-shell-sass/_drawing.scss
 +++ b/data/theme/gnome-shell-sass/_drawing.scss
 @@ -143,7 +143,7 @@
  //
  // since buttons are all flat an borderless now the mixin is simpler
  
--@mixin button($t, $tc:$fg_color, $c:$bg_color, $flat: false) {
-+@mixin button($t, $tc:$fg_color, $c:$base_color, $flat: false) {
+-@mixin button($t, $tc:$fg_color, $c:$bg_color, $flat: false, $osd: false) {
++@mixin button($t, $tc:$fg_color, $c:$base_color, $flat: false, $osd: false) {
  
    $button_bg_color: mix($tc, $c, $button_mix_factor);
    transition-duration: 100ms;
 diff --git a/data/theme/gnome-shell-sass/widgets/_calendar.scss b/data/theme/gnome-shell-sass/widgets/_calendar.scss
-index 393221627..0bc93111a 100644
+index fc054da38..8e31741c1 100644
 --- a/data/theme/gnome-shell-sass/widgets/_calendar.scss
 +++ b/data/theme/gnome-shell-sass/widgets/_calendar.scss
 @@ -27,6 +27,8 @@
@@ -51,7 +53,7 @@ index 393221627..0bc93111a 100644
  }
  
  /* Calendar */
-@@ -250,7 +252,7 @@
+@@ -220,7 +222,7 @@
    .weather-forecast-time {
      @extend %numeric;
      @extend %caption;
@@ -61,12 +63,15 @@ index 393221627..0bc93111a 100644
      padding-bottom: 0.4em;
    }
 diff --git a/data/theme/gnome-shell-sass/widgets/_panel.scss b/data/theme/gnome-shell-sass/widgets/_panel.scss
-index 650d4fa83..63ac5df8f 100644
+index 6e7b3be14..3f37fdef5 100644
 --- a/data/theme/gnome-shell-sass/widgets/_panel.scss
 +++ b/data/theme/gnome-shell-sass/widgets/_panel.scss
-@@ -1,9 +1,9 @@
+@@ -1,11 +1,11 @@
  /* Top Bar */
  // a.k.a. the panel
+ 
+-$privacy_indicator_color: $orange_3;
++$privacy_indicator_color: $warning_color;
  
 -$panel_bg_color: if($variant == 'light', $light_3, $dark_5);
 -$panel_fg_color: if($variant == 'light', $fg_color, darken($fg_color, 5%));
@@ -78,15 +83,13 @@ index 650d4fa83..63ac5df8f 100644
  $panel_system_fg_color: $system_fg_color; // always light for lockscreen, overview and other transparent panels
  $panel_height: 2.2em;
 diff --git a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-index 82a5e11aa..681d73e33 100644
+index 723afe7db..b23062294 100644
 --- a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
 +++ b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-@@ -108,15 +108,10 @@
-     padding-bottom: 2 * $base_padding;
- 
+@@ -110,13 +110,9 @@
      & .icon {
--      icon-size: $base_icon_size*1.5; // a non-standard symbolic size but ok
--      border-radius: 999px;
+       icon-size: $base_icon_size*1.5; // a non-standard symbolic size but ok
+       border-radius: 999px;
 -      padding: 1.5 * $base_padding;
 -      background-color: transparentize($fg_color, 0.8);
 -
@@ -94,7 +97,6 @@ index 82a5e11aa..681d73e33 100644
 -        background-color: $selected_bg_color;
 -        color: $selected_fg_color;
 -      }
-+      icon-size: $base_icon_size * 1.5;
 +      padding: $base_padding;
 +      background-color: $bg_color;
 +      color: $fg_color;
