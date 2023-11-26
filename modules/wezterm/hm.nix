@@ -24,11 +24,11 @@ in {
         background = base01;
         inactive_tab_edge = base01;
         active_tab = {
-          bg_color = base03;
+          bg_color = base00;
           fg_color = base05;
         };
         inactive_tab = {
-          bg_color = base00;
+          bg_color = base03;
           fg_color = base05;
         };
         inactive_tab_hover = {
@@ -36,7 +36,7 @@ in {
           fg_color = base00;
         };
         new_tab = {
-          bg_color = base00;
+          bg_color = base03;
           fg_color = base05;
         };
         new_tab_hover = {
