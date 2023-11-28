@@ -12,10 +12,7 @@ in {
       name = cfg.name;
       package = cfg.package;
       size = cfg.size;
-      x11 = {
-        enable = true;
-        defaultCursor = cfg.name;
-      };
+      x11.enable = true;
       gtk.enable = true;
     };
   };
