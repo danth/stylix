@@ -55,8 +55,8 @@ in
       }
     ''
     + (builtins.readFile ./base.css)
-    + (if config.stylix.targets.waybar.enableLeftBackColors then (import ./colors.nix { palce = "left"; }) else colorlessModules "left")
-    + (if config.stylix.targets.waybar.enableCenterBackColors then (import ./colors.nix { palce = "center"; }) else colorlessModules "center")
-    + (if config.stylix.targets.waybar.enableRightBackColors then (import ./colors.nix { palce = "right"; }) else colorlessModules "right");
+    + (if config.stylix.targets.waybar.enableLeftBackColors then (import ./colors.nix "left") else colorlessModules "left")
+    + (if config.stylix.targets.waybar.enableCenterBackColors then (import ./colors.nix "center") else colorlessModules "center")
+    + (if config.stylix.targets.waybar.enableRightBackColors then (import ./colors.nix "right") else colorlessModules "right");
   };
 }
