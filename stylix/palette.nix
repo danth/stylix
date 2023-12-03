@@ -26,18 +26,19 @@ in {
         with values.stylix;
         mkIf (image != "_mkMergedOptionModule") (
           if polarity == "_mkMergedOptionModule"
-          then config.lib.stylix.make.image {
-            inherit image;
+          then config.lib.stylix.types.wallpaper.from.image {
+            file = image;
           }
-          else config.lib.stylix.make.image {
-            inherit image polarity;
+          else config.lib.stylix.types.wallpaper.from.image {
+            file = image;
+            inherit polarity;
           }
         ))) 
   ];
 
   options.stylix = {
     wallpaper = mkOption {
-      type = config.lib.stylix.types.wallpaper;
+      type = config.lib.stylix.types.wallpaper.type;
       description = mdDoc ''
         This option defines the desktop wallpaper.
 
@@ -46,7 +47,7 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.image {
+          stylix.wallpaper = config.lib.stylix.types.wallpaper.from.image {
             image = ./path/to/image.png;
           };
         }
@@ -61,7 +62,7 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.slideshow {
+          stylix.wallpaper = config.lib.stylix.types.wallpaper.from.slideshow {
             images = [
               ./path/to/image/1.webp
               ./path/to/image/2.jpg
@@ -76,7 +77,7 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.animation {
+          stylix.wallpaper = config.lib.stylix.types.wallpaper.from.animation {
             animation = ./path/to/animation.gif;
           };
         }
@@ -87,7 +88,7 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.video {
+          stylix.wallpaper = config.lib.stylix.types.wallpaper.from.video {
             video = ./path/to/video.mp4;
           };
         }
@@ -101,7 +102,7 @@ in {
         ```nix
         { config, ... }:
         {
-          stylix.wallpaper = config.lib.stylix.make.image {
+          stylix.wallpaper = config.lib.stylix.types.wallpaper.from.image {
             image = ./night-sky.jpg;
             polarity = "dark";
           };
@@ -132,7 +133,7 @@ in {
               base08 base09 base0A base0B base0C base0D base0E base0F
               scheme author description slug;
           }
-          else config.stylix.wallpaper.colors;
+          else config.stylix.wallpaper.as.colors;
 
       defaultText = literalMD "generated scheme based on `stylix.wallpaper`";
 

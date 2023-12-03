@@ -1,55 +1,133 @@
 { palette-generator, base16 }:
-{ pkgs, config, lib, options, ... }:
+{ pkgs, lib, options, ... }:
 
 with lib;
 
 let
-  # Exports the given constructor function as `config.lib.stylix.make.«name»`,
-  # and generates a type `config.lib.stylix.types.«name»`. The function must
-  # return an attribute set for this to work. The generated type can be used to
-  # create options which accept the output of the function.
-  objectModule =
+  # A "black box" which can store multiple types and convert between them.
+  #
+  # This is used for wallpapers so that we can put in advanced types like
+  # animations and videos, and pull them back out as still images when the more
+  # advanced type isn't supported.
+  boxType =
     {
       # Name of the type in camelCase.
-      name,
+      boxName,
       # Name of the type in human readable format.
-      description,
-      # Used to add brackets around the description where needed.
-      # "noun" - A simple noun phrase such as "positive integer"
-      # "conjunction" - A phrase with an "or" connective
-      # "composite" - A phrase with an "of" connective
-      descriptionClass,
-      # Constructor function.
-      constructor
+      boxDescription,
+      # Attribute set of each possible thing which could be inside the box.
+      #
+      # Each attribute is formatted as follows:
+      #
+      # type1 = {
+      #   description = "type 1";
+      #
+      #   # Type of the stored value using lib.types
+      #   type = ...;
+      #
+      #   # Conversion functions from this type to either another variety,
+      #   # or something outside of the box. Missing conversions are okay.
+      #   to = {
+      #     type2 = value: doSomething;
+      #     type3 = value: doSomethingElse;
+      #   };
+      # }
+      varieties
     }:
-    {
-      # The type of objects is tracked via the `_object` attribute.
-      # We cannot use `_type` because that is already used by `mkIf`,
-      # `mkMerge`, and `mkForce` from the standard library.
-      make.${name} = args: constructor args // { _object = name; };
-
-      types.${name} = mkOptionType {
-        inherit name description descriptionClass;
+    rec {
+      # Used for options which accept anything stored in this box.
+      type = mkOptionType {
+        name = boxName;
+        description = boxDescription;
+        descriptionClass = "noun";
         check = value:
-          builtins.isAttrs value &&
-          value?_object &&
-          value._object == name;
+          isAttrs value
+          && value?_box
+          && value._box == boxName;
       };
+
+      # Used to put values into the box by doing
+      # «box type».from.type1 «value»
+      from = mapAttrs (
+        varietyName: variety: value:
+        let
+          # If the stored type is a submodule, then this will fill in
+          # default values for any missing attributes.
+          mergedValue = variety.type.merge [] [{
+            inherit value;
+            file = "";
+          }];
+
+          directConversions = mapAttrs
+            (_: conversion: conversion mergedValue)
+            variety.to;
+
+          # A shortcut which allows writing
+          # «wallpaper».as.colors
+          # rather than
+          # «wallpaper».as.image.as.colors
+          # by automatically looking up the intermediate type.
+          indirectConversions = pipe directConversions [
+            attrValues
+            (catAttrs "as")
+            (foldl (a: b: a // b) {})
+          ];
+
+          possibleConversions =
+            indirectConversions //
+            directConversions //
+            # Conversion from this type to itself.
+            { ${varietyName} = value; };
+
+          # Error values for all possible output types. These will be overridden
+          # unless the conversion is not possible by any means.
+          missingConversions = pipe varieties [
+            attrValues
+            (map (variety: attrNames variety.to))
+            flatten
+            (a: a ++ attrNames varieties)
+            (a: genAttrs a (conversionName: throw "Conversion from ${varietyName} to ${conversionName} is not possible"))
+          ];
+
+          box = {
+            _box = boxName;
+
+            # To get a certain type out of the box regardless of what is inside,
+            # we can write
+            # «boxed value».as.«type»
+            as = missingConversions // possibleConversions;
+
+            # This is used to get values out of the box while doing something
+            # different depending on the stored type.
+            #
+            # «boxed value».unpack {
+            #   type1 = value: doSomething;
+            #   type2 = value: doSomethingElse;
+            # }
+            #
+            # If there is no function for the current type, then it will be
+            # converted to one of the other types.
+            unpack =
+              functions:
+              let
+                conversions = intersectLists
+                  (attrNames functions)
+                  (attrNames possibleConversions);
+                conversion = elemAt conversions 0;
+              in
+                if functions?${varietyName}
+                then functions.${varietyName} value
+                else
+                  if length conversions > 0
+                  then functions.${conversion} as.${conversion}
+                  else throw "${varietyName} cannot be unpacked with any of the provided functions";
+          };
+        in
+          if variety.type.check value
+          then box
+          else throw "Invalid value for ${variety.description}"
+      ) varieties;
     };
-
-  # The definition for `config.lib` only merges the first level of attrsets
-  # automatically, so we have to merge `make` and `types` explicitly
-  mergeModules = modules: {
-    lib.stylix = foldl recursiveUpdate {} modules;
-  };
-
-  generatePalette =
-    { image, polarity }:
-    # TODO: make base16.nix able to load this file directly, rather than importing it here
-    let palette = pkgs.runCommand "palette.json" { } ''
-      ${palette-generator}/bin/palette-generator ${polarity} ${image} $out
-    '';
-    in importJSON palette;
 
   extractFirstFrame =
     input:
@@ -57,120 +135,170 @@ let
       ${pkgs.ffmpeg}/bin/ffmpeg -i ${input} -vf 'select=eq(n\,0)' -vframes 1 $out
     '';
 
-in mergeModules [
-  (objectModule {
-    name = "image";
-    description = "image wallpaper";
-    descriptionClass = "noun";
-    constructor =
-      { image, polarity ? "either" }:
-      {
-        inherit image;
-        colors = generatePalette { inherit image polarity; };
+in {
+  lib.stylix.types.wallpaper = boxType {
+    boxName = "wallpaper";
+    boxDescription = "wallpaper";
+    varieties = {
+      image = {
+        description = "still image";
+
+        type = types.submodule {
+          options = {
+            file = mkOption {
+              type = with types; oneOf [ path package ];
+            };
+
+            polarity = mkOption {
+              type = types.enum [ "light" "dark" "either" ];
+              default = "either";
+            };
+          };
+        };
+
+        to.colors =
+          { file, polarity }:
+          # TODO: make base16.nix able to load this file directly, rather than importing it here
+          let palette = pkgs.runCommand "palette.json" { } ''
+            ${palette-generator}/bin/palette-generator ${polarity} ${file} $out
+          '';
+          in importJSON palette;
       };
-  })
 
-  (objectModule {
-    name = "slideshow";
-    description = "slideshow wallpaper";
-    descriptionClass = "noun";
-    constructor =
-      { images, delay ? 300, polarity ? "either" }:
-      rec {
-        inherit images delay;
-        image = builtins.elemAt images 0;
-        colors = generatePalette { inherit image polarity; };
+      slideshow = {
+        description = "slideshow";
+
+        type = types.submodule {
+          options = {
+            files = mkOption {
+              type = with types; nonEmptyListOf (oneOf [ path package ]);
+            };
+
+            delay = mkOption {
+              type = types.int;
+              default = 300;
+            };
+
+            polarity = mkOption {
+              type = types.enum [ "light" "dark" "either" ];
+              default = "either";
+            };
+          };
+        };
+
+        to.image =
+          { files, polarity, ... }:
+          {
+            file = elemAt files 0;
+            inherit polarity;
+          };
       };
-  })
 
-  (objectModule {
-    name = "animation";
-    description = "animated wallpaper";
-    descriptionClass = "noun";
-    constructor =
-      { animation, polarity ? "either" }:
-      rec {
-        inherit animation;
-        image = extractFirstFrame animation;
-        colors = generatePalette { inherit image polarity; };
+      animation = {
+        description = "animated image";
+
+        type = types.submodule {
+          options = {
+            file = mkOption {
+              type = with types; oneOf [ path package ];
+            };
+
+            polarity = mkOption {
+              type = types.enum [ "light" "dark" "either" ];
+              default = "either";
+            };
+          };
+        };
+
+        to.image =
+          { file, polarity, ... }:
+          {
+            file = extractFirstFrame file;
+            inherit polarity;
+          };
       };
-  })
 
-  (objectModule {
-    name = "video";
-    description = "video wallpaper";
-    descriptionClass = "noun";
-    constructor =
-      { video, polarity ? "either" }:
-      rec {
-        inherit video;
-        image = extractFirstFrame video;
-        colors = generatePalette { inherit image polarity; };
+      video = {
+        description = "video";
+
+        type = types.submodule {
+          options = {
+            file = mkOption {
+              type = with types; oneOf [ path package ];
+            };
+
+            polarity = mkOption {
+              type = types.enum [ "light" "dark" "either" ];
+              default = "either";
+            };
+          };
+        };
+
+        to.image =
+          { file, polarity, ... }:
+          {
+            file = extractFirstFrame file;
+            inherit polarity;
+          };
       };
-  })
+    };
+  };
 
-  {
-    types.wallpaper =
-      with config.lib.stylix.types;
-      types.oneOf [ image slideshow animation video ];
-  }
+  lib.stylix.types.scheme =
+    let
+      bases = [
+        "base00" "base01" "base02" "base03"
+        "base04" "base05" "base06" "base07"
+        "base08" "base09" "base0A" "base0B"
+        "base0C" "base0D" "base0E" "base0F"
+      ];
+      meta = [
+        "scheme" "author" "description" "slug"
+      ];
 
-  (let
-    bases = [
-      "base00" "base01" "base02" "base03"
-      "base04" "base05" "base06" "base07"
-      "base08" "base09" "base0A" "base0B"
-      "base0C" "base0D" "base0E" "base0F"
-    ];
-    meta = [
-      "scheme" "author" "description" "slug"
-    ];
+      hasOnlyPermittedAttrs = set:
+        all (a: elem a (bases ++ meta)) (attrNames set);
 
-    hasOnlyPermittedAttrs = set:
-      all (a: elem a (bases ++ meta)) (attrNames set);
+      hasAllRequiredAttrs = set:
+        all (a: elem a (attrNames set)) bases;
 
-    hasAllRequiredAttrs = set:
-      all (a: elem a (attrNames set)) bases;
+      isSchemeOrOverride = value:
+        types.path.check value ||
+        (builtins.isAttrs value && hasOnlyPermittedAttrs value);
 
-    isSchemeOrOverride = value:
-      types.path.check value ||
-      (builtins.isAttrs value && hasOnlyPermittedAttrs value);
+      isScheme = value:
+        types.path.check value ||
+        (builtins.isAttrs value && hasAllRequiredAttrs value);
 
-    isScheme = value:
-      types.path.check value ||
-      (builtins.isAttrs value && hasAllRequiredAttrs value);
+      merge = optionName: definitions:
+        let
+          values = catAttrs "value" definitions;
 
-    merge = optionName: definitions:
-      let
-        values = catAttrs "value" definitions;
+          partitioned = partition isScheme values;
+          schemes = partitioned.right;
+          overrides = partitioned.wrong;
 
-        partitioned = partition isScheme values;
-        schemes = partitioned.right;
-        overrides = partitioned.wrong;
+          schemeDefinition =
+            if length schemes < 1
+            then
+              # If only overrides were found, try looking at the option default for a scheme.
+              if hasAttrByPath (optionName ++ [ "default" ]) options
+              then getAttrFromPath (optionName ++ [ "default" ]) options
+              else throw "At least one definition for `${showOption optionName}' must contain a whole scheme."
+            else
+              if length schemes > 1
+              then throw "Only one definition for `${showOption optionName}' may contain a whole scheme."
+              else elemAt schemes 0;
 
-        schemeDefinition =
-          if length schemes < 1
-          then
-            # If only overrides were found, try looking at the option default for a scheme.
-            if hasAttrByPath (optionName ++ [ "default" ]) options
-            then getAttrFromPath (optionName ++ [ "default" ]) options
-            else throw "At least one definition for `${showOption optionName}' must contain a whole scheme."
-          else
-            if length schemes > 1
-            then throw "Only one definition for `${showOption optionName}' may contain a whole scheme."
-            else elemAt schemes 0;
+          scheme = base16.mkSchemeAttrs schemeDefinition;
 
-        scheme = base16.mkSchemeAttrs schemeDefinition;
+        in foldr (o: s: s.override o) scheme overrides;
 
-      in foldr (o: s: s.override o) scheme overrides;
-
-  in {
-    types.scheme = mkOptionType {
+    in mkOptionType {
       name = "scheme";
       description = "base16 scheme";
       descriptionClass = "noun";
       check = isSchemeOrOverride;
       inherit merge;
     };
-  })
-]
+}

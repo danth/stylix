@@ -110,7 +110,7 @@ let
 
   kscreenlockerrc = ''
     [Greeter][Wallpaper][org.kde.image][General][$i]
-    Image=${config.stylix.wallpaper.image}
+    Image=${config.stylix.wallpaper.as.image.file}
   '';
 
   configDir = pkgs.runCommandLocal "stylix-kde"
@@ -128,7 +128,7 @@ let
     for (desktop of desktops()) {
       desktop.wallpaperPlugin = "org.kde.image";
       desktop.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
-      desktop.writeConfig("Image", "${config.stylix.wallpaper.image}");
+      desktop.writeConfig("Image", "${config.stylix.wallpaper.as.image.file}");
     }
   '';
 

@@ -52,7 +52,7 @@ in {
         text-ver-color = text;
         text-wrong-color = text;
       } // lib.optionalAttrs config.stylix.targets.swaylock.useImage {
-        image = "${config.stylix.wallpaper.image}";
+        image = "${config.stylix.wallpaper.as.image.file}";
       };
     });
 }

@@ -98,7 +98,7 @@ in {
       ${if config.stylix.targets.grub.useImage
       # Make sure the background image is .png by asking to convert it
       then
-        "${pkgs.imagemagick}/bin/convert ${config.stylix.wallpaper.image} png32:$out/background.png"
+        "${pkgs.imagemagick}/bin/convert ${config.stylix.wallpaper.as.image.file} png32:$out/background.png"
       else
         "cp ${pixel "base00"} $out/background.png"}
 

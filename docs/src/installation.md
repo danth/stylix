@@ -119,8 +119,8 @@ let
 in {
     imports = [ (import stylix).homeManagerModules.stylix ];
 
-    stylix.wallpaper = config.lib.stylix.make.image {
-      image = ./wallpaper.jpg;
+    stylix.wallpaper = config.lib.stylix.types.wallpaper.from.image {
+      file = ./wallpaper.jpg;
     };
 }
 

@@ -3,26 +3,26 @@
 with lib;
 
 let
-  slide = image: ''
-    <static>
-      <duration>${toString config.stylix.wallpaper.delay}</duration>
-      <file>${image}</file>
-    </static>
-  '';
+  wallpaper = config.stylix.wallpaper.unpack {
+    slideshow =
+      { files, delay, ... }:
+      let
+        slide = file: ''
+          <static>
+            <duration>${toString delay}</duration>
+            <file>${file}</file>
+          </static>
+        '';
+        slideshow = pkgs.writeText "slideshow.xml" ''
+          <?xml version="1.0"?>
+          <background>
+          ${concatMapStrings slide files}
+          </background>
+        '';
+      in "file://${slideshow}";
 
-  slideshow = pkgs.writeText "slideshow.xml" ''
-    <?xml version="1.0"?>
-    <background>
-    ${concatMapStrings slide config.stylix.wallpaper.images}
-    </background>
-  '';
-
-  wallpaper =
-    if config.lib.stylix.types.slideshow.check config.stylix.wallpaper
-    then slideshow
-    else config.stylix.wallpaper.image;
-
-  wallpaperUri = "file://${wallpaper}";
+    image = { file, ... }: "file://${file}";
+  };
 
 in {
   options.stylix.targets.gnome.enable =
@@ -31,8 +31,8 @@ in {
   config = mkIf config.stylix.targets.gnome.enable {
     dconf.settings = {
       "org/gnome/desktop/background" = {
-        picture-uri = wallpaperUri;
-        picture-uri-dark = wallpaperUri;
+        picture-uri = wallpaper;
+        picture-uri-dark = wallpaper;
         picture-options = "zoom";
         color-shading-type = "solid";
         primary-color = config.stylix.colors.withHashtag.base00;

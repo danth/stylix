@@ -16,8 +16,8 @@ let
   fillColor = "black"
 in
 {
-  stylix.wallpaper = config.lib.stylix.make.image {
-    image = pkgs.runCommand "dimmed-background.png" { } ''
+  stylix.wallpaper = config.lib.stylix.types.wallpaper.from.image {
+    file = pkgs.runCommand "dimmed-background.png" { } ''
       ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
     '';
   };
