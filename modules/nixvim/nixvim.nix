@@ -41,23 +41,17 @@
           enable = true;
         };
 
-        extraConfigLuaPost = let
+        highlight = let
           cfg = config.stylix.targets.nixvim;
-          vim_cmds = lib.strings.concatLines ((lib.optionals cfg.transparent_bg.main [
-              "highlight Normal guibg=none"
-              "highlight NonText guibg=none"
-              "highlight Normal ctermbg=none"
-              "highlight NonText ctermbg=none"
-            ])
-            ++ (lib.optionals cfg.transparent_bg.sign_column [
-              "highlight SignColumn guibg=none"
-              "highlight SignColumn ctermbg=none"
-            ]));
-        in ''
-          vim.cmd([[
-          ${vim_cmds}
-          ]])
-        '';
+          transparent = {
+            bg = "none";
+            ctermbg = "none";
+          };
+        in {
+          Normal = lib.mkIf cfg.transparent_bg.main transparent;
+          NonText = lib.mkIf cfg.transparent_bg.main transparent;
+          SignColumn = lib.mkIf cfg.transparent_bg.sign_column transparent;
+        };
       };
     }
   );
