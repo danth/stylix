@@ -11,7 +11,7 @@ config.stylix.wallpaper.unpack rec {
       name = "slideshow";
       runtimeInputs = [ pkgs.feh ];
       text = ''
-        images=(${toString files})
+        images=(${toString (map lib.escapeShellArg files)})
         while true; do
           feh --no-fehbg --bg-scale ''${images[ $RANDOM % ''${#images[@]} ]}
           sleep ${toString delay}

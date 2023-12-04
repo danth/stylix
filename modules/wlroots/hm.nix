@@ -63,10 +63,10 @@ let
         name = "slideshow";
         runtimeInputs = [ pkgs.swww ];
         text = ''
-          images=(${builtins.toString files})
+          images=(${toString (map lib.escapeShellArg files)})
           while true; do
             swww img ''${images[ $RANDOM % ''${#images[@]} ]}
-            sleep ${builtins.toString delay}
+            sleep ${toString delay}
           done
         '';
       };
