@@ -42,14 +42,14 @@
         };
 
         extraConfigLuaPost = let
-          transparency_cfg = config.stylix.targets.nixvim.transparent_bg;
-          vim_cmds = lib.strings.concatLines ((lib.optionals transparency_cfg.main [
+          cfg = config.stylix.targets.nixvim;
+          vim_cmds = lib.strings.concatLines ((lib.optionals cfg.transparent_bg.main [
               "highlight Normal guibg=none"
               "highlight NonText guibg=none"
               "highlight Normal ctermbg=none"
               "highlight NonText ctermbg=none"
             ])
-            ++ (lib.optionals transparency_cfg.sign_column [
+            ++ (lib.optionals cfg.transparent_bg.sign_column [
               "highlight SignColumn guibg=none"
               "highlight SignColumn ctermbg=none"
             ]));
