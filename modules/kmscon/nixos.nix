@@ -3,15 +3,16 @@
   options.stylix.targets.kmscon.enable =
     config.lib.stylix.mkEnableTarget "the kmscon virtual console" true;
 
-  config.services.kmscon.extraConfig =
+  config.services.kmscon = lib.mkIf config.stylix.targets.kmscon.enable {
+    fonts = [config.stylix.fonts.monospace];
+    extraConfig =
     let
       formatBase = name:
         let
           getComponent = comp: config.lib.stylix.colors."${name}-rgb-${comp}";
         in
         "${getComponent "r"},${getComponent "g"},${getComponent "b"}";
-    in
-    lib.mkIf config.stylix.targets.kmscon.enable ''
+    in ''
       font-size=${builtins.toString config.stylix.fonts.sizes.terminal}
 
       palette=custom
@@ -36,4 +37,5 @@
       palette-background=${formatBase "base00"}
       palette-foreground=${formatBase "base05"}
     '';
+  };
 }
