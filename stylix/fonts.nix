@@ -59,6 +59,32 @@ in {
       };
     };
 
+    fallbackFonts = {
+      serif = mkOption {
+        description = mdDoc "Fallback fonts for this font type.";
+        type = types.listOf fontType;
+        default = fromOs [ "fonts" "fallbackFonts" "serif" ] [ ];
+      };
+
+      sansSerif = mkOption {
+        description = mdDoc "Fallback fonts for this font type.";
+        type = types.listOf fontType;
+        default = fromOs [ "fonts" "fallbackFonts" "sansSerif" ] [ ];
+      };
+
+      monospace = mkOption {
+        description = mdDoc "Fallback fonts for this font type.";
+        type = types.listOf fontType;
+        default = fromOs [ "fonts" "fallbackFonts" "monospace" ] [ ];
+      };
+
+      emoji = mkOption {
+        description = mdDoc "Fallback fonts for this font type.";
+        type = types.listOf fontType;
+        default = fromOs [ "fonts" "fallbackFonts" "emoji" ] [ ];
+      };
+    };
+
     sizes = {
       desktop = mkOption {
         description = mdDoc ''
