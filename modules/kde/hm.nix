@@ -8,8 +8,8 @@ let
     BackgroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
     BackgroundAlternate = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
 
-    DecorationFocus = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
-    DecorationHover = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
+    DecorationFocus = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
+    DecorationHover = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
 
     ForegroundNormal = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
     ForegroundActive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
@@ -50,7 +50,7 @@ let
     DisabledColor = "${base03-rgb-r},${base03-rgb-g},${base03-rgb-b}";
     DisabledColor2 = "${base03-rgb-r},${base03-rgb-g},${base03-rgb-b}";
     DisabledEffect = "none";
-    DisabledSemiTransparent = true;
+    DisabledSemiTransparent = false;
     DisabledValue = 1;
   };
 
@@ -84,7 +84,8 @@ let
     "Colors:Button" = colors;
     "Colors:Complementary" = colors;
     "Colors:Selection" = colors // {
-      BackgroundNormal = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
+      BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
+      BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
     };
     "Colors:Tooltip" = colors;
     "Colors:View" = colors;
