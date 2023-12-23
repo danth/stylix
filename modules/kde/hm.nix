@@ -109,6 +109,12 @@ let
     ToolbarIcons = icons;
   };
 
+  kcminputrc = ''
+    [Mouse]
+    cursorSize[$i]=${toString config.stylix.cursor.size}
+    cursorTheme[$i]=${config.stylix.cursor.name}
+  '';
+
   kscreenlockerrc = ''
     [Greeter][Wallpaper][org.kde.image][General][$i]
     Image=${config.stylix.image}
@@ -117,11 +123,12 @@ let
   configDir = pkgs.runCommandLocal "stylix-kde"
     {
       kdeglobals = (pkgs.formats.ini {}).generate "kdeglobals" kdeglobals;
-      inherit kscreenlockerrc;
+      inherit kcminputrc kscreenlockerrc;
     }
     ''
       mkdir $out
       cp $kdeglobals $out/kdeglobals
+      echo "$kcminputrc" >$out/kcminputrc
       echo "$kscreenlockerrc" >$out/kscreenlockerrc
     '';
 
