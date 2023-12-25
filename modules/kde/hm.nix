@@ -168,6 +168,24 @@ let
     writeText "$lookAndFeelDefaults" "$lookandfeel/contents/defaults"
   '';
 
+  # The cursor theme can be configured through a look and feel package,
+  # however its size cannot.
+  kcminputrc = {
+    Mouse = {
+      cursorSize = makeImmutable (toString config.stylix.cursor.size);
+      cursorTheme = makeImmutable config.stylix.cursor.name;
+    };
+  };
+
+  kded5rc = {
+    # The gtkconfig module copies settings from KDE to the GTK configuration.
+    # This blocks Home Manager activation because the same files are already
+    # managed by Stylix.
+    Module-gtkconfig = makeImmutable {
+      autoload = false;
+    };
+  };
+
   kdeglobals = {
     KDE.LookAndFeelPackage = makeImmutable "stylix";
 
@@ -182,22 +200,15 @@ let
     };
   };
 
-  # The cursor theme can be configured through a look and feel package,
-  # however its size cannot.
-  kcminputrc = {
-    Mouse = {
-      cursorSize = makeImmutable (toString config.stylix.cursor.size);
-      cursorTheme = makeImmutable config.stylix.cursor.name;
-    };
-  };
-
   configPackage = pkgs.runCommandLocal "stylix-kde-config" {
-    kdeglobals = formatConfig kdeglobals;
     kcminputrc = formatConfig kcminputrc;
+    kded5rc = formatConfig kded5rc;
+    kdeglobals = formatConfig kdeglobals;
   } ''
     mkdir "$out"
-    echo "$kdeglobals" >"$out/kdeglobals"
     echo "$kcminputrc" >"$out/kcminputrc"
+    echo "$kded5rc" >"$out/kded5rc"
+    echo "$kdeglobals" >"$out/kdeglobals"
   '';
 
 in {
