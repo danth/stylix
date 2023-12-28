@@ -234,18 +234,26 @@ in {
     # config files alone.
     home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       globalPath () {
-        find /run/current-system/sw/bin /usr/bin /bin \
-          -maxdepth 1 -type f,l -name "$1" -print -quit
+        for dir in /run/current-system/sw/bin /usr/bin /bin; do
+          if [ -f "$dir/$1" ]; then
+            echo "$dir/$1"
+            break
+          fi
+        done
       }
 
       wallpaperImage="$(globalPath plasma-apply-wallpaperimage)"
       if [ -n "$wallpaperImage" ]; then
         "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
+      else
+        echo "Skipping plasma-apply-wallpaperimage because it's not installed"
       fi
 
       lookAndFeel="$(globalPath plasma-apply-lookandfeel)"
       if [ -n "$lookAndFeel" ]; then
         "$lookAndFeel" --apply stylix
+      else
+        echo "Skipping plasma-apply-lookandfeel because it's not installed"
       fi
     '';
   };
