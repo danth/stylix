@@ -62,14 +62,12 @@ The human readable name must fit into the following sentence:
 Refer to the [style guide](./styling.md) to see how colors are named,
 and where to use each one.
 
-The colors are exported under `config.lib.stylix.colors`, which originates from
-[`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
-
-You can use the values directly:
+The colors are exported under `config.stylix.colors`. You can use the values
+directly:
 
 ```nix
 {
-  environment.variables.MY_APPLICATION_COLOR = config.lib.stylix.colors.base05;
+  some.program.color = config.stylix.colors.base05;
 }
 ```
 
@@ -78,8 +76,8 @@ it as a function. This returns a derivation which builds the template.
 
 ```nix
 {
-  environment.variables.MY_APPLICATION_CONFIG_FILE =
-    let configFile = config.lib.stylix.colors {
+  some.program.configPath =
+    let configFile = config.stylix.colors {
       template = ./config.toml.mustache;
       extension = ".toml";
     };
@@ -94,7 +92,40 @@ individually.
 Also note that reading generated files with `builtins.readFile` can be very
 slow and should be avoided.
 
+## How to apply wallpapers
+
+If your module will only support image wallpapers, then you can use
+the image as follows:
+
+```nix
+{
+  some.program.wallpaper = config.stylix.wallpaper.as.image.file;
+}
+```
+
+Otherwise, use `unpack`:
+
+```nix
+{
+  some.program.wallpaperURIs = config.stylix.wallpaper.unpack {
+    slideshow =
+      { files, ... }:
+      map (f: "file://${f}") files;
+
+    image =
+      { file, ... }:
+      [ "file://${file}" ];
+  };
+}
+```
+
+This calls the corresponding function for the type of wallpaper which the user
+selected, kind of like [pattern matching](https://stackoverflow.com/a/2225811).
+
+It's essential that still images are handled correctly, since any other missing
+types can be converted to that.
+
 ## How to apply other things
 
-For everything else, like fonts and wallpapers, you can just take option values
+For everything else, like fonts, you can just take option values
 directly from `config`. See the reference pages for a list of options.
