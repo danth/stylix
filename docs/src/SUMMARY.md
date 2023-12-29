@@ -14,4 +14,5 @@
 
 # Contributing
 
+- [Adding modules](modules.md)
 - [Style guide](styling.md)
