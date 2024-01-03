@@ -21,7 +21,7 @@ let
     };
   };
 
-  fontList = types.coercedTo fontType (f: [ f ]) (types.nonEmptyListOf fontType);
+  fontList = types.nonEmptyListOf fontType;
 in {
   options.stylix.fonts = {
     serif = mkOption {
