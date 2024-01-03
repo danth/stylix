@@ -21,11 +21,12 @@ let
     };
   };
 
+  fontList = types.coercedTo fontType (f: [ f ]) (types.nonEmptyListOf fontType);
 in {
   options.stylix.fonts = {
     serif = mkOption {
       description = mdDoc "Serif font.";
-      type = types.nonEmptyListOf fontType;
+      type = fontList;
       default = fromOs [ "fonts" "serif" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
@@ -34,7 +35,7 @@ in {
 
     sansSerif = mkOption {
       description = mdDoc "Sans-serif font.";
-      type = types.nonEmptyListOf fontType;
+      type = fontList;
       default = fromOs [ "fonts" "sansSerif" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
@@ -43,7 +44,7 @@ in {
 
     monospace = mkOption {
       description = mdDoc "Monospace font.";
-      type = types.nonEmptyListOf fontType;
+      type = fontList;
       default = fromOs [ "fonts" "monospace" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
@@ -52,7 +53,7 @@ in {
 
     emoji = mkOption {
       description = mdDoc "Emoji font.";
-      type = types.nonEmptyListOf fontType;
+      type = fontList;
       default = fromOs [ "fonts" "emoji" ] [{
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
