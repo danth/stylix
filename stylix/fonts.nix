@@ -21,8 +21,46 @@ let
     };
   };
 
-  fontList = types.nonEmptyListOf fontType;
-in {
+  # A best hope mix of
+  #
+  # - lib.types.listOf
+  # - lib.types.nonEmptyListOf
+  # - lib.types.coercedTo
+  #
+  # My understanding is shallow and my hopes are high.
+  coercedToNonEmptyListOf = elemType: types.mkOptionType ({
+    name = "coercedToNonEmptyList of ${types.optionDescriptionPhrase (class: class == "noun" || class == "composite") elemType}";
+    descriptionClass = "composite";
+    check = x: if builtins.isList x then x != [ ] else elemType.check x;
+    merge = loc: defs:
+      let coerceVal = val: if builtins.isList val then val else [ val ];
+      in
+      builtins.map (x: x.value) (builtins.filter (x: x ? value)
+        (builtins.concatLists
+          (lists.imap1
+            (n: def:
+              lists.imap1
+                (m: def':
+                  (mergeDefinitions
+                    (loc ++ [ "[definition ${toString n}-entry ${toString m}]" ])
+                    elemType
+                    [{ inherit (def) file; value = def'; }]
+                  ).optionalValue
+                )
+                def.value
+            )
+            (builtins.map (def: def // { value = coerceVal def.value; }) defs))));
+    emptyValue = { }; # unset
+    getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "*" ]);
+    getSubModules = elemType.getSubModules;
+    substSubModules = m: coercedToNonEmptyListOf (elemType.substSubModules m);
+    functor = (defaultFunctor name) // { wrapped = elemType; };
+    nestedTypes.elemType = elemType;
+  });
+
+  fontList = coercedToNonEmptyListOf fontType;
+in
+{
   options.stylix.fonts = {
     serif = mkOption {
       description = mdDoc "Serif font.";
