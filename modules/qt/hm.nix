@@ -4,8 +4,8 @@
   lib,
   ...
 }: {
-  options.stylix.targets.kvantum = {
-    enable = config.lib.stylix.mkEnableTarget "Kvantum" pkgs.stdenv.hostPlatform.isLinux;
+  options.stylix.targets.qt = {
+    enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
     enableDefaultIcons = lib.mkOption {
       description = "Default QT Icons";
       type = lib.types.bool;
@@ -13,8 +13,8 @@
     };
   };
 
-  config = lib.mkIf config.stylix.targets.kvantum.enable (let
-    cfg = config.stylix.targets.kvantum;
+  config = lib.mkIf config.stylix.targets.qt.enable (let
+    cfg = config.stylix.targets.qt;
     kvconfig = config.lib.stylix.colors {
       template = ./kvconfig.mustache;
       extension = ".kvconfig";
@@ -48,6 +48,8 @@
     xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
       General.theme = "Base16Kvantum";
     };
+
+    xdg.configFile."Kvantum/Base16Kvantum".source = "${kvantumPackage}/share/Kvantum/Base16Kvantum";
 
     xdg.configFile."qt5ct/qt5ct.conf".text =
       ''
