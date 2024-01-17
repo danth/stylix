@@ -1,9 +1,12 @@
 { pkgs, config, lib, ... }:
 
-with config.stylix.fonts;
 with config.lib.stylix.colors;
 
 let
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+  sansSerif = builtins.head fonts.sansSerif;
+  monospace = builtins.head fonts.monospace;
   formatValue = value:
     if builtins.isBool value
     then if value then "true" else "false"

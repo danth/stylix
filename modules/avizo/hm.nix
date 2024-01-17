@@ -1,7 +1,6 @@
 { config, lib, options, ... }:
 
 with config.lib.stylix.colors;
-with config.stylix.fonts;
 let
   aviOpacity = toString config.stylix.opacity.popups;
 in

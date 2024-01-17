@@ -1,7 +1,5 @@
 { config, lib, ... }:
 
-with config.stylix.fonts;
-
 let
   inherit (config.lib.formats.rasi) mkLiteral;
   mkRgba = opacity: color:
@@ -14,6 +12,10 @@ let
       mkLiteral
         "rgba ( ${r}, ${g}, ${b}, ${opacity} % )";
   mkRgb = mkRgba "100";
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+  monospace = builtins.head fonts.monospace;
+
   rofiOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
 in
 {

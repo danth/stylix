@@ -37,10 +37,13 @@ in {
     # programs.dconf.enable = true; required in system config
     gtk = {
       enable = true;
-      font = {
-        inherit (config.stylix.fonts.sansSerif) package name;
-        size = config.stylix.fonts.sizes.applications;
-      };
+      font = let
+          inherit (config.stylix) fonts;
+          sansSerif = builtins.head fonts.sansSerif;
+        in {
+          inherit (sansSerif) package name;
+          size = fonts.sizes.applications;
+        };
       theme = {
         package = pkgs.adw-gtk3;
         name = "adw-gtk3";

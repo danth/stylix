@@ -1,8 +1,9 @@
 {pkgs, config, lib, ... }:
 
-with config.stylix.fonts;
-
 let
+  inherit (config.stylix) fonts;
+  monospace = builtins.head fonts.monospace;
+
   themeFile = config.lib.stylix.colors {
     template = ./template.mustache;
     extension = ".json";

@@ -5,6 +5,18 @@
 
 let
   colors = config.lib.stylix.colors.withHashtag;
+  useYaml = (builtins.compareVersions config.programs.alacritty.package.version "0.13.0") < 0;
+  templateRepo = config.lib.stylix.templates.
+    "base16-alacritty${if useYaml then "-yaml" else ""}";
+
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+
+  monospace = builtins.head fonts.monospace;
+
+  themeFile = config.lib.stylix.colors {
+    inherit templateRepo;
+  };
 in
 {
   options.stylix.targets.alacritty.enable = config.lib.stylix.mkEnableTarget "Alacritty" true;

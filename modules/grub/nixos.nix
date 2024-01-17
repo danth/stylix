@@ -1,10 +1,14 @@
 { pkgs, config, lib, ... }:
 
 with config.lib.stylix;
-with config.stylix.fonts;
 with config.lib.stylix.colors.withHashtag;
 
 let
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+  monospace = builtins.head fonts.monospace;
+  sansSerif = builtins.head fonts.sansSerif;
+
   # Grub requires fonts to be converted to "PFF2 format"
   # This function takes a font { name, package } and produces a .pf2 file
   mkGrubFont = font:
