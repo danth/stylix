@@ -19,6 +19,10 @@
       url = "github:aarowill/base16-alacritty";
       flake = false;
     };
+    base16-alacritty-yaml = {
+      url = "github:aarowill/base16-alacritty/63d8ae5dfefe5db825dd4c699d0cdc2fc2c3eaf7";
+      flake = false;
+    };
     base16-fish = {
       url = "github:tomyun/base16-fish";
       flake = false;
