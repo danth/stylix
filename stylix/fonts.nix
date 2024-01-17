@@ -21,42 +21,81 @@ let
     };
   };
 
-in {
+  # A best hope mix of
+  #
+  # - lib.types.listOf
+  # - lib.types.nonEmptyListOf
+  # - lib.types.coercedTo
+  #
+  # My understanding is shallow and my hopes are high.
+  coercedToNonEmptyListOf = elemType: types.mkOptionType ({
+    name = "coercedToNonEmptyList of ${types.optionDescriptionPhrase (class: class == "noun" || class == "composite") elemType}";
+    descriptionClass = "composite";
+    check = x: if builtins.isList x then x != [ ] else elemType.check x;
+    merge = loc: defs:
+      let coerceVal = val: if builtins.isList val then val else [ val ];
+      in
+      builtins.map (x: x.value) (builtins.filter (x: x ? value)
+        (builtins.concatLists
+          (lists.imap1
+            (n: def:
+              lists.imap1
+                (m: def':
+                  (mergeDefinitions
+                    (loc ++ [ "[definition ${toString n}-entry ${toString m}]" ])
+                    elemType
+                    [{ inherit (def) file; value = def'; }]
+                  ).optionalValue
+                )
+                def.value
+            )
+            (builtins.map (def: def // { value = coerceVal def.value; }) defs))));
+    emptyValue = { }; # unset
+    getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "*" ]);
+    getSubModules = elemType.getSubModules;
+    substSubModules = m: coercedToNonEmptyListOf (elemType.substSubModules m);
+    functor = (defaultFunctor name) // { wrapped = elemType; };
+    nestedTypes.elemType = elemType;
+  });
+
+  fontList = coercedToNonEmptyListOf fontType;
+in
+{
   options.stylix.fonts = {
     serif = mkOption {
       description = "Serif font.";
-      type = fontType;
-      default = fromOs [ "fonts" "serif" ] {
+      type = fontList;
+      default = fromOs [ "fonts" "serif" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
-      };
+      }];
     };
 
     sansSerif = mkOption {
       description = "Sans-serif font.";
-      type = fontType;
-      default = fromOs [ "fonts" "sansSerif" ] {
+      type = fontList;
+      default = fromOs [ "fonts" "sansSerif" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
-      };
+      }];
     };
 
     monospace = mkOption {
       description = "Monospace font.";
-      type = fontType;
-      default = fromOs [ "fonts" "monospace" ] {
+      type = fontList;
+      default = fromOs [ "fonts" "monospace" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
-      };
+      }];
     };
 
     emoji = mkOption {
       description = "Emoji font.";
-      type = fontType;
-      default = fromOs [ "fonts" "emoji" ] {
+      type = fontList;
+      default = fromOs [ "fonts" "emoji" ] [{
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
-      };
+      }];
     };
 
     sizes = {
@@ -105,11 +144,10 @@ in {
   };
 
   config = {
-    stylix.fonts.packages = [
-      cfg.monospace.package
-      cfg.serif.package
-      cfg.sansSerif.package
-      cfg.emoji.package
-    ];
+    stylix.fonts.packages =
+      (lib.catAttrs "package" cfg.monospace)
+      ++ (lib.catAttrs "package" cfg.serif)
+      ++ (lib.catAttrs "package" cfg.sansSerif)
+      ++ (lib.catAttrs "package" cfg.emoji);
   };
 }
