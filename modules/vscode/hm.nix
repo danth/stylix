@@ -26,9 +26,9 @@ in {
     programs.vscode = {
       extensions = [ themeExtension ];
       userSettings = {
-        workbench.colorTheme = "Stylix";
-        terminal.integrated.fontFamily = "'${monospace.name}'";
-        editor.fontFamily = "'${monospace.name}'";
+        "workbench.colorTheme" = "Stylix";
+        "terminal.integrated.fontFamily" = "'${monospace.name}'";
+        "editor.fontFamily" = "'${monospace.name}'";
       };
     };
   };
