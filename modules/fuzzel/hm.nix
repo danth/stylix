@@ -21,8 +21,11 @@ in {
         border = "${base0D-hex}ff";
       };
 
-      main = {
-        font = "${config.stylix.fonts.sansSerif.name}:size=${toString config.stylix.fonts.sizes.popups}";
+      main = let
+        inherit (config.stylix) fonts;
+        sansSerif = builtins.head fonts.sansSerif;
+      in {
+        font = "${sansSerif.name}:size=${toString fonts.sizes.popups}";
         dpi-aware = "no";
       };
     };

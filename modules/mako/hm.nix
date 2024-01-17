@@ -1,8 +1,10 @@
 {pkgs, config, lib, options, ... }:
 
 with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
 let
+  inherit (config.stylix) fonts;
+  inherit(fonts) sizes;
+  sansSerif = builtins.head fonts.sansSerif;
   makoOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
 in {
   options.stylix.targets.mako.enable =

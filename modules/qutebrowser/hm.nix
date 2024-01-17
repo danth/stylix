@@ -12,11 +12,15 @@ let
   inverted-foreground = base00;
 
   error = base08;
-
   info = base0B;
   secondary-info = base0C;
 
   warning = base0E;
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+  serif = builtins.head fonts.serif;
+  sansSerif = builtins.head fonts.sansSerif;
+  monospace = builtins.head fonts.monospace;
 in {
   options.stylix.targets.qutebrowser.enable =
     config.lib.stylix.mkEnableTarget "Qutebrowser" true;

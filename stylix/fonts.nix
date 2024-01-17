@@ -25,38 +25,38 @@ in {
   options.stylix.fonts = {
     serif = mkOption {
       description = mdDoc "Serif font.";
-      type = fontType;
-      default = fromOs [ "fonts" "serif" ] {
+      type = types.nonEmptyListOf fontType;
+      default = fromOs [ "fonts" "serif" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
-      };
+      }];
     };
 
     sansSerif = mkOption {
       description = mdDoc "Sans-serif font.";
-      type = fontType;
-      default = fromOs [ "fonts" "sansSerif" ] {
+      type = types.nonEmptyListOf fontType;
+      default = fromOs [ "fonts" "sansSerif" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
-      };
+      }];
     };
 
     monospace = mkOption {
       description = mdDoc "Monospace font.";
-      type = fontType;
-      default = fromOs [ "fonts" "monospace" ] {
+      type = types.nonEmptyListOf fontType;
+      default = fromOs [ "fonts" "monospace" ] [{
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
-      };
+      }];
     };
 
     emoji = mkOption {
       description = mdDoc "Emoji font.";
-      type = fontType;
-      default = fromOs [ "fonts" "emoji" ] {
+      type = types.nonEmptyListOf fontType;
+      default = fromOs [ "fonts" "emoji" ] [{
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
-      };
+      }];
     };
 
     sizes = {
