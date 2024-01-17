@@ -3,8 +3,12 @@
 with config.stylix.fonts;
 
 let
+  useYaml = (builtins.compareVersions config.programs.alacritty.package.version "0.13.0") < 0;
+  templateRepo = config.lib.stylix.templates.
+    "base16-alacritty${if useYaml then "-yaml" else ""}";
+
   themeFile = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-alacritty;
+    inherit templateRepo;
   };
 in
 {
