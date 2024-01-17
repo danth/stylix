@@ -23,5 +23,8 @@ makeOutputTable :: V.Vector RGB -> JSObject String
 makeOutputTable
   = toJSObject
   . V.toList
+  . V.cons ("author", "Stylix")
+  . V.cons ("scheme", "Stylix")
+  . V.cons ("slug", "stylix")
   . V.imap (\i c -> (printf "base%02X" i, c))
   . V.map toHex

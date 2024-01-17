@@ -7,7 +7,7 @@
   config = lib.mkIf config.stylix.targets.zellij.enable {
     programs.zellij.settings = {
         theme = "stylix";
-        themes.stylix = with config.lib.stylix.colors.withHashtag; {
+        themes.stylix = with config.stylix.colors.withHashtag; {
             bg = base03;
             fg = base05;
             red = base08;

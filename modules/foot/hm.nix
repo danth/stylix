@@ -3,7 +3,7 @@
 let
   cfg = config.stylix.targets.foot;
 
-  theme = config.lib.stylix.colors {
+  theme = config.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-foot;
   };
 

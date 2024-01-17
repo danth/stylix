@@ -3,9 +3,10 @@
 with config.stylix.fonts;
 
 let
-  themeFile = config.lib.stylix.colors {
+  themeFile = config.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-alacritty;
   };
+
 in
 {
   options.stylix.targets.alacritty.enable =

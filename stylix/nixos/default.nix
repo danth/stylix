@@ -7,12 +7,11 @@ let
   autoload = import ../autoload.nix { inherit lib; } "nixos";
 in {
   imports = [
-    ../pixel.nix
     ../target.nix
     ../opacity.nix
     ./cursor.nix
     ./fonts.nix
-    (import ./palette.nix { inherit palette-generator base16; })
+    (import ./etc.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)
   ] ++ autoload;
 

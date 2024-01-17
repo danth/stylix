@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 
 with config.stylix.fonts;
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   formatValue = value:
@@ -143,7 +143,7 @@ let
   themePackage = pkgs.runCommandLocal "stylix-kde-theme" {
     colorscheme = formatConfig colorscheme;
     wallpaperMetadata = builtins.toJSON wallpaperMetadata;
-    wallpaperImage = config.stylix.image;
+    wallpaperImage = config.stylix.wallpaper.as.image.file;
     lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
     lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
   } ''

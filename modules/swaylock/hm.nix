@@ -1,6 +1,6 @@
 { pkgs, options, config, lib, ... }:
 
-with config.lib.stylix.colors;
+with config.stylix.colors;
 
 let
   inside = base01-hex;
@@ -52,7 +52,7 @@ in {
         text-ver-color = text;
         text-wrong-color = text;
       } // lib.optionalAttrs config.stylix.targets.swaylock.useImage {
-        image = "${config.stylix.image}";
+        image = "${config.stylix.wallpaper.as.image.file}";
       };
     });
 }

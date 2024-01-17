@@ -2,10 +2,12 @@
 
 let
   cfg = config.stylix.targets.kitty;
-  theme = config.lib.stylix.colors {
+
+  theme = config.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-kitty;
     target = if cfg.variant256Colors then "default-256" else "default";
   };
+
 in {
   options.stylix.targets.kitty = {
     enable = config.lib.stylix.mkEnableTarget "Kitty" true;

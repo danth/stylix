@@ -1,26 +1,12 @@
-# Dummy values to avoid errors when generating the documentation.
+# Dummy wallpaper to avoid errors when generating the documentation.
+
+{ pkgs, config, ... }:
 
 {
-  stylix = {
-    image = "/a/b/c";
-
-    base16Scheme = {
-      base00 = "ffffff";
-      base01 = "ffffff";
-      base02 = "ffffff";
-      base03 = "ffffff";
-      base04 = "ffffff";
-      base05 = "ffffff";
-      base06 = "ffffff";
-      base07 = "ffffff";
-      base08 = "ffffff";
-      base09 = "ffffff";
-      base0A = "ffffff";
-      base0B = "ffffff";
-      base0C = "ffffff";
-      base0D = "ffffff";
-      base0E = "ffffff";
-      base0F = "ffffff";
+  stylix.wallpaper = config.lib.stylix.types.wallpaper.from.image {
+    file = pkgs.fetchurl {
+      url = "https://picsum.photos/seed/stylix/1920/1080.jpg";
+      sha256 = "tow7DBO+/tgkDDD8diif+0V/6aDzrYl02/J7SCA8RCU=";
     };
   };
 }

@@ -74,12 +74,20 @@
             base16 = base16.lib args;
             homeManagerModule = self.homeManagerModules.stylix;
           })
+          (import ./lib {
+            inherit (self.packages.${pkgs.system}) palette-generator;
+            base16 = base16.lib args;
+          })
         ];
       };
 
       homeManagerModules.stylix = { pkgs, ... }@args: {
         imports = [
           (import ./stylix/hm inputs {
+            inherit (self.packages.${pkgs.system}) palette-generator;
+            base16 = base16.lib args;
+          })
+          (import ./lib {
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
           })
@@ -92,6 +100,10 @@
             inherit (self.packages.${pkgs.system}) palette-generator;
             base16 = base16.lib args;
             homeManagerModule = self.homeManagerModules.stylix;
+          })
+          (import ./lib {
+            inherit (self.packages.${pkgs.system}) palette-generator;
+            base16 = base16.lib args;
           })
         ];
       };

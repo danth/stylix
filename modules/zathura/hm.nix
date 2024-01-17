@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-with config.lib.stylix.colors;
+with config.stylix.colors;
 {
   options.stylix.targets.zathura.enable =
     config.lib.stylix.mkEnableTarget "Zathura" true;

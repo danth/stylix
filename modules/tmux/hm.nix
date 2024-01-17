@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 
 let
-  theme = config.lib.stylix.colors {
+  theme = config.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-tmux;
   };
 

@@ -1,6 +1,6 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
-with config.lib.stylix.colors.withHashtag;
+with config.stylix.colors.withHashtag;
 
 let
   text = base05;
@@ -15,13 +15,15 @@ let
 
 in {
   options.stylix.targets.sway.enable =
-    config.lib.stylix.mkEnableTarget "Sway" true;
+    config.lib.stylix.mkEnableTarget "Sway"
+    config.wayland.windowManager.sway.enable;
 
   config = lib.mkMerge [
     (lib.mkIf config.stylix.targets.sway.enable {
+      stylix.targets.wlroots.enable = true;
+
       wayland.windowManager.sway.config = {
         inherit fonts;
-
         colors = let
           background = base00;
           indicator = base0B;
@@ -53,8 +55,6 @@ in {
             childBorder = unfocused;
           };
         };
-
-        output."*".bg = "${config.stylix.image} fill";
 
         seat."*" = {
           xcursor_theme = "${config.stylix.cursor.name} ${toString config.stylix.cursor.size}";

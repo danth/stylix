@@ -5,7 +5,7 @@
     config.lib.stylix.mkEnableTarget "Bat" config.programs.bat.enable;
 
   config = lib.mkIf config.stylix.targets.bat.enable {
-    programs.bat.themes."base16-stylix".src = config.lib.stylix.colors {
+    programs.bat.themes."base16-stylix".src = config.stylix.colors {
       template = ./base16-stylix.mustache;
       extension = ".tmTheme";
     };

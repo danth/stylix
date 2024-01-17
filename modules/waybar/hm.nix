@@ -1,5 +1,5 @@
 { config, lib, ... }:
-with config.lib.stylix.colors.withHashtag;
+with config.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
   colorlessModules = place: ''
@@ -46,7 +46,7 @@ in
       }
 
       window#waybar, tooltip {
-          background: alpha(@base00, ${with config.stylix.opacity; builtins.toString desktop});
+          background: alpha(@base00, ${config.lib.stylix.desktopOpacity-float});
           color: @base05;
       }
 
