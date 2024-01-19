@@ -47,6 +47,11 @@
       url = "github:edolstra/flake-compat";
     };
 
+    gnome-shell = {
+      flake = false;
+      url = "github:GNOME/gnome-shell/45.1";
+    };
+
     # The 'home-manager' input is used to generate the documentation.
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
