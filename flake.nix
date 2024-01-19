@@ -47,7 +47,7 @@
       flake = false;
     };
 
-    # Used for documentation
+    # The 'home-manager' input is used to generate the documentation.
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
