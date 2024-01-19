@@ -1,19 +1,5 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    base16.url = "github:SenchoPens/base16.nix";
-
-    # Used for documentation
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-
     # Templates
     base16-alacritty = {
       url = "github:aarowill/base16-alacritty";
@@ -35,18 +21,33 @@
       url = "github:tinted-theming/base16-helix";
       flake = false;
     };
-    base16-kitty = {
-      url = "github:kdrag0n/base16-kitty";
-      flake = false;
-    };
     base16-tmux = {
       url = "github:tinted-theming/base16-tmux";
+      flake = false;
+    };
+    base16-kitty = {
+      url = "github:kdrag0n/base16-kitty";
       flake = false;
     };
     base16-vim = {
       url = "github:chriskempson/base16-vim";
       flake = false;
     };
+
+    base16.url = "github:SenchoPens/base16.nix";
+
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+
+    # Used for documentation
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
   outputs =
