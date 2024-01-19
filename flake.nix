@@ -49,7 +49,7 @@
 
     gnome-shell = {
       flake = false;
-      url = "github:GNOME/gnome-shell/45.1";
+      url = "git+https://gitlab.gnome.org/GNOME/gnome-shell";
     };
 
     # The 'home-manager' input is used to generate the documentation.
