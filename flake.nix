@@ -1,34 +1,40 @@
 {
   inputs = {
-    # Templates
     base16-alacritty = {
       url = "github:aarowill/base16-alacritty";
       flake = false;
     };
+
     base16-alacritty-yaml = {
       url = "github:aarowill/base16-alacritty/63d8ae5dfefe5db825dd4c699d0cdc2fc2c3eaf7";
       flake = false;
     };
+
     base16-fish = {
       url = "github:tomyun/base16-fish";
       flake = false;
     };
+
     base16-foot = {
       url = "github:tinted-theming/base16-foot";
       flake = false;
     };
+
     base16-helix = {
       url = "github:tinted-theming/base16-helix";
       flake = false;
     };
+
     base16-tmux = {
       url = "github:tinted-theming/base16-tmux";
       flake = false;
     };
+
     base16-kitty = {
       url = "github:kdrag0n/base16-kitty";
       flake = false;
     };
+
     base16-vim = {
       url = "github:chriskempson/base16-vim";
       flake = false;
