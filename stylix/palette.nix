@@ -24,7 +24,7 @@ let
   override =
     (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
      then fromOs [ "override" ] {}
-     else {}) 
+     else {})
     // cfg.override;
 
 in {
@@ -108,7 +108,7 @@ in {
         but could be overridden manually.
       '';
     };
-    
+
     override = mkOption {
       description = mdDoc ''
         An override that will be applied to stylix.base16Scheme when generating

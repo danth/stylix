@@ -42,7 +42,7 @@ in {
       "--scf '${base03}'"
       "--ab '${if alternate then base00 else base01}'"
       "--af '${if alternate then base04 else base05}'"
-      "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'" 
+      "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'"
     ];
   };
 }

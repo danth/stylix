@@ -24,7 +24,7 @@ in
 
 ## Dynamic wallpaper generation based on selected theme
 
-With imagemagick, you can also dynamically generate wallpapers based on the selected theme.  
+With imagemagick, you can also dynamically generate wallpapers based on the selected theme.
 Similarly, you can use a template image and repaint it for the current theme.
 
 ```nix

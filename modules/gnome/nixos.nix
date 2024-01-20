@@ -1,6 +1,6 @@
 { pkgs, config, ... }@args:
 
-let 
+let
   # We use this imported lib instead of the one from the module arguments
   # to avoid infinite loops if the lib in arguments depends on nixpkgs.overlays
   lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/174d7dc67189bc4a53f1bffb4fb9d0f13b79cd3c").lib;
@@ -12,7 +12,7 @@ in {
     lib.mkOption {
       description = lib.mdDoc "Whether to style GNOME and GDM";
       type = lib.types.bool;
-      default = config.stylix.autoEnable 
+      default = config.stylix.autoEnable
              && config.services.xserver.desktopManager.gnome.enable;
     };
 
