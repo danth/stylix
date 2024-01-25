@@ -21,6 +21,6 @@ in
               image-opacity = aviOpacity;
             };
         };
-    }; 
+    };
   });
 }

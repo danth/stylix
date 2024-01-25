@@ -14,7 +14,7 @@ with lib;
         picture-uri = "file://${config.stylix.image}";
         picture-uri-dark = "file://${config.stylix.image}";
       };
-      
+
       "org/gnome/desktop/interface" = with config.stylix.fonts ; {
         # We show the same colours regardless of this setting, and the quick
         # settings tile is removed. The value is still used by Epiphany to
