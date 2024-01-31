@@ -24,7 +24,7 @@ let
   override =
     (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
      then fromOs [ "override" ] {}
-     else {}) 
+     else {})
     // cfg.override;
 
 in {
@@ -108,7 +108,7 @@ in {
         but could be overridden manually.
       '';
     };
-    
+
     override = mkOption {
       description = mdDoc ''
         An override that will be applied to stylix.base16Scheme when generating
@@ -124,7 +124,7 @@ in {
 
   config = {
     # This attrset can be used like a function too, see
-    # https://github.com/SenchoPens/base16.nix#mktheme
+    # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
     lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
     lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
   };

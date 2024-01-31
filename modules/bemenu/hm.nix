@@ -26,23 +26,26 @@ in {
   };
 
   config = lib.mkIf config.stylix.targets.bemenu.enable {
-    home.sessionVariables.BEMENU_OPTS = with config.stylix.targets.bemenu; builtins.concatStringsSep " " [
-      # Inspired from https://git.sr.ht/~h4n1/base16-bemenu_opts
-      "--tb '${base01}${bemenuOpacity}'"
-      "--nb '${base01}${bemenuOpacity}'"
-      "--fb '${base01}${bemenuOpacity}'"
-      "--hb '${base03}${bemenuOpacity}'"
-      "--sb '${base03}${bemenuOpacity}'"
-      "--hf '${base0A}'"
-      "--sf '${base0B}'"
-      "--tf '${base05}'"
-      "--ff '${base05}'"
-      "--nf '${base05}'"
-      "--scb '${base01}'"
-      "--scf '${base03}'"
-      "--ab '${if alternate then base00 else base01}'"
-      "--af '${if alternate then base04 else base05}'"
-      "--fn '${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}'" 
-    ];
+    programs.bemenu.settings = with config.stylix.targets.bemenu; {
+      tb = "${base01}${bemenuOpacity}"; # Title bg
+      nb = "${base01}${bemenuOpacity}"; # Normal bg
+      fb = "${base01}${bemenuOpacity}"; # Filter bg
+      hb = "${base03}${bemenuOpacity}"; # Highlighted bg
+      sb = "${base03}${bemenuOpacity}"; # Selected bg
+      scb = "${base01}"; # Scrollbar bg
+
+      hf = "${base0A}"; # Highlighted fg
+      sf = "${base0B}"; # Selected fg
+      tf = "${base05}"; # Title fg
+      ff = "${base05}"; # Filter fg
+      nf = "${base05}"; # Normal fg
+      scf = "${base03}"; # Scrollbar fg
+
+      ab = "${if alternate then base00 else base01}"; # Alternate bg
+      af = "${if alternate then base04 else base05}"; # Alternate fg
+
+      # Font name
+      fn = "${sansSerif.name} ${lib.optionalString (fontSize != null) (builtins.toString fontSize)}";
+    };
   };
 }

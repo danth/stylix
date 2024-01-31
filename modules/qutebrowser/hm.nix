@@ -204,18 +204,18 @@ in {
         };
       };
 
-      fonts = let
-        mkFont = name: "${name} ${toString sizes.applications}pt";
-      in {
-        default_family = mkFont sansSerif.name;
+      fonts = {
+        default_family = sansSerif.name;
+        default_size = "${toString sizes.applications}pt";
         web.family = {
-          cursive = mkFont serif.name;
-          fantasy = mkFont serif.name;
-          fixed = mkFont monospace.name;
-          sans_serif = mkFont sansSerif.name;
-          serif = mkFont serif.name;
-          standard = mkFont sansSerif.name;
+          cursive = serif.name;
+          fantasy = serif.name;
+          fixed = monospace.name;
+          sans_serif = sansSerif.name;
+          serif = serif.name;
+          standard = sansSerif.name;
         };
+        web.size.default = "${toString sizes.applications}pt";
       };
     };
   };

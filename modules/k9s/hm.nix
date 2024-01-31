@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 
@@ -7,7 +7,7 @@ with config.lib.stylix.colors.withHashtag;
     config.lib.stylix.mkEnableTarget "k9s" true;
 
   config = lib.mkIf config.stylix.targets.k9s.enable {
-    programs.k9s.skin = {
+    programs.k9s.skins.skin = {
       k9s = {
         body = {
           fgColor = base05-hex;

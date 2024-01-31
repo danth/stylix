@@ -13,5 +13,6 @@
 
 # Contributing
 
+- [Contributing](contributing.md)
 - [Adding modules](modules.md)
 - [Style guide](styling.md)
