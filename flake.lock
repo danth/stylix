@@ -182,17 +182,18 @@
     "gnome-shell": {
       "flake": false,
       "locked": {
-        "lastModified": 1705673918,
-        "narHash": "sha256-QYrS5cZYE9u9o3jf8k5qcvDfBAQq5woawBsfoPGJoPw=",
-        "ref": "refs/heads/main",
-        "rev": "dad06fa423ec3cc1f54c0266d27024df74ef4702",
-        "revCount": 18433,
-        "type": "git",
-        "url": "https://gitlab.gnome.org/GNOME/gnome-shell"
+        "lastModified": 1698794309,
+        "narHash": "sha256-/TIkZ8y5Wv3QHLFp79Poao9fINurKs5pa4z0CRe+F8s=",
+        "owner": "GNOME",
+        "repo": "gnome-shell",
+        "rev": "a7c169c6c29cf02a4c392fa0acbbc5f5072823e7",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://gitlab.gnome.org/GNOME/gnome-shell"
+        "owner": "GNOME",
+        "ref": "45.1",
+        "repo": "gnome-shell",
+        "type": "github"
       }
     },
     "home-manager": {
