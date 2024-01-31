@@ -10,6 +10,7 @@ inputs:
       base16-kitty
       base16-tmux
       base16-vim
+      gnome-shell
       ;
   };
 }
