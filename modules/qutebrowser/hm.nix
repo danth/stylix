@@ -13,7 +13,6 @@ let
   secondary-info = base0C;
   warning = base0E;
   error = base08;
-
 in {
   options.stylix.targets.qutebrowser.enable =
     config.lib.stylix.mkEnableTarget "Qutebrowser" true;
@@ -30,14 +29,18 @@ in {
           category = {
             fg = info;
             bg = background;
-            border.top = background;
-            border.bottom = background;
+            border = {
+              top = background;
+              bottom = background;
+            };
           };
           item.selected = {
             fg = foreground;
             bg = selection-background;
-            border.top = selection-background;
-            border.bottom = selection-background;
+            border = {
+              top = selection-background;
+              bottom = selection-background;
+            };
           };
           scrollbar = {
             fg = foreground;
@@ -144,8 +147,10 @@ in {
             fg = foreground;
             error.fg = error;
             hover.fg = foreground;
-            success.http.fg = secondary-info;
-            success.https.fg = info;
+            success = {
+              http.fg = secondary-info;
+              https.fg = info;
+            };
             warn.fg = warning;
           };
         };
@@ -207,15 +212,17 @@ in {
       fonts = {
         default_family = sansSerif.name;
         default_size = "${toString sizes.applications}pt";
-        web.family = {
-          cursive = serif.name;
-          fantasy = serif.name;
-          fixed = monospace.name;
-          sans_serif = sansSerif.name;
-          serif = serif.name;
-          standard = sansSerif.name;
+        web = {
+          family = {
+            cursive = serif.name;
+            fantasy = serif.name;
+            fixed = monospace.name;
+            sans_serif = sansSerif.name;
+            serif = serif.name;
+            standard = sansSerif.name;
+          };
+          size.default = "${toString sizes.applications}pt";
         };
-        web.size.default = "${toString sizes.applications}pt";
       };
     };
   };
