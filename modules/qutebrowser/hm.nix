@@ -215,7 +215,7 @@ in {
           serif = serif.name;
           standard = sansSerif.name;
         };
-        web.size.default = "${toString sizes.applications}pt";
+        web.size.default = sizes.applications;
       };
     };
   };
