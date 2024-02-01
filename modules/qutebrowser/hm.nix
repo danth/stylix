@@ -1,56 +1,55 @@
 { config, lib, ... }:
 
-with config.stylix.fonts;
 with config.lib.stylix.colors.withHashtag;
+with config.stylix.fonts;
 
 let
   background = base00;
-  secondary-background = base01;
-  selection-background = base03;
-  foreground = base05;
-  inverted-foreground = base00;
-  info = base0B;
-  secondary-info = base0C;
-  warning = base0E;
   error = base08;
+  foreground = base05;
+  info = base0B;
+  inverted-foreground = base00;
+  secondary-background = base01;
+  secondary-info = base0C;
+  selection-background = base03;
+  warning = base0E;
 in {
   options.stylix.targets.qutebrowser.enable =
     config.lib.stylix.mkEnableTarget "Qutebrowser" true;
 
   config = lib.mkIf config.stylix.targets.qutebrowser.enable {
     programs.qutebrowser.settings = {
-      hints.border = background;
       colors = {
         completion = {
-          fg = foreground;
-          odd.bg = secondary-background;
-          even.bg = background;
-          match.fg = info;
           category = {
-            fg = info;
             bg = background;
+            fg = info;
             border = {
-              top = background;
               bottom = background;
+              top = background;
             };
           };
+          even.bg = background;
+          fg = foreground;
           item.selected = {
-            fg = foreground;
             bg = selection-background;
             border = {
-              top = selection-background;
               bottom = selection-background;
+              top = selection-background;
             };
-          };
-          scrollbar = {
             fg = foreground;
+          };
+          match.fg = info;
+          odd.bg = secondary-background;
+          scrollbar = {
             bg = background;
+            fg = foreground;
           };
         };
         contextmenu = {
           disabled = {
-            fg = inverted-foreground;
             bg = secondary-background;
+            fg = inverted-foreground;
           };
           menu = {
             bg = background;
@@ -63,89 +62,89 @@ in {
         };
         downloads = {
           bar.bg = background;
-          start = {
+          error = {
+            bg = error;
             fg = inverted-foreground;
+          };
+          start = {
             bg = info;
+            fg = inverted-foreground;
           };
           stop = {
-            fg = inverted-foreground;
             bg = secondary-info;
-          };
-          error = {
             fg = inverted-foreground;
-            bg = error;
           };
         };
         hints = {
-          fg = foreground;
           bg = secondary-background;
+          fg = foreground;
           match.fg = info;
         };
         keyhint = {
-          fg = foreground;
           bg = background;
+          fg = foreground;
           suffix.fg = foreground;
         };
         messages = {
           error = {
-            fg = inverted-foreground;
             bg = error;
+            fg = inverted-foreground;
             border = error;
           };
-          warning = {
-            fg = inverted-foreground;
-            bg = warning;
-            border = warning;
-          };
           info = {
-            fg = inverted-foreground;
             bg = info;
+            fg = inverted-foreground;
             border = info;
+          };
+          warning = {
+            bg = warning;
+            fg = inverted-foreground;
+            border = warning;
           };
         };
         prompts = {
-          fg = foreground;
           bg = background;
           border = background;
+          fg = foreground;
           selected.bg = secondary-background;
         };
         statusbar = {
-          normal = {
+          caret = {
+            bg = selection-background;
             fg = foreground;
-            bg = background;
-          };
-          insert = {
-            fg = inverted-foreground;
-            bg = info;
-          };
-          passthrough = {
-            fg = inverted-foreground;
-            bg = secondary-info;
-          };
-          private = {
-            fg = foreground;
-            bg = secondary-background;
+            selection = {
+              bg = selection-background;
+              fg = foreground;
+            };
           };
           command = {
-            fg = foreground;
             bg = background;
+            fg = foreground;
             private = {
-              fg = foreground;
               bg = secondary-background;
+              fg = foreground;
             };
           };
-          caret = {
+          insert = {
+            bg = info;
+            fg = inverted-foreground;
+          };
+          normal = {
+            bg = background;
             fg = foreground;
-            bg = selection-background;
-            selection = {
-              fg = foreground;
-              bg = selection-background;
-            };
+          };
+          passthrough = {
+            bg = secondary-info;
+            fg = inverted-foreground;
+          };
+          private = {
+            bg = secondary-background;
+            fg = foreground;
           };
           progress.bg = info;
           url = {
-            fg = foreground;
             error.fg = error;
+            fg = foreground;
             hover.fg = foreground;
             success = {
               http.fg = secondary-info;
@@ -156,47 +155,47 @@ in {
         };
         tabs = {
           bar.bg = background;
+          even = {
+            bg = secondary-background;
+            fg = foreground;
+          };
           indicator = {
+            error = error;
             start = secondary-info;
             stop = info;
-            error = error;
           };
           odd = {
-            fg = foreground;
             bg = background;
-          };
-          even = {
             fg = foreground;
-            bg = secondary-background;
           };
           pinned = {
             even = {
-              fg = inverted-foreground;
               bg = info;
+              fg = inverted-foreground;
             };
             odd = {
-              fg = inverted-foreground;
               bg = secondary-info;
+              fg = inverted-foreground;
             };
             selected = {
               even = {
-                fg = foreground;
                 bg = selection-background;
+                fg = foreground;
               };
               odd = {
-                fg = foreground;
                 bg = selection-background;
+                fg = foreground;
               };
             };
           };
           selected = {
             even = {
-              fg = foreground;
               bg = selection-background;
+              fg = foreground;
             };
             odd = {
-              fg = foreground;
               bg = selection-background;
+              fg = foreground;
             };
           };
         };
@@ -224,6 +223,8 @@ in {
           size.default = "${toString sizes.applications}pt";
         };
       };
+
+      hints.border = background;
     };
   };
 }
