@@ -5,6 +5,7 @@ with lib;
 let
   fromOs = import ./fromos.nix { inherit lib args; };
 in {
+  options.stylix.enable = lib.mkEnableOption "stylix" // { default = true; example = false; };
   options.stylix.autoEnable = mkOption {
     description = mdDoc "Whether to automatically enable styling for installed targets.";
     type = types.bool;
