@@ -7,7 +7,7 @@ let
 in {
   imports = [ ../cursor.nix ];
 
-  config = mkIf pkgs.stdenv.hostPlatform.isLinux {
+  config = mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.pointerCursor = {
       name = cfg.name;
       package = cfg.package;
