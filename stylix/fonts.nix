@@ -94,5 +94,22 @@ in {
         default = fromOs [ "fonts" "sizes" "popups" ] cfg.sizes.desktop;
       };
     };
+
+    packages = mkOption {
+      description = mdDoc ''
+        A list of all the font packages that will be installed.
+      '';
+      type = types.listOf types.package;
+      readOnly = true;
+    };
+  };
+
+  config = {
+    stylix.fonts.packages = [
+      cfg.monospace.package
+      cfg.serif.package
+      cfg.sansSerif.package
+      cfg.emoji.package
+    ];
   };
 }
