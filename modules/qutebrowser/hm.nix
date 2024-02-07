@@ -215,7 +215,8 @@ in {
           serif = serif.name;
           standard = sansSerif.name;
         };
-        web.size.default = sizes.applications;
+        # TODO: Use the pixel unit: https://github.com/danth/stylix/issues/251.
+        web.size.default = builtins.floor (sizes.applications * 4 / 3 + 0.5);
       };
     };
   };
