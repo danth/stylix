@@ -59,6 +59,10 @@ in {
       description = mdDoc "Logo to be used on the boot screen.";
       type = with types; either path package;
       defaultText = literalMD "NixOS logo";
+
+      # Considering that Flake inputs are currently unable to fetch individual
+      # files, the SVG file is fetched with `pkgs.fetchurl` to avoid downloading
+      # the entire repository for a single SVG file.
       default = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg";
         # Reduce size
