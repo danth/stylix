@@ -179,6 +179,23 @@
         "type": "github"
       }
     },
+    "gnome-shell": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1698794309,
+        "narHash": "sha256-/TIkZ8y5Wv3QHLFp79Poao9fINurKs5pa4z0CRe+F8s=",
+        "owner": "GNOME",
+        "repo": "gnome-shell",
+        "rev": "a7c169c6c29cf02a4c392fa0acbbc5f5072823e7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GNOME",
+        "ref": "45.1",
+        "repo": "gnome-shell",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -227,6 +244,7 @@
         "base16-tmux": "base16-tmux",
         "base16-vim": "base16-vim",
         "flake-compat": "flake-compat",
+        "gnome-shell": "gnome-shell",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"
       }

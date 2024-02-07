@@ -267,7 +267,9 @@ in {
             standard = sansSerif.name;
           };
 
-          size.default = "${toString sizes.applications}pt";
+          # TODO: Use the pixel unit:
+          # https://github.com/danth/stylix/issues/251.
+          size.default = builtins.floor (sizes.applications * 4 / 3 + 0.5);
         };
       };
 
