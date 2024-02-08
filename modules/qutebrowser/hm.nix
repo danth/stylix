@@ -5,13 +5,17 @@ with config.stylix.fonts;
 
 let
   background = base00;
-  error = base08;
-  foreground = base05;
-  info = base0B;
-  inverted-foreground = base00;
   secondary-background = base01;
-  secondary-info = base0C;
   selection-background = base03;
+
+  foreground = base05;
+  inverted-foreground = base00;
+
+  error = base08;
+
+  info = base0B;
+  secondary-info = base0C;
+
   warning = base0E;
 in {
   options.stylix.targets.qutebrowser.enable =
