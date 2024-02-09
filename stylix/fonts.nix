@@ -144,11 +144,10 @@ in
   };
 
   config = {
-    stylix.fonts.packages = [
-      cfg.monospace.package
-      cfg.serif.package
-      cfg.sansSerif.package
-      cfg.emoji.package
-    ];
+    stylix.fonts.packages =
+      (lib.catAttrs "package" cfg.monospace)
+      ++ (lib.catAttrs "package" cfg.serif)
+      ++ (lib.catAttrs "package" cfg.sansSerif)
+      ++ (lib.catAttrs "package" cfg.emoji);
   };
 }
