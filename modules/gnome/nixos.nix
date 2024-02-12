@@ -25,7 +25,7 @@ in {
     environment.gnome.excludePackages = [ pkgs.gnome.gnome-backgrounds ];
 
     nixpkgs.overlays = [(self: super: {
-      gnome = super.gnome.overrideScope' (gnomeSelf: gnomeSuper: {
+      gnome = super.gnome.overrideScope (gnomeSelf: gnomeSuper: {
         gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
           # Themes are usually applied via an extension, but extensions are
           # not available on the login screen. The only way to change the
