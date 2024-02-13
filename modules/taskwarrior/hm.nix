@@ -33,13 +33,7 @@
         convert = component: toString (scale component);
         factor = 6.0 / 255.0;
         scale = component: builtins.floor (lib.toInt component * factor + 0.5);
-      in red: green: blue: let
-        taskwarrior = {
-          blue = convert blue;
-          green = convert green;
-          red = convert red;
-        };
-      in "rgb${taskwarrior.red}${taskwarrior.green}${taskwarrior.blue}";
+      in red: green: blue: "rgb${convert red}${convert green}${convert blue}";
     in config.lib.stylix.colors {
       extension = "theme";
       template = ./template.theme.mustache;
