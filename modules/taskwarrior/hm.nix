@@ -32,7 +32,7 @@
       taskwarriorRgb = let
         convert = component: toString (scale component);
         factor = 6.0 / 255.0;
-        scale = rgb: builtins.floor (lib.toInt rgb * factor + 0.5);
+        scale = component: builtins.floor (lib.toInt component * factor + 0.5);
       in red: green: blue: let
         taskwarrior = {
           blue = convert blue;
