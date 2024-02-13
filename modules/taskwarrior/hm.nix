@@ -30,13 +30,14 @@
       # Map the traditional RGB range (0--255) to Taskwarrior's RGB range
       # (0--5).
       taskwarriorRgb = let
-        convert = rgb: builtins.floor (lib.toInt rgb * factor + 0.5);
+        convert = component: toString (scale component);
         factor = 6.0 / 255.0;
+        scale = rgb: builtins.floor (lib.toInt rgb * factor + 0.5);
       in red: green: blue: let
         taskwarrior = {
-          blue = toString (convert blue);
-          green = toString (convert green);
-          red = toString (convert red);
+          blue = convert blue;
+          green = convert green;
+          red = convert red;
         };
       in "rgb${taskwarrior.red}${taskwarrior.green}${taskwarrior.blue}";
     in config.lib.stylix.colors {
