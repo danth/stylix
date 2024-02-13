@@ -33,10 +33,12 @@
         convert = rgb: builtins.floor (lib.toInt rgb * factor + 0.5);
         factor = 6.0 / 255.0;
       in red: green: blue: let
-        taskwarriorBlue = toString (convert blue);
-        taskwarriorGreen = toString (convert green);
-        taskwarriorRed = toString (convert red);
-      in "rgb${taskwarriorRed}${taskwarriorGreen}${taskwarriorBlue}";
+        taskwarrior = {
+          blue = toString (convert blue);
+          green = toString (convert green);
+          red = toString (convert red);
+        };
+      in "rgb${taskwarrior.red}${taskwarrior.green}${taskwarrior.blue}";
     in config.lib.stylix.colors {
       extension = "theme";
       template = ./template.theme.mustache;
