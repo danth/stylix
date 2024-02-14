@@ -579,7 +579,7 @@ def recolor_modified(src_path:str, replacement, op:str, smooth:bool) -> None:
         if op == "color":
             x = apply_monotones_to_img(x, new_colors)
         elif op == "color-from-palette":
-            x = apply_monotones_to_vec(x, colors, random.choice(new_colors))
+            x = apply_monotones_to_img(x, random.choice(new_colors))
         elif op == "palette":
             x = apply_palette_to_img(x, new_colors, smooth)
 
@@ -597,7 +597,7 @@ def recolor_modified(src_path:str, replacement, op:str, smooth:bool) -> None:
         if op == "color":
             x = apply_monotones_to_img(x, new_colors)
         elif op == "color-from-palette":
-            x = apply_monotones_to_vec(x, colors, random.choice(new_colors))
+            x = apply_monotones_to_img(x, random.choice(new_colors))
         elif op == "palette":
             x = apply_palette_to_img(x, new_colors, smooth)
 
