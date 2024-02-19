@@ -906,7 +906,7 @@ def main():
     if args.saturation != None:
         args.saturation = float(args.saturation)
     if args.saturation_multiply != None:
-        args.saturation = float(args.saturation_multiply)
+        args.saturation_multiply = float(args.saturation_multiply)
     if args.light != None:
         args.light = float(args.light)
     if args.light_multiply != None:
