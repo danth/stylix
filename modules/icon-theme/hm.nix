@@ -15,12 +15,12 @@ in
     name = lib.mkOption {
       description = "The icon theme name";
       type = lib.types.str;
-      default = "Numix-Circle";
+      default = "Zafiro-icons-Dark";
     };
     package = lib.mkOption {
       description = "The icon theme package";
       type = lib.types.package;
-      default = pkgs.numix-icon-theme-circle;
+      default = pkgs.zafiro-icons;
     };
     recolor = {
       enable = lib.mkOption {
