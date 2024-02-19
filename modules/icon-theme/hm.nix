@@ -36,6 +36,11 @@ in
         type = lib.types.enum [ "monochrome" "palette" ];
         default = "palette";
       };
+      saturation = lib.mkOption {
+        description = ''Override icon saturation with custom value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
       colors = lib.mkOption {
         description = "The color list";
         type = lib.types.listOf (lib.types.str);
@@ -95,6 +100,7 @@ in
                 (oldAttrs: rec {
                   postInstall = (oldAttrs.postInstall or "") + ''
                     ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
+                    ${if isNull cfg.recolor.saturation then "" else "--saturation ${cfg.recolor.saturation}"} \
                     ${if cfg.recolor.mode == "monochrome" then
                       "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
                     else
