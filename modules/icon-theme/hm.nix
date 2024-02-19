@@ -24,26 +24,23 @@ in
     };
     recolor = {
       enable = lib.mkOption {
-        description = "Whether to adjust the icon theme colors.";
+        description = "Whether to recolor the icon theme colors.";
         type = lib.types.bool;
         default = true;
       };
       mode = lib.mkOption {
         description = ''The mode to use:
-          color = single color
-          color-from-palette = uses a random single color from the palette for each icon
-          palette = uses the entire colorscheme for each icon
+          monochrome = A monochromatic variant, colored by appropriate shades of the provided base color.
+          palette = A multichromatic variant, where all colors are replaced by their nearest perceived equivalent that adheres to the provided color palette.
         '';
-        type = lib.types.enum [ "color" "color-from-palette" "palette" ];
+        type = lib.types.enum [ "monochrome" "palette" ];
         default = "palette";
       };
       colors = lib.mkOption {
-        description = "The color to use when mode is set to color";
+        description = "The color list";
         type = lib.types.listOf (lib.types.str);
         default =
-          if cfg.recolor.mode == "color" then
-            config.lib.stylix.colors.withHashtag.base09
-          else if cfg.recolor.mode == "color-from-palette" then
+          if cfg.recolor.mode == "monochrome" then
             with config.lib.stylix.colors.withHashtag; [
               base08
               base09
@@ -98,10 +95,8 @@ in
                 (oldAttrs: rec {
                   postInstall = (oldAttrs.postInstall or "") + ''
                     ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
-                    ${if cfg.recolor.mode == "color" then
-                      "--color '${builtins.head cfg.recolor.colors}'"
-                    else if cfg.recolor.mode == "color-from-palette" then
-                      "--color-from-palette '${builtins.concatStringsSep "," cfg.recolor.colors}'"
+                    ${if cfg.recolor.mode == "monochrome" then
+                      "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
                     else
                       "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
 
