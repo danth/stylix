@@ -114,45 +114,43 @@ in
             ];
       };
     };
+  };
 
-    config = cfg.enable {
-      home-manager.users.${config.modules.user.name} = {
-        gtk = {
-          enable = true;
-          iconTheme = lib.mkMerge [
-            {
-              name = cfg.name;
-            }
+  config = cfg.enable {
+    gtk = {
+      enable = true;
+      iconTheme = lib.mkMerge [
+        {
+          name = cfg.name;
+        }
 
-            (lib.mkIf (!cfg.recolor.enable) {
-              package = cfg.package;
-            })
-            (lib.mkIf (cfg.recolor.enable) {
-              package = cfg.package.overrideAttrs
-                (oldAttrs: rec {
-                  postInstall = with cfg.recolor; (oldAttrs.postInstall or "") + ''
-                    ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
-                    ${if isNull saturation then "" else "--saturation ${saturation}"} \
-                    ${if isNull saturationMultiply then "" else "--saturation-multiply ${saturationMultiply}"} \
-                    ${if isNull light then "" else "--light ${light}"} \
-                    ${if isNull lightMultiply then "" else "--light-multiply ${lightMultiply}"} \
-                    --override-white '${toString overrideWhite}' \
-                    --dont-override-white-threshold ${dontOverrideWhiteThreshold} \
-                    --smooth '${toString smooth}' \
-                    ${if cfg.recolor.mode == "monochrome" then
-                      "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
-                    else
-                      "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
+        (lib.mkIf (!cfg.recolor.enable) {
+          package = cfg.package;
+        })
+        (lib.mkIf (cfg.recolor.enable) {
+          package = cfg.package.overrideAttrs
+            (oldAttrs: rec {
+              postInstall = with cfg.recolor; (oldAttrs.postInstall or "") + ''
+                ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
+                ${if isNull saturation then "" else "--saturation ${saturation}"} \
+                ${if isNull saturationMultiply then "" else "--saturation-multiply ${saturationMultiply}"} \
+                ${if isNull light then "" else "--light ${light}"} \
+                ${if isNull lightMultiply then "" else "--light-multiply ${lightMultiply}"} \
+                --override-white '${toString overrideWhite}' \
+                --dont-override-white-threshold ${dontOverrideWhiteThreshold} \
+                --smooth '${toString smooth}' \
+                ${if cfg.recolor.mode == "monochrome" then
+                  "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
+                else
+                  "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
 
-                    for theme in $out/share/icons/*; do
-                      gtk-update-icon-cache $theme
-                    done
-                  '';
-                });
-            })
-          ];
-        };
-      };
+                for theme in $out/share/icons/*; do
+                  gtk-update-icon-cache $theme
+                done
+              '';
+            });
+        })
+      ];
     };
   };
 }
