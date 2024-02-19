@@ -602,7 +602,7 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Ima
 def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Image:
     """ Replace colors in a given image with the closest match within a given color palette. """
 
-    if smooth: img = img.convert("P", palette=Image.ADAPTIVE, colors=256)
+    if args.smooth: img = img.convert("P", palette=Image.ADAPTIVE, colors=256)
     else: img = img.convert("P")
 
     palette = img.getpalette()
@@ -893,13 +893,13 @@ def main():
     parser.add_argument('--src', type=str)
     parser.add_argument('--monochrome', type=list_of_strings)
     parser.add_argument('--palette', type=list_of_strings)
-    parser.add_argument('--smooth', type=bool, default=True)
     parser.add_argument('--saturation', type=str)
     parser.add_argument('--saturation-multiply', type=str)
     parser.add_argument('--light', type=str)
     parser.add_argument('--light-multiply', type=str)
     parser.add_argument('--override-white', type=bool, default=False)
-    parser.add_argument('--dont-override-white-threshold', type=str, default=20)
+    parser.add_argument('--dont-override-white-threshold', type=str, default=35)
+    parser.add_argument('--smooth', type=bool, default=True)
 
     args = parser.parse_args()
 

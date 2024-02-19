@@ -37,7 +37,7 @@ in
         default = "palette";
       };
       saturation = lib.mkOption {
-        description = ''Override icon saturation with custom value.'';
+        description = ''Override icon saturation with custom value. Values between 0.0 and 1.0.'';
         type = (lib.types.nullOr lib.types.str);
         default = null;
       };
@@ -47,7 +47,7 @@ in
         default = null;
       };
       light = lib.mkOption {
-        description = ''Override icon light with custom value.'';
+        description = ''Override icon light with custom value. Values between 0.0 and 1.0.'';
         type = (lib.types.nullOr lib.types.str);
         default = null;
       };
@@ -62,18 +62,22 @@ in
           causing the icon to lose the contrast between the different colors.
           recommended to keep as false/null.
         '';
-        type = (lib.types.nullOr lib.types.bool);
-        default = null;
+        type = lib.types.bool;
+        default = false;
       };
       dontOverrideWhiteThreshold = lib.mkOption {
-        description = ''Only used when overrideWhite is false/null and light/lightMultiply is set.
+        description = ''Only used when overrideWhite is false and light/lightMultiply is set.
           This speicifes the distance which anything bigger than will not considered white
-          and it's light value will get overriden by light/lightMultiply. Internally it defaults to 20.
+          and it's light value will get overriden by light/lightMultiply.
         '';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
+        type = lib.types.str;
+        default = "35";
       };
-
+      smooth = lib.mkOption {
+        description = "#TODO explain this? kinda hard, showing some pictures will be easier.";
+        type = lib.types.bool;
+        default = true;
+      };
       colors = lib.mkOption {
         description = "The color list";
         type = lib.types.listOf (lib.types.str);
@@ -108,11 +112,6 @@ in
               base0E
               base0F
             ];
-        smooth = lib.mkOption {
-          description = "#TODO explain this? kinda hard, showing some pictures will be easier.";
-          type = lib.types.bool;
-          default = true;
-        };
       };
     };
 
@@ -132,13 +131,14 @@ in
               package = cfg.package.overrideAttrs
                 (oldAttrs: rec {
                   postInstall = with cfg.recolor; (oldAttrs.postInstall or "") + ''
-                    ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
+                    ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
                     ${if isNull saturation then "" else "--saturation ${saturation}"} \
                     ${if isNull saturationMultiply then "" else "--saturation-multiply ${saturationMultiply}"} \
                     ${if isNull light then "" else "--light ${light}"} \
                     ${if isNull lightMultiply then "" else "--light-multiply ${lightMultiply}"} \
-                    ${if isNull overrideWhite then "" else "--override-white"} \
-                    ${if isNull dontOverrideWhiteThreshold then "" else "--dont-override-white-threshold ${dontOverrideWhiteThreshold}"} \
+                    --override-white '${toString overrideWhite}' \
+                    --dont-override-white-threshold ${dontOverrideWhiteThreshold} \
+                    --smooth '${toString smooth}' \
                     ${if cfg.recolor.mode == "monochrome" then
                       "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
                     else
