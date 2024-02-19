@@ -407,6 +407,41 @@ def closest_match(color:str, palette:Dict[str,LabColor]) -> str:
 
     return closest_color
 
+def is_white(color:str, args) -> bool:
+    lab_color = hex_to_lab_dict.get(color)
+    if lab_color is None:
+        r, g, b = hex_to_rgb(color)
+        lab_color = convert_color(sRGBColor(r,g,b), LabColor)
+        hex_to_lab_dict[color] = lab_color
+
+    white_lab_color = hex_to_lab_dict.get("#FFFFFF")
+    if white_lab_color is None:
+        r, g, b = hex_to_rgb("#FFFFFF")
+        white_lab_color = convert_color(sRGBColor(r,g,b), LabColor)
+        hex_to_lab_dict["#FFFFFF"] = white_lab_color
+
+    return delta_e_cie2000(lab_color, white_lab_color) < args.dont_override_white_threshold
+
+def apply_modifications(hsl:Tuple[float,float,float], args) -> Tuple[float,float,float]:
+    h, s, l = hsl
+
+    if args.saturation != None:
+        s = args.saturation
+    if args.saturation_multiply != None:
+        s = min(s, s * args.saturation_multiply)
+    if args.light != None:
+        if args.override_white:
+            l = args.light
+        else:
+            l = l if is_white(rgb_to_hex(hsl_to_rgb((h, s, l))), args) else args.light
+    if args.light_multiply != None:
+        if args.override_white:
+            l = min(1, l * args.light_multiply)
+        else:
+            l = l if is_white(rgb_to_hex(hsl_to_rgb((h, s, l))), args) else min(1, l * args.light_multiply)
+
+    return h, s, l
+
 # Pack management --------------------------------------------------------------
 
 def get_paths(folder: str, exts: List[str]) -> List[str]:
@@ -489,7 +524,7 @@ def copy_pack(src_path:str, dest_path:str, name:str) -> str:
 
 # Vector-based recoloring ------------------------------------------------------
 
-def apply_monotones_to_vec(text:str, colors:Set[str], hsl:Tuple[float,float,float], custom_saturation:int) -> str:
+def apply_monotones_to_vec(text:str, colors:Set[str], hsl:Tuple[float,float,float], args) -> str:
     """ Replace every instance of color within the given list with their monochrome equivalent in the given string representing an svg-file, determined by the given hue, saturation and lightness offset. """
 
     h, s, l_offset = hsl
@@ -506,24 +541,17 @@ def apply_monotones_to_vec(text:str, colors:Set[str], hsl:Tuple[float,float,floa
             r, g, b = hex_to_rgb(graytone)
             l = (0.21*r + 0.72*g + 0.07*b)/255
             l = max(0, min(l+l_offset, 1))
-            if custom_saturation is not None:
-                s = custom_saturation
-            monochrome = rgb_to_hex(hsl_to_rgb((h, s, l)))
+            monochrome = rgb_to_hex(hsl_to_rgb(apply_modifications((h, s, l), args)))
             text = re.sub(color, monochrome, text)
 
     return text
 
-def apply_palette_to_vec(text:str, colors:Set[str], new_colors:Dict[str,LabColor], custom_saturation:int) -> str:
+def apply_palette_to_vec(text:str, colors:Set[str], new_colors:Dict[str,LabColor], args) -> str:
     """ Replace hexadecimal color codes in a given svg/xml/css string with their closest matches within the given color palette. """
 
     for color in colors:
         new_color = closest_match(color, new_colors)
-
-        if custom_saturation is not None:
-            h, s, l = hex_to_hsl(new_color)
-            s = custom_saturation
-            new_color = rgb_to_hex(hsl_to_rgb((h, s, l)))
-
+        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications((h, s, l), args)))
         text = re.sub(color, new_color, text)
 
     return text
@@ -539,7 +567,7 @@ def apply_mapping_to_vec(text:str, colors:Set[str], map:Dict[str,str]) -> str:
 
 # Pixel-based recoloring -------------------------------------------------------
 
-def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], custom_saturation:int) -> Image:
+def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Image:
     """ Replace every instance of color within the given list with their monochrome equivalent in the given image, determined by the given hue, saturation and lightness offset. """
 
     mode = img.mode
@@ -561,9 +589,8 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], custom_satur
 
                 l = (0.21*r + 0.72*g + 0.07*b)/255
                 l = max(0, min(l+l_offset, 1))
-                if custom_saturation is not None:
-                    s = custom_saturation
-                new_color = hsl_to_rgb((h, s, l))
+
+                new_color = hsl_to_rgb(apply_modifications((h, s, l), args))
 
                 if mode == "RGBA":
                     img.putpixel((x,y), new_color + (a,))
@@ -572,7 +599,7 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], custom_satur
 
     return img
 
-def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], smooth:bool, custom_saturation:int) -> Image:
+def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Image:
     """ Replace colors in a given image with the closest match within a given color palette. """
 
     if smooth: img = img.convert("P", palette=Image.ADAPTIVE, colors=256)
@@ -587,12 +614,7 @@ def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], smooth:bool, 
     new_palette = []
     for color in hex_palette:
         new_color = hex_to_rgb(closest_match(color, new_colors))
-
-        if custom_saturation is not None:
-            h, s, l = rgb_to_hsl(new_color)
-            s = custom_saturation
-            new_color = hsl_to_rgb((h, s, l))
-
+        new_color = hsl_to_rgb(apply_modifications((h, s, l), args))
         new_palette.extend(new_color)
 
     img.putpalette(new_palette)
@@ -703,16 +725,16 @@ def recolor(src_path:str, dest_path:str, name:str, replacement) -> None:
         x = x.convert("RGB")
         x.save(path)
 
-def recolor_modified(src_path:str, new_colors, op:str, smooth:bool, custom_saturation:int) -> None:
+def recolor_modified(op:str, args) -> None:
     """ Recursively copies and converts a source folder into a destination, given either an hsl color, a palette, or a color mapping. """
 
-    check_path(src_path)
+    check_path(args.src)
 
     if op == "palette":
-        new_colors = generate_palette_dict(new_colors)
+        args.palette = generate_palette_dict(args.palette)
 
     # Recolor vector graphics.
-    paths = get_paths(src_path, [".svg", ".xml"])
+    paths = get_paths(args.src, [".svg", ".xml"])
     for path in tqdm(paths, desc="svg", disable=is_empty(paths)):
         with open(path, 'r') as file: x = file.read()
 
@@ -720,14 +742,14 @@ def recolor_modified(src_path:str, new_colors, op:str, smooth:bool, custom_satur
         colors = get_file_colors(x)
 
         if op == "monochrome":
-            x = apply_monotones_to_vec(x, colors, random.choice(new_colors), custom_saturation)
+            x = apply_monotones_to_vec(x, colors, random.choice(args.monochrome), args)
         elif op == "palette":
-            x = apply_palette_to_vec(x, colors, new_colors, custom_saturation)
+            x = apply_palette_to_vec(x, colors, args.palette, args)
 
         with open(path, 'w') as file: file.write(x)
 
     # Recolor stylesheets.
-    paths = get_paths(src_path, [".css", "rc"])
+    paths = get_paths(args.src, [".css", "rc"])
     for path in tqdm(paths, desc="css", disable=is_empty(paths)):
         with open(path, 'r') as file: x = file.read()
 
@@ -736,24 +758,24 @@ def recolor_modified(src_path:str, new_colors, op:str, smooth:bool, custom_satur
         colors = get_file_colors(x)
 
         if op == "monochrome":
-            x = apply_monotones_to_vec(x, colors, random.choice(new_colors), custom_saturation)
+            x = apply_monotones_to_vec(x, colors, random.choice(args.monochrome), args)
         elif op == "palette":
-            x = apply_palette_to_vec(x, colors, new_colors, custom_saturation)
+            x = apply_palette_to_vec(x, colors, args.palette, args)
 
         x = hex_to_css(x)
         with open(path, 'w') as file: file.write(x)
 
     # Recolor pngs.
-    paths = get_paths(src_path, [".png"])
+    paths = get_paths(args.src, [".png"])
     for path in tqdm(paths, desc="png", disable=is_empty(paths)):
         x = Image.open(path)
         x = x.convert("RGBA")
         a = x.split()[3] # Save original alpha channel.
 
         if op == "monochrome":
-            x = apply_monotones_to_img(x, random.choice(new_colors), custom_saturation)
+            x = apply_monotones_to_img(x, random.choice(args.monochrome), args)
         elif op == "palette":
-            x = apply_palette_to_img(x, new_colors, smooth, custom_saturation)
+            x = apply_palette_to_img(x, args.palette, args)
 
         x = x.convert("RGBA")
         r,g,b,_ = x.split()
@@ -761,15 +783,15 @@ def recolor_modified(src_path:str, new_colors, op:str, smooth:bool, custom_satur
         x.save(path)
 
     # Recolor jpgs.
-    paths = get_paths(src_path, [".jpg", ".jpeg"])
+    paths = get_paths(args.src, [".jpg", ".jpeg"])
     for path in tqdm(paths, desc="jpg", disable=is_empty(paths)):
         x = Image.open(path)
         x = x.convert("RGB")
 
         if op == "monochrome":
-            x = apply_monotones_to_img(x, random.choice(new_colors), custom_saturation)
+            x = apply_monotones_to_img(x, random.choice(args.monochrome), args)
         elif op == "palette":
-            x = apply_palette_to_img(x, new_colors, smooth, custom_saturation)
+            x = apply_palette_to_img(x, args.palette, args)
 
         x = x.convert("RGB")
         x.save(path)
@@ -873,19 +895,32 @@ def main():
     parser.add_argument('--palette', type=list_of_strings)
     parser.add_argument('--smooth', type=bool, default=True)
     parser.add_argument('--saturation', type=str)
+    parser.add_argument('--saturation-multiply', type=str)
+    parser.add_argument('--light', type=str)
+    parser.add_argument('--light-multiply', type=str)
+    parser.add_argument('--override-white', type=bool, default=False)
+    parser.add_argument('--dont-override-white-threshold', type=str, default=20)
 
     args = parser.parse_args()
 
-    if args.saturation:
+    if args.saturation != None:
         args.saturation = float(args.saturation)
+    if args.saturation_multiply != None:
+        args.saturation = float(args.saturation_multiply)
+    if args.light != None:
+        args.light = float(args.light)
+    if args.light_multiply != None:
+        args.light_multiply = float(args.light_multiply)
+    if args.dont_override_white_threshold != None:
+        args.dont_override_white_threshold = float(args.dont_override_white_threshold)
 
     if args.monochrome != None:
         for idx in range(len(args.monochrome)):
             args.monochrome[idx] = hex_to_hsl(args.monochrome[idx])
-        recolor_modified(args.src, args.monochrome, "monochrome", args.smooth, args.saturation)
+        recolor_modified("monochrome", args)
 
     if args.palette != None:
-        recolor_modified(args.src, args.palette, "palette", args.smooth, args.saturation)
+        recolor_modified("palette", args)
 
 if __name__ == '__main__':
     main()

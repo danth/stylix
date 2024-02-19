@@ -41,6 +41,39 @@ in
         type = (lib.types.nullOr lib.types.str);
         default = null;
       };
+      saturationMultiply = lib.mkOption {
+        description = ''Multiply icon saturation by value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      light = lib.mkOption {
+        description = ''Override icon light with custom value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      lightMultiply = lib.mkOption {
+        description = ''Multiply icon light by value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      overrideWhite = lib.mkOption {
+        description = ''Only used when light/lightMultiply is set.
+          If set to true, the light value of white colors will get overriden
+          causing the icon to lose the contrast between the different colors.
+          recommended to keep as false/null.
+        '';
+        type = (lib.types.nullOr lib.types.bool);
+        default = null;
+      };
+      dontOverrideWhiteThreshold = lib.mkOption {
+        description = ''Only used when overrideWhite is false/null and light/lightMultiply is set.
+          This speicifes the distance which anything bigger than will not considered white
+          and it's light value will get overriden by light/lightMultiply. Internally it defaults to 20.
+        '';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+
       colors = lib.mkOption {
         description = "The color list";
         type = lib.types.listOf (lib.types.str);
@@ -98,9 +131,14 @@ in
             (lib.mkIf (cfg.recolor.enable) {
               package = cfg.package.overrideAttrs
                 (oldAttrs: rec {
-                  postInstall = (oldAttrs.postInstall or "") + ''
+                  postInstall = with cfg.recolor; (oldAttrs.postInstall or "") + ''
                     ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons --smooth '${toString cfg.recolor.smooth}' \
-                    ${if isNull cfg.recolor.saturation then "" else "--saturation ${cfg.recolor.saturation}"} \
+                    ${if isNull saturation then "" else "--saturation ${saturation}"} \
+                    ${if isNull saturationMultiply then "" else "--saturation-multiply ${saturationMultiply}"} \
+                    ${if isNull light then "" else "--light ${light}"} \
+                    ${if isNull lightMultiply then "" else "--light-multiply ${lightMultiply}"} \
+                    ${if isNull overrideWhite then "" else "--override-white"} \
+                    ${if isNull dontOverrideWhiteThreshold then "" else "--dont-override-white-threshold ${dontOverrideWhiteThreshold}"} \
                     ${if cfg.recolor.mode == "monochrome" then
                       "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
                     else
