@@ -412,7 +412,7 @@ def apply_modifications(old_color, new_color_hsl:Tuple[float,float,float], args)
 
     _, __, old_color_l = hex_to_hsl(old_color)
 
-    if old_color_l > 0.85:
+    if old_color_l > args.foreground_threshold:
         if args.foreground_saturation != None:
             s = args.foreground_saturation
         if args.foreground_saturation_multiply != None:
