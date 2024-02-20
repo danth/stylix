@@ -45,9 +45,10 @@ in
         description = ''This speicifes the max distance from white for which the color will be considered foreground.
           anything smaller and the 'foreground' modifications will be used, anything larger
           and the accent modifications will be used.
+          Values between 0.0 and 1.0.
         '';
         type = lib.types.str;
-        default = "35";
+        default = "0.85";
       };
       accentSaturation = lib.mkOption {
         description = ''Override icon accent colors saturation with custom value.

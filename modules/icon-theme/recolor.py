@@ -407,25 +407,12 @@ def closest_match(color:str, palette:Dict[str,LabColor]) -> str:
 
     return closest_color
 
-def is_foreground(color:str, args) -> bool:
-    lab_color = hex_to_lab_dict.get(color)
-    if lab_color is None:
-        r, g, b = hex_to_rgb(color)
-        lab_color = convert_color(sRGBColor(r,g,b), LabColor)
-        hex_to_lab_dict[color] = lab_color
+def apply_modifications(old_color, new_color_hsl:Tuple[float,float,float], args) -> Tuple[float,float,float]:
+    h, s, l = new_color_hsl
 
-    white_lab_color = hex_to_lab_dict.get("#FFFFFF")
-    if white_lab_color is None:
-        r, g, b = hex_to_rgb("#FFFFFF")
-        white_lab_color = convert_color(sRGBColor(r,g,b), LabColor)
-        hex_to_lab_dict["#FFFFFF"] = white_lab_color
+    _, __, old_color_l = hex_to_hsl(old_color)
 
-    return delta_e_cie2000(lab_color, white_lab_color) < args.foreground_threshold
-
-def apply_modifications(hsl:Tuple[float,float,float], args) -> Tuple[float,float,float]:
-    h, s, l = hsl
-
-    if is_foreground(rgb_to_hex(hsl_to_rgb((h, s, l))), args):
+    if old_color_l > 0.85:
         if args.foreground_saturation != None:
             s = args.foreground_saturation
         if args.foreground_saturation_multiply != None:
@@ -545,7 +532,7 @@ def apply_monotones_to_vec(text:str, colors:Set[str], hsl:Tuple[float,float,floa
             r, g, b = hex_to_rgb(graytone)
             l = (0.21*r + 0.72*g + 0.07*b)/255
             l = max(0, min(l+l_offset, 1))
-            monochrome = rgb_to_hex(hsl_to_rgb(apply_modifications((h, s, l), args)))
+            monochrome = rgb_to_hex(hsl_to_rgb(apply_modifications(color, (h, s, l), args)))
             text = re.sub(color, monochrome, text)
 
     return text
@@ -555,7 +542,7 @@ def apply_palette_to_vec(text:str, colors:Set[str], new_colors:Dict[str,LabColor
 
     for color in colors:
         new_color = closest_match(color, new_colors)
-        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications((h, s, l), args)))
+        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications(color, (h, s, l), args)))
         text = re.sub(color, new_color, text)
 
     return text
@@ -594,7 +581,7 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Ima
                 l = (0.21*r + 0.72*g + 0.07*b)/255
                 l = max(0, min(l+l_offset, 1))
 
-                new_color = hsl_to_rgb((h, s, l))
+                new_color = hsl_to_rgb(apply_modifications(rgb_to_hex((r, g, b)), (h, s, l), args))
 
                 if mode == "RGBA":
                     img.putpixel((x,y), new_color + (a,))
@@ -618,6 +605,7 @@ def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Imag
     new_palette = []
     for color in hex_palette:
         new_color = hex_to_rgb(closest_match(color, new_colors))
+        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications(color, (h, s, l), args)))
         new_palette.extend(new_color)
 
     img.putpalette(new_palette)
@@ -900,7 +888,7 @@ def main():
     parser.add_argument('--monochrome', type=list_of_strings)
     parser.add_argument('--palette', type=list_of_strings)
     parser.add_argument('--smooth', type=bool, default=True)
-    parser.add_argument('--foreground-threshold', type=str_float, default=30)
+    parser.add_argument('--foreground-threshold', type=str_float, default=0.85)
     parser.add_argument('--accent-saturation', type=str_float)
     parser.add_argument('--accent-saturation-multiply', type=str_float)
     parser.add_argument('--foreground-saturation', type=str_float)
