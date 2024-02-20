@@ -542,7 +542,7 @@ def apply_palette_to_vec(text:str, colors:Set[str], new_colors:Dict[str,LabColor
 
     for color in colors:
         new_color = closest_match(color, new_colors)
-        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications(color, (h, s, l), args)))
+        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications(color, hex_to_hsl(new_color), args)))
         text = re.sub(color, new_color, text)
 
     return text
@@ -605,7 +605,7 @@ def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Imag
     new_palette = []
     for color in hex_palette:
         new_color = hex_to_rgb(closest_match(color, new_colors))
-        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications(color, (h, s, l), args)))
+        new_color = hsl_to_rgb(apply_modifications(color, rgb_to_hsl(new_color), args))
         new_palette.extend(new_color)
 
     img.putpalette(new_palette)
