@@ -407,7 +407,7 @@ def closest_match(color:str, palette:Dict[str,LabColor]) -> str:
 
     return closest_color
 
-def is_white(color:str, args) -> bool:
+def is_foreground(color:str, args) -> bool:
     lab_color = hex_to_lab_dict.get(color)
     if lab_color is None:
         r, g, b = hex_to_rgb(color)
@@ -420,25 +420,29 @@ def is_white(color:str, args) -> bool:
         white_lab_color = convert_color(sRGBColor(r,g,b), LabColor)
         hex_to_lab_dict["#FFFFFF"] = white_lab_color
 
-    return delta_e_cie2000(lab_color, white_lab_color) < args.dont_override_white_threshold
+    return delta_e_cie2000(lab_color, white_lab_color) < args.foreground_threshold
 
 def apply_modifications(hsl:Tuple[float,float,float], args) -> Tuple[float,float,float]:
     h, s, l = hsl
 
-    if args.saturation != None:
-        s = args.saturation
-    if args.saturation_multiply != None:
-        s = min(s, s * args.saturation_multiply)
-    if args.light != None:
-        if args.override_white:
-            l = args.light
-        else:
-            l = l if is_white(rgb_to_hex(hsl_to_rgb((h, s, l))), args) else args.light
-    if args.light_multiply != None:
-        if args.override_white:
-            l = min(1, l * args.light_multiply)
-        else:
-            l = l if is_white(rgb_to_hex(hsl_to_rgb((h, s, l))), args) else min(1, l * args.light_multiply)
+    if is_foreground(rgb_to_hex(hsl_to_rgb((h, s, l))), args):
+        if args.foreground_saturation != None:
+            s = args.foreground_saturation
+        if args.foreground_saturation_multiply != None:
+            s = min(1, s * args.foreground_saturation_multiply)
+        if args.foreground_light != None:
+            l = args.foreground_light
+        if args.foreground_light_multiply!= None:
+            l = min(1, l * args.foreground_light_multiply)
+    else:
+        if args.accent_saturation != None:
+            s = args.accent_saturation
+        if args.accent_saturation_multiply != None:
+            s = min(1, s * args.accent_saturation_multiply)
+        if args.accent_light != None:
+            l = args.accent_light
+        if args.accent_light_multiply!= None:
+            l = min(1, l * args.accent_light_multiply)
 
     return h, s, l
 
@@ -590,7 +594,7 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Ima
                 l = (0.21*r + 0.72*g + 0.07*b)/255
                 l = max(0, min(l+l_offset, 1))
 
-                new_color = hsl_to_rgb(apply_modifications((h, s, l), args))
+                new_color = hsl_to_rgb((h, s, l))
 
                 if mode == "RGBA":
                     img.putpixel((x,y), new_color + (a,))
@@ -614,7 +618,6 @@ def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Imag
     new_palette = []
     for color in hex_palette:
         new_color = hex_to_rgb(closest_match(color, new_colors))
-        new_color = hsl_to_rgb(apply_modifications((h, s, l), args))
         new_palette.extend(new_color)
 
     img.putpalette(new_palette)
@@ -887,39 +890,33 @@ def add_backdrop(src_path:str, dest_path:str, name:str, color:str="#000000", pad
 def list_of_strings(arg):
     return arg.split(',')
 
+def str_float(arg):
+    return float(arg)
+
 def main():
     parser = argparse.ArgumentParser(description='Recolor an image.')
 
     parser.add_argument('--src', type=str)
     parser.add_argument('--monochrome', type=list_of_strings)
     parser.add_argument('--palette', type=list_of_strings)
-    parser.add_argument('--saturation', type=str)
-    parser.add_argument('--saturation-multiply', type=str)
-    parser.add_argument('--light', type=str)
-    parser.add_argument('--light-multiply', type=str)
-    parser.add_argument('--override-white', type=bool, default=False)
-    parser.add_argument('--dont-override-white-threshold', type=str, default=35)
     parser.add_argument('--smooth', type=bool, default=True)
+    parser.add_argument('--foreground-threshold', type=str_float, default=30)
+    parser.add_argument('--accent-saturation', type=str_float)
+    parser.add_argument('--accent-saturation-multiply', type=str_float)
+    parser.add_argument('--foreground-saturation', type=str_float)
+    parser.add_argument('--foreground-saturation-multiply', type=str_float)
+    parser.add_argument('--accent-light', type=str_float)
+    parser.add_argument('--accent-light-multiply', type=str_float)
+    parser.add_argument('--foreground-light', type=str_float)
+    parser.add_argument('--foreground-light-multiply', type=str_float)
 
     args = parser.parse_args()
-
-    if args.saturation != None:
-        args.saturation = float(args.saturation)
-    if args.saturation_multiply != None:
-        args.saturation_multiply = float(args.saturation_multiply)
-    if args.light != None:
-        args.light = float(args.light)
-    if args.light_multiply != None:
-        args.light_multiply = float(args.light_multiply)
-    if args.dont_override_white_threshold != None:
-        args.dont_override_white_threshold = float(args.dont_override_white_threshold)
 
     if args.monochrome != None:
         for idx in range(len(args.monochrome)):
             args.monochrome[idx] = hex_to_hsl(args.monochrome[idx])
         recolor_modified("monochrome", args)
-
-    if args.palette != None:
+    elif args.palette != None:
         recolor_modified("palette", args)
 
 if __name__ == '__main__':

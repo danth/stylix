@@ -36,47 +36,62 @@ in
         type = lib.types.enum [ "monochrome" "palette" ];
         default = "palette";
       };
-      saturation = lib.mkOption {
-        description = ''Override icon saturation with custom value. Values between 0.0 and 1.0.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      saturationMultiply = lib.mkOption {
-        description = ''Multiply icon saturation by value.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      light = lib.mkOption {
-        description = ''Override icon light with custom value. Values between 0.0 and 1.0.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      lightMultiply = lib.mkOption {
-        description = ''Multiply icon light by value.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      overrideWhite = lib.mkOption {
-        description = ''Only used when light/lightMultiply is set.
-          If set to true, the light value of white colors will get overriden
-          causing the icon to lose the contrast between the different colors.
-          recommended to keep as false/null.
-        '';
-        type = lib.types.bool;
-        default = false;
-      };
-      dontOverrideWhiteThreshold = lib.mkOption {
-        description = ''Only used when overrideWhite is false and light/lightMultiply is set.
-          This speicifes the distance which anything bigger than will not considered white
-          and it's light value will get overriden by light/lightMultiply.
-        '';
-        type = lib.types.str;
-        default = "35";
-      };
       smooth = lib.mkOption {
         description = "#TODO explain this? kinda hard, showing some pictures will be easier.";
         type = lib.types.bool;
         default = true;
+      };
+      foregroundThreshold = lib.mkOption {
+        description = ''This speicifes the max distance from white for which the color will be considered foreground.
+          anything smaller and the 'foreground' modifications will be used, anything larger
+          and the accent modifications will be used.
+        '';
+        type = lib.types.str;
+        default = "35";
+      };
+      accentSaturation = lib.mkOption {
+        description = ''Override icon accent colors saturation with custom value.
+          Values between 0.0 and 1.0.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      accentSaturationMultiply = lib.mkOption {
+        description = ''Multiply icon accent colors saturation by value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      accentLight = lib.mkOption {
+        description = ''Override icon accent colors light with custom value.
+          Values between 0.0 and 1.0.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      accentLightMultiply = lib.mkOption {
+        description = ''Multiply icon accent colors light by value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      foregroundSaturation = lib.mkOption {
+        description = ''Override icon foreground colors saturation with custom value.
+          Values between 0.0 and 1.0.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      foregroundSaturationMultiply = lib.mkOption {
+        description = ''Multiply icon foreground colors saturation by value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      foregroundLight = lib.mkOption {
+        description = ''Override icon foreground colors light with custom value.
+          Values between 0.0 and 1.0.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
+      };
+      foregroundLightMultiply = lib.mkOption {
+        description = ''Multiply icon foreground colors light by value.'';
+        type = (lib.types.nullOr lib.types.str);
+        default = null;
       };
       colors = lib.mkOption {
         description = "The color list";
@@ -132,13 +147,16 @@ in
             (oldAttrs: rec {
               postInstall = with cfg.recolor; (oldAttrs.postInstall or "") + ''
                 ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
-                ${if isNull saturation then "" else "--saturation ${saturation}"} \
-                ${if isNull saturationMultiply then "" else "--saturation-multiply ${saturationMultiply}"} \
-                ${if isNull light then "" else "--light ${light}"} \
-                ${if isNull lightMultiply then "" else "--light-multiply ${lightMultiply}"} \
-                --override-white '${toString overrideWhite}' \
-                --dont-override-white-threshold ${dontOverrideWhiteThreshold} \
                 --smooth '${toString smooth}' \
+                --foreground-threshold ${foregroundThreshold} \
+                ${if isNull accentSaturation then "" else "--accent-saturation ${accentSaturation}"} \
+                ${if isNull accentSaturationMultiply then "" else "--accent-saturation-multiply ${accentSaturationMultiply}"} \
+                ${if isNull accentLight then "" else "--accent-light ${accentLight}"} \
+                ${if isNull accentLightMultiply then "" else "--accent-light-multiply ${accentLightMultiply}"} \
+                ${if isNull foregroundSaturation then "" else "--foreground-saturation ${foregroundSaturation}"} \
+                ${if isNull foregroundSaturationMultiply then "" else "--foreground-saturation-multiply ${foregroundSaturationMultiply}"} \
+                ${if isNull foregroundLight then "" else "--foreground-light ${foregroundLight}"} \
+                ${if isNull foregroundLightMultiply then "" else "--foreground-light-multiply ${foregroundLightMultiply}"} \
                 ${if cfg.recolor.mode == "monochrome" then
                   "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
                 else
