@@ -10,20 +10,20 @@ let
     ]);
   recolorScript = with cfg.recolor; ''
     ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
-       --smooth '${toString smooth}' \
-       --foreground-threshold ${foregroundThreshold} \
-       ${if isNull accentSaturation then "" else "--accent-saturation ${accentSaturation}"} \
-       ${if isNull accentSaturationMultiply then "" else "--accent-saturation-multiply ${accentSaturationMultiply}"} \
-       ${if isNull accentLight then "" else "--accent-light ${accentLight}"} \
-       ${if isNull accentLightMultiply then "" else "--accent-light-multiply ${accentLightMultiply}"} \
-       ${if isNull foregroundSaturation then "" else "--foreground-saturation ${foregroundSaturation}"} \
-       ${if isNull foregroundSaturationMultiply then "" else "--foreground-saturation-multiply ${foregroundSaturationMultiply}"} \
-       ${if isNull foregroundLight then "" else "--foreground-light ${foregroundLight}"} \
-       ${if isNull foregroundLightMultiply then "" else "--foreground-light-multiply ${foregroundLightMultiply}"} \
-       ${if cfg.recolor.mode == "monochrome" then
-         "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
-       else
-         "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
+      --smooth '${toString smooth}' \
+      --foreground-threshold ${foregroundThreshold} \
+    ${lib.optionalString (accentSaturation != null) "--accent-saturation ${accentSaturation}"} \
+      ${lib.optionalString (accentSaturationMultiply != null) "--accent-saturation-multiply ${accentSaturationMultiply}"} \
+      ${lib.optionalString (accentLight != null) "--accent-light ${accentLight}"} \
+      ${lib.optionalString (accentLightMultiply != null) "--accent-light-multiply ${accentLightMultiply}"} \
+      ${lib.optionalString (foregroundSaturation != null) "--foreground-saturation ${foregroundSaturation}"} \
+      ${lib.optionalString (foregroundSaturationMultiply != null) "--foreground-saturation-multiply ${foregroundSaturationMultiply}"} \
+      ${lib.optionalString (foregroundLight != null) "--foreground-light ${foregroundLight}"} \
+      ${lib.optionalString (foregroundLightMultiply != null) "--foreground-light-multiply ${foregroundLightMultiply}"} \
+      ${if cfg.recolor.mode == "monochrome" then
+        "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
+      else
+        "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
   '';
 in
 {
