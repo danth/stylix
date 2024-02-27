@@ -8,6 +8,23 @@ let
       tqdm
       pillow
     ]);
+  recolorScript = with cfg.recolor; ''
+    ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
+       --smooth '${toString smooth}' \
+       --foreground-threshold ${foregroundThreshold} \
+       ${if isNull accentSaturation then "" else "--accent-saturation ${accentSaturation}"} \
+       ${if isNull accentSaturationMultiply then "" else "--accent-saturation-multiply ${accentSaturationMultiply}"} \
+       ${if isNull accentLight then "" else "--accent-light ${accentLight}"} \
+       ${if isNull accentLightMultiply then "" else "--accent-light-multiply ${accentLightMultiply}"} \
+       ${if isNull foregroundSaturation then "" else "--foreground-saturation ${foregroundSaturation}"} \
+       ${if isNull foregroundSaturationMultiply then "" else "--foreground-saturation-multiply ${foregroundSaturationMultiply}"} \
+       ${if isNull foregroundLight then "" else "--foreground-light ${foregroundLight}"} \
+       ${if isNull foregroundLightMultiply then "" else "--foreground-light-multiply ${foregroundLightMultiply}"} \
+       ${if cfg.recolor.mode == "monochrome" then
+         "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
+       else
+         "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
+  '';
 in
 {
   options.stylix.targets.iconTheme = {
@@ -25,6 +42,11 @@ in
     recolor = {
       enable = lib.mkOption {
         description = "Whether to recolor the icon theme colors.";
+        type = lib.types.bool;
+        default = true;
+      };
+      enableForParentThemes = lib.mkOption {
+        description = "Whether to recolor the parent icon theme colors.";
         type = lib.types.bool;
         default = true;
       };
@@ -146,27 +168,17 @@ in
         (lib.mkIf (cfg.recolor.enable) {
           package = cfg.package.overrideAttrs
             (oldAttrs: rec {
-              postInstall = with cfg.recolor; (oldAttrs.postInstall or "") + ''
-                ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
-                --smooth '${toString smooth}' \
-                --foreground-threshold ${foregroundThreshold} \
-                ${if isNull accentSaturation then "" else "--accent-saturation ${accentSaturation}"} \
-                ${if isNull accentSaturationMultiply then "" else "--accent-saturation-multiply ${accentSaturationMultiply}"} \
-                ${if isNull accentLight then "" else "--accent-light ${accentLight}"} \
-                ${if isNull accentLightMultiply then "" else "--accent-light-multiply ${accentLightMultiply}"} \
-                ${if isNull foregroundSaturation then "" else "--foreground-saturation ${foregroundSaturation}"} \
-                ${if isNull foregroundSaturationMultiply then "" else "--foreground-saturation-multiply ${foregroundSaturationMultiply}"} \
-                ${if isNull foregroundLight then "" else "--foreground-light ${foregroundLight}"} \
-                ${if isNull foregroundLightMultiply then "" else "--foreground-light-multiply ${foregroundLightMultiply}"} \
-                ${if cfg.recolor.mode == "monochrome" then
-                  "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
-                else
-                  "--palette ''${builtins.concatStringsSep "," cfg.recolor.colors}''"}
+              propagatedBuildInputs =
+                if cfg.recolor.enableForParentThemes then
+                  builtins.map
+                    (parentIconTheme: parentIconTheme.overrideAttrs (parentIconThemeOldAttrs: rec {
+                      postInstall = recolorScript + (parentIconThemeOldAttrs.postInstall or "");
+                    }))
+                    # For some reason patching gnome-icon-theme takes forever
+                    (builtins.filter (parentIconTheme: parentIconTheme.pname != "gnome-icon-theme") oldAttrs.propagatedBuildInputs)
+                else oldAttrs.propagatedBuildInputs;
 
-                for theme in $out/share/icons/*; do
-                  gtk-update-icon-cache $theme
-                done
-              '';
+              postInstall = recolorScript + (oldAttrs.postInstall or "");
             });
         })
       ];
