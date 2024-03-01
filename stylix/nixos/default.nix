@@ -10,6 +10,7 @@ in {
     ../pixel.nix
     ../target.nix
     ../opacity.nix
+    ../swatches.nix
     ./cursor.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
