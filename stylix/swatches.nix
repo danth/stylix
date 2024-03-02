@@ -1,10 +1,12 @@
 { config, lib, ... }:
 
 let
-  inherit (lib) findFirst foldl' genAttrs hasSuffix last mkOption pipe removeSuffix toUpper splitString stringToCharacters;
-  inherit (lib.types) submodule attrsOf;
+  inherit (lib) findFirst foldl' genAttrs hasSuffix last max mdDoc min mkOption pipe removeSuffix toUpper splitString stringToCharacters;
+  inherit (lib.types) attrsOf submodule;
+  inherit (lib.types.numbers) between;
   inherit (lib.types.ints) u8;
   inherit (builtins) attrNames elem elemAt filter hasAttr head listToAttrs mapAttrs substring stringLength;
+  constrainU8 = num: min (max num 0) 255;
   hex01 = {
     "0" = 0;
     "1" = 1;
@@ -83,12 +85,15 @@ let
     options = {
       r = mkOption {
         type = u8;
+        description = mdDoc "Red component int with value between 0 to 255";
       };
       g = mkOption {
         type = u8;
+        description = mdDoc "Green component int with value between 0 to 255";
       };
       b = mkOption {
         type = u8;
+        description = mdDoc "Blue component int with value between 0 to 255";
       };
     };
   };
@@ -97,17 +102,22 @@ let
     options = {
       fg = mkOption {
         type = submodule colorSubmodule;
+        description = mdDoc "Foreground swatch component with r g and b sub components";
       };
       bg = mkOption {
         type = submodule colorSubmodule;
+        description = mdDoc "Background swatch component with r g and b sub components";
       };
       ol = mkOption {
         type = submodule colorSubmodule;
+        description = mdDoc "Outline swatch component with r g and b sub components";
       };
     };
   };
 
-  wrappedColor = color: rec {
+  wrappedColor = color: let 
+    factor = config.stylix.blendFactor;
+  in rec {
     inherit (color) r g b;
     asRgbDec = "rgb(${toString r}, ${toString g}, ${toString b})";
     asRgbaDec = alphaDec: "rgba(${toString r}, ${toString g}, ${toString b}, ${toString alphaDec})";
@@ -118,14 +128,26 @@ let
     asDecInt = r * 256 + g * 16 + b;
     asDecIntAlpha = decAlpha: asDecInt * 16 + decAlpha;
     newFactored = factor: wrappedColor {
-      r = r * factor;
-      g = g * factor;
-      b = b * factor;
+      r = constrainU8 (r * factor);
+      g = constrainU8 (g * factor);
+      b = constrainU8 (b * factor);
     };
     newBlended = toBlend: wrappedColor {
-      r = ((r + toBlend.r) / 2);
-      g = ((g + toBlend.g) / 2);
-      b = ((b + toBlend.b) / 2);
+      r = constrainU8 ((r + toBlend.r) / 2);
+      g = constrainU8 ((g + toBlend.g) / 2);
+      b = constrainU8 ((b + toBlend.b) / 2);
+    };
+    newBrighter = let
+      brightFactor = factor + 1.0;
+    in wrappedColor {
+      r = constrainU8 (r * brightFactor);
+      g = constrainU8 (g * brightFactor);
+      b = constrainU8 (b * brightFactor);
+    };
+    newDarker = wrappedColor {
+      r = constrainU8 (r * factor);
+      g = constrainU8 (g * factor);
+      b = constrainU8 (b * factor);
     };
   };
 
@@ -144,6 +166,16 @@ let
       fg = fg.newBlended color;
       bg = bg.newBlended color;
       ol = ol.newBlended color;
+    };
+    newBrigter = color: wrappedSwatch {
+      fg = fg.newBrighter color;
+      bg = bg.newBrighter color;
+      ol = ol.newBrighter color;
+    };
+    newDarker = color: wrappedSwatch {
+      fg = fg.newDarker color;
+      bg = bg.newDarker color;
+      ol = ol.newDarker color;
     };
   };
 
@@ -180,27 +212,33 @@ let
     base0E = hexToRgb base16Attrs.base0E;
     base0F = hexToRgb base16Attrs.base0F;
   };
-  
+
   genSwatches = colors: mapAttrs (name: generator:
     generator colors
   ) swatchGenerators;
-  
+
   genSwatchesFromBase16Attrs = colors: genSwatches (convertBase16ToWrappedColors colors);
 in {
   config = {
     lib.stylix = {
         inherit swatchGenerators hexToRgb getSwatches genSwatches genSwatchesFromBase16Attrs;
     };
-    stylix.swatches.default = (genSwatchesFromBase16Attrs (config.lib.stylix.colors));
+    stylix.swatches.default = lib.mkDefault (genSwatchesFromBase16Attrs (config.lib.stylix.colors));
   };
 
   options.stylix = {
     swatches = mkOption {
       type = attrsOf (submodule {
         options = genAttrs (attrNames swatchGenerators) (name: mkOption {
+          description = mdDoc "Swatch for ${name}. Use this to override it and config.lib.stylix.getSwatches to use it.";
           type = submodule swatchSubmodule;
         });
       });
+    };
+    colors.blendFactor = lib.mkOption {
+      type = between 0 1;
+      description = mdDoc "Default amount to blend incremental highlights/color changes by. Range of 0.0 - 1.0.";
+      default = 0.2;
     };
   };
 }
