@@ -1,3 +1,4 @@
+{ base16, ... }:
 { config, lib, ... }:
 
 let
@@ -114,10 +115,9 @@ let
       };
     };
   };
+    blendFactor = config.stylix.blendFactor;
 
-  wrappedColor = color: let 
-    factor = config.stylix.blendFactor;
-  in rec {
+  wrappedColor = color: rec {
     inherit (color) r g b;
     asRgbDec = "rgb(${toString r}, ${toString g}, ${toString b})";
     asRgbaDec = alphaDec: "rgba(${toString r}, ${toString g}, ${toString b}, ${toString alphaDec})";
@@ -137,18 +137,8 @@ let
       g = constrainU8 ((g + toBlend.g) / 2);
       b = constrainU8 ((b + toBlend.b) / 2);
     };
-    newBrighter = let
-      brightFactor = factor + 1.0;
-    in wrappedColor {
-      r = constrainU8 (r * brightFactor);
-      g = constrainU8 (g * brightFactor);
-      b = constrainU8 (b * brightFactor);
-    };
-    newDarker = wrappedColor {
-      r = constrainU8 (r * factor);
-      g = constrainU8 (g * factor);
-      b = constrainU8 (b * factor);
-    };
+    newBrighter = newFactored (blendFactor + 1.0);
+    newDarker = newFactored blendFactor;
   };
 
   wrappedSwatch = swatch: let
@@ -167,16 +157,9 @@ let
       bg = bg.newBlended color;
       ol = ol.newBlended color;
     };
-    newBrigter = color: wrappedSwatch {
-      fg = fg.newBrighter color;
-      bg = bg.newBrighter color;
-      ol = ol.newBrighter color;
-    };
-    newDarker = color: wrappedSwatch {
-      fg = fg.newDarker color;
-      bg = bg.newDarker color;
-      ol = ol.newDarker color;
-    };
+    newBrighter = color: newFactored (blendFactor + 1.0);
+    newDarker = color: newFactored blendFactor;
+
   };
 
   swatchGenerators = listToAttrs (map (swatchFile: {
@@ -193,7 +176,7 @@ let
   in genAttrs (attrNames swatchGenerators) (name:
     wrappedSwatch (config.stylix.swatches.${foundTarget}.${name})
   );
-  
+
   convertBase16ToWrappedColors = base16Attrs: {
     base00 = hexToRgb base16Attrs.base00;
     base01 = hexToRgb base16Attrs.base01;
@@ -218,10 +201,19 @@ let
   ) swatchGenerators;
 
   genSwatchesFromBase16Attrs = colors: genSwatches (convertBase16ToWrappedColors colors);
+
+  genSwatchesFromBase16SchemeOverriden = overrides: scheme: (base16.mkSchemeAttrs scheme).override overrides;
+  genSwatchesFromBase16Scheme = scheme: genSwatchesFromBase16SchemeOverriden {};
 in {
   config = {
     lib.stylix = {
-        inherit swatchGenerators hexToRgb getSwatches genSwatches genSwatchesFromBase16Attrs;
+        inherit swatchGenerators
+          hexToRgb
+          getSwatches
+          genSwatches
+          genSwatchesFromBase16Attrs
+          genSwatchesFromBase16Scheme
+          genSwatchesFromBase16SchemeOverriden;
     };
     stylix.swatches.default = lib.mkDefault (genSwatchesFromBase16Attrs (config.lib.stylix.colors));
   };
