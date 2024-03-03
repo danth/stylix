@@ -191,7 +191,7 @@ let
       override.${name} args
     else
       import genFile args
-  ) swatchGenerators) // colors;
+  ) swatchGenerators) // { inherit colors; };
 
 in {
   config = {
