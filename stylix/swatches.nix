@@ -2,12 +2,17 @@
 { config, lib, ... }:
 
 let
-  inherit (lib) findFirst foldl' genAttrs hasSuffix last max mdDoc min mkOption pipe removeSuffix toUpper splitString stringToCharacters;
-  inherit (lib.types) attrsOf submodule;
+
+  inherit (lib) findFirst foldl' hasSuffix last literalMD max mdDoc min mkOption pipe removeSuffix splitString stringToCharacters toHexString toUpper;
+
+  inherit (lib.types) attrs attrsOf lines nullOr oneOf path submodule;
+
   inherit (lib.types.numbers) between;
-  inherit (lib.types.ints) u8;
-  inherit (builtins) attrNames elem elemAt filter hasAttr head listToAttrs mapAttrs substring stringLength;
+
+  inherit (builtins) attrNames elem elemAt filter hasAttr head listToAttrs mapAttrs substring stringLength typeOf;
+
   constrainU8 = num: min (max num 0) 255;
+
   hex01 = {
     "0" = 0;
     "1" = 1;
@@ -32,6 +37,7 @@ let
     "E" = 14;
     "F" = 15;
   };
+
   hex10 = {
     "0" = 0;
     "1" = 16;
@@ -56,6 +62,19 @@ let
     "E" = 224;
     "F" = 240;
   };
+
+  to2HexStr = num: pipe num [
+    toHexString
+    (str: if num < 10 then "0" + str else str)
+  ];
+
+  genBaseAttrs = fn: listToAttrs (map (base: rec {
+    name = "base${base}";
+    value = fn name;
+  }) [
+    "00" "01" "02" "03" "04" "05" "06" "07"
+    "08" "09" "0A" "0B" "0C" "0D" "0E" "0F"
+  ]);
 
   hexToRgb = str: pipe str [
     (str: stringToCharacters str)
@@ -82,46 +101,18 @@ let
 
   findSwatchFiles = (filter (hasSuffix ".nix") (lib.filesystem.listFilesRecursive ../swatches));
 
-  colorSubmodule = {
-    options = {
-      r = mkOption {
-        type = u8;
-        description = mdDoc "Red component int with value between 0 to 255";
-      };
-      g = mkOption {
-        type = u8;
-        description = mdDoc "Green component int with value between 0 to 255";
-      };
-      b = mkOption {
-        type = u8;
-        description = mdDoc "Blue component int with value between 0 to 255";
-      };
-    };
-  };
+  swatchGenerators = listToAttrs (map (swatchFile: {
+    name = getSwatchName swatchFile;
+    value = swatchFile;
+  }) findSwatchFiles);
 
-  swatchSubmodule = {
-    options = {
-      fg = mkOption {
-        type = submodule colorSubmodule;
-        description = mdDoc "Foreground swatch component with r g and b sub components";
-      };
-      bg = mkOption {
-        type = submodule colorSubmodule;
-        description = mdDoc "Background swatch component with r g and b sub components";
-      };
-      ol = mkOption {
-        type = submodule colorSubmodule;
-        description = mdDoc "Outline swatch component with r g and b sub components";
-      };
-    };
-  };
-    blendFactor = config.stylix.blendFactor;
+  blendFactor = config.stylix.blendFactor;
 
   wrappedColor = color: rec {
     inherit (color) r g b;
     asRgbDec = "rgb(${toString r}, ${toString g}, ${toString b})";
     asRgbaDec = alphaDec: "rgba(${toString r}, ${toString g}, ${toString b}, ${toString alphaDec})";
-    asHex = "${lib.toHexString r}${lib.toHexString g}${lib.toHexString b}";
+    asHex = "${to2HexStr r}${to2HexStr g}${to2HexStr b}";
     asHexWithHash = "#${asHex}";
     asHexAlpha = alphaHex: "${asHex}${alphaHex}";
     asHexAlphaWithHash = alphaHex: "#${asHex}${alphaHex}";
@@ -159,73 +150,93 @@ let
     };
     newBrighter = color: newFactored (blendFactor + 1.0);
     newDarker = color: newFactored blendFactor;
-
   };
-
-  swatchGenerators = listToAttrs (map (swatchFile: {
-    name = getSwatchName swatchFile;
-    value = colors: import swatchFile {
-      inherit colors lib config;
-      inherit (config.stylix) polarity;
-      mkSwatch = fg: bg: ol: { inherit fg bg ol; };
-    };
-  } ) findSwatchFiles);
 
   getSwatches = targetOrder: let
-    foundTarget = findFirst (check: elem check (attrNames config.stylix.swatches)) "default" targetOrder;
-  in genAttrs (attrNames swatchGenerators) (name:
-    wrappedSwatch (config.stylix.swatches.${foundTarget}.${name})
-  );
+      type = typeOf targetOrder;
+      target = if type == "list" then
+        findFirst (check: elem check (attrNames config.stylix.swatches)) "default" targetOrder
+      else if type == "string" then
+        if hasAttr targetOrder config.stylix.swatches then
+          targetOrder
+        else
+          "default"
+      else
+        "default";
+    in
+      getSwatchesFromOpts target;
 
-  convertBase16ToWrappedColors = base16Attrs: {
-    base00 = hexToRgb base16Attrs.base00;
-    base01 = hexToRgb base16Attrs.base01;
-    base02 = hexToRgb base16Attrs.base02;
-    base03 = hexToRgb base16Attrs.base03;
-    base04 = hexToRgb base16Attrs.base04;
-    base05 = hexToRgb base16Attrs.base05;
-    base06 = hexToRgb base16Attrs.base06;
-    base07 = hexToRgb base16Attrs.base07;
-    base08 = hexToRgb base16Attrs.base08;
-    base09 = hexToRgb base16Attrs.base09;
-    base0A = hexToRgb base16Attrs.base0A;
-    base0B = hexToRgb base16Attrs.base0B;
-    base0C = hexToRgb base16Attrs.base0C;
-    base0D = hexToRgb base16Attrs.base0D;
-    base0E = hexToRgb base16Attrs.base0E;
-    base0F = hexToRgb base16Attrs.base0F;
-  };
+  getSwatchesFromOpts = target: let
+    opts = config.stylix.swatches.${target};
+    override = opts.override;
+    scheme = if opts.base16Scheme == null then
+      config.stylix.base16Scheme
+    else
+      opts.base16Scheme;
+    colors = if (findFirst (hasSuffix "base") null (attrNames override)) != null then
+          if scheme == config.stylix.base16Scheme then
+            config.lib.stylix.colors
+          else
+            base16.mkSchemeAttrs scheme
+        else
+          (base16.mkSchemeAttrs scheme).override override;
+    args = {
+      inherit lib config;
+      inherit (config.stylix) polarity;
+      colors = genBaseAttrs (base: hexToRgb colors.${base});
+      mkSwatch = fg: bg: ol: wrappedSwatch { inherit fg bg ol; };
+    };
+  in (mapAttrs (name: genFile:
+    if (elem name (attrNames override)) then
+      override.${name} args
+    else
+      import genFile args
+  ) swatchGenerators) // colors;
 
-  genSwatches = colors: mapAttrs (name: generator:
-    generator colors
-  ) swatchGenerators;
-
-  genSwatchesFromBase16Attrs = colors: genSwatches (convertBase16ToWrappedColors colors);
-
-  genSwatchesFromBase16SchemeOverriden = overrides: scheme: (base16.mkSchemeAttrs scheme).override overrides;
-  genSwatchesFromBase16Scheme = scheme: genSwatchesFromBase16SchemeOverriden {};
 in {
   config = {
     lib.stylix = {
-        inherit swatchGenerators
-          hexToRgb
-          getSwatches
-          genSwatches
-          genSwatchesFromBase16Attrs
-          genSwatchesFromBase16Scheme
-          genSwatchesFromBase16SchemeOverriden;
+      inherit
+        swatchGenerators
+        hexToRgb
+        getSwatches;
     };
-    stylix.swatches.default = lib.mkDefault (genSwatchesFromBase16Attrs (config.lib.stylix.colors));
+    stylix.swatches.default = {};
   };
 
   options.stylix = {
     swatches = mkOption {
       type = attrsOf (submodule {
-        options = genAttrs (attrNames swatchGenerators) (name: mkOption {
-          description = mdDoc "Swatch for ${name}. Use this to override it and config.lib.stylix.getSwatches to use it.";
-          type = submodule swatchSubmodule;
-        });
+        options = {
+          base16Scheme = mkOption {
+            description = mdDoc ''
+              The scheme for the swatches.
+
+              This can be a path to a file, a string of YAML, or an attribute set.
+            '';
+            type = nullOr (oneOf [ path lines attrs ]);
+            default = null;
+            defaultText = literalMD ''
+              The colors used in the theming.
+
+              Those are automatically selected from the background image by default,
+              but could be overridden manually.
+            '';
+          };
+          override = mkOption {
+            description = mdDoc ''
+              An override that will be both be applied to the swatches' base16Scheme when generating
+              the $'{swatch}.colors,
+
+              Takes anything that a scheme generated by base16nix can take as argument
+              to override.
+            '';
+            type = attrs;
+            default = {};
+          };
+        };
       });
+      description = "Attr set containing base16Schemes and overrides to build swatches from";
     };
     colors.blendFactor = lib.mkOption {
       type = between 0 1;
