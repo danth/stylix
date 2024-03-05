@@ -1,15 +1,14 @@
-{ base16, ... }:
-{ config, lib, ... }:
+{ base16, ... }: { config, lib, ... }:
 
 let
 
-  inherit (lib) findFirst foldl' hasSuffix last literalMD max mdDoc min mkOption pipe removeSuffix splitString stringToCharacters toHexString toUpper;
+  inherit (lib) findFirst foldl' getAttrFromPath hasAttrByPath hasSuffix literalMD mapAttrsRecursive max mdDoc min mkOption pipe removeSuffix setAttrByPath splitString stringToCharacters toHexString ;
 
   inherit (lib.types) attrs attrsOf lines nullOr oneOf path submodule;
 
   inherit (lib.types.numbers) between;
 
-  inherit (builtins) attrNames elem elemAt filter hasAttr head listToAttrs mapAttrs substring stringLength typeOf;
+  inherit (builtins) attrNames elem elemAt filter hasAttr listToAttrs typeOf;
 
   constrainU8 = num: min (max num 0) 255;
 
@@ -79,32 +78,25 @@ let
   hexToRgb = str: pipe str [
     (str: stringToCharacters str)
     (chars: {
-      r = hex10.${elemAt chars 0} + hex01.${elemAt chars 1};
-      g = hex10.${elemAt chars 2} + hex01.${elemAt chars 3};
-      b = hex10.${elemAt chars 4} + hex01.${elemAt chars 5};
+      red = hex10.${elemAt chars 0} + hex01.${elemAt chars 1};
+      green = hex10.${elemAt chars 2} + hex01.${elemAt chars 3};
+      blue = hex10.${elemAt chars 4} + hex01.${elemAt chars 5};
     })
   ];
 
-  getSwatchName = path:
+  nestSwatchAttrs = path:
     pipe path [
       (toString)
-      (removeSuffix ".nix")
       (splitString "/")
-      (last)
+      (lib.last)
+      (removeSuffix ".nix")
       (splitString "-")
-      (strs: foldl' (acc: str:
-        acc + (if str != (head strs) then
-          (toUpper (substring 0 1 str)) + (substring 1 (stringLength str) str)
-          else str))
-        "" strs)
+      (strs: setAttrByPath strs path)
     ];
 
   findSwatchFiles = (filter (hasSuffix ".nix") (lib.filesystem.listFilesRecursive ../swatches));
 
-  swatchGenerators = listToAttrs (map (swatchFile: {
-    name = getSwatchName swatchFile;
-    value = swatchFile;
-  }) findSwatchFiles);
+  swatchGenerators =  { swatches = foldl' (acc: path: lib.recursiveUpdate acc (nestSwatchAttrs path)) {} findSwatchFiles; };
 
   blendFactor = config.stylix.blendFactor;
 
@@ -124,9 +116,9 @@ let
       blue = constrainU8 (blue * factor);
     };
     newBlended = toBlend: wrappedColor {
-      red = constrainU8 ((red + toBlend.r) / 2);
-      green = constrainU8 ((green + toBlend.g) / 2);
-      blue = constrainU8 ((blue + toBlend.b) / 2);
+      red = constrainU8 ((red + toBlend.red) / 2);
+      green = constrainU8 ((green + toBlend.green) / 2);
+      blue = constrainU8 ((blue + toBlend.blue) / 2);
     };
     newBrighter = newFactored (blendFactor + 1.0);
     newDarker = newFactored blendFactor;
@@ -184,13 +176,13 @@ let
       inherit lib config;
       inherit (config.stylix) polarity;
       colors = genBaseAttrs (base: hexToRgb colors.${base});
-      mkSwatch = fg: bg: ol: wrappedSwatch { inherit fg bg ol; };
+      mkSwatch = foreground: background: outline: wrappedSwatch { inherit foreground background outline; };
     };
-  in (mapAttrs (name: genFile:
-    if (elem name (attrNames override)) then
-      override.${name} args
+  in (mapAttrsRecursive (path: value:
+    if (hasAttrByPath path override) then
+      (getAttrFromPath path override) args
     else
-      import genFile args
+      import value args
   ) swatchGenerators) // { inherit colors; };
 
 in {
