@@ -46,7 +46,9 @@ in
       }
 
       window#waybar, tooltip {
-          background: alpha(@base00, ${config.lib.stylix.desktopOpacity-float});
+          background: alpha(@base00, ${
+            config.lib.stylix.opacityToFloat config.stylix.opacity.desktop
+          });
           color: @base05;
       }
 
