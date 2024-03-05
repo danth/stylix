@@ -109,44 +109,44 @@ let
   blendFactor = config.stylix.blendFactor;
 
   wrappedColor = color: rec {
-    inherit (color) r g b;
-    asRgbDec = "rgb(${toString r}, ${toString g}, ${toString b})";
-    asRgbaDec = alphaDec: "rgba(${toString r}, ${toString g}, ${toString b}, ${toString alphaDec})";
-    asHex = "${to2HexStr r}${to2HexStr g}${to2HexStr b}";
+    inherit (color) red blue green;
+    asRgbDec = "rgb(${toString red}, ${toString green}, ${toString blue})";
+    asRgbaDec = alphaDec: "rgba(${toString red}, ${toString green}, ${toString blue}, ${toString alphaDec})";
+    asHex = "${to2HexStr red}${to2HexStr green}${to2HexStr blue}";
     asHexWithHash = "#${asHex}";
     asHexAlpha = alphaHex: "${asHex}${alphaHex}";
     asHexAlphaWithHash = alphaHex: "#${asHex}${alphaHex}";
-    asDecInt = r * 256 + g * 16 + b;
+    asDecInt = red * 256 + green * 16 + blue;
     asDecIntAlpha = decAlpha: asDecInt * 16 + decAlpha;
     newFactored = factor: wrappedColor {
-      r = constrainU8 (r * factor);
-      g = constrainU8 (g * factor);
-      b = constrainU8 (b * factor);
+      red = constrainU8 (red * factor);
+      green = constrainU8 (green * factor);
+      blue = constrainU8 (blue * factor);
     };
     newBlended = toBlend: wrappedColor {
-      r = constrainU8 ((r + toBlend.r) / 2);
-      g = constrainU8 ((g + toBlend.g) / 2);
-      b = constrainU8 ((b + toBlend.b) / 2);
+      red = constrainU8 ((red + toBlend.r) / 2);
+      green = constrainU8 ((green + toBlend.g) / 2);
+      blue = constrainU8 ((blue + toBlend.b) / 2);
     };
     newBrighter = newFactored (blendFactor + 1.0);
     newDarker = newFactored blendFactor;
   };
 
   wrappedSwatch = swatch: let
-    wrapped = hasAttr "asHex" swatch.fg;
+    wrapped = hasAttr "asHex" swatch.foreground;
   in rec {
-    fg = if wrapped then swatch.fg else wrappedColor swatch.fg;
-    bg = if wrapped then swatch.bg else wrappedColor swatch.bg;
-    ol = if wrapped then swatch.ol else wrappedColor swatch.ol;
+    foreground = if wrapped then swatch.foreground else wrappedColor swatch.foreground;
+    background = if wrapped then swatch.background else wrappedColor swatch.background;
+    outline = if wrapped then swatch.outline else wrappedColor swatch.outline;
     newFactored = factor: wrappedSwatch {
-      fg = fg.newFactored factor;
-      bg = bg.newFactored factor;
-      ol = ol.newFactored factor;
+      foreground = foreground.newFactored factor;
+      background = background.newFactored factor;
+      outline = outline.newFactored factor;
     };
     newBlended = color: wrappedSwatch {
-      fg = fg.newBlended color;
-      bg = bg.newBlended color;
-      ol = ol.newBlended color;
+      foreground = foreground.newBlended color;
+      background = background.newBlended color;
+      outline = outline.newBlended color;
     };
     newBrighter = color: newFactored (blendFactor + 1.0);
     newDarker = color: newFactored blendFactor;
