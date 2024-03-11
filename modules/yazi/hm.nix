@@ -54,7 +54,7 @@
       select = {
         border = mkFg base0D;
         active = mkFg base0E;
-        inacitve = mkFg base05;
+        inactive = mkFg base05;
       };
 
       input = {
