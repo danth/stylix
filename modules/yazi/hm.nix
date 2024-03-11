@@ -86,8 +86,7 @@
 
       help = {
         on = mkFg base0E;
-        # Change `exec` to `run`, when it's deprecated in v0.3.
-        exec = mkFg base0C;
+        run = mkFg base0C;
         desc = mkFg base05;
         hovered = mkBoth base05 base03;
         footer = mkFg base05;
