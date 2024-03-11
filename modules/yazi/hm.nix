@@ -15,7 +15,7 @@
       mkBoth = fg: bg: {inherit fg bg;};
       mkSame = c: (mkBoth c c);
     in {
-      manager = {
+      manager = rec {
         # Reusing bat themes, since it's suggested in the stying guide
         # https://yazi-rs.github.io/docs/configuration/theme#manager
         syntect_theme = config.lib.stylix.colors {
@@ -25,18 +25,23 @@
 
         cwd = mkFg base0C;
         hovered = (mkBoth base05 base03) // {bold = true;};
+        preview_hovered = hovered;
+        find_keyword = (mkFg base0B) // {bold = true;};
+        find_position = mkFg base05;
         marker_selected = mkSame base0B;
         marker_copied = mkSame base0A;
         marker_cut = mkSame base08;
         tab_active = mkBoth base00 base0D;
         tab_inactive = mkBoth base05 base01;
+        border_style = mkFg base04;
       };
 
       status = {
+        separator_style = mkSame base01;
         mode_normal = (mkBoth base00 base0D) // {bold = true;};
         mode_select = (mkBoth base00 base0B) // {bold = true;};
         mode_unset = (mkBoth base00 base0F) // {bold = true;};
-        separator_style = mkSame base01;
+        progress_label = mkBoth base05 base00;
         progress_normal = mkBoth base05 base00;
         progress_error = mkBoth base08 base00;
         permissions_t = mkFg base0D;
@@ -46,11 +51,29 @@
         permissions_s = mkFg base0C;
       };
 
-      input.border = mkFg base0D;
-      tasks.border = mkFg base0D;
       select = {
         border = mkFg base0D;
         active = mkFg base0E;
+        inacitve = mkFg base05;
+      };
+
+      input = {
+        border = mkFg base0D;
+        title = mkFg base05;
+        value = mkFg base05;
+        selected = mkBg base03;
+      };
+
+      completion = {
+        border = mkFg base0D;
+        active = mkBoth base0E base03;
+        inactive = mkFg base05;
+      };
+
+      tasks = {
+        border = mkFg base0D;
+        title = mkFg base05;
+        hovered = mkBoth base05 base03;
       };
 
       which = {
@@ -63,10 +86,11 @@
 
       help = {
         on = mkFg base0E;
+        # Change `exec` to `run`, when it's deprecated in v0.3.
         exec = mkFg base0C;
         desc = mkFg base05;
-        hovered = mkBg base03;
-        footer = mkBoth base05 base00;
+        hovered = mkBoth base05 base03;
+        footer = mkFg base05;
       };
 
       # https://github.com/sxyazi/yazi/blob/main/yazi-config/preset/theme.toml
