@@ -15,6 +15,7 @@ Where the scope is one of:
 
 | Scope          | Purpose                                                                |
 |----------------|------------------------------------------------------------------------|
+| `ci`           | Changes to GitHub Actions workflows.                                   |
 | `doc`          | Changes to the website, `README.md`, and so on.                        |
 | `stylix`       | Changes in the `stylix` directory, `flake.nix`, and other global code. |
 | Name of target | Changes to code for a particular target.                               |
