@@ -154,7 +154,7 @@ in
     };
   };
 
-  config = cfg.enable {
+  config = lib.mkIf cfg.enable {
     gtk = {
       enable = true;
       iconTheme = lib.mkMerge [
