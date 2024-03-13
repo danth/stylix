@@ -1,10 +1,6 @@
-{ pkgs, config, ... }@args:
+{ lib, pkgs, config, ... }@args:
 
 let
-  # We use this imported lib instead of the one from the module arguments
-  # to avoid infinite loops if the lib in arguments depends on nixpkgs.overlays
-  lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/174d7dc67189bc4a53f1bffb4fb9d0f13b79cd3c").lib;
-
   theme = import ./theme.nix args;
 
 in {
