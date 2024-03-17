@@ -46,9 +46,10 @@ in {
         document-font-name = "${serif.name}  ${toString (sizes.applications - 1)}";
         monospace-font-name = "${monospace.name} ${toString sizes.applications}";
 
-        color-scheme = if config.lib.stylix.backgroundPolarity == "dark"
-        then "prefer-dark"
-        else "default";
+        color-scheme =
+          if (config.lib.stylix.polarityFrom config.stylix.colors) == "dark"
+          then "prefer-dark"
+          else "default";
       };
       
       "org/gnome/shell/extensions/user-theme".name = "Stylix";

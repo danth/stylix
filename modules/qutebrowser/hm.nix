@@ -195,12 +195,14 @@ in {
             };
           };
         };
-        webpage = {
-          darkmode.enabled = lib.mkDefault
-            (config.lib.stylix.backgroundPolarity == "dark");
-          preferred_color_scheme = lib.mkDefault
-            config.lib.stylix.backgroundPolarity;
-        };
+        webpage =
+          let
+            polarity = config.lib.stylix.polarityFrom config.stylix.colors;
+          in
+          {
+            darkmode.enabled = lib.mkDefault (polarity == "dark");
+            preferred_color_scheme = lib.mkDefault polarity;
+          };
       };
 
       fonts = let

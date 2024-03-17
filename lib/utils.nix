@@ -2,33 +2,28 @@
 
 {
   config.lib.stylix = {
-    # get the opacity values as strings in hexadecimal, integer and floating point values for the four opacity options
-    desktopOpacity-hex = lib.toHexString ((((builtins.ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
-    desktopOpacity-int = builtins.toString (builtins.ceil (config.stylix.opacity.desktop * 100));
-    desktopOpacity-float = builtins.toString config.stylix.opacity.desktop;
+    # get the opacity values as strings in hexadecimal, integer and floating point values
 
+    opacityToHex = opacity: lib.toHexString (
+      ((builtins.ceil (opacity * 100)) * 255 / 100)
+    );
 
-    applicationsOpacity-hex = lib.toHexString ((((builtins.ceil (config.stylix.opacity.applications * 100)) * 255) / 100));
-    applicationsOpacity-int = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
-    applicationsOpacity-float = builtins.toString config.stylix.opacity.applications;
+    opacityToInt = opacity: builtins.toString (
+      builtins.ceil (opacity * 100));
 
+    opacityToFloat = opacity: builtins.toString
+      opacity;
 
-    terminalOpacity-hex = lib.toHexString ((((builtins.ceil (config.stylix.opacity.terminal * 100)) * 255) / 100));
-    terminalOpacity-int = builtins.toString (builtins.ceil (config.stylix.opacity.terminal * 100));
-    terminalOpacity-float = builtins.toString config.stylix.opacity.terminal;
-
-
-    popupsOpacity-hex = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
-    popupsOpacity-int = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
-    popupsOpacity-float = builtins.toString config.stylix.opacity.popups;
-
-    backgroundPolarity =
+    polarityFrom = colors:
       let
-        red = lib.toInt config.stylix.colors.base00-rgb-r;
-        green = lib.toInt config.stylix.colors.base00-rgb-g;
-        blue = lib.toInt config.stylix.colors.base00-rgb-b;
+        red = lib.toInt colors.base00-rgb-r;
+        green = lib.toInt colors.base00-rgb-g;
+        blue = lib.toInt colors.base00-rgb-b;
       in
-      if (red + green + blue >= 150) then "light" else "dark";
+      if
+        (red + green + blue) >= 150
+      then "light"
+      else "dark";
 
     # Generate a PNG image containing a named color
 

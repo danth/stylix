@@ -64,7 +64,9 @@ with config.stylix.fonts;
         (set-face-attribute 'default t :font "${monospace.name}" )
         ;; -----------------------------
         ;; set opacity
-        (add-to-list 'default-frame-alist '(alpha-background . ${config.lib.stylix.applicationsOpacity-int}))
+        (add-to-list 'default-frame-alist '(alpha-background . ${
+          config.lib.stylix.opacityToInt config.stylix.opacity.applications
+        }))
         ;; -----------------------------
       '';
     };

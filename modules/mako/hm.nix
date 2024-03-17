@@ -9,7 +9,8 @@ with config.stylix.fonts;
   # Referenced https://github.com/stacyharper/base16-mako
   config = lib.optionalAttrs (options.services ? mako) (lib.mkIf config.stylix.targets.mako.enable {
     services.mako = {
-      backgroundColor = base00 + config.lib.stylix.popupsOpacity-hex;
+      backgroundColor = base00
+        + (config.lib.stylix.opacityToHex config.stylix.opacity.popups);
       borderColor = base0D;
       textColor = base05;
       progressColor = "over ${base02}";
@@ -17,12 +18,16 @@ with config.stylix.fonts;
       # I wish the mako hm module was like the dunst one
       extraConfig = ''
         [urgency=low]
-        background-color=${base00}${config.lib.stylix.popupsOpacity-hex}
+        background-color=${base00}${
+          config.lib.stylix.opacityToHex config.stylix.opacity.popups
+        }
         border-color=${base0D}
         text-color=${base0A}
 
         [urgency=high]
-        background-color=${base00}${config.lib.stylix.popupsOpacity-hex}
+        background-color=${base00}${
+          config.lib.stylix.opacityToHex config.stylix.opacity.popups
+        }
         border-color=${base0D}
         text-color=${base08}
       '';
