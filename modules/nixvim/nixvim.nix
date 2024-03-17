@@ -17,7 +17,7 @@
     lib.optionalAttrs (builtins.hasAttr "nixvim" options.programs) {
       programs.nixvim = {
         colorschemes.base16 = {
-          customColorScheme = let
+          colorscheme = let
             colors = config.lib.stylix.colors.withHashtag;
           in {
             base00 = colors.base00;
