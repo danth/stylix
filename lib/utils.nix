@@ -6,7 +6,6 @@
 
     opacityToHex = opacity: lib.toHexString (
       builtins.ceil (opacity * 255)
-    )
     );
 
     opacityToInt = opacity: builtins.toString (
