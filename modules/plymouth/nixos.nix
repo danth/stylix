@@ -30,13 +30,13 @@ let
       if cfg.blackBackground
       then ''
         substituteInPlace $themeDir/stylix.script \
-          --replace "%BASE00%" "0, 0, 0" \
-          --replace "%BASE05%" "1, 1, 1"
+          --replace-fail "%BASE00%" "0, 0, 0" \
+          --replace-fail "%BASE05%" "1, 1, 1"
       ''
       else ''
         substituteInPlace $themeDir/stylix.script \
-          --replace "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
-          --replace "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
+          --replace-fail "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
+          --replace-fail "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
       ''
     }
 
@@ -68,8 +68,8 @@ in {
         # Reduce size
         postFetch = ''
           substituteInPlace $out \
-            --replace "141.5919" "70.79595" \
-            --replace "122.80626" "61.40313"
+            --replace-fail "141.5919" "70.79595" \
+            --replace-fail "122.80626" "61.40313"
         '';
         sha256 = "4+MWdqESKo9omd3q0WfRmnrd3Wpe2feiayMnQlA4izU=";
       };
