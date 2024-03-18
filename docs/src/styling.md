@@ -46,7 +46,7 @@ the currently active item, or there could be multiple selected depending on the 
 
 - Default background: base00
 - Alternate background: base01
-- Selection background: base03
+- Selection background: base02
 - Default text: base05
 - Alternate text: base04
 - Warning: base0A
