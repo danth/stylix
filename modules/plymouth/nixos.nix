@@ -58,8 +58,8 @@ in {
         # Reduce size
         postFetch = ''
           substituteInPlace $out \
-            --replace "141.5919" "70.79595" \
-            --replace "122.80626" "61.40313"
+            --replace-fail "141.5919" "70.79595" \
+            --replace-fail "122.80626" "61.40313"
         '';
         sha256 = "4+MWdqESKo9omd3q0WfRmnrd3Wpe2feiayMnQlA4izU=";
       };
