@@ -26,19 +26,9 @@ let
       else "cp ${./theme_still.script} $themeDir/stylix.script"
     }
 
-    ${
-      if cfg.blackBackground
-      then ''
-        substituteInPlace $themeDir/stylix.script \
-          --replace "%BASE00%" "0, 0, 0" \
-          --replace "%BASE05%" "1, 1, 1"
-      ''
-      else ''
-        substituteInPlace $themeDir/stylix.script \
-          --replace "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
-          --replace "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
-      ''
-    }
+    substituteInPlace $themeDir/stylix.script \
+      --replace "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
+      --replace "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
 
     echo "
     [Plymouth Theme]
@@ -85,19 +75,15 @@ in {
       type = types.bool;
       default = true;
     };
-
-    blackBackground = mkOption {
-      description = mdDoc ''
-        Whether to use a black background rather than a theme colour.
-
-        This looks good in combination with systemd-boot, as it means that the
-        background colour doesn't change throughout the boot process.
-      '';
-      type = types.bool;
-      defaultText = literalMD "`true` if systemd-boot is enabled";
-      default = config.boot.loader.systemd-boot.enable;
-    };
   };
+
+  imports = [
+    (
+      lib.mkRemovedOptionModule
+      [ "stylix" "targets" "plymouth" "blackBackground" ]
+      "This was removed since it goes against the chosen color scheme. If you want this, consider disabling the target and configuring Plymouth by hand."
+    )
+  ];
 
   config.boot.plymouth = mkIf cfg.enable {
     theme = "stylix";
