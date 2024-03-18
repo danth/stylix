@@ -5,7 +5,8 @@
     # get the opacity values as strings in hexadecimal, integer and floating point values
 
     opacityToHex = opacity: lib.toHexString (
-      ((builtins.ceil (opacity * 100)) * 255 / 100)
+      builtins.ceil (opacity * 255)
+    )
     );
 
     opacityToInt = opacity: builtins.toString (
