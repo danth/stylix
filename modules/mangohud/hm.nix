@@ -38,7 +38,10 @@ in {
             gpu_load_color = "${base0B}, ${base0A}, ${base08}";
             cpu_load_color = "${base0B}, ${base0A}, ${base08}";
             fps_color = "${base0B}, ${base0A}, ${base08}";
-            font_scale = 1.33333; # px -> pt conversion
+
+            # TODO: Use the point unit:
+            # https://github.com/danth/stylix/issues/251.
+            font_scale = 1.33333;
         };
     };
 
