@@ -10,7 +10,13 @@ with config.lib.stylix.colors;
     nixos-icons = super.nixos-icons.overrideAttrs (oldAttrs: {
       patchPhase = ''
         substituteInPlace logo/white.svg --replace-fail '#ffffff' '#${base05}'
-        sed -i '2i<!-- The original NixOS logo from ${oldAttrs.src.url} modified to use colors from ${scheme}. This file is licensed under https://creativecommons.org/licenses/by/4.0 -->' logo/white.svg
+
+        # Insert attribution comment after the XML prolog
+        sed \
+          --in-place \
+          '2i<!-- The original NixOS logo from ${oldAttrs.src.url} is licensed under https://creativecommons.org/licenses/by/4.0 and has been modified to match the ${scheme} color scheme. -->' \
+          logo/white.svg
+
         ${lib.getExe pkgs.resvg} logo/white.svg logo/white.png
       '';
     });
