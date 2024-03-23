@@ -3,10 +3,10 @@
 with config.lib.stylix.colors;
 
 {
-  options.stylix.targets.nixos.enable =
+  options.stylix.targets.nixos-icons.enable =
     config.lib.stylix.mkEnableTarget "the NixOS logo" true;
 
-  config.nixpkgs.overlays = lib.mkIf config.stylix.targets.nixos.enable [(self: super: {
+  config.nixpkgs.overlays = lib.mkIf config.stylix.targets.nixos-icons.enable [(self: super: {
     nixos-icons = super.nixos-icons.overrideAttrs (oldAttrs: {
       patchPhase = ''
         substituteInPlace logo/white.svg --replace-fail '#ffffff' '#${base05}'
