@@ -232,25 +232,24 @@ in {
     # might be installed, and look there. The ideal solution would require
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
-    home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      globalPath() {
-        for dir in /run/current-system/sw/bin /usr/bin /bin; do
-          if [[ -f "$dir/$1" ]]; then
-            echo "$dir/$1"
-            break
-          fi
-        done
-      }
+    home.activation.stylixLookAndFeel = let
+      globalPath = filename:
+        pkgs.lib.concatMapStringsSep ";" (
+          directory: let
+            file = "${directory}/${filename}";
+          in ''[[ -f "${file}" ]] && { printf '%s\n' "${file}"; exit 0; }''
+        ) ["/run/current-system/sw/bin" "/usr/bin" "/bin"];
+    in
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        wallpaperImage="$(${globalPath "plasma-apply-wallpaperimage"})"
+        if [[ -n "$wallpaperImage" ]]; then
+          "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
+        fi
 
-      wallpaperImage="$(globalPath plasma-apply-wallpaperimage)"
-      if [[ -n "$wallpaperImage" ]]; then
-        "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
-      fi
-
-      lookAndFeel="$(globalPath plasma-apply-lookandfeel)"
-      if [[ -n "$lookAndFeel" ]]; then
-        "$lookAndFeel" --apply stylix
-      fi
-    '';
+        lookAndFeel="$(${globalPath "plasma-apply-lookandfeel"})"
+        if [[ -n "$lookAndFeel" ]]; then
+          "$lookAndFeel" --apply stylix
+        fi
+      '';
   };
 }
