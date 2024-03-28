@@ -44,7 +44,7 @@ in {
     };
   };
 
-  config = lib.optionalAttrs (options ? home-manager) (lib.mkIf hm.autoImport {
+  config = lib.optionalAttrs (options ? home-manager) (lib.mkIf (hm.autoImport && config.stylix.enable) {
     home-manager.sharedModules = [ homeManagerModule ];
   });
 }

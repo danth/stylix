@@ -1,10 +1,10 @@
 args:
-{ config, ... }:
+{ config, lib, ... }:
 
 {
   imports = [ (import ../palette.nix args) ];
 
-  config = {
+  config = lib.mkIf config.stylix.enable {
     environment.etc = config.stylix.generated.fileTree;
   };
 }
