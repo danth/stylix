@@ -245,15 +245,11 @@ in {
       wallpaperImage="$(globalPath plasma-apply-wallpaperimage)"
       if [ -n "$wallpaperImage" ]; then
         "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
-      else
-        echo "Skipping plasma-apply-wallpaperimage because it's not installed"
       fi
 
       lookAndFeel="$(globalPath plasma-apply-lookandfeel)"
       if [ -n "$lookAndFeel" ]; then
         "$lookAndFeel" --apply stylix
-      else
-        echo "Skipping plasma-apply-lookandfeel because it's not installed"
       fi
     '';
   };
