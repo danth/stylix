@@ -14,8 +14,13 @@ with lib;
         picture-uri = "file://${config.stylix.image}";
         picture-uri-dark = "file://${config.stylix.image}";
       };
-
-      "org/gnome/desktop/interface" = with config.stylix.fonts ; {
+      "org/gnome/desktop/interface" = let
+        inherit (config.stylix) fonts;
+        inherit (fonts) sizes;
+        serif = builtins.head fonts.serif;
+        sansSerif = builtins.head fonts.sansSerif;
+        monospace = builtins.head fonts.monospace;
+      in {
         # We show the same colours regardless of this setting, and the quick
         # settings tile is removed. The value is still used by Epiphany to
         # request dark mode for websites which support it.

@@ -1,7 +1,11 @@
 { config, lib, ... }:
 with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
 let
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+
+  sansSerif = builtins.head fonts.sansSerif;
+
   colorlessModules = place: ''
     .modules-${place} #workspaces button {
         border-bottom: 3px solid transparent;

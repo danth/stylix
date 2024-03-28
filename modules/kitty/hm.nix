@@ -22,9 +22,12 @@ in {
 
   config = lib.mkIf cfg.enable {
     programs.kitty = {
-      font = {
-        inherit (config.stylix.fonts.monospace) package name;
-        size = config.stylix.fonts.sizes.terminal;
+      font = let 
+        inherit (config.stylix) fonts;
+        monospace = builtins.head fonts.monospace;
+      in {
+        inherit (monospace) package name;
+        size = fonts.sizes.terminal;
       };
       settings.background_opacity = with config.stylix.opacity; "${builtins.toString terminal}";
       extraConfig = ''

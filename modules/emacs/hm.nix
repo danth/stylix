@@ -1,9 +1,10 @@
 { pkgs, config, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
 
 let
+  inherit (config.stylix) fonts;
+  monospace = builtins.head fonts.monospace;
   emacsOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
 in
 {

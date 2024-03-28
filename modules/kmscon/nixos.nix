@@ -4,7 +4,7 @@
     config.lib.stylix.mkEnableTarget "the kmscon virtual console" true;
 
   config.services.kmscon = lib.mkIf config.stylix.targets.kmscon.enable {
-    fonts = [config.stylix.fonts.monospace];
+    fonts = config.stylix.fonts.monospace;
     extraConfig =
     let
       formatBase = name:

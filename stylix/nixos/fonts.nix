@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.stylix.fonts;
@@ -8,10 +8,10 @@ in {
     packages = cfg.packages;
 
     fontconfig.defaultFonts = {
-      monospace = [ cfg.monospace.name ];
-      serif = [ cfg.serif.name ];
-      sansSerif = [ cfg.sansSerif.name ];
-      emoji = [ cfg.emoji.name ];
+      monospace = lib.catAttrs "name" cfg.monospace;
+      serif = lib.catAttrs "name" cfg.serif;
+      sansSerif = lib.catAttrs "name" cfg.sansSerif;
+      emoji = lib.catAttrs "name" cfg.emoji;
     };
   };
 }

@@ -6,7 +6,12 @@
     config.lib.stylix.mkEnableTarget "Xfce" false;
 
   config = lib.mkIf config.stylix.targets.xfce.enable {
-    xfconf.settings = with config.stylix.fonts; {
+    xfconf.settings = let
+      inherit (config.stylix) fonts;
+      inherit (fonts) sizes;
+      sansSerif = builtins.head fonts.sansSerif;
+      monospace = builtins.head fonts.monospace;
+    in {
       xfwm4 = {
         "general/title_font" = "${sansSerif.name} ${toString sizes.desktop}";
       };

@@ -76,25 +76,25 @@ The default combination of fonts is:
 ```nix
 {
   stylix.fonts = {
-    serif = {
+    serif = [{
       package = pkgs.dejavu_fonts;
       name = "DejaVu Serif";
-    };
+    }];
 
-    sansSerif = {
+    sansSerif = [{
       package = pkgs.dejavu_fonts;
       name = "DejaVu Sans";
-    };
+    }];
 
-    monospace = {
+    monospace = [{
       package = pkgs.dejavu_fonts;
       name = "DejaVu Sans Mono";
-    };
+    }];
 
-    emoji = {
+    emoji = [{
       package = pkgs.noto-fonts-emoji;
       name = "Noto Color Emoji";
-    };
+    }];
   };
 }
 ```

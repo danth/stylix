@@ -1,11 +1,14 @@
 {pkgs, config, lib, ... }:
 
-with config.stylix.fonts;
-
 let
   useYaml = (builtins.compareVersions config.programs.alacritty.package.version "0.13.0") < 0;
   templateRepo = config.lib.stylix.templates.
     "base16-alacritty${if useYaml then "-yaml" else ""}";
+
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+
+  monospace = builtins.head fonts.monospace;
 
   themeFile = config.lib.stylix.colors {
     inherit templateRepo;
