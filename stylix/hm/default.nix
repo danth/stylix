@@ -12,6 +12,7 @@ in {
     ./cursor.nix
     ./fonts.nix
     (import ./palette.nix { inherit palette-generator base16; })
+    (import ../swatches.nix { inherit base16; })
     (import ../templates.nix inputs)
   ] ++ autoload;
 }
