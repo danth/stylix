@@ -39,7 +39,7 @@ with lib;
         let theme = import ./theme.nix args;
         in "${theme}/share/gnome-shell/gnome-shell.css";
       onChange = ''
-        if [ -x "$(command -v gnome-extensions)" ]; then
+        if [[ -x "$(command -v gnome-extensions)" ]]; then
           gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com
           gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
         fi
