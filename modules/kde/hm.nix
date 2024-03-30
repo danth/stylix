@@ -235,7 +235,7 @@ in {
     home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       globalPath() {
         for dir in /run/current-system/sw/bin /usr/bin /bin; do
-          if [ -f "$dir/$1" ]; then
+          if [[ -f "$dir/$1" ]]; then
             echo "$dir/$1"
             break
           fi
@@ -243,12 +243,12 @@ in {
       }
 
       wallpaperImage="$(globalPath plasma-apply-wallpaperimage)"
-      if [ -n "$wallpaperImage" ]; then
+      if [[ -n "$wallpaperImage" ]]; then
         "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
       fi
 
       lookAndFeel="$(globalPath plasma-apply-lookandfeel)"
-      if [ -n "$lookAndFeel" ]; then
+      if [[ -n "$lookAndFeel" ]]; then
         "$lookAndFeel" --apply stylix
       fi
     '';
