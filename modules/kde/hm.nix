@@ -152,7 +152,7 @@ let
     wallpaper="$out/share/wallpapers/stylix"
     lookandfeel="$out/share/plasma/look-and-feel/stylix"
 
-    writeText () {
+    writeText() {
       mkdir -p "$(dirname "$2")"
       echo "$1" >"$2"
     }
@@ -233,7 +233,7 @@ in {
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
     home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      globalPath () {
+      globalPath() {
         for dir in /run/current-system/sw/bin /usr/bin /bin; do
           if [ -f "$dir/$1" ]; then
             echo "$dir/$1"
