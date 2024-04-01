@@ -87,6 +87,19 @@
         }
       );
 
+      checks = nixpkgs.lib.genAttrs [
+        "aarch64-linux"
+        "i686-linux"
+        "x86_64-linux"
+      ] (
+        system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in import ./stylix/checks.nix {
+          inherit pkgs inputs;
+          inherit (nixpkgs) lib;
+        }
+      );
+
       nixosModules.stylix = { pkgs, ... }@args: {
         imports = [
           (import ./stylix/nixos inputs {
