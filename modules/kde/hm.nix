@@ -147,25 +147,33 @@ let
     lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
     lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
   } ''
+    write_text() {
+      mkdir --parents "$(dirname "$2")"
+      printf '%s\n' "$1" >"$2"
+    }
+
     PATH="${pkgs.imagemagick}/bin:$PATH"
 
     wallpaper="$out/share/wallpapers/stylix"
-    lookandfeel="$out/share/plasma/look-and-feel/stylix"
+    look_and_feel="$out/share/plasma/look-and-feel/stylix"
 
-    writeText() {
-      mkdir -p "$(dirname "$2")"
-      echo "$1" >"$2"
-    }
+    mkdir --parents "$wallpaper/contents/images"
 
-    mkdir -p "$wallpaper/contents/images"
-    magick "$wallpaperImage" -thumbnail 400x250 "$wallpaper/contents/screenshot.png"
+    magick \
+      "$wallpaperImage" \
+      -thumbnail 400x250 \
+      "$wallpaper/contents/screenshot.png"
+
     dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
     magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
 
-    writeText "$colorscheme" "$out/share/color-schemes/${colorschemeSlug}.colors"
-    writeText "$wallpaperMetadata" "$wallpaper/metadata.json"
-    writeText "$lookAndFeelMetadata" "$lookandfeel/metadata.json"
-    writeText "$lookAndFeelDefaults" "$lookandfeel/contents/defaults"
+    write_text \
+      "$colorscheme" \
+      "$out/share/color-schemes/${colorschemeSlug}.colors"
+
+    write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
+    write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
+    write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
   '';
 
   # The cursor theme can be configured through a look and feel package,
@@ -206,9 +214,10 @@ let
     kdeglobals = formatConfig kdeglobals;
   } ''
     mkdir "$out"
-    echo "$kcminputrc" >"$out/kcminputrc"
-    echo "$kded5rc" >"$out/kded5rc"
-    echo "$kdeglobals" >"$out/kdeglobals"
+
+    printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
+    printf '%s\n' "$kded5rc" >"$out/kded5rc"
+    printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
   '';
 
 in {
@@ -233,23 +242,23 @@ in {
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
     home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      globalPath() {
-        for dir in /run/current-system/sw/bin /usr/bin /bin; do
-          if [[ -f "$dir/$1" ]]; then
-            echo "$dir/$1"
-            break
+      global_path() {
+        for directory in /run/current-system/sw/bin /usr/bin /bin; do
+          if [[ -f "$directory/$1" ]]; then
+            printf '%s\n' "$directory/$1"
+            return 0
           fi
         done
+
+        return 1
       }
 
-      wallpaperImage="$(globalPath plasma-apply-wallpaperimage)"
-      if [[ -n "$wallpaperImage" ]]; then
-        "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
+      if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+        "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
       fi
 
-      lookAndFeel="$(globalPath plasma-apply-lookandfeel)"
-      if [[ -n "$lookAndFeel" ]]; then
-        "$lookAndFeel" --apply stylix
+      if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+        "$look_and_feel" --apply stylix
       fi
     '';
   };
