@@ -257,14 +257,14 @@ in {
         "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
       else
         verboseEcho \
-          "Skipping plasma-apply-wallpaperimage because it's not installed"
+          "plasma-apply-wallpaperimage: command not found"
       fi
 
       if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
         "$look_and_feel" --apply stylix
       else
         verboseEcho \
-          "Skipping plasma-apply-lookandfeel because it's not installed"
+          "Skipping plasma-apply-lookandfeel: command not found"
       fi
     '';
   };
