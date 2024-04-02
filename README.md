@@ -59,17 +59,17 @@ or ask on [GitHub Discussions](https://github.com/danth/stylix/discussions).
 <picture>
   <source
     media="(prefers-color-scheme: dark)"
-    srcset="https://api.star-history.com/svg?repos=danth/stylix&amp;type=Date&amp;theme=dark"
+    srcset="https://api.star-history.com/svg?repos=danth/stylix&amp;theme=dark"
   />
 
   <source
     media="(prefers-color-scheme: light)"
-    srcset="https://api.star-history.com/svg?repos=danth/stylix&amp;type=Date"
+    srcset="https://api.star-history.com/svg?repos=danth/stylix"
   />
 
   <img
     alt="Star History Chart"
-    src="https://api.star-history.com/svg?repos=danth/stylix&amp;type=Date&amp;theme=dark"
+    src="https://api.star-history.com/svg?repos=danth/stylix&amp;theme=dark"
     width="100%"
   />
 </picture>
