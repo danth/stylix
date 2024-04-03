@@ -94,7 +94,7 @@
       ] (
         system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./stylix/checks.nix {
+        in import ./stylix/testbed.nix {
           inherit pkgs inputs;
           inherit (nixpkgs) lib;
         }
