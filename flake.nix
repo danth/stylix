@@ -76,28 +76,20 @@
         "x86_64-linux"
       ] (
         system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in {
-          docs = import ./docs {
-            inherit pkgs inputs;
-            inherit (nixpkgs) lib;
+        let
+          inherit (nixpkgs) lib;
+          pkgs = nixpkgs.legacyPackages.${system};
+
+          universalPackages = {
+            docs = import ./docs { inherit pkgs inputs lib; };
+            palette-generator = pkgs.callPackage ./palette-generator { };
           };
 
-          palette-generator = pkgs.callPackage ./palette-generator { };
-        }
-      );
-
-      checks = nixpkgs.lib.genAttrs [
-        "aarch64-linux"
-        "i686-linux"
-        "x86_64-linux"
-      ] (
-        system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./stylix/testbed.nix {
-          inherit pkgs inputs;
-          inherit (nixpkgs) lib;
-        }
+          testbedPackages = lib.optionalAttrs
+            (lib.hasSuffix "-linux" system)
+            (import ./stylix/testbed.nix { inherit pkgs inputs lib; });
+        in
+          universalPackages // testbedPackages
       );
 
       nixosModules.stylix = { pkgs, ... }@args: {
