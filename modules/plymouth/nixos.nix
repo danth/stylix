@@ -54,7 +54,7 @@ in {
       # files, the SVG file is fetched with `pkgs.fetchurl` to avoid downloading
       # the entire repository for a single SVG file.
       default = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg";
+        url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/f84c13adae08e860a7c3f76ab3a9bef916d276cc/logo/nix-snowflake-colours.svg";
         # Reduce size
         postFetch = ''
           substituteInPlace $out \
