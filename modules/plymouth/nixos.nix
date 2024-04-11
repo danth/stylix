@@ -55,12 +55,6 @@ in {
       # the entire repository for a single SVG file.
       default = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/f84c13adae08e860a7c3f76ab3a9bef916d276cc/logo/nix-snowflake-colours.svg";
-        # Reduce size
-        postFetch = ''
-          substituteInPlace $out \
-            --replace-fail "141.5919" "70.79595" \
-            --replace-fail "122.80626" "61.40313"
-        '';
         sha256 = "4+MWdqESKo9omd3q0WfRmnrd3Wpe2feiayMnQlA4izU=";
       };
     };
