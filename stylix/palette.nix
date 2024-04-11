@@ -12,7 +12,7 @@ let
     generatedJSON = pkgs.runCommand "palette.json" { } ''
       ${palette-generator}/bin/palette-generator \
         "${cfg.polarity}" \
-        "${lib.escapeShellArg "${cfg.image}"}" \
+        ${lib.escapeShellArg "${cfg.image}"} \
         "$out"
     '';
     palette = importJSON generatedJSON;
