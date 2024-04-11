@@ -58,16 +58,9 @@ let
       script = pkgs.writeShellApplication {
         inherit name;
         text = ''
-          directory="''${XDG_CACHE_HOME:-$HOME/.cache}/stylix-testbed"
-          mkdir --parents "$directory"
-
-          # The disk image is only initialised if the file doesn't already exist,
-          # so we need to create a temporary directory and give a path within it
-          # rather than creating a temporary file. 
-          directory="$(mktemp --directory "$directory/XXXXXXXXXX")"
-
-          NIX_DISK_IMAGE="$directory/nixos.qcow2"
-          export NIX_DISK_IMAGE
+          # We create a temporary directory rather than a temporary file, since
+          # temporary files are created empty and are not valid disk images.
+          directory="$(mktemp --directory)"
 
           clean() {
             if rm --recursive "$directory"; then
@@ -76,7 +69,8 @@ let
           }
           trap clean EXIT
 
-          ${lib.getExe system.config.system.build.vm}
+          NIX_DISK_IMAGE="$directory/nixos.qcow2" \
+            ${lib.getExe system.config.system.build.vm}
         '';
       };
     in
