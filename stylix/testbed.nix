@@ -76,6 +76,7 @@ let
     in
       lib.nameValuePair name script;
 
+  # This generates a copy of each testbed for each of the following themes.
   makeTestbeds = testbed: map (makeTestbed testbed) [
     {
       image = "${pkgs.pantheon.elementary-wallpapers}/share/backgrounds/Photo of Valley.jpg";
