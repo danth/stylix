@@ -1,9 +1,11 @@
 { pkgs, inputs, lib, ... }:
 
 let
+  username = "guest";
+
   commonModule = { config, ... }: {
-    users.users.testbed = {
-      description = "Testbed";
+    users.users.${username} = {
+      description = "Guest";
       hashedPassword = "";
       isNormalUser = true;
     };
@@ -11,7 +13,7 @@ let
     # The state version can safely track the latest release because the disk
     # image is ephermal.
     system.stateVersion = config.system.nixos.release;
-    home-manager.users.testbed.home.stateVersion = config.system.nixos.release;
+    home-manager.users.${username}.home.stateVersion = config.system.nixos.release;
 
     virtualisation.vmVariant.virtualisation = {
       # This is a maximum limit; the VM should still work if the host has fewer cores.
