@@ -39,11 +39,13 @@ let
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
+
         modules = [
+          commonModule
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
-          commonModule
           testbed.module
+
           {
             inherit stylix;
             system.name = name;
