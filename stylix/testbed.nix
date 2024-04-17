@@ -18,7 +18,7 @@ let
     virtualisation.vmVariant.virtualisation = {
       # This is a maximum limit; the VM should still work if the host has fewer cores.
       cores = 4;
-      memorySize = 2048;
+      memorySize = lib.mkDefault 2048;
     };
   };
 
