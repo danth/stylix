@@ -18,8 +18,6 @@ with config.lib.stylix.colors;
             --in-place \
             '2i<!-- The original NixOS logo from ${oldAttrs.src.url} is licensed under https://creativecommons.org/licenses/by/4.0 and has been modified to match the ${scheme} color scheme. -->' \
             logo/nix-snowflake-white.svg
-
-          ${lib.getExe pkgs.resvg} logo/nix-snowflake-white.svg logo/nix-snowflake-white.png
       '';
       };
     });
