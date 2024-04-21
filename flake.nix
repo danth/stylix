@@ -1,15 +1,5 @@
 {
   inputs = {
-    base16-alacritty = {
-      flake = false;
-      url = "github:aarowill/base16-alacritty";
-    };
-
-    base16-alacritty-yaml = {
-      flake = false;
-      url = "github:aarowill/base16-alacritty/63d8ae5dfefe5db825dd4c699d0cdc2fc2c3eaf7";
-    };
-
     base16-fish = {
       flake = false;
       url = "github:tomyun/base16-fish";
