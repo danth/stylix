@@ -28,6 +28,6 @@ in {
         border-color=${base0D}
         text-color=${base08}
       '';
-    }; 
+    };
   });
 }

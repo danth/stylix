@@ -11,7 +11,7 @@ in {
     enable = config.lib.stylix.mkEnableTarget "Kitty" true;
 
     variant256Colors = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         Whether to use the [256-color variant](https://github.com/kdrag0n/base16-kitty#256-color-variants)
         rather than the default combination of colors.
       '';

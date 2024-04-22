@@ -16,7 +16,7 @@ in {
 
   options.stylix.homeManagerIntegration = {
     followSystem = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         When this option is `true`, Home Manager will follow
         the system theme by default, rather than requiring a theme to be set.
 
@@ -28,7 +28,7 @@ in {
     };
 
     autoImport = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Stylix automatically for every user.
 
         This only applies to users for which Home Manager is set up within the

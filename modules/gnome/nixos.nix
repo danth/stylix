@@ -1,18 +1,14 @@
-{ pkgs, config, ... }@args:
+{ lib, pkgs, config, ... }@args:
 
-let 
-  # We use this imported lib instead of the one from the module arguments
-  # to avoid infinite loops if the lib in arguments depends on nixpkgs.overlays
-  lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/174d7dc67189bc4a53f1bffb4fb9d0f13b79cd3c").lib;
-
+let
   theme = import ./theme.nix args;
 
 in {
   options.stylix.targets.gnome.enable =
     lib.mkOption {
-      description = lib.mdDoc "Whether to style GNOME and GDM";
+      description = "Whether to style GNOME and GDM";
       type = lib.types.bool;
-      default = config.stylix.autoEnable 
+      default = config.stylix.autoEnable
              && config.services.xserver.desktopManager.gnome.enable;
     };
 
@@ -25,7 +21,7 @@ in {
     environment.gnome.excludePackages = [ pkgs.gnome.gnome-backgrounds ];
 
     nixpkgs.overlays = [(self: super: {
-      gnome = super.gnome.overrideScope' (gnomeSelf: gnomeSuper: {
+      gnome = super.gnome.overrideScope (gnomeSelf: gnomeSuper: {
         gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
           # Themes are usually applied via an extension, but extensions are
           # not available on the login screen. The only way to change the

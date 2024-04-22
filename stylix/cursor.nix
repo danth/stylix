@@ -8,17 +8,17 @@ let
 in {
     options.stylix.cursor = {
         name = mkOption {
-            description = mdDoc "The cursor name within the package.";
+            description = "The cursor name within the package.";
             type = types.str;
             default = fromOs [ "cursor" "name" ] "Vanilla-DMZ";
         };
         package = mkOption {
-            description = mdDoc "Package providing the cursor theme.";
+            description = "Package providing the cursor theme.";
             type = types.package;
             default = fromOs [ "cursor" "package" ] pkgs.vanilla-dmz;
         };
         size = mkOption {
-            description = mdDoc "The cursor size.";
+            description = "The cursor size.";
             type = types.int;
             default = fromOs [ "cursor" "size" ] 32;
         };

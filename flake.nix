@@ -1,48 +1,58 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    base16-fish = {
+      flake = false;
+      url = "github:tomyun/base16-fish";
+    };
+
+    base16-foot = {
+      flake = false;
+      url = "github:tinted-theming/base16-foot";
+    };
+
+    base16-helix = {
+      flake = false;
+      url = "github:tinted-theming/base16-helix";
+    };
+
+    base16-tmux = {
+      flake = false;
+      url = "github:tinted-theming/base16-tmux";
+    };
+
+    base16-kitty = {
+      flake = false;
+      url = "github:kdrag0n/base16-kitty";
+    };
+
+    base16-vim = {
+      flake = false;
+      url = "github:chriskempson/base16-vim";
+    };
+
     base16.url = "github:SenchoPens/base16.nix";
 
-    # Used for documentation
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     flake-compat = {
-      url = "github:edolstra/flake-compat";
       flake = false;
+      url = "github:edolstra/flake-compat";
     };
 
-    # Templates
-    base16-alacritty = {
-      url = "github:aarowill/base16-alacritty";
+    gnome-shell = {
       flake = false;
+
+      # TODO: Unlocking the input and pointing to official repository requires
+      # updating the patch:
+      # https://github.com/danth/stylix/pull/224#discussion_r1460339607.
+      url = "github:GNOME/gnome-shell/45.1";
     };
-    base16-fish = {
-      url = "github:tomyun/base16-fish";
-      flake = false;
+
+    # The 'home-manager' input is used to generate the documentation.
+    home-manager = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager";
     };
-    base16-foot = {
-      url = "github:tinted-theming/base16-foot";
-      flake = false;
-    };
-    base16-helix = {
-      url = "github:tinted-theming/base16-helix";
-      flake = false;
-    };
-    base16-kitty = {
-      url = "github:kdrag0n/base16-kitty";
-      flake = false;
-    };
-    base16-tmux = {
-      url = "github:tinted-theming/base16-tmux";
-      flake = false;
-    };
-    base16-vim = {
-      url = "github:chriskempson/base16-vim";
-      flake = false;
-    };
+
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
   outputs =
@@ -56,15 +66,22 @@
         "x86_64-linux"
       ] (
         system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in {
-          docs = import ./docs {
-            inherit pkgs inputs;
-            inherit (nixpkgs) lib;
+        let
+          inherit (nixpkgs) lib;
+          pkgs = nixpkgs.legacyPackages.${system};
+
+          universalPackages = {
+            docs = import ./docs { inherit pkgs inputs lib; };
+            palette-generator = pkgs.callPackage ./palette-generator { };
           };
 
-          palette-generator = pkgs.callPackage ./palette-generator { };
-        }
+          # Testbeds are virtual machines based on NixOS, therefore they are
+          # only available for Linux systems.
+          testbedPackages = lib.optionalAttrs
+            (lib.hasSuffix "-linux" system)
+            (import ./stylix/testbed.nix { inherit pkgs inputs lib; });
+        in
+          universalPackages // testbedPackages
       );
 
       nixosModules.stylix = { pkgs, ... }@args: {

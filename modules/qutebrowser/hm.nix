@@ -1,222 +1,283 @@
 { config, lib, ... }:
 
-with config.stylix.fonts;
 with config.lib.stylix.colors.withHashtag;
+with config.stylix.fonts;
 
 let
   background = base00;
   secondary-background = base01;
   selection-background = base03;
+
   foreground = base05;
   inverted-foreground = base00;
-  info = base0B;
-  secondary-info = base0C;
-  warning = base0E;
+
   error = base08;
 
+  info = base0B;
+  secondary-info = base0C;
+
+  warning = base0E;
 in {
   options.stylix.targets.qutebrowser.enable =
     config.lib.stylix.mkEnableTarget "Qutebrowser" true;
 
   config = lib.mkIf config.stylix.targets.qutebrowser.enable {
     programs.qutebrowser.settings = {
-      hints.border = background;
       colors = {
         completion = {
-          fg = foreground;
-          odd.bg = secondary-background;
-          even.bg = background;
-          match.fg = info;
           category = {
+            bg = background;
             fg = info;
-            bg = background;
-            border.top = background;
-            border.bottom = background;
+
+            border = {
+              bottom = background;
+              top = background;
+            };
           };
+
+          even.bg = background;
+          fg = foreground;
+
           item.selected = {
-            fg = foreground;
             bg = selection-background;
-            border.top = selection-background;
-            border.bottom = selection-background;
-          };
-          scrollbar = {
+
+            border = {
+              bottom = selection-background;
+              top = selection-background;
+            };
+
             fg = foreground;
+          };
+
+          match.fg = info;
+          odd.bg = secondary-background;
+
+          scrollbar = {
             bg = background;
+            fg = foreground;
           };
         };
+
         contextmenu = {
           disabled = {
-            fg = inverted-foreground;
             bg = secondary-background;
+            fg = inverted-foreground;
           };
+
           menu = {
             bg = background;
             fg = foreground;
           };
+
           selected = {
             bg = selection-background;
             fg = foreground;
           };
         };
+
         downloads = {
           bar.bg = background;
-          start = {
-            fg = inverted-foreground;
-            bg = info;
-          };
-          stop = {
-            fg = inverted-foreground;
-            bg = secondary-info;
-          };
+
           error = {
-            fg = inverted-foreground;
             bg = error;
+            fg = inverted-foreground;
+          };
+
+          start = {
+            bg = info;
+            fg = inverted-foreground;
+          };
+
+          stop = {
+            bg = secondary-info;
+            fg = inverted-foreground;
           };
         };
+
         hints = {
-          fg = foreground;
           bg = secondary-background;
+          fg = foreground;
           match.fg = info;
         };
+
         keyhint = {
-          fg = foreground;
           bg = background;
+          fg = foreground;
           suffix.fg = foreground;
         };
+
         messages = {
           error = {
-            fg = inverted-foreground;
             bg = error;
+            fg = inverted-foreground;
             border = error;
           };
-          warning = {
-            fg = inverted-foreground;
-            bg = warning;
-            border = warning;
-          };
+
           info = {
-            fg = inverted-foreground;
             bg = info;
+            fg = inverted-foreground;
             border = info;
           };
+
+          warning = {
+            bg = warning;
+            fg = inverted-foreground;
+            border = warning;
+          };
         };
+
         prompts = {
-          fg = foreground;
           bg = background;
           border = background;
+          fg = foreground;
           selected.bg = secondary-background;
         };
+
         statusbar = {
-          normal = {
-            fg = foreground;
-            bg = background;
-          };
-          insert = {
-            fg = inverted-foreground;
-            bg = info;
-          };
-          passthrough = {
-            fg = inverted-foreground;
-            bg = secondary-info;
-          };
-          private = {
-            fg = foreground;
-            bg = secondary-background;
-          };
-          command = {
-            fg = foreground;
-            bg = background;
-            private = {
-              fg = foreground;
-              bg = secondary-background;
-            };
-          };
           caret = {
-            fg = foreground;
             bg = selection-background;
+            fg = foreground;
+
             selection = {
-              fg = foreground;
               bg = selection-background;
+              fg = foreground;
             };
           };
-          progress.bg = info;
-          url = {
+
+          command = {
+            bg = background;
             fg = foreground;
+
+            private = {
+              bg = secondary-background;
+              fg = foreground;
+            };
+          };
+
+          insert = {
+            bg = info;
+            fg = inverted-foreground;
+          };
+
+          normal = {
+            bg = background;
+            fg = foreground;
+          };
+
+          passthrough = {
+            bg = secondary-info;
+            fg = inverted-foreground;
+          };
+
+          private = {
+            bg = secondary-background;
+            fg = foreground;
+          };
+
+          progress.bg = info;
+
+          url = {
             error.fg = error;
+            fg = foreground;
             hover.fg = foreground;
-            success.http.fg = secondary-info;
-            success.https.fg = info;
+
+            success = {
+              http.fg = secondary-info;
+              https.fg = info;
+            };
+
             warn.fg = warning;
           };
         };
+
         tabs = {
           bar.bg = background;
+
+          even = {
+            bg = secondary-background;
+            fg = foreground;
+          };
+
           indicator = {
+            error = error;
             start = secondary-info;
             stop = info;
-            error = error;
           };
+
           odd = {
-            fg = foreground;
             bg = background;
-          };
-          even = {
             fg = foreground;
-            bg = secondary-background;
           };
+
           pinned = {
             even = {
-              fg = inverted-foreground;
               bg = info;
-            };
-            odd = {
               fg = inverted-foreground;
-              bg = secondary-info;
             };
+
+            odd = {
+              bg = secondary-info;
+              fg = inverted-foreground;
+            };
+
             selected = {
               even = {
-                fg = foreground;
                 bg = selection-background;
+                fg = foreground;
               };
+
               odd = {
-                fg = foreground;
                 bg = selection-background;
+                fg = foreground;
               };
             };
           };
+
           selected = {
             even = {
-              fg = foreground;
               bg = selection-background;
+              fg = foreground;
             };
+
             odd = {
-              fg = foreground;
               bg = selection-background;
+              fg = foreground;
             };
           };
         };
+
         webpage = let
           isDark = config.stylix.polarity == "dark";
         in {
           darkmode.enabled = lib.mkIf isDark (lib.mkDefault true);
-          preferred_color_scheme = lib.mkIf
+
+          preferred_color_scheme =
+            lib.mkIf
             isDark (lib.mkDefault config.stylix.polarity);
         };
       };
 
-      fonts = let
-        mkFont = name: "${name} ${toString sizes.applications}pt";
-      in {
-        default_family = mkFont sansSerif.name;
-        web.family = {
-          cursive = mkFont serif.name;
-          fantasy = mkFont serif.name;
-          fixed = mkFont monospace.name;
-          sans_serif = mkFont sansSerif.name;
-          serif = mkFont serif.name;
-          standard = mkFont sansSerif.name;
+      fonts = {
+        default_family = sansSerif.name;
+        default_size = "${toString sizes.applications}pt";
+
+        web = {
+          family = {
+            cursive = serif.name;
+            fantasy = serif.name;
+            fixed = monospace.name;
+            sans_serif = sansSerif.name;
+            serif = serif.name;
+            standard = sansSerif.name;
+          };
+
+          # TODO: Use the pixel unit:
+          # https://github.com/danth/stylix/issues/251.
+          size.default = builtins.floor (sizes.applications * 4 / 3 + 0.5);
         };
       };
+
+      hints.border = background;
     };
   };
 }

@@ -1,38 +1,34 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+{ pkgs, config, lib, ... }:
+
 with config.stylix.fonts;
-with config.lib.stylix.colors; let
+with config.lib.stylix.colors;
+
+let
   formatValue = value:
     if builtins.isBool value
-    then
-      if value
-      then "true"
-      else "false"
+    then if value then "true" else "false"
     else builtins.toString value;
 
-  formatSection = path: data: let
-    header = lib.concatStrings (map (p: "[${p}]") path);
-    formatChild = name: formatLines (path ++ [name]);
-    children = lib.mapAttrsToList formatChild data;
-    partitioned = lib.partition builtins.isString children;
-    directChildren = partitioned.right;
-    indirectChildren = partitioned.wrong;
-  in
-    lib.optional (directChildren != []) header
-    ++ directChildren
-    ++ lib.flatten indirectChildren;
+  formatSection = path: data:
+    let
+      header = lib.concatStrings (map (p: "[${p}]") path);
+      formatChild = name: formatLines (path ++ [ name ]);
+      children = lib.mapAttrsToList formatChild data;
+      partitioned = lib.partition builtins.isString children;
+      directChildren = partitioned.right;
+      indirectChildren = partitioned.wrong;
+    in
+      lib.optional (directChildren != []) header ++
+      directChildren ++
+      lib.flatten indirectChildren;
 
   formatLines = path: data:
     if builtins.isAttrs data
     then
-      if data ? _immutable
+      if data?_immutable
       then
         if builtins.isAttrs data.value
-        then formatSection (path ++ ["$i"]) data.value
+        then formatSection (path ++ [ "$i" ]) data.value
         else "${lib.last path}[$i]=${formatValue data.value}"
       else formatSection path data
     else "${lib.last path}=${formatValue data}";
@@ -50,8 +46,7 @@ with config.lib.stylix.colors; let
   # PascalCase is the standard naming for color scheme files. Schemes named
   # in kebab-case will load when selected manually, but don't work with a
   # look and feel package.
-  colorschemeSlug =
-    lib.concatStrings
+  colorschemeSlug = lib.concatStrings
     (builtins.filter builtins.isString
       (builtins.split "[^a-zA-Z]" scheme));
 
@@ -93,17 +88,15 @@ with config.lib.stylix.colors; let
     "Colors:Button" = colors;
     "Colors:Tooltip" = colors;
     "Colors:Complementary" = colors;
-    "Colors:Selection" =
-      colors
-      // {
-        BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-        BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-        ForegroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundActive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundInactive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundLink = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundVisited = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      };
+    "Colors:Selection" = colors // {
+      BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
+      BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
+      ForegroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+      ForegroundActive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+      ForegroundInactive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+      ForegroundLink = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+      ForegroundVisited = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+    };
 
     WM = {
       activeBlend = "${base0A-rgb-r},${base0A-rgb-g},${base0A-rgb-b}";
@@ -127,7 +120,7 @@ with config.lib.stylix.colors; let
       Id = "stylix";
       Name = "Stylix";
       Description = "Generated from your Home Manager configuration";
-      ServiceTypes = ["Plasma/LookAndFeel"];
+      ServiceTypes = [ "Plasma/LookAndFeel" ];
       Website = "https://github.com/danth/stylix";
     };
   };
@@ -147,34 +140,41 @@ with config.lib.stylix.colors; let
 
   # Contains a wallpaper package, a colorscheme file, and a look and feel
   # package which depends on both.
-  themePackage =
-    pkgs.runCommandLocal "stylix-kde-theme" {
-      colorscheme = formatConfig colorscheme;
-      wallpaperMetadata = builtins.toJSON wallpaperMetadata;
-      wallpaperImage = config.stylix.image;
-      lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
-      lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
-    } ''
-      PATH="${pkgs.imagemagick}/bin:$PATH"
+  themePackage = pkgs.runCommandLocal "stylix-kde-theme" {
+    colorscheme = formatConfig colorscheme;
+    wallpaperMetadata = builtins.toJSON wallpaperMetadata;
+    wallpaperImage = config.stylix.image;
+    lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
+    lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
+  } ''
+    write_text() {
+      mkdir --parents "$(dirname "$2")"
+      printf '%s\n' "$1" >"$2"
+    }
 
-      wallpaper="$out/share/wallpapers/stylix"
-      lookandfeel="$out/share/plasma/look-and-feel/stylix"
+    PATH="${pkgs.imagemagick}/bin:$PATH"
 
-      writeText () {
-        mkdir -p "$(dirname "$2")"
-        echo "$1" >"$2"
-      }
+    wallpaper="$out/share/wallpapers/stylix"
+    look_and_feel="$out/share/plasma/look-and-feel/stylix"
 
-      mkdir -p "$wallpaper/contents/images"
-      magick "$wallpaperImage" -thumbnail 400x250 "$wallpaper/contents/screenshot.png"
-      dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
-      magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+    mkdir --parents "$wallpaper/contents/images"
 
-      writeText "$colorscheme" "$out/share/color-schemes/${colorschemeSlug}.colors"
-      writeText "$wallpaperMetadata" "$wallpaper/metadata.json"
-      writeText "$lookAndFeelMetadata" "$lookandfeel/metadata.json"
-      writeText "$lookAndFeelDefaults" "$lookandfeel/contents/defaults"
-    '';
+    magick \
+      "$wallpaperImage" \
+      -thumbnail 400x250 \
+      "$wallpaper/contents/screenshot.png"
+
+    dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
+    magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+
+    write_text \
+      "$colorscheme" \
+      "$out/share/color-schemes/${colorschemeSlug}.colors"
+
+    write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
+    write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
+    write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
+  '';
 
   # The cursor theme can be configured through a look and feel package,
   # however its size cannot.
@@ -208,24 +208,25 @@ with config.lib.stylix.colors; let
     };
   };
 
-  configPackage =
-    pkgs.runCommandLocal "stylix-kde-config" {
-      kcminputrc = formatConfig kcminputrc;
-      kded5rc = formatConfig kded5rc;
-      kdeglobals = formatConfig kdeglobals;
-    } ''
-      mkdir "$out"
-      echo "$kcminputrc" >"$out/kcminputrc"
-      echo "$kded5rc" >"$out/kded5rc"
-      echo "$kdeglobals" >"$out/kdeglobals"
-    '';
+  configPackage = pkgs.runCommandLocal "stylix-kde-config" {
+    kcminputrc = formatConfig kcminputrc;
+    kded5rc = formatConfig kded5rc;
+    kdeglobals = formatConfig kdeglobals;
+  } ''
+    mkdir "$out"
+
+    printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
+    printf '%s\n' "$kded5rc" >"$out/kded5rc"
+    printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
+  '';
+
 in {
   options.stylix.targets.kde.enable =
     config.lib.stylix.mkEnableTarget "KDE" pkgs.stdenv.hostPlatform.isLinux;
 
   config = lib.mkIf config.stylix.targets.kde.enable {
-    home.packages = [themePackage];
-    xdg.systemDirs.config = ["${configPackage}"];
+    home.packages = [ themePackage ];
+    xdg.systemDirs.config = [ "${configPackage}" ];
 
     # plasma-apply-wallpaperimage is necessary to change the wallpaper
     # after the first login.
@@ -240,28 +241,30 @@ in {
     # might be installed, and look there. The ideal solution would require
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
-    home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      globalPath () {
-        for dir in /run/current-system/sw/bin /usr/bin /bin; do
-          if [ -f "$dir/$1" ]; then
-            echo "$dir/$1"
-            break
+    home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      global_path() {
+        for directory in /run/current-system/sw/bin /usr/bin /bin; do
+          if [[ -f "$directory/$1" ]]; then
+            printf '%s\n' "$directory/$1"
+            return 0
           fi
         done
+
+        return 1
       }
 
-      wallpaperImage="$(globalPath plasma-apply-wallpaperimage)"
-      if [ -n "$wallpaperImage" ]; then
-        "$wallpaperImage" ${themePackage}/share/wallpapers/stylix
+      if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+        "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
       else
-        echo "Skipping plasma-apply-wallpaperimage because it's not installed"
+        verboseEcho \
+          "plasma-apply-wallpaperimage: command not found"
       fi
 
-      lookAndFeel="$(globalPath plasma-apply-lookandfeel)"
-      if [ -n "$lookAndFeel" ]; then
-        "$lookAndFeel" --apply stylix
+      if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+        "$look_and_feel" --apply stylix
       else
-        echo "Skipping plasma-apply-lookandfeel because it's not installed"
+        verboseEcho \
+          "Skipping plasma-apply-lookandfeel: command not found"
       fi
     '';
   };

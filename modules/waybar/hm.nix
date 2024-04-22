@@ -18,17 +18,17 @@ in
     enableLeftBackColors = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = lib.mdDoc "enables background colors on the left side of the bar";
+      description = "enables background colors on the left side of the bar";
     };
     enableCenterBackColors = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = lib.mdDoc "enables background colors on the center of the bar";
+      description = "enables background colors on the center of the bar";
     };
     enableRightBackColors = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = lib.mdDoc "enables background colors on the right side of the bar";
+      description = "enables background colors on the right side of the bar";
     };
   };
 

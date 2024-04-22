@@ -5,12 +5,7 @@ let
 in {
   imports = [ ../fonts.nix ];
   config.fonts = {
-    packages = [
-      cfg.monospace.package
-      cfg.serif.package
-      cfg.sansSerif.package
-      cfg.emoji.package
-    ];
+    packages = cfg.packages;
 
     fontconfig.defaultFonts = {
       monospace = [ cfg.monospace.name ];
