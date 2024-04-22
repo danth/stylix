@@ -27,7 +27,7 @@ in {
     enable = config.lib.stylix.mkEnableTarget "GRUB" true;
 
     useImage = lib.mkOption {
-      description = lib.mdDoc "Whether to use your wallpaper image as the GRUB background.";
+      description = "Whether to use your wallpaper image as the GRUB background.";
       type = lib.types.bool;
       default = false;
     };

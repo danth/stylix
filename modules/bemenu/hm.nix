@@ -9,7 +9,7 @@ in {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
 
     fontSize = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         Font size used for bemenu.
       '';
       type = with lib.types; nullOr int;
@@ -17,7 +17,7 @@ in {
     }; # optional argument
 
     alternate = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         Whether to use alternating colours.
       '';
       type = lib.types.bool;

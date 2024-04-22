@@ -6,7 +6,7 @@ let
   fromOs = import ./fromos.nix { inherit lib args; };
 in {
   options.stylix.autoEnable = mkOption {
-    description = mdDoc "Whether to automatically enable styling for installed targets.";
+    description = "Whether to automatically enable styling for installed targets.";
     type = types.bool;
     default = fromOs [ "autoEnable" ] true;
   };
@@ -25,7 +25,7 @@ in {
     autoEnable:
 
     mkOption {
-      description = mdDoc "Whether to style ${humanName}.";
+      description = "Whether to style ${humanName}.";
       type = types.bool;
 
       # We can't substitute the target name into this description because some
