@@ -38,7 +38,7 @@ in
           white = base05;
           inherit red green yellow blue magenta cyan;
         };
-        bright = with colors; {
+        bright = {
           black = base03;
           white = base07;
           red = bright-red;
