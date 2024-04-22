@@ -46,7 +46,7 @@ in {
     enable = config.lib.stylix.mkEnableTarget "the Plymouth boot screen" true;
 
     logo = mkOption {
-      description = mdDoc "Logo to be used on the boot screen.";
+      description = "Logo to be used on the boot screen.";
       type = with types; either path package;
       defaultText = literalMD "NixOS logo";
 
@@ -60,7 +60,7 @@ in {
     };
 
     logoAnimated = mkOption {
-      description = mdDoc ''
+      description = ''
         Whether to apply a spinning animation to the logo.
 
         Disabling this allows the use of logos which don't have rotational
