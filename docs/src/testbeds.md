@@ -80,4 +80,4 @@ selected earlier.
 If the testbed includes a login screen, the guest user should log in
 automatically when selected. Depending on the software used, you may still be
 presented with a password prompt - in which case you can leave it blank and
-just press enter.
+proceed by pressing enter.
