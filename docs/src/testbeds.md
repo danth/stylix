@@ -61,13 +61,15 @@ github:danth/stylix
 
 (This has been edited down to only the relevant parts.)
 
-The packages starting with `testbed-` are the testbeds.
-
-You can select a testbed to run using:
+To start a testbed, each of which is named in the format
+`testbed-«target»-«polarity»`, run the following command:
 
 ```console
-user@host:~$ nix run .#testbed-gnome-dark
+user@host:~$ nix run .#testbed-«target»-«polarity»
 ```
+
+Any package with a name not fitting the given format is not a testbed,
+and may behave differently with this command, or not work at all.
 
 Once the virtual machine starts, a window should open, similar to the screenshot
 below. The contents of the virtual machine will vary depending on the target you
