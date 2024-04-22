@@ -46,13 +46,8 @@ packages will be available to use with `nix run` as described below.
 You can list the available testbeds by running this command from anywhere
 within the repository:
 
-```sh
-nix flake show
-```
-
-Which prints something like:
-
-```
+```console
+user@host:~$ nix flake show
 github:danth/stylix
 └───packages
     └───x86_64-linux
@@ -70,8 +65,8 @@ The packages starting with `testbed-` are the testbeds.
 
 You can select a testbed to run using:
 
-```sh
-nix run .#testbed-gnome-dark
+```console
+user@host:~$ nix run .#testbed-gnome-dark
 ```
 
 Once the virtual machine starts, a window should open, similar to the screenshot
