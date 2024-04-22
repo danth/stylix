@@ -74,10 +74,8 @@ You can select a testbed to run using:
 nix run .#testbed-gnome-dark
 ```
 
-This may take a few minutes to download and build the virtual machine.
-
-Once it starts, it should open a window similar to the screenshot below. The
-contents of the the virtual machine will vary depending on the target you
+Once the virtual machine starts, a window should open, similar to the screenshot
+below. The contents of the virtual machine will vary depending on the target you
 selected earlier.
 
 ![GDM login screen with a dark background color and showing a guest user](testbed-gnome-dark.png)
