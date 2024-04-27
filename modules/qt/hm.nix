@@ -6,10 +6,10 @@
 }: {
   options.stylix.targets.qt = {
     enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
-    enableDefaultIcons = lib.mkOption {
+    iconThemeName = lib.mkOption {
       description = "Default QT Icons";
-      type = lib.types.bool;
-      default = true;
+      type = lib.types.str;
+      default = "ePapirus-Dark";
     };
   };
 
@@ -30,16 +30,13 @@
       cat ${svg} >>"$directory/Base16Kvantum.svg"
     '';
   in {
-    home.packages = with pkgs;
-      [
-        qt5ct
-        libsForQt5.qtstyleplugin-kvantum
-        qt6Packages.qtstyleplugin-kvantum
-        kvantumPackage
-      ]
-      ++ (lib.optionals cfg.enableDefaultIcons [
-        papirus-icon-theme
-      ]);
+    home.packages = with pkgs; [
+      qt5ct
+      libsForQt5.qtstyleplugin-kvantum
+      qt6Packages.qtstyleplugin-kvantum
+      kvantumPackage
+      papirus-icon-theme
+    ];
 
     qt = {
       enable = true;
@@ -52,22 +49,16 @@
 
     xdg.configFile."Kvantum/Base16Kvantum".source = "${kvantumPackage}/share/Kvantum/Base16Kvantum";
 
-    xdg.configFile."qt5ct/qt5ct.conf".text =
-      ''
-        [Appearance]
-        style=kvantum
-      ''
-      + (lib.optionalString cfg.enableDefaultIcons ''
-        icon_theme=ePapirus-Dark
-      '');
+    xdg.configFile."qt5ct/qt5ct.conf".text = ''
+      [Appearance]
+      style=kvantum
+      icon_theme=${cfg.iconThemeName}
+    '';
 
-    xdg.configFile."qt6ct/qt6ct.conf".text =
-      ''
-        [Appearance]
-        style=kvantum
-      ''
-      + (lib.optionalString cfg.enableDefaultIcons ''
-        icon_theme=ePapirus-Dark
-      '');
+    xdg.configFile."qt6ct/qt6ct.conf".text = ''
+      [Appearance]
+      style=kvantum
+      icon_theme=${cfg.iconThemeName}
+    '';
   });
 }
