@@ -1,4 +1,4 @@
-{ config, lib, ... }{ config, lib, ... }:
+{ config, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 
