@@ -57,7 +57,7 @@ in {
         output."*".bg = "${config.stylix.image} fill";
 
         seat."*" = {
-          xcursor_theme = "\"${config.stylix.cursor.name}\" ${toString config.stylix.cursor.size}";
+          xcursor_theme = ''"${config.stylix.cursor.name}" ${toString config.stylix.cursor.size}'';
         };
       };
     })

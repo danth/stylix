@@ -24,9 +24,10 @@
       extension = "svg";
     };
     kvantumPackage = pkgs.runCommandLocal "base16-kvantum" {} ''
-      mkdir -p $out/share/Kvantum/Base16Kvantum
-      cat ${kvconfig} >>$out/share/Kvantum/Base16Kvantum/Base16Kvantum.kvconfig
-      cat ${svg} >>$out/share/Kvantum/Base16Kvantum/Base16Kvantum.svg
+      directory="$out/share/Kvantum/Base16Kvantum"
+      mkdir --parents "$directory"
+      cat ${kvconfig} >>"$directory/Base16Kvantum.kvconfig"
+      cat ${svg} >>"$directory/Base16Kvantum.svg"
     '';
   in {
     home.packages = with pkgs;
