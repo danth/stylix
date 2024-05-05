@@ -16,7 +16,7 @@ with config.lib.stylix.colors.withHashtag; {
       selection = base03;
     in {
       font = monospace.name;
-      font-size = "${toString sizes.popups}";
+      font-size = toString sizes.popups;
 
       background-color = background;
       outline-color = darkForeground;
