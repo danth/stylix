@@ -2,6 +2,7 @@
 
 with lib;
 with config.lib.stylix.colors;
+with config.stylix.fonts;
 
 let
   cfg = config.stylix.targets.plymouth;
@@ -41,6 +42,40 @@ let
     " > $themeDir/stylix.plymouth
   '';
 
+  mkPlymouthFont =
+    font:
+    pkgs.runCommand "${font.package.name}.otf"
+      { FONTCONFIG_FILE = pkgs.makeFontsConf { fontDirectories = [ font.package ]; }; }
+      ''
+        if ! matchingFonts="$(
+          # sort because otherwise fc-match doesn't print all available formats
+          ${lib.getExe' pkgs.fontconfig "fc-match"} \
+            --sort \
+            --format '%{family}|%{file}\n' \
+            '${font.name}' | \
+            # Filter for fonts that match the name exactly and only print the path
+            awk --field-separator '|' '/^${font.name}\|/ { print $2; found=1} END {if (!found) exit 1}'
+        )"; then
+          printf 'Font not found: %s' '${font.name}' >&2
+          exit 1
+        fi
+        echo "fonts: '$matchingFonts'" >&2
+        if compatibleFont="$(
+              # Take the first opentype font or fail when there is none
+              printf '%s\n' "$matchingFonts" |
+                grep --max-count 1 --regexp "\.otf$"
+            )"; then
+          cp "$compatibleFont" "$out"
+        else
+          # If there is no opentype font we take another format and convert it
+          font=$(printf '%s\n' "$matchingFonts" | head --lines 1)
+          ${lib.getExe' pkgs.fontforge "fontforge"} \
+            -lang=ff \
+            -c 'Open($1); Generate($2); Close()' \
+            "$font" \
+            "$out"
+        fi
+      '';
 in {
   options.stylix.targets.plymouth = {
     enable = config.lib.stylix.mkEnableTarget "the Plymouth boot screen" true;
@@ -82,5 +117,6 @@ in {
   config.boot.plymouth = mkIf cfg.enable {
     theme = "stylix";
     themePackages = [ theme ];
+    font = mkPlymouthFont sansSerif;
   };
 }
