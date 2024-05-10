@@ -8,7 +8,10 @@ let
       description = "Guest";
       hashedPassword = "";
       isNormalUser = true;
+      extraGroups = [ "wheel" ];
     };
+
+    security.sudo.wheelNeedsPassword = false;
 
     # The state version can safely track the latest release because the disk
     # image is ephermal.
