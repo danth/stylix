@@ -125,5 +125,5 @@ in {
 ```
 <small>Example usage of the Home Manager module without flakes.</small>
 
-[nix-flakes]: https://nixos.wiki/wiki/Flakes
+[nix-flakes]: https://wiki.nixos.org/wiki/Flakes
 [nix-hm]: https://github.com/nix-community/home-manager
