@@ -225,7 +225,14 @@ in {
     config.lib.stylix.mkEnableTarget "KDE" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.packages = [ themePackage ];
+    home.packages = [ themePackage pkgs.breeze-icons ];
+
+    qt = {
+      enable = true;
+      style.name = "breeze";
+      platformTheme = "kde";
+    };
+
     xdg.systemDirs.config = [ "${configPackage}" ];
 
     # plasma-apply-wallpaperimage is necessary to change the wallpaper
@@ -260,12 +267,7 @@ in {
           "plasma-apply-wallpaperimage: command not found"
       fi
 
-      if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
-        "$look_and_feel" --apply stylix
-      else
-        verboseEcho \
-          "Skipping plasma-apply-lookandfeel: command not found"
-      fi
+      ${pkgs.plasma-workspace}/bin/plasma-apply-lookandfeel --apply stylix
     '';
   };
 }
