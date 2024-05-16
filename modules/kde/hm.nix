@@ -233,6 +233,8 @@ in {
       platformTheme = "kde";
     };
 
+    xdg.configFile."kdeglobals".text = "${formatConfig colorscheme}";
+
     xdg.systemDirs.config = [ "${configPackage}" ];
 
     # plasma-apply-wallpaperimage is necessary to change the wallpaper
@@ -266,8 +268,6 @@ in {
         verboseEcho \
           "plasma-apply-wallpaperimage: command not found"
       fi
-
-      ${pkgs.plasma-workspace}/bin/plasma-apply-lookandfeel --apply stylix
     '';
   };
 }
