@@ -14,8 +14,8 @@ let
     } ''
       # Use fontconfig to select the correct .ttf or .otf file based on name
       font=$(
-        ${lib.getExe' pkgs.fontconfig "fc-match"}
-        ${lib.escapeShellArg font.name}
+        ${lib.getExe' pkgs.fontconfig "fc-match"} \
+        ${lib.escapeShellArg font.name} \
         --format=%{file}
       )
 
