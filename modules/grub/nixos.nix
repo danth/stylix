@@ -14,8 +14,9 @@ let
     } ''
       # Use fontconfig to select the correct .ttf or .otf file based on name
       font=$(
-        ${pkgs.fontconfig}/bin/fc-match -v "${font.name}" \
-        | grep "file:" | cut -d '"' -f 2
+        ${lib.getExe' pkgs.fontconfig "fc-match"} \
+        ${lib.escapeShellArg font.name} \
+        --format=%{file}
       )
 
       # Convert to .pf2
