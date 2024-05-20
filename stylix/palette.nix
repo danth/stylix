@@ -77,7 +77,7 @@ in {
 
     imageScalingMode = mkOption {
       type = types.enum [ "stretch" "fill" "fit" "center" "tile" ];
-      default = fromOS [ "imageScalingMode" ] "fill";
+      default = fromOs [ "imageScalingMode" ] "fill";
       description = ''
         Wallpaper scaling mode;
 
