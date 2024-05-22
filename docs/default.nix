@@ -43,6 +43,8 @@ in pkgs.stdenvNoCC.mkDerivation {
 
   patchPhase = ''
     cp ${../README.md} src/README.md
+    cp ${../gnome.png} src/gnome.png
+    cp ${../kde.png} src/kde.png
     cp ${../CONTRIBUTING.md} src/contributing.md
 
     # The "declared by" links point to a file which only exists when the docs
