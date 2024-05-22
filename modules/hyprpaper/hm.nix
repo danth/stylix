@@ -5,7 +5,7 @@
 }: let
   settings = {
     preload = ["${config.stylix.image}"];
-    wallpaper = [" ,${config.stylix.image}"];
+    wallpaper = [",${config.stylix.image}"];
   };
 in {
   options.stylix.targets.hyprpaper.enable =
