@@ -1,8 +1,11 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
+with config.lib.stylix.colors; let
+  cfg = config.stylix.targets.hyprland;
 
-with config.lib.stylix.colors;
-
-let
   rgb = color: "rgb(${color})";
   rgba = color: alpha: "rgba(${color}${alpha})";
 
@@ -19,11 +22,16 @@ let
     };
     misc.background_color = rgb base00;
   };
-
 in {
   options.stylix.targets.hyprland.enable =
     config.lib.stylix.mkEnableTarget "Hyprland" true;
 
-  config.wayland.windowManager.hyprland.settings =
-    lib.mkIf config.stylix.targets.hyprland.enable settings;
+  config = lib.mkIf cfg.enable {
+    wayland.windowManager.hyprland = {inherit settings;};
+
+    services.hyprpaper.settings = {
+      preload = ["${config.stylix.image}"];
+      wallpaper = [",${config.stylix.image}"];
+    };
+  };
 }
