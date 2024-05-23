@@ -10,7 +10,7 @@ in {
     config.lib.stylix.mkEnableTarget "Fuzzel" config.programs.fuzzel.enable;
 
   config.programs.fuzzel.settings =
-    lib.mkIf config.stylix.targets.fuzzel.enable {
+    lib.mkIf config.stylix.targets.fuzzel.enable (lib.mkDefault {
       colors = {
         background = "${base00-hex}${opacity}";
         text = "${base05-hex}ff";
@@ -25,5 +25,5 @@ in {
         font = "${config.stylix.fonts.sansSerif.name}:size=${toString config.stylix.fonts.sizes.popups}";
         dpi-aware = "no";
       };
-    };
+    });
 }
