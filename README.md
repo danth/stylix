@@ -51,9 +51,9 @@ Try a live demo of this theme by running
 `nix run github:danth/stylix#testbed-gnome-light` or
 `nix run github:danth/stylix#testbed-gnome-dark`.
 
-### KDE Plasma 6
+### KDE Plasma 5
 
-![KDE Plasma 6](./kde.png)
+![KDE Plasma 5](./kde.png)
 
 Photos by [Aniket Deole](https://unsplash.com/photos/mountain-surrounded-by-trees-under-cloudy-sky-T-tOgjWZ0fQ)
 and [Tom Gainor](https://unsplash.com/photos/landscape-photography-of-body-of-water-overlooking-mountain-range-ZqLeQDjY6fY).
