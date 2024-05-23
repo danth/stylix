@@ -20,7 +20,7 @@ in
   options.stylix.targets.rofi.enable =
     config.lib.stylix.mkEnableTarget "Rofi" true;
 
-  config = lib.mkIf config.stylix.targets.rofi.enable {
+  config = lib.mkIf config.stylix.targets.rofi.enable (lib.mkDefault {
     programs.rofi = {
       font = "${monospace.name} ${toString sizes.popups}";
       theme = {
@@ -140,5 +140,5 @@ in
         textbox-prompt-colon.text-color = mkLiteral "inherit";
       };
     };
-  };
+  });
 }
