@@ -41,7 +41,7 @@ in
       @define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
 
       * {
-          font-family: ${sansSerif.name};
+          font-family: "${sansSerif.name}";
           font-size: ${builtins.toString sizes.desktop}pt;
       }
 
