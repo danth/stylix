@@ -1,11 +1,8 @@
-{
-  config,
-  lib,
-  ...
-}:
-with config.lib.stylix.colors; let
-  cfg = config.stylix.targets.hyprland;
+{ config, lib, ... }:
 
+with config.lib.stylix.colors;
+
+let
   rgb = color: "rgb(${color})";
   rgba = color: alpha: "rgba(${color}${alpha})";
 
@@ -22,12 +19,13 @@ with config.lib.stylix.colors; let
     };
     misc.background_color = rgb base00;
   };
+
 in {
   options.stylix.targets.hyprland.enable =
     config.lib.stylix.mkEnableTarget "Hyprland" true;
 
-  config = lib.mkIf cfg.enable {
-    wayland.windowManager.hyprland = {inherit settings;};
+  config = lib.mkIf config.stylix.targets.hyprland.enable {
+    wayland.windowManager.hyprland.settings = settings;
 
     services.hyprpaper.settings = {
       preload = ["${config.stylix.image}"];
