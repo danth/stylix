@@ -27,9 +27,13 @@ in {
   config = lib.mkIf config.stylix.targets.hyprland.enable {
     wayland.windowManager.hyprland.settings = settings;
 
-    services.hyprpaper.settings = {
-      preload = ["${config.stylix.image}"];
-      wallpaper = [",${config.stylix.image}"];
+    services.hyprpaper = {
+      enable = true;
+
+      settings = {
+        preload = ["${config.stylix.image}"];
+        wallpaper = [",${config.stylix.image}"];
+      };
     };
   };
 }
