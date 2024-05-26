@@ -14,8 +14,11 @@ in {
   config.programs.foot.settings = lib.mkIf cfg.enable {
     main = {
         include = theme;
-        font =
-          with config.stylix.fonts;
+        font = let
+            inherit (config.stylix) fonts;
+            inherit  (fonts) sizes;
+            monospace = builtins.head fonts.monospace;
+          in
           "${monospace.name}:size=${toString sizes.terminal}";
         dpi-aware = "no";
     };

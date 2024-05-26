@@ -2,10 +2,12 @@
 
 let
   profileSettings = {
-    settings = {
-      "font.name.monospace.x-western" = config.stylix.fonts.monospace.name;
-      "font.name.sans-serif.x-western" = config.stylix.fonts.sansSerif.name;
-      "font.name.serif.x-western" = config.stylix.fonts.serif.name;
+    settings = let
+      inherit (config.stylix) fonts;
+    in {
+      "font.name.monospace.x-western" = (builtins.head fonts.monospace).name;
+      "font.name.sans-serif.x-western" = (builtins.head fonts.sansSerif).name;
+      "font.name.serif.x-western" = (builtins.head fonts.serif).name;
     };
   };
   makeProfileSettingsPair = profileName:

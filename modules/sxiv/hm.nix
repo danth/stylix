@@ -1,8 +1,9 @@
 { config, lib, ... }:
 
 let
-  colors = config.lib.stylix.colors;
-  fonts = config.stylix.fonts;
+  inherit (config.lib.stylix) colors;
+  inherit (config.stylix) fonts;
+  sansSerif = builtins.head fonts.sansSerif;
 in {
   options.stylix.targets.sxiv.enable =
     config.lib.stylix.mkEnableTarget "Sxiv" true;
@@ -12,7 +13,7 @@ in {
       properties = {
         "Sxiv.foreground" = "#${colors.base01}";
         "Sxiv.background" = "#${colors.base04}";
-        "Sxiv.font" = "${fonts.sansSerif.name}-${toString fonts.sizes.applications}";
+        "Sxiv.font" = "${sansSerif.name}-${toString fonts.sizes.applications}";
       };
     };
   };

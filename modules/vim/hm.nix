@@ -20,14 +20,16 @@ let
   };
 
   vimOptions = let
-    fonts = config.stylix.fonts;
+    inherit (config.stylix) fonts;
+    inherit (fonts) sizes;
+    monospace = builtins.head fonts.monospace;
   in {
     plugins = [ themePlugin ];
     extraConfig = ''
       set termguicolors
       colorscheme base16-stylix
       unlet g:colors_name
-      set guifont=${escape [" "] fonts.monospace.name}:h${toString fonts.sizes.terminal}
+      set guifont=${escape [" "] monospace.name}:h${toString sizes.terminal}
     '';
   };
 

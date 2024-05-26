@@ -1,9 +1,11 @@
 { config, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
 let
   dunstOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
+  inherit (config.stylix) fonts;
+  inherit (fonts) sizes;
+  sansSerif = builtins.head sansSerif;
 in {
   options.stylix.targets.dunst.enable =
     config.lib.stylix.mkEnableTarget "Dunst" true;
