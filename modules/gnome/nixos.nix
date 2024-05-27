@@ -6,7 +6,7 @@ let
 in {
   options.stylix.targets.gnome.enable =
     config.lib.stylix.mkEnableTarget
-    "GNOME"
+    "GNOME and GDM"
     config.services.xserver.desktopManager.gnome.enable;
 
   config = lib.mkIf config.stylix.targets.gnome.enable {
