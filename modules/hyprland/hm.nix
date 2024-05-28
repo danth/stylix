@@ -24,6 +24,7 @@ in {
   options.stylix.targets.hyprland.enable =
     config.lib.stylix.mkEnableTarget "Hyprland" true;
 
+<<<<<<< HEAD
   config = lib.mkIf config.stylix.targets.hyprland.enable {
     wayland.windowManager.hyprland.settings = settings;
 
@@ -32,4 +33,8 @@ in {
       settings.wallpaper = [",${config.stylix.image}"];
     };
   };
+=======
+  config.wayland.windowManager.hyprland.settings =
+    lib.mkIf config.stylix.targets.hyprland.enable settings;
+>>>>>>> 654b636 (Revert "move hyprpaper into hyprland")
 }
