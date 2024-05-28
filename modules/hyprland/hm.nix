@@ -1,8 +1,9 @@
-{ config, lib, ... }:
-
-with config.lib.stylix.colors;
-
-let
+{
+  config,
+  lib,
+  ...
+}:
+with config.lib.stylix.colors; let
   rgb = color: "rgb(${color})";
   rgba = color: alpha: "rgba(${color}${alpha})";
 
@@ -19,7 +20,6 @@ let
     };
     misc.background_color = rgb base00;
   };
-
 in {
   options.stylix.targets.hyprland.enable =
     config.lib.stylix.mkEnableTarget "Hyprland" true;
@@ -29,6 +29,7 @@ in {
 
     services.hyprpaper = {
       enable = true;
+      settings.prelod = ["${config.stylix.image}"];
       settings.wallpaper = [",${config.stylix.image}"];
     };
   };
