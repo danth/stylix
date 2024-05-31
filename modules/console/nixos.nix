@@ -14,7 +14,7 @@ with config.lib.stylix.colors;
     blue
     magenta
     cyan
-    base07-hex
+    base05-hex
     base00-hex
     red
     green
