@@ -15,13 +15,13 @@ with config.lib.stylix.colors;
     magenta
     cyan
     base05-hex
-    base00-hex
+    base03-hex
     red
     green
     yellow
     blue
     magenta
     cyan
-    base07-hex
+    base06-hex
   ];
 }
