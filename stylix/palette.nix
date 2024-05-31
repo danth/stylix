@@ -4,8 +4,6 @@
 with lib;
 
 let
-  fromOs = import ./fromos.nix { inherit lib args; };
-
   cfg = config.stylix;
 
   paletteJSON = let
@@ -23,12 +21,6 @@ let
     };
   in json;
   generatedScheme = importJSON paletteJSON;
-
-  override =
-    (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
-     then fromOs [ "override" ] {}
-     else {})
-    // cfg.override;
 
 in {
   # TODO link to doc on how to do instead
@@ -54,7 +46,7 @@ in {
   options.stylix = {
     polarity = mkOption {
       type = types.enum [ "either" "light" "dark" ];
-      default = fromOs [ "polarity" ] "either";
+      default = "either";
       description = ''
         Use this option to force a light or dark theme.
 
@@ -72,7 +64,6 @@ in {
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
-      default = fromOs [ "image" ] null;
     };
 
     generated = {
@@ -107,10 +98,7 @@ in {
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
       type = with types; oneOf [ path lines attrs ];
-      default =
-        if cfg.image != fromOs [ "image" ] null
-          then generatedScheme
-          else fromOs [ "base16Scheme" ] generatedScheme;
+      default = generatedScheme;
       defaultText = literalMD ''
         The colors used in the theming.
 
@@ -135,7 +123,7 @@ in {
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
-    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
+    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
     lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
 
     stylix.generated.fileTree = {

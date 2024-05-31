@@ -2,13 +2,11 @@
 
 with lib;
 
-let
-  fromOs = import ./fromos.nix { inherit lib args; };
-in {
+{
   options.stylix.autoEnable = mkOption {
     description = "Whether to automatically enable styling for installed targets.";
     type = types.bool;
-    default = fromOs [ "autoEnable" ] true;
+    default = true;
   };
 
   config.lib.stylix.mkEnableTarget =
