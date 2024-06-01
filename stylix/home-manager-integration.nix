@@ -2,45 +2,40 @@ homeManagerModule:
 { lib, config, options, ... }:
 
 let
-  alwaysCopy = path: {
-    inherit path;
-    condition = lib.const true;
-  };
-
   copyModules = builtins.map
     (
-      { path, condition }:
+      { path, condition ? lib.const true }:
       { config, osConfig, ... }:
       lib.mkIf (condition config)
       (lib.setAttrByPath path (lib.mkDefault (lib.getAttrFromPath path osConfig)))
     )
     [
-      (alwaysCopy [ "stylix" "autoEnable" ])
+      { path = [ "stylix" "autoEnable" ]; }
       {
         path = [ "stylix" "base16Scheme" ];
         condition = homeConfig: config.stylix.image == homeConfig.stylix.image;
       }
-      (alwaysCopy [ "stylix" "cursor" "name" ])
-      (alwaysCopy [ "stylix" "cursor" "package" ])
-      (alwaysCopy [ "stylix" "cursor" "size" ])
-      (alwaysCopy [ "stylix" "fonts" "serif" ])
-      (alwaysCopy [ "stylix" "fonts" "sansSerif" ])
-      (alwaysCopy [ "stylix" "fonts" "monospace" ])
-      (alwaysCopy [ "stylix" "fonts" "emoji" ])
-      (alwaysCopy [ "stylix" "fonts" "sizes" "desktop" ])
-      (alwaysCopy [ "stylix" "fonts" "sizes" "applications" ])
-      (alwaysCopy [ "stylix" "fonts" "sizes" "terminal" ])
-      (alwaysCopy [ "stylix" "fonts" "sizes" "popups" ])
-      (alwaysCopy [ "stylix" "image" ])
-      (alwaysCopy [ "stylix" "opacity" "desktop" ])
-      (alwaysCopy [ "stylix" "opacity" "applications" ])
-      (alwaysCopy [ "stylix" "opacity" "terminal" ])
-      (alwaysCopy [ "stylix" "opacity" "popups" ])
+      { path = [ "stylix" "cursor" "name" ]; }
+      { path = [ "stylix" "cursor" "package" ]; }
+      { path = [ "stylix" "cursor" "size" ]; }
+      { path = [ "stylix" "fonts" "serif" ]; }
+      { path = [ "stylix" "fonts" "sansSerif" ]; }
+      { path = [ "stylix" "fonts" "monospace" ]; }
+      { path = [ "stylix" "fonts" "emoji" ]; }
+      { path = [ "stylix" "fonts" "sizes" "desktop" ]; }
+      { path = [ "stylix" "fonts" "sizes" "applications" ]; }
+      { path = [ "stylix" "fonts" "sizes" "terminal" ]; }
+      { path = [ "stylix" "fonts" "sizes" "popups" ]; }
+      { path = [ "stylix" "image" ]; }
+      { path = [ "stylix" "opacity" "desktop" ]; }
+      { path = [ "stylix" "opacity" "applications" ]; }
+      { path = [ "stylix" "opacity" "terminal" ]; }
+      { path = [ "stylix" "opacity" "popups" ]; }
       {
         path = [ "stylix" "override" ];
         condition = homeConfig: config.stylix.base16Scheme == homeConfig.stylix.base16Scheme;
       }
-      (alwaysCopy [ "stylix" "polarity" ])
+      { path = [ "stylix" "polarity" ]; }
     ];
 
 in {
