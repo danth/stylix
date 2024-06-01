@@ -27,12 +27,8 @@ with lib;
       "styling for ${humanName}"
       // {
         default = config.stylix.autoEnable && autoEnable;
-
-        # We can't substitute the target name into this description because some
-        # don't make sense: "if the desktop background using Feh is installed"
-        defaultText = literalMD ''
-          `true` if `stylix.autoEnable == true` and the target is installed,
-          otherwise `false`.
-        '';
+      }
+      // optionalAttrs autoEnable {
+        defaultText = literalExpression "stylix.autoEnable";
       };
 }
