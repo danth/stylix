@@ -36,9 +36,9 @@ Other files needed by the module can also be stored within the
 All modules should have an enable option created using `mkEnableTarget`.
 This is similar to
 [`mkEnableOption`](https://nix-community.github.io/docnix/reference/lib/options/lib-options-mkenableoption/)
-from the standard library, however it integrates with
+from the standard library, however it integrates with `stylix.enable` and
 [`stylix.autoEnable`](./options/nixos.md#stylixautoenable)
-and generates more specific documentation.
+by generating more specific documentation.
 
 A general format for modules is shown below.
 

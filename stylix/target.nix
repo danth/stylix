@@ -3,15 +3,18 @@
 with lib;
 
 {
-  options.stylix.autoEnable =
-    mkEnableOption
-    "styling installed targets"
-    // {
+  options.stylix = {
+    autoEnable = mkEnableOption "styling installed targets" // {
       default = import ./fromos.nix { inherit lib args; } [ "autoEnable" ] true;
       example = false;
     };
 
-  config.lib.stylix.mkEnableTarget =
+    enable = mkEnableOption "Stylix";
+  };
+
+  config.lib.stylix.mkEnableTarget = let
+    cfg = config.stylix;
+  in
     humanName:
 
     # If the module only touches options under its target (programs.target.*)
@@ -26,9 +29,9 @@ with lib;
       mkEnableOption
       "styling for ${humanName}"
       // {
-        default = config.stylix.autoEnable && autoEnable;
+        default = cfg.enable && cfg.autoEnable && autoEnable;
       }
       // optionalAttrs autoEnable {
-        defaultText = literalExpression "stylix.autoEnable";
+        defaultText = literalExpression "stylix.enable && stylix.autoEnable";
       };
 }

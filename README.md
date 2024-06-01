@@ -32,7 +32,10 @@ for instructions and a list of supported apps.
 
 For a visual guide, watch the [*Ricing Linux Has Never Been Easier | NixOS +
 Stylix*](https://youtu.be/ljHkWgBaQWU) YouTube video by
-[Vimjoyer](https://www.youtube.com/@vimjoyer).
+[Vimjoyer](https://www.youtube.com/@vimjoyer). **Since the release of the video,
+the `stylix.enable` option has been added. This option enables or disables all
+Stylix modules, and introduces a *BREAKING CHANGE*: Stylix is now disabled by
+default. To enable Stylix, add `stylix.enable = true;` to your configuration.**
 
 If you have any questions, you are welcome to
 join our [Matrix room](https://matrix.to/#/#stylix:danth.me),

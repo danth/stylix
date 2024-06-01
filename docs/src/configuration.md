@@ -1,5 +1,15 @@
 # Configuration
 
+## Enable
+
+To enable the Stylix module, declare:
+
+```nix
+{
+  stylix.enable = true;
+}
+```
+
 ## Wallpaper
 
 To start theming, you need to set a wallpaper image.
