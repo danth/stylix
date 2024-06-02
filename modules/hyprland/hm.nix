@@ -29,8 +29,10 @@ in {
 
     services.hyprpaper = {
       enable = true;
-      settings.prelod = ["${config.stylix.image}"];
-      settings.wallpaper = [",${config.stylix.image}"];
+      settings = {
+        preload = ["${config.stylix.image}"];
+        wallpaper = [",${config.stylix.image}"];
+      };
     };
   };
 }
