@@ -22,7 +22,7 @@ with config.lib.stylix.colors.withHashtag; {
         background-color = background;
         outline-color = darkForeground;
         border-color = foreground;
-        text-color = foreground;
+        text-color = base00;
         prompt-color = base0A;
         prompt-background = background;
         placeholder-color = selection;
