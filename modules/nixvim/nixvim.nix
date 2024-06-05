@@ -64,9 +64,9 @@ in
   ];
 
   config =
-    lib.mkIf (config.stylix.enable && cfg.enable && (config.programs ? nixvim))
+    lib.mkIf (config.stylix.enable && cfg.enable && options.programs ? nixvim)
       (
-        lib.optionalAttrs (builtins.hasAttr "nixvim" options.programs) (
+        lib.optionalAttrs (options.programs ? nixvim) (
           lib.mkMerge [
             (lib.mkIf (cfg.plugin == "base16-nvim") {
               programs.nixvim.colorschemes.base16 = {
