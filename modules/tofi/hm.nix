@@ -30,8 +30,8 @@ with config.lib.stylix.colors.withHashtag; {
         default-result-background = background;
         selection-color = selection;
         selection-background = background;
-        border-width = 4;
-        outline-width = 2;
+        border-width = lib.mkDefault 4;
+        outline-width = lib.mkDefault 2;
       };
   };
 }
