@@ -4,8 +4,8 @@ with lib;
 
 let
   cfg = config.stylix.targets.gtk;
-
-  baseCss = config.lib.stylix.colors {
+  
+  baseCss = config.lib.stylix.colors.withHashtag {
     template = ./gtk.mustache;
     extension = "css";
   };
@@ -29,6 +29,9 @@ in {
       example = ''
         // Remove rounded corners
         window.background { border-radius: 0; }
+        // Override stylix defaults
+        @define-color accent_color @base05;
+        @define-color accent_bg_color @base05;
       '';
     };
   };
