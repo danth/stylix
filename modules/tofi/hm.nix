@@ -12,7 +12,7 @@ with config.lib.stylix.colors.withHashtag; {
       let
         opacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
         background = base00 + opacity;
-        foreground = base05 + opacity;
+        foreground = base05;
         darkForeground = base04 + opacity;
         selection = base03 + opacity;
       in
@@ -22,7 +22,7 @@ with config.lib.stylix.colors.withHashtag; {
         background-color = background;
         outline-color = darkForeground;
         border-color = foreground;
-        text-color = base00;
+        text-color = foreground;
         prompt-color = base0A;
         prompt-background = background;
         placeholder-color = selection;
@@ -30,6 +30,8 @@ with config.lib.stylix.colors.withHashtag; {
         default-result-background = background;
         selection-color = selection;
         selection-background = background;
+        border-width = 4;
+        outline-width = 2;
       };
   };
 }
