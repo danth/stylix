@@ -3,11 +3,13 @@
 with lib;
 
 {
-  options.stylix.autoEnable = mkOption {
-    description = "Whether to automatically enable styling for installed targets.";
-    type = types.bool;
-    default = true;
-  };
+  options.stylix.autoEnable =
+    mkEnableOption
+    "styling installed targets"
+    // {
+      default = true;
+      example = false;
+    };
 
   config.lib.stylix.mkEnableTarget =
     humanName:
@@ -21,18 +23,12 @@ with lib;
     # If some manual setup is required, or the module leads to the target
     # being installed if it wasn't already, set this to `false`.
     autoEnable:
-
-    mkOption {
-      description = "Whether to style ${humanName}.";
-      type = types.bool;
-
-      # We can't substitute the target name into this description because some
-      # don't make sense: "if the desktop background using Feh is installed"
-      defaultText = literalMD ''
-        `true` if `stylix.autoEnable == true` and the target is installed,
-        otherwise `false`.
-      '';
-
-      default = config.stylix.autoEnable && autoEnable;
-    };
+      mkEnableOption
+      "styling for ${humanName}"
+      // {
+        default = config.stylix.autoEnable && autoEnable;
+      }
+      // optionalAttrs autoEnable {
+        defaultText = literalExpression "stylix.autoEnable";
+      };
 }

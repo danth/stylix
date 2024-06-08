@@ -66,6 +66,17 @@ in {
       '';
     };
 
+    imageScalingMode = mkOption {
+      type = types.enum [ "stretch" "fill" "fit" "center" "tile" ];
+      default = fromOs [ "imageScalingMode" ] "fill";
+      description = ''
+        Wallpaper scaling mode;
+
+        This is the scaling mode your wallpaper image will use assuming it
+        doesnt fix your monitor perfectly
+      '';
+    };
+
     generated = {
       json = mkOption {
         type = types.path;
