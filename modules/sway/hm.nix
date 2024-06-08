@@ -5,7 +5,7 @@ with config.lib.stylix.colors.withHashtag;
 let
   text = base05;
   urgent = base08;
-  focused = base0A;
+  focused = base0D;
   unfocused = base03;
 
   fonts = {

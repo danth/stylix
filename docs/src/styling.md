@@ -67,10 +67,10 @@ An urgent window is one which is grabbing for attention - Windows shows this by
 a flashing orange taskbar icon.
 
 - Unfocused window border: base03
-- Focused window border: base0A
-- Unfocused window border in group: base0D
-- Focused window border in group: base06
-- Urgent window border: base07
+- Focused window border: base0D
+- Unfocused window border in group: base03
+- Focused window border in group: base0D
+- Urgent window border: base08
 - Window title text: base05
 
 ## Notifications and Popups
