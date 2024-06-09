@@ -5,7 +5,7 @@ with config.lib.stylix.colors.withHashtag;
 let
   text = base05;
   urgent = base08;
-  focused = base0A;
+  focused = base0D;
   unfocused = base03;
 
   fonts = {
@@ -54,7 +54,7 @@ in {
           };
         };
 
-        output."*".bg = "${config.stylix.image} fill";
+        output."*".bg = "${config.stylix.image} ${config.stylix.imageScalingMode}";
 
         seat."*" = {
           xcursor_theme = "${config.stylix.cursor.name} ${toString config.stylix.cursor.size}";
