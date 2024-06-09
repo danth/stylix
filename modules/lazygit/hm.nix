@@ -5,7 +5,7 @@
 }: let
   colors = config.lib.stylix.colors.withHashtag;
 in {
-  options.stylix.targets.lazygit.enable = config.lib.stylix.mkEnableTarget "lazygit" config.programs.lazygit.enable;
+  options.stylix.targets.lazygit.enable = config.lib.stylix.mkEnableTarget "lazygit" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.lazygit.enable) {
     programs.lazygit.settings.gui.theme = {

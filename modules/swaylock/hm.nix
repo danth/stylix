@@ -12,7 +12,7 @@ let
 
 in {
   options.stylix.targets.swaylock = {
-    enable = config.lib.stylix.mkEnableTarget "Swaylock" pkgs.stdenv.hostPlatform.isLinux;
+    enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
     useImage = lib.mkOption {
       description = ''
         Whether to use your wallpaper image for the Swaylock background.
@@ -23,7 +23,7 @@ in {
     };
   };
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.swaylock.enable)
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.swaylock.enable && pkgs.stdenv.hostPlatform.isLinux)
     # See https://github.com/danth/stylix/issues/8#issuecomment-1194484544
     # This check can be removed when programs.swaylock is in a stable release
     (lib.optionalAttrs (options.programs ? swaylock) {

@@ -5,7 +5,7 @@
   ...
 }: {
   options.stylix.targets.yazi = {
-    enable = config.lib.stylix.mkEnableTarget "Yazi" config.programs.yazi.enable;
+    enable = config.lib.stylix.mkEnableTarget "Yazi" true;
   };
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.yazi.enable) {

@@ -7,7 +7,7 @@ let
 
 in {
   options.stylix.targets.fuzzel.enable =
-    config.lib.stylix.mkEnableTarget "Fuzzel" config.programs.fuzzel.enable;
+    config.lib.stylix.mkEnableTarget "Fuzzel" true;
 
   config.programs.fuzzel.settings =
     lib.mkIf (config.stylix.enable && config.stylix.targets.fuzzel.enable) {

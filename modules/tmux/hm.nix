@@ -7,7 +7,7 @@ let
 
 in {
   options.stylix.targets.tmux.enable =
-    config.lib.stylix.mkEnableTarget "Tmux" config.programs.tmux.enable;
+    config.lib.stylix.mkEnableTarget "Tmux" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.tmux.enable) {
     programs.tmux.extraConfig = ''
