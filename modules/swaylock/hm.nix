@@ -23,7 +23,7 @@ in {
     };
   };
 
-  config = lib.mkIf config.stylix.targets.swaylock.enable
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.swaylock.enable)
     # See https://github.com/danth/stylix/issues/8#issuecomment-1194484544
     # This check can be removed when programs.swaylock is in a stable release
     (lib.optionalAttrs (options.programs ? swaylock) {

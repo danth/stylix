@@ -5,7 +5,7 @@ with config.lib.stylix.colors;
   options.stylix.targets.zathura.enable =
     config.lib.stylix.mkEnableTarget "Zathura" true;
 
-  config = lib.mkIf config.stylix.targets.zathura.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.zathura.enable) {
     # Taken from here:
     #   https://github.com/doenerkebap/base16-zathura
     programs.zathura.options = {

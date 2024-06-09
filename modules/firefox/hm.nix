@@ -22,7 +22,7 @@ in {
     };
   };
 
-  config = lib.mkIf config.stylix.targets.firefox.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.firefox.enable) {
     programs.firefox.profiles = lib.listToAttrs
       (map makeProfileSettingsPair config.stylix.targets.firefox.profileNames);
   };

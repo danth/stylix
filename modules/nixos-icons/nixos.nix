@@ -6,7 +6,7 @@ with config.lib.stylix.colors;
   options.stylix.targets.nixos-icons.enable =
     config.lib.stylix.mkEnableTarget "the NixOS logo" true;
 
-  config.nixpkgs.overlays = lib.mkIf config.stylix.targets.nixos-icons.enable [(self: super: {
+  config.nixpkgs.overlays = lib.mkIf (config.stylix.enable && config.stylix.targets.nixos-icons.enable) [(self: super: {
     nixos-icons = super.nixos-icons.overrideAttrs (oldAttrs: {
       src = pkgs.applyPatches {
         src = oldAttrs.src;

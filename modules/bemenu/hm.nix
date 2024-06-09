@@ -25,7 +25,7 @@ in {
     };
   };
 
-  config = lib.mkIf config.stylix.targets.bemenu.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.bemenu.enable) {
     programs.bemenu.settings = with config.stylix.targets.bemenu; {
       tb = "${base01}${bemenuOpacity}"; # Title bg
       nb = "${base01}${bemenuOpacity}"; # Normal bg

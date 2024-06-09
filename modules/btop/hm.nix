@@ -5,7 +5,7 @@ let
 in {
     options.stylix.targets.btop.enable = config.lib.stylix.mkEnableTarget "btop" config.programs.btop.enable;
 
-      config = lib.mkIf config.stylix.targets.btop.enable {
+      config = lib.mkIf (config.stylix.enable && config.stylix.targets.btop.enable) {
 
         programs.btop.settings = {
             color_theme = "stylix";

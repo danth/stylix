@@ -8,7 +8,7 @@ with config.lib.stylix.colors.withHashtag; {
   options.stylix.targets.tofi.enable =
     config.lib.stylix.mkEnableTarget "Tofi" true;
 
-  config = lib.mkIf config.stylix.targets.tofi.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.tofi.enable) {
     programs.tofi.settings = let
       background = base00;
       foreground = base05;

@@ -6,7 +6,7 @@ with config.lib.stylix.colors;
   options.stylix.targets.console.enable =
     config.lib.stylix.mkEnableTarget "the Linux kernel console" true;
 
-  config.console.colors = lib.mkIf config.stylix.targets.console.enable [
+  config.console.colors = lib.mkIf (config.stylix.enable && config.stylix.targets.console.enable) [
     base00-hex
     red
     green

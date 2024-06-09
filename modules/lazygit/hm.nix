@@ -7,7 +7,7 @@
 in {
   options.stylix.targets.lazygit.enable = config.lib.stylix.mkEnableTarget "lazygit" config.programs.lazygit.enable;
 
-  config = lib.mkIf config.stylix.targets.lazygit.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.lazygit.enable) {
     programs.lazygit.settings.gui.theme = {
       activeBorderColor = [
         colors.base07

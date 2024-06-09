@@ -10,7 +10,7 @@ in {
     config.lib.stylix.mkEnableTarget "Fuzzel" config.programs.fuzzel.enable;
 
   config.programs.fuzzel.settings =
-    lib.mkIf config.stylix.targets.fuzzel.enable {
+    lib.mkIf (config.stylix.enable && config.stylix.targets.fuzzel.enable) {
       colors = {
         background = "${base00-hex}${opacity}";
         text = "${base05-hex}ff";

@@ -11,6 +11,6 @@
                                       || xmonad.enable);
 
   config.xsession.initExtra =
-    lib.mkIf config.stylix.targets.feh.enable
+    lib.mkIf (config.stylix.enable && config.stylix.targets.feh.enable)
     "${pkgs.feh}/bin/feh --no-fehbg --bg-scale ${config.stylix.image}";
 }

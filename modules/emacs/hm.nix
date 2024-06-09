@@ -10,7 +10,7 @@ in
   options.stylix.targets.emacs.enable =
     config.lib.stylix.mkEnableTarget "Emacs" config.programs.emacs.enable;
 
-  config = lib.mkIf config.stylix.targets.emacs.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.emacs.enable) {
     programs.emacs = {
       extraPackages = epkgs:
         [
