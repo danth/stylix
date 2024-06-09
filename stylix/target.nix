@@ -4,12 +4,15 @@ with lib;
 
 {
   options.stylix = {
+    enable = mkEnableOption "Stylix" // {
+      default = import ./fromos.nix { inherit lib args; } [ "enable" ] false;
+      example = true;
+    };
+
     autoEnable = mkEnableOption "styling installed targets" // {
       default = import ./fromos.nix { inherit lib args; } [ "autoEnable" ] true;
       example = false;
     };
-
-    enable = mkEnableOption "Stylix";
   };
 
   config.lib.stylix.mkEnableTarget = let
