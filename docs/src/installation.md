@@ -119,7 +119,10 @@ let
 in {
     imports = [ (import stylix).homeManagerModules.stylix ];
 
-    stylix.image = ./wallpaper.jpg;
+    stylix = {
+      enable = true;
+      image = ./wallpaper.jpg;
+    };
 }
 
 ```

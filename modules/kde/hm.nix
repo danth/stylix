@@ -222,9 +222,9 @@ let
 
 in {
   options.stylix.targets.kde.enable =
-    config.lib.stylix.mkEnableTarget "KDE" pkgs.stdenv.hostPlatform.isLinux;
+    config.lib.stylix.mkEnableTarget "KDE" true;
 
-  config = lib.mkIf config.stylix.targets.kde.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.packages = [ themePackage ];
     xdg.systemDirs.config = [ "${configPackage}" ];
 

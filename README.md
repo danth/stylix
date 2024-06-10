@@ -34,6 +34,12 @@ For a visual guide, watch the [*Ricing Linux Has Never Been Easier | NixOS +
 Stylix*](https://youtu.be/ljHkWgBaQWU) YouTube video by
 [Vimjoyer](https://www.youtube.com/@vimjoyer).
 
+> [!NOTE]
+>
+> It's now necessary to include `stylix.enable = true` in your configuration
+> for any other settings to take effect. This is not mentioned in the video
+> linked above.
+
 If you have any questions, you are welcome to
 join our [Matrix room](https://matrix.to/#/#stylix:danth.me),
 or ask on [GitHub Discussions](https://github.com/danth/stylix/discussions).

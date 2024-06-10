@@ -1,5 +1,21 @@
 # Configuration
 
+## Enable
+
+To enable the Stylix module, declare:
+
+```nix
+{
+  stylix.enable = true;
+}
+```
+
+> [!NOTE]
+>
+> The global enable option was recently added, so you may come across old
+> examples which don't include it. No other settings will take effect unless
+> `stylix.enable` is set to `true`.
+
 ## Wallpaper
 
 To start theming, you need to set a wallpaper image.

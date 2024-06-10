@@ -6,14 +6,14 @@
 }: {
   options.stylix.targets.nixvim = {
     enable =
-      config.lib.stylix.mkEnableTarget "nixvim" (config.programs ? nixvim);
+      config.lib.stylix.mkEnableTarget "nixvim" true;
     transparent_bg = {
       main = lib.mkEnableOption "background transparency for the main NeoVim window";
       sign_column = lib.mkEnableOption "background transparency for the NeoVim sign column";
     };
   };
 
-  config = lib.mkIf ((config.programs ? nixvim) && config.stylix.targets.nixvim.enable) (
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.nixvim.enable && (config.programs ? nixvim)) (
     lib.optionalAttrs (builtins.hasAttr "nixvim" options.programs) {
       programs.nixvim = {
         colorschemes.base16 = {

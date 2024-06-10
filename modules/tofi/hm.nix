@@ -7,7 +7,7 @@ with config.lib.stylix.colors.withHashtag; {
   options.stylix.targets.tofi.enable =
     config.lib.stylix.mkEnableTarget "Tofi" true;
 
-  config = lib.mkIf config.stylix.targets.tofi.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.tofi.enable) {
     programs.tofi.settings =
       let
         opacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));

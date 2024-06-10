@@ -47,6 +47,14 @@ in pkgs.stdenvNoCC.mkDerivation {
     cp ${../kde.png} src/kde.png
     cp ${../CONTRIBUTING.md} src/contributing.md
 
+    # mdBook doesn't support this Markdown extension yet
+    substituteInPlace **/*.md \
+      --replace-quiet '> [!NOTE]' '> **Note**' \
+      --replace-quiet '> [!TIP]' '> **Tip**' \
+      --replace-quiet '> [!IMPORTANT]' '> **Important**' \
+      --replace-quiet '> [!WARNING]' '> **Warning**' \
+      --replace-quiet '> [!CAUTION]' '> **Caution**'
+
     # The "declared by" links point to a file which only exists when the docs
     # are built locally. This removes the links.
     sed '/*Declared by:*/,/^$/d' <${nixos.optionsCommonMark} >>src/options/nixos.md

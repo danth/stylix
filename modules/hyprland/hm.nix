@@ -25,5 +25,5 @@ in {
     config.lib.stylix.mkEnableTarget "Hyprland" true;
 
   config.wayland.windowManager.hyprland.settings =
-    lib.mkIf config.stylix.targets.hyprland.enable settings;
+    lib.mkIf (config.stylix.enable && config.stylix.targets.hyprland.enable) settings;
 }
