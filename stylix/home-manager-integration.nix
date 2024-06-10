@@ -18,6 +18,7 @@ let
       { path = [ "stylix" "cursor" "name" ]; }
       { path = [ "stylix" "cursor" "package" ]; }
       { path = [ "stylix" "cursor" "size" ]; }
+      { path = [ "stylix" "enable" ]; }
       { path = [ "stylix" "fonts" "serif" ]; }
       { path = [ "stylix" "fonts" "sansSerif" ]; }
       { path = [ "stylix" "fonts" "monospace" ]; }
@@ -27,6 +28,7 @@ let
       { path = [ "stylix" "fonts" "sizes" "terminal" ]; }
       { path = [ "stylix" "fonts" "sizes" "popups" ]; }
       { path = [ "stylix" "image" ]; }
+      { path = [ "stylix" "imageScalingMode" ]; }
       { path = [ "stylix" "opacity" "desktop" ]; }
       { path = [ "stylix" "opacity" "applications" ]; }
       { path = [ "stylix" "opacity" "terminal" ]; }
