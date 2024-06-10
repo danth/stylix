@@ -42,7 +42,7 @@ in {
     };
   };
 
-  config = lib.mkIf (config.stylix.enable && hm.autoImport) {
+  config = lib.mkIf hm.autoImport {
     home-manager.sharedModules = [ homeManagerModule ];
   };
 }
