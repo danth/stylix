@@ -58,7 +58,7 @@ A general format for modules is shown below.
 
 The human readable name will be inserted into the following sentence:
 
-> Whether to style «human readable name».
+> Whether to enable theming for «human readable name».
 
 If your module will touch options outside of `programs.«name»` or `services.«name»`,
 it should include an additional condition in `mkIf` to prevent any effects
