@@ -169,28 +169,36 @@ Or even choose monospace for everything:
 }
 ```
 
-## Multi-user configurations
+## Home Manager inheritance
 
-For those apps which are configured through Home Manager, Stylix allows you to
-choose a different theme for each user. This can be done by setting the theme
-within Home Manager for that user rather than at the system level.
+By default, if Home Manager is used as part of NixOS, then Stylix will be
+automatically installed for all users, and the NixOS theme will become their
+default settings.
 
-By default, all users follow the system theme. This can be turned off by
-setting `stylix.homeManagerIntegration.followSystem = false`, in which case you
-must explicitly set a theme for each user. Setting that option is not required
-just to be able to override an individual theme.
+This is convenient for single-user systems, since you can configure everything
+once at the system level and it will automatically carry over. For multi-user
+systems, you can override the settings within Home Manager to select a different
+theme for each user.
 
-If you would like to disable all Home Manager activity for a user, you can set
-`stylix.homeManagerIntegration.autoImport = false`, then manually import the
-Home Manager module for the users for which it should be enabled.
+You may prefer to disable inheritance entirely, and set up the Home Manager
+version of Stylix yourself if required. Refer to the options
+[`stylix.homeManagerIntegration.autoImport`](options/nixos.md#stylixhomemanagerintegrationautoimport)
+and
+[`stylix.homeManagerIntegration.followSystem`](options/nixos.md#stylixhomemanagerintegrationfollowsystem)
+to customize this.
 
-Note that if the wallpaper image for a user is different to the rest of the
-system, a separate theme will always be generated for them, even though their
-`base16Scheme` option has not been overridden. If you want that user to follow
-the system theme while having a different wallpaper, you will need to manually
-copy the system theme into their configuration. (This behaviour is necessary as
-otherwise it would be impossible to use a generated theme for a user while
-having a manually created theme for the rest of the system.)
+> [!NOTE]
+>
+> There is a special case involving the
+> [`stylix.base16Scheme`](options/nixos.md#stylixbase16scheme)
+> option:
+> 
+> If the wallpaper in a Home Manager configuration is changed, then Home Manager
+> will stop inheriting the color scheme from NixOS. This allows Home Manager
+> configurations to use the automatic palette generator without being overridden.
+>
+> Similarly, [`stylix.override`](options/nixos.md#stylixoverride) is not inherited
+> if the color scheme is different.
 
 ## Turning targets on and off
 

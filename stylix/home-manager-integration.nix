@@ -44,29 +44,28 @@ in {
   options.stylix.homeManagerIntegration = {
     followSystem = lib.mkOption {
       description = ''
-        When this option is `true`, Home Manager configurations will copy
-        the NixOS configuration by default, rather than requiring their own
-        settings.
+        When this option is `true`, Home Manager configurations will follow
+        the NixOS configuration by default, rather than using the standard
+        default settings.
 
         This only applies to Home Manager configurations managed by
         [`stylix.homeManagerIntegration.autoImport`](#stylixhomemanagerintegrationautoimport).
       '';
       type = lib.types.bool;
       default = true;
+      example = false;
     };
 
     autoImport = lib.mkOption {
       description = ''
         Whether to import Stylix automatically for every Home Manager user.
 
-        This only applies if you are using `home-manager.users.«name»` within
+        This only works if you are using `home-manager.users.«name»` within
         your NixOS configuration, rather than running Home Manager independently.
       '';
       type = lib.types.bool;
-      default = options ? home-manager;
-      defaultText = lib.literalMD ''
-        `true` when Home Manager is present.
-      '';
+      default = true;
+      example = false;
     };
   };
 
