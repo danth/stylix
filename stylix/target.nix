@@ -41,7 +41,7 @@ with lib;
       mkEnableOption
       "theming for ${humanName}"
       // {
-        default = cfg.enable && cfg.autoEnable && autoEnable;
+        default = cfg.autoEnable && autoEnable;
         example = !autoEnable;
       }
       // optionalAttrs autoEnable {
