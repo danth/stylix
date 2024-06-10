@@ -82,6 +82,7 @@ let
   # This generates a copy of each testbed for each of the following themes.
   makeTestbeds = testbed: map (makeTestbed testbed) [
     {
+      enable = true;
       image = pkgs.fetchurl {
         name = "three-bicycles.jpg";
         url = "https://unsplash.com/photos/hwLAI5lRhdM/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzYxNDcwfA&force=true";
@@ -91,6 +92,7 @@ let
       polarity = "light";
     }
     {
+      enable = true;
       image = pkgs.fetchurl {
         name = "mountains.jpg";
         url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
