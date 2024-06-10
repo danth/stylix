@@ -102,7 +102,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf config.stylix.enable {
     stylix.fonts.packages = [
       cfg.monospace.package
       cfg.serif.package

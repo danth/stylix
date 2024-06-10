@@ -14,9 +14,9 @@ let
 
 in {
   options.stylix.targets.helix.enable =
-    config.lib.stylix.mkEnableTarget "Helix" config.programs.helix.enable;
+    config.lib.stylix.mkEnableTarget "Helix" true;
 
-  config = lib.mkIf config.stylix.targets.helix.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.helix.enable && config.programs.helix.enable) {
     programs.helix.settings.theme = "stylix";
 
     xdg.configFile."helix/themes/stylix.toml".source =

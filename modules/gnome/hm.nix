@@ -6,7 +6,7 @@ with lib;
   options.stylix.targets.gnome.enable =
     config.lib.stylix.mkEnableTarget "GNOME" true;
 
-  config = mkIf config.stylix.targets.gnome.enable {
+  config = mkIf (config.stylix.enable && config.stylix.targets.gnome.enable) {
     dconf.settings = {
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";

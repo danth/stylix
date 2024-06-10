@@ -9,7 +9,7 @@ in
 {
   options.stylix.targets.alacritty.enable = config.lib.stylix.mkEnableTarget "Alacritty" true;
 
-  config = lib.mkIf config.stylix.targets.alacritty.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.alacritty.enable) {
     programs.alacritty.settings = {
       font = with config.stylix.fonts; {
         normal = {

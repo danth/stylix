@@ -2,9 +2,9 @@
 
 {
   options.stylix.targets.zellij.enable =
-    config.lib.stylix.mkEnableTarget "zellij" config.programs.zellij.enable ;
+    config.lib.stylix.mkEnableTarget "zellij" true;
 
-  config = lib.mkIf config.stylix.targets.zellij.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.zellij.enable) {
     programs.zellij.settings = {
         theme = "stylix";
         themes.stylix = with config.lib.stylix.colors.withHashtag; {

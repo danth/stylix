@@ -18,7 +18,7 @@ in {
     config.lib.stylix.mkEnableTarget "Sway" true;
 
   config = lib.mkMerge [
-    (lib.mkIf config.stylix.targets.sway.enable {
+    (lib.mkIf (config.stylix.enable && config.stylix.targets.sway.enable) {
       wayland.windowManager.sway.config = {
         inherit fonts;
 

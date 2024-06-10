@@ -8,7 +8,7 @@ in
 {
   options.stylix.targets.vesktop.enable = config.lib.stylix.mkEnableTarget "Vesktop" true;
 
-  config = lib.mkIf config.stylix.targets.vesktop.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.vesktop.enable) {
     home.file."${config.xdg.configHome}/vesktop/themes/stylix.theme.css" = {
       source = themeFile;
     };
