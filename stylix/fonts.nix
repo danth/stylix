@@ -5,8 +5,6 @@ with lib;
 let
   cfg = config.stylix.fonts;
 
-  fromOs = import ./fromos.nix { inherit lib args; };
-
   fontType = types.submodule {
     options = {
       package = mkOption {
@@ -26,7 +24,7 @@ in {
     serif = mkOption {
       description = "Serif font.";
       type = fontType;
-      default = fromOs [ "fonts" "serif" ] {
+      default = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
       };
@@ -35,7 +33,7 @@ in {
     sansSerif = mkOption {
       description = "Sans-serif font.";
       type = fontType;
-      default = fromOs [ "fonts" "sansSerif" ] {
+      default = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
       };
@@ -44,7 +42,7 @@ in {
     monospace = mkOption {
       description = "Monospace font.";
       type = fontType;
-      default = fromOs [ "fonts" "monospace" ] {
+      default = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
       };
@@ -53,7 +51,7 @@ in {
     emoji = mkOption {
       description = "Emoji font.";
       type = fontType;
-      default = fromOs [ "fonts" "emoji" ] {
+      default = {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
@@ -66,7 +64,7 @@ in {
           the desktop.
         '';
         type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "desktop" ] 10;
+        default = 10;
       };
 
       applications = mkOption {
@@ -74,7 +72,7 @@ in {
           The font size used by applications.
         '';
         type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "applications" ] 12;
+        default = 12;
       };
 
       terminal = mkOption {
@@ -82,7 +80,7 @@ in {
           The font size for terminals/text editors.
         '';
         type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "terminal" ] cfg.sizes.applications;
+        default = cfg.sizes.applications;
       };
 
       popups = mkOption {
@@ -91,7 +89,7 @@ in {
           elements of the desktop.
         '';
         type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "popups" ] cfg.sizes.desktop;
+        default = cfg.sizes.desktop;
       };
     };
 
