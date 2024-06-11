@@ -12,7 +12,7 @@ with lib;
         are ignored.
       '';
       type = types.bool;
-      default = import ./fromos.nix { inherit lib args; } [ "enable" ] false;
+      default = false;
       example = true;
     };
 
@@ -28,7 +28,7 @@ with lib;
         detected automatically.
       '';
       type = types.bool;
-      default = import ./fromos.nix { inherit lib args; } [ "autoEnable" ] true;
+      default = true;
       example = false;
     };
   };
