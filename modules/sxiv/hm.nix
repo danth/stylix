@@ -7,7 +7,7 @@ in {
   options.stylix.targets.sxiv.enable =
     config.lib.stylix.mkEnableTarget "Sxiv" true;
 
-  config = lib.mkIf config.stylix.targets.sxiv.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.sxiv.enable) {
     xresources = {
       properties = {
         "Sxiv.foreground" = "#${colors.base01}";

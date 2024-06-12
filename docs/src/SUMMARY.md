@@ -15,4 +15,5 @@
 
 - [Contributing](contributing.md)
 - [Adding modules](modules.md)
+- [Testbeds](testbeds.md)
 - [Style guide](styling.md)

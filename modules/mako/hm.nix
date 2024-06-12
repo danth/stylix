@@ -9,7 +9,7 @@ in {
     config.lib.stylix.mkEnableTarget "Mako" true;
 
   # Referenced https://github.com/stacyharper/base16-mako
-  config = lib.optionalAttrs (options.services ? mako) (lib.mkIf config.stylix.targets.mako.enable {
+  config = lib.optionalAttrs (options.services ? mako) (lib.mkIf (config.stylix.enable && config.stylix.targets.mako.enable) {
     services.mako = {
       backgroundColor = base00 + makoOpacity;
       borderColor = base0D;

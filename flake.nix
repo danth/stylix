@@ -1,15 +1,5 @@
 {
   inputs = {
-    base16-alacritty = {
-      flake = false;
-      url = "github:aarowill/base16-alacritty";
-    };
-
-    base16-alacritty-yaml = {
-      flake = false;
-      url = "github:aarowill/base16-alacritty/63d8ae5dfefe5db825dd4c699d0cdc2fc2c3eaf7";
-    };
-
     base16-fish = {
       flake = false;
       url = "github:tomyun/base16-fish";
@@ -53,7 +43,7 @@
       # TODO: Unlocking the input and pointing to official repository requires
       # updating the patch:
       # https://github.com/danth/stylix/pull/224#discussion_r1460339607.
-      url = "github:GNOME/gnome-shell/45.1";
+      url = "github:GNOME/gnome-shell/46.1";
     };
 
     # The 'home-manager' input is used to generate the documentation.
@@ -76,15 +66,22 @@
         "x86_64-linux"
       ] (
         system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in {
-          docs = import ./docs {
-            inherit pkgs inputs;
-            inherit (nixpkgs) lib;
+        let
+          inherit (nixpkgs) lib;
+          pkgs = nixpkgs.legacyPackages.${system};
+
+          universalPackages = {
+            docs = import ./docs { inherit pkgs inputs lib; };
+            palette-generator = pkgs.callPackage ./palette-generator { };
           };
 
-          palette-generator = pkgs.callPackage ./palette-generator { };
-        }
+          # Testbeds are virtual machines based on NixOS, therefore they are
+          # only available for Linux systems.
+          testbedPackages = lib.optionalAttrs
+            (lib.hasSuffix "-linux" system)
+            (import ./stylix/testbed.nix { inherit pkgs inputs lib; });
+        in
+          universalPackages // testbedPackages
       );
 
       nixosModules.stylix = { pkgs, ... }@args: {

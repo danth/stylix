@@ -1,22 +1,17 @@
-{ pkgs, config, ... }@args:
+{ lib, pkgs, config, ... }@args:
 
 let
-  # We use this imported lib instead of the one from the module arguments
-  # to avoid infinite loops if the lib in arguments depends on nixpkgs.overlays
-  lib = (builtins.getFlake "github:nix-community/nixpkgs.lib/174d7dc67189bc4a53f1bffb4fb9d0f13b79cd3c").lib;
-
   theme = import ./theme.nix args;
 
 in {
   options.stylix.targets.gnome.enable =
-    lib.mkOption {
-      description = lib.mdDoc "Whether to style GNOME and GDM";
-      type = lib.types.bool;
-      default = config.stylix.autoEnable
-             && config.services.xserver.desktopManager.gnome.enable;
-    };
+    config.lib.stylix.mkEnableTarget "GNOME and GDM" true;
 
-  config = lib.mkIf config.stylix.targets.gnome.enable {
+  config = lib.mkIf (
+    config.stylix.enable
+    && config.stylix.targets.gnome.enable
+    && config.services.xserver.desktopManager.gnome.enable
+  ) {
     # As Stylix is controlling the wallpaper, there is no need for this
     # pack of default wallpapers to be installed.
     # If you want to use one, you can set stylix.image to something like

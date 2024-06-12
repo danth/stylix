@@ -5,7 +5,7 @@
   options.stylix.targets.xfce.enable =
     config.lib.stylix.mkEnableTarget "Xfce" false;
 
-  config = lib.mkIf config.stylix.targets.xfce.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.xfce.enable) {
     xfconf.settings = with config.stylix.fonts; {
       xfwm4 = {
         "general/title_font" = "${sansSerif.name} ${toString sizes.desktop}";

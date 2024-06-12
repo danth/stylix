@@ -20,7 +20,7 @@ in
   options.stylix.targets.rofi.enable =
     config.lib.stylix.mkEnableTarget "Rofi" true;
 
-  config = lib.mkIf config.stylix.targets.rofi.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.rofi.enable) {
     programs.rofi = {
       font = "${monospace.name} ${toString sizes.popups}";
       theme = {

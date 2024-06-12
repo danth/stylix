@@ -31,7 +31,7 @@ Similarly, you can use a template image and repaint it for the current theme.
 { pkgs, ... }:
 
 let
-  theme = "${pkgs.base16-schemes}/share/themes/catppuccin.yaml";
+  theme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
   wallpaper = pkgs.runCommand "image.png" {} ''
         COLOR=$(${pkgs.yq}/bin/yq -r .base00 ${theme})
         COLOR="#"$COLOR
@@ -41,6 +41,19 @@ in {
   stylix = {
     image = wallpaper;
     base16Scheme = theme;
+  };
+}
+```
+
+Which is neatly implemented as a single function in `lib.stylix.pixel`:
+
+```nix
+{ pkgs, config, ... }:
+
+{
+  stylix = {
+    image = config.lib.stylix.pixel "base0A";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
   };
 }
 ```

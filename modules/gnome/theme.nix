@@ -11,7 +11,7 @@ in pkgs.stdenv.mkDerivation {
   src = config.lib.stylix.templates.gnome-shell;
   patches = [ ./shell_colors.patch ];
   postPatch = ''
-    rm data/theme/gnome-shell-sass/{_colors.scss,_palette.scss}
+    rm data/theme/gnome-shell-sass/{_colors.scss,_default-colors.scss,_palette.scss}
     cp ${colors} data/theme/gnome-shell-sass/_colors.scss
   '';
 

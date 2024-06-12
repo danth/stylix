@@ -4,13 +4,14 @@
 with lib;
 
 let
-  fromOs = import ./fromos.nix { inherit lib args; };
-
   cfg = config.stylix;
 
   paletteJSON = let
     generatedJSON = pkgs.runCommand "palette.json" { } ''
-      ${palette-generator}/bin/palette-generator ${cfg.polarity} ${cfg.image} $out
+      ${palette-generator}/bin/palette-generator \
+        "${cfg.polarity}" \
+        ${lib.escapeShellArg "${cfg.image}"} \
+        "$out"
     '';
     palette = importJSON generatedJSON;
     scheme = base16.mkSchemeAttrs palette;
@@ -20,12 +21,6 @@ let
     };
   in json;
   generatedScheme = importJSON paletteJSON;
-
-  override =
-    (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
-     then fromOs [ "override" ] {}
-     else {})
-    // cfg.override;
 
 in {
   # TODO link to doc on how to do instead
@@ -51,8 +46,8 @@ in {
   options.stylix = {
     polarity = mkOption {
       type = types.enum [ "either" "light" "dark" ];
-      default = fromOs [ "polarity" ] "either";
-      description = mdDoc ''
+      default = "either";
+      description = ''
         Use this option to force a light or dark theme.
 
         By default we will select whichever is ranked better by the genetic
@@ -63,13 +58,23 @@ in {
 
     image = mkOption {
       type = types.coercedTo types.package toString types.path;
-      description = mdDoc ''
+      description = ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
-      default = fromOs [ "image" ] null;
+    };
+
+    imageScalingMode = mkOption {
+      type = types.enum [ "stretch" "fill" "fit" "center" "tile" ];
+      default = "fill";
+      description = ''
+        Wallpaper scaling mode;
+
+        This is the scaling mode your wallpaper image will use assuming it
+        doesnt fix your monitor perfectly
+      '';
     };
 
     generated = {
@@ -98,16 +103,13 @@ in {
     };
 
     base16Scheme = mkOption {
-      description = mdDoc ''
+      description = ''
         A scheme following the base16 standard.
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
       type = with types; oneOf [ path lines attrs ];
-      default =
-        if cfg.image != fromOs [ "image" ] null
-          then generatedScheme
-          else fromOs [ "base16Scheme" ] generatedScheme;
+      default = generatedScheme;
       defaultText = literalMD ''
         The colors used in the theming.
 
@@ -117,7 +119,7 @@ in {
     };
 
     override = mkOption {
-      description = mdDoc ''
+      description = ''
         An override that will be applied to stylix.base16Scheme when generating
         lib.stylix.colors.
 
@@ -132,7 +134,7 @@ in {
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
-    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
+    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
     lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
 
     stylix.generated.fileTree = {

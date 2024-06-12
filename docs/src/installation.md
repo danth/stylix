@@ -27,7 +27,7 @@ Many applications cannot be configured system wide, so Stylix will also need
 [Home Manager][nix-hm] to be able to change their settings within your home
 directory.
 
-[Installing Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module)
+[Installing Home Manager as a NixOS module](https://nix-community.github.io/home-manager/index.xhtml#sec-install-nixos-module)
 is highly recommended if you don't use it already. This will combine it with
 your existing configuration, so you don't need to run any extra commands when
 you rebuild, and the theme you set in NixOS will automatically be used for Home
@@ -119,11 +119,14 @@ let
 in {
     imports = [ (import stylix).homeManagerModules.stylix ];
 
-    stylix.image = ./wallpaper.jpg;
+    stylix = {
+      enable = true;
+      image = ./wallpaper.jpg;
+    };
 }
 
 ```
 <small>Example usage of the Home Manager module without flakes.</small>
 
-[nix-flakes]: https://nixos.wiki/wiki/Flakes
+[nix-flakes]: https://wiki.nixos.org/wiki/Flakes
 [nix-hm]: https://github.com/nix-community/home-manager

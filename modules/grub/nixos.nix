@@ -14,8 +14,9 @@ let
     } ''
       # Use fontconfig to select the correct .ttf or .otf file based on name
       font=$(
-        ${pkgs.fontconfig}/bin/fc-match -v "${font.name}" \
-        | grep "file:" | cut -d '"' -f 2
+        ${lib.getExe' pkgs.fontconfig "fc-match"} \
+        ${lib.escapeShellArg font.name} \
+        --format=%{file}
       )
 
       # Convert to .pf2
@@ -27,13 +28,13 @@ in {
     enable = config.lib.stylix.mkEnableTarget "GRUB" true;
 
     useImage = lib.mkOption {
-      description = lib.mdDoc "Whether to use your wallpaper image as the GRUB background.";
+      description = "Whether to use your wallpaper image as the GRUB background.";
       type = lib.types.bool;
       default = false;
     };
   };
 
-  config.boot.loader.grub = lib.mkIf config.stylix.targets.grub.enable {
+  config.boot.loader.grub = lib.mkIf (config.stylix.enable && config.stylix.targets.grub.enable) {
     backgroundColor = base00;
     # Need to override the NixOS splash, this will match the background
     splashImage = pixel "base00";

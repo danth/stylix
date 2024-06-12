@@ -1,7 +1,14 @@
 name: Build
 
 on:
+  push:
+    branches:
+      - master
+      - release-**
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   evaluate:
@@ -10,15 +17,19 @@ jobs:
 
     steps:
       - name: Install Nix
-        uses: cachix/install-nix-action@v22
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra-conf: |
+            extra-experimental-features = nix-command flakes
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set up cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: List packages
         id: list-packages
         run: |
-          nix flake show . --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-latest" else "macos-latest" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
+          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-latest" else "macos-latest" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
 
     outputs:
       packages: ${{ steps.list-packages.outputs.packages }}
@@ -37,10 +48,14 @@ jobs:
 
     steps:
       - name: Install Nix
-        uses: cachix/install-nix-action@v22
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra-conf: |
+            extra-experimental-features = nix-command flakes
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set up cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Build ${{ matrix.build.key }}
-        run: nix -L build .#${{ matrix.build.type }}.${{ matrix.build.arch }}.${{ matrix.build.key }}
+        run: nix -L build github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.build.type }}.${{ matrix.build.arch }}.${{ matrix.build.key }}

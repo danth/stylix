@@ -1,24 +1,14 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 let
     fonts = config.stylix.fonts;
     colors = config.lib.stylix.colors;
     opacity = config.stylix.opacity;
-    copyFont = font:
-    # Mangohud needs an exact path to the font's .ttf
-    pkgs.runCommandLocal "mangohud-stylix.ttf" {
-        FONTCONFIG_FILE =
-            pkgs.makeFontsConf { fontDirectories = [ font.package ]; };
-    } ''
-        font=$(${pkgs.fontconfig}/bin/fc-match -v "${font.name}" | grep "file:" | cut -d '"' -f 2)
-        cp $font $out
-    '';
 in {
-    options.stylix.targets.mangohud.enable = config.lib.stylix.mkEnableTarget "mangohud" config.programs.mangohud.enable;
+    options.stylix.targets.mangohud.enable = config.lib.stylix.mkEnableTarget "mangohud" true;
 
-    config = lib.mkIf config.stylix.targets.mangohud.enable {
+    config = lib.mkIf (config.stylix.enable && config.stylix.targets.mangohud.enable) {
         programs.mangohud.settings = with colors; {
-            font_file = toString (copyFont fonts.sansSerif);
             font_size = fonts.sizes.applications;
             font_size_text = fonts.sizes.applications;
             background_alpha = opacity.popups;
@@ -38,7 +28,10 @@ in {
             gpu_load_color = "${base0B}, ${base0A}, ${base08}";
             cpu_load_color = "${base0B}, ${base0A}, ${base08}";
             fps_color = "${base0B}, ${base0A}, ${base08}";
-            font_scale = 1.33333; # px -> pt conversion
+
+            # TODO: Use the point unit:
+            # https://github.com/danth/stylix/issues/251.
+            font_scale = 1.33333;
         };
     };
 

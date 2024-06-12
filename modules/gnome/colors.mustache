@@ -1,45 +1,69 @@
-$is_highcontrast: false;
+// _default-colors.scss
+
+$descructive_bg_color: #{{base08-hex}};
+$descructive_fg_color: #{{base00-hex}};
+$destructive_color: #{{base08-hex}};
+
+$success_bg_color: #{{base0B-hex}};
+$success_fg_color: #{{base00-hex}};
+$success_color: #{{base0B-hex}};
+
+$warning_bg_color: #{{base0A-hex}};
+$warning_fg_color: #{{base00-hex}};
+$warning_color: #{{base0A-hex}};
+
+$error_bg_color: #{{base08-hex}};
+$error_fg_color: #{{base00-hex}};
+$error_color: #{{base08-hex}};
+
+$selected_bg_color: #{{base0D-hex}};
+$selected_fg_color: #{{base00-hex}};
+
+$link_color: #{{base0D-hex}};
+$link_visited_color: transparentize($link_color, 0.4);
+
+$background_mix_factor: 0%;
+$border_opacity: 1;
+
+$shadow_color: transparent;
+$text_shadow_color: transparent;
+
+$focus_color: $selected_bg_color;
+$focus_border_color: transparentize(#{{base05-hex}}, 0.5);
+
+// _colors.scss
 
 $base_color: #{{base01-hex}};
 $bg_color: #{{base00-hex}};
 $fg_color: #{{base05-hex}};
-$borders_color: transparentize($bg_color, 0.9);
-$outer_borders_color: transparentize($bg_color, 0.98);
 
-$selected_fg_color: #{{base00-hex}};
-$selected_bg_color: #{{base0D-hex}};
-$selected_borders_color: transparentize($selected_bg_color, 0.9);
-
-$link_color: #{{base0D-hex}};
-$link_visited_color: #{{base0D-hex}};
-
-$warning_color: #{{base0A-hex}};
-$error_color: #{{base08-hex}};
-$success_color: #{{base0B-hex}};
-$destructive_color: $error_color;
-
-$osd_bg_color: #{{base01-hex}};
 $osd_fg_color: #{{base05-hex}};
-$osd_insensitive_bg_color: #{{base01-hex}};
-$osd_insensitive_fg_color: #{{base05-hex}};
-$osd_borders_color: transparentize($osd_bg_color, 0.9);
-$osd_outer_borders_color: transparentize($osd_bg_color, 0.98);
-
-$shadow_color: rgba(0,0,0,0.1);
-
-$button_mix_factor: 0%;
-$bubble_buttons_color: #{{base01-hex}};
+$osd_bg_color: #{{base01-hex}};
 
 $system_base_color: #{{base00-hex}};
 $system_fg_color: #{{base05-hex}};
-$system_bg_color: #{{base00-hex}};
-$system_borders_color: transparentize($system_bg_color, .9);
-$system_insensitive_fg_color: #{{base05-hex}};
-$system_overlay_bg_color: #{{base01-hex}}; // for non-transparent items, e.g. dash
 
-$insensitive_fg_color: #{{base05-hex}};
-$insensitive_bg_color: #{{base01-hex}};
-$insensitive_borders_color: transparentize($insensitive_bg_color, 0.9);
+$panel_bg_color: #{{base01-hex}};
+$panel_fg_color: #{{base05-hex}};
+
+$card_bg_color: #{{base01-hex}};
+$card_shadow_color: transparent;
+$card_shadow_border_color: transparent;
+
+$borders_color: transparentize(#{{base05-hex}}, 0.8);
+$outer_borders_color: transparentize(#{{base05-hex}}, 0.9);
+
+$osd_borders_color: $borders_color;
+$osd_outer_borders_color: $outer_borders_color;
+
+$system_bg_color: #{{base00-hex}};
+$system_borders_color: $borders_color;
+$system_insensitive_fg_color: #{{base05-hex}};
+$system_overlay_bg_color: #{{base01-hex}};
+
+$insensitive_fg_color: #{{base04-hex}};
+$insensitive_bg_color: #{{base00-hex}};
+$insensitive_borders_color: $borders_color;
 
 $checked_bg_color: #{{base01-hex}};
 $checked_fg_color: #{{base05-hex}};
@@ -49,3 +73,12 @@ $hover_fg_color: #{{base05-hex}};
 
 $active_bg_color: #{{base01-hex}};
 $active_fg_color: #{{base05-hex}};
+
+$selected_borders_color: transparentize(#{{base05-hex}}, 0.5);
+
+// Other required variables
+
+$_base_color_light: #eeeeee;
+$light_1: #ffffff;
+$red_4: #{{base08-hex}};
+$orange_4: #{{base09-hex}};

@@ -20,10 +20,10 @@ let
 in
 {
   options.stylix.targets.fzf = {
-    enable = config.lib.stylix.mkEnableTarget "Fzf" config.programs.fzf.enable;
+    enable = config.lib.stylix.mkEnableTarget "Fzf" true;
   };
 
-  config = lib.mkIf config.stylix.targets.fzf.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.fzf.enable) {
     programs.fzf.defaultOptions = lib.mkAfter [ "--color=${colorConfig}" ];
   };
 }

@@ -9,7 +9,7 @@ in {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
 
     fontSize = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         Font size used for bemenu.
       '';
       type = with lib.types; nullOr int;
@@ -17,7 +17,7 @@ in {
     }; # optional argument
 
     alternate = lib.mkOption {
-      description = lib.mdDoc ''
+      description = ''
         Whether to use alternating colours.
       '';
       type = lib.types.bool;
@@ -25,7 +25,7 @@ in {
     };
   };
 
-  config = lib.mkIf config.stylix.targets.bemenu.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.bemenu.enable) {
     programs.bemenu.settings = with config.stylix.targets.bemenu; {
       tb = "${base01}${bemenuOpacity}"; # Title bg
       nb = "${base01}${bemenuOpacity}"; # Normal bg
