@@ -50,13 +50,7 @@ in {
       type = with types; either path package;
       defaultText = literalMD "NixOS logo";
 
-      # Considering that Flake inputs are currently unable to fetch individual
-      # files, the SVG file is fetched with `pkgs.fetchurl` to avoid downloading
-      # the entire repository for a single SVG file.
-      default = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/f84c13adae08e860a7c3f76ab3a9bef916d276cc/logo/nix-snowflake-colours.svg";
-        sha256 = "pHYa+d5f6MAaY8xWd3lDjhagS+nvwDL3w7zSsQyqH7A=";
-      };
+      default = "${pkgs.nixos-icons}/share/icons/hicolor/256x256/apps/nix-snowflake.png";
     };
 
     logoAnimated = mkOption {
