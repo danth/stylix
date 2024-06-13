@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }@args:
+{ config, lib, ... }:
 
 {
   # Disabled by default due to https://github.com/danth/stylix/issues/180

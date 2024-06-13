@@ -1,5 +1,5 @@
 { palette-generator, base16 }:
-{ pkgs, lib, config, ... }@args:
+{ pkgs, lib, config, ... }:
 
 with lib;
 

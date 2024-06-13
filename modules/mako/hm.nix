@@ -1,4 +1,4 @@
-{pkgs, config, lib, options, ... }:
+{ config, lib, options, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;

@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 let
   mkFzfKeyValue = lib.generators.mkKeyValueDefault { } ":";
 

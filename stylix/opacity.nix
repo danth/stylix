@@ -1,4 +1,4 @@
-{ lib, ... } @ args:
+{ lib, ... }:
 
 with lib;
 
