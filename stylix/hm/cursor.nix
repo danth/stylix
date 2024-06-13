@@ -9,9 +9,7 @@ in {
 
   config = mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.pointerCursor = {
-      name = cfg.name;
-      package = cfg.package;
-      size = cfg.size;
+      inherit (cfg) name package size;
       x11.enable = true;
       gtk.enable = true;
     };

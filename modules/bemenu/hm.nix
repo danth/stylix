@@ -3,7 +3,7 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
-  bemenuOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
+  bemenuOpacity = lib.toHexString (((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100);
 in {
   options.stylix.targets.bemenu = {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;

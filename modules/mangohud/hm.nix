@@ -1,9 +1,8 @@
 { config, lib, ... }:
 
 let
-    fonts = config.stylix.fonts;
-    colors = config.lib.stylix.colors;
-    opacity = config.stylix.opacity;
+    inherit (config.stylix) fonts opacity;
+    inherit (config.lib.stylix) colors;
 in {
     options.stylix.targets.mangohud.enable = config.lib.stylix.mkEnableTarget "mangohud" true;
 
