@@ -1,4 +1,4 @@
-{ config, lib, ... }@args:
+{ pkgs, config, lib, ... }@args:
 
 let
   inherit (config.stylix.fonts) sansSerif serif monospace;
