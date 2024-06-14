@@ -50,7 +50,13 @@ in {
       type = with types; either path package;
       defaultText = literalMD "NixOS logo";
 
-      default = "${pkgs.nixos-icons}/share/icons/hicolor/256x256/apps/nix-snowflake.png";
+      default = let
+        path = "${pkgs.nixos-icons}/share/icons/hicolor/256x256/apps/nix-snowflake.png";
+      in
+        lib.throwIfNot
+        (builtins.pathExists path)
+        "No such file or directory: ${path}"
+        path;
     };
 
     logoAnimated = mkOption {
