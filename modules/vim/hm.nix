@@ -1,7 +1,5 @@
 { pkgs, config, lib, ... }:
 
-with lib;
-
 let
   themeFile = config.lib.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-vim;

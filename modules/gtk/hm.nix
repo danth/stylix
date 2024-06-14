@@ -1,7 +1,5 @@
 { pkgs, config, lib, ... }:
 
-with lib;
-
 let
   cfg = config.stylix.targets.gtk;
 
@@ -12,7 +10,7 @@ let
 
   finalCss = pkgs.runCommandLocal "gtk.css" {} ''
     cat ${baseCss} >>$out
-    echo ${escapeShellArg cfg.extraCss} >>$out
+    echo ${lib.escapeShellArg cfg.extraCss} >>$out
   '';
 
 in {
@@ -20,11 +18,11 @@ in {
     enable = config.lib.stylix.mkEnableTarget
       "all GTK3, GTK4 and Libadwaita apps" true;
 
-    extraCss = mkOption {
+    extraCss = lib.mkOption {
       description = ''
         Extra code added to `gtk-3.0/gtk.css` and `gtk-4.0/gtk.css`.
       '';
-      type = types.lines;
+      type = lib.types.lines;
       default = "";
       example = ''
         // Remove rounded corners
