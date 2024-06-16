@@ -5,7 +5,7 @@ let
 in {
   imports = [ ../fonts.nix ];
   config.fonts = lib.mkIf config.stylix.enable {
-    packages = cfg.packages;
+    inherit (cfg) packages;
 
     fontconfig.defaultFonts = {
       monospace = [ cfg.monospace.name ];

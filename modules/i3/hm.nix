@@ -9,7 +9,7 @@ let
   unfocused = base03;
 
   fonts = let
-    fonts = config.stylix.fonts;
+    inherit (config.stylix) fonts;
   in {
     names = [ fonts.sansSerif.name ];
     size = fonts.sizes.desktop * 1.0;

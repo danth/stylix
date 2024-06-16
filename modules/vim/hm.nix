@@ -18,7 +18,7 @@ let
   };
 
   vimOptions = let
-    fonts = config.stylix.fonts;
+    inherit (config.stylix) fonts;
   in {
     plugins = [ themePlugin ];
     extraConfig = with config.lib.stylix.colors.withHashtag; ''

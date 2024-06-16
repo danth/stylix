@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... } @ args:
+{ pkgs, config, lib, ... }:
 
 let
   cfg = config.stylix.fonts;

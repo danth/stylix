@@ -1,7 +1,9 @@
-{ lib, pkgs, config, ... }@args:
+{ lib, pkgs, config, ... }:
 
 let
-  theme = import ./theme.nix args;
+  theme = pkgs.callPackage ./theme.nix {
+    inherit (config.lib.stylix) colors templates;
+  };
 
 in {
   options.stylix.targets.gnome.enable =

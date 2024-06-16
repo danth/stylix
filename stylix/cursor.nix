@@ -1,4 +1,4 @@
-{ pkgs, lib, ... } @ args:
+{ pkgs, lib, ... }:
 
 {
     options.stylix.cursor = {

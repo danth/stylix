@@ -1,9 +1,9 @@
-{pkgs, config, lib, options, ... }:
+{ config, lib, options, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
-  makoOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
+  makoOpacity = lib.toHexString (((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100);
 in {
   options.stylix.targets.mako.enable =
     config.lib.stylix.mkEnableTarget "Mako" true;

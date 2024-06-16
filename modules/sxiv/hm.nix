@@ -1,8 +1,8 @@
 { config, lib, ... }:
 
 let
-  colors = config.lib.stylix.colors;
-  fonts = config.stylix.fonts;
+  inherit (config.lib.stylix) colors;
+  inherit (config.stylix) fonts;
 in {
   options.stylix.targets.sxiv.enable =
     config.lib.stylix.mkEnableTarget "Sxiv" true;
