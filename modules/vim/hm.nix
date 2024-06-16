@@ -1,7 +1,5 @@
 { pkgs, config, lib, ... }:
 
-with lib;
-
 let
   themeFile = config.lib.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-vim;
@@ -47,7 +45,7 @@ let
         \ 'base0F': '${base0F}',
       \ }
 
-      set guifont=${escape [" "] fonts.monospace.name}:h${toString fonts.sizes.terminal}
+      set guifont=${lib.escape [" "] fonts.monospace.name}:h${toString fonts.sizes.terminal}
     '';
   };
 

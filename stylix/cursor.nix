@@ -1,22 +1,20 @@
 { pkgs, lib, ... }:
 
-with lib;
-
 {
     options.stylix.cursor = {
-        name = mkOption {
+        name = lib.mkOption {
             description = "The cursor name within the package.";
-            type = types.str;
+            type = lib.types.str;
             default = "Vanilla-DMZ";
         };
-        package = mkOption {
+        package = lib.mkOption {
             description = "Package providing the cursor theme.";
-            type = types.package;
+            type = lib.types.package;
             default = pkgs.vanilla-dmz;
         };
-        size = mkOption {
+        size = lib.mkOption {
             description = "The cursor size.";
-            type = types.int;
+            type = lib.types.int;
             default = 32;
         };
     };

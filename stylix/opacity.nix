@@ -1,27 +1,25 @@
 { lib, ... }:
 
-with lib;
-
 {
     options.stylix.opacity = {
-        desktop = mkOption {
+        desktop = lib.mkOption {
             description = "The opacity of the windows of bars/widgets, the amount of applications supported is currently limited";
-            type = types.float;
+            type = lib.types.float;
             default = 1.0;
         };
-        applications = mkOption {
+        applications = lib.mkOption {
             description = "The opacity of the windows of applications, the amount of applications supported is currently limited";
-            type = types.float;
+            type = lib.types.float;
             default = 1.0;
         };
-        terminal = mkOption {
+        terminal = lib.mkOption {
             description = "The opacity of the windows of terminals, this works across all terminals supported by stylix";
-            type = types.float;
+            type = lib.types.float;
             default = 1.0;
         };
-        popups = mkOption {
+        popups = lib.mkOption {
             description = "The opacity of the windows of notifications/popups, the amount of applications supported is currently limited";
-            type = types.float;
+            type = lib.types.float;
             default = 1.0;
         };
     };
