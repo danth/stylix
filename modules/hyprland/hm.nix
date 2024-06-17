@@ -28,7 +28,7 @@ in {
     lib.mkIf
     (config.stylix.enable && config.stylix.targets.hyprland.enable)
     {
-      wayland.windowManager.hyprland.settings = settings;
       services.hyprpaper.enable = true;
+      wayland.windowManager.hyprland.settings = settings;
     };
 }
