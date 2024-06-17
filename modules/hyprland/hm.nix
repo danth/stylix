@@ -24,6 +24,12 @@ in {
   options.stylix.targets.hyprland.enable =
     config.lib.stylix.mkEnableTarget "Hyprland" true;
 
-  config.wayland.windowManager.hyprland.settings =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.hyprland.enable) settings;
+  config =
+    lib.mkIf
+    (config.stylix.enable && config.stylix.targets.hyprland.enable)
+    {
+      services.hyprpaper.enable = true;
+      stylix.targets.hyprpaper.enable = true;
+      wayland.windowManager.hyprland.settings = settings;
+    };
 }
