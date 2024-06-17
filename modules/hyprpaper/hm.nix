@@ -3,11 +3,9 @@
     config.lib.stylix.mkEnableTarget "Hyprpaper" true;
 
   config = lib.mkIf config.stylix.targets.hyprpaper.enable {
-    services.hyprpaper = {
-      settings = {
-        preload = [ "${config.stylix.image}" ];
-        wallpaper = [ ",${config.stylix.image}" ];
-      };
+    services.hyprpaper.settings = {
+      preload = [ "${config.stylix.image}" ];
+      wallpaper = [ ",${config.stylix.image}" ];
     };
   };
 }
