@@ -22,7 +22,7 @@ in {
   options.stylix.targets.vscode.enable =
     config.lib.stylix.mkEnableTarget "VSCode" true;
 
-  config = lib.mkIf config.stylix.targets.vscode.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable) {
     programs.vscode = {
       extensions = [ themeExtension ];
       userSettings = {

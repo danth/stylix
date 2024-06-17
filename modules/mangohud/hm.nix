@@ -5,9 +5,9 @@ let
     colors = config.lib.stylix.colors;
     opacity = config.stylix.opacity;
 in {
-    options.stylix.targets.mangohud.enable = config.lib.stylix.mkEnableTarget "mangohud" config.programs.mangohud.enable;
+    options.stylix.targets.mangohud.enable = config.lib.stylix.mkEnableTarget "mangohud" true;
 
-    config = lib.mkIf config.stylix.targets.mangohud.enable {
+    config = lib.mkIf (config.stylix.enable && config.stylix.targets.mangohud.enable) {
         programs.mangohud.settings = with colors; {
             font_size = fonts.sizes.applications;
             font_size_text = fonts.sizes.applications;

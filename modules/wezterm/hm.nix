@@ -3,9 +3,9 @@
 let colors = config.lib.stylix.colors.withHashtag;
 in {
   options.stylix.targets.wezterm.enable =
-    config.lib.stylix.mkEnableTarget "wezterm" config.programs.wezterm.enable;
+    config.lib.stylix.mkEnableTarget "wezterm" true;
 
-  config = lib.mkIf config.stylix.targets.wezterm.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.wezterm.enable && config.programs.wezterm.enable) {
 
     programs.wezterm.colorSchemes.stylix = with colors; {
       ansi = [ base00 base08 base0B base0A base0D base0E base0C base05 ];
