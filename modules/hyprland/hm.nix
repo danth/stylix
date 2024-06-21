@@ -16,6 +16,12 @@ let
       "col.border_inactive" = rgb base03;
       "col.border_active" = rgb base0D;
       "col.border_locked_active" = rgb base0C;
+
+      groupbar = {
+        text_color = rgb base05;
+        "col.active" = rgb base0D;
+        "col.inactive" = rgb base03;
+      };
     };
     misc.background_color = rgb base00;
   };
