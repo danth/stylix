@@ -17,8 +17,8 @@
             magenta = base0E;
             orange = base09;
             cyan = base0C;
-            black = base03;
-            white = base05;
+            black = base00;
+            white = base07;
         };
     };
   };
