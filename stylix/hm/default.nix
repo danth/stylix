@@ -1,6 +1,6 @@
 inputs:
 { palette-generator, base16 }:
-{ config, lib, ... }:
+{ lib, ... }:
 
 let
   autoload = import ../autoload.nix { inherit lib; } "hm";

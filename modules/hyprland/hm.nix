@@ -16,6 +16,12 @@ let
       "col.border_inactive" = rgb base03;
       "col.border_active" = rgb base0D;
       "col.border_locked_active" = rgb base0C;
+
+      groupbar = {
+        text_color = rgb base05;
+        "col.active" = rgb base0D;
+        "col.inactive" = rgb base03;
+      };
     };
     misc.background_color = rgb base00;
   };
@@ -24,6 +30,12 @@ in {
   options.stylix.targets.hyprland.enable =
     config.lib.stylix.mkEnableTarget "Hyprland" true;
 
-  config.wayland.windowManager.hyprland.settings =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.hyprland.enable) settings;
+  config =
+    lib.mkIf
+    (config.stylix.enable && config.stylix.targets.hyprland.enable)
+    {
+      services.hyprpaper.enable = true;
+      stylix.targets.hyprpaper.enable = true;
+      wayland.windowManager.hyprland.settings = settings;
+    };
 }

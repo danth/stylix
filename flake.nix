@@ -27,7 +27,7 @@
 
     base16-vim = {
       flake = false;
-      url = "github:chriskempson/base16-vim";
+      url = "github:tinted-theming/base16-vim";
     };
 
     base16.url = "github:SenchoPens/base16.nix";

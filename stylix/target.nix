@@ -1,22 +1,20 @@
-{ config, lib, ... }@args:
-
-with lib;
+{ config, lib, ... }:
 
 {
   options.stylix = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = ''
         Whether to enable Stylix.
 
         When this is `false`, all theming is disabled and all other options
         are ignored.
       '';
-      type = types.bool;
+      type = lib.types.bool;
       default = false;
       example = true;
     };
 
-    autoEnable = mkOption {
+    autoEnable = lib.mkOption {
       description = ''
         Whether to enable targets by default.
 
@@ -27,7 +25,7 @@ with lib;
         they are only applicable in specific circumstances which cannot be
         detected automatically.
       '';
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
       example = false;
     };
@@ -38,13 +36,13 @@ with lib;
   in
     humanName:
     autoEnable:
-      mkEnableOption
+      lib.mkEnableOption
       "theming for ${humanName}"
       // {
         default = cfg.enable && cfg.autoEnable && autoEnable;
         example = !autoEnable;
       }
-      // optionalAttrs autoEnable {
-        defaultText = literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
+      // lib.optionalAttrs autoEnable {
+        defaultText = lib.literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
       };
 }

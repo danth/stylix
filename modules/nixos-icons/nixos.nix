@@ -9,7 +9,7 @@ with config.lib.stylix.colors;
   config.nixpkgs.overlays = lib.mkIf (config.stylix.enable && config.stylix.targets.nixos-icons.enable) [(self: super: {
     nixos-icons = super.nixos-icons.overrideAttrs (oldAttrs: {
       src = pkgs.applyPatches {
-        src = oldAttrs.src;
+        inherit (oldAttrs) src;
         prePatch = ''
           substituteInPlace logo/nix-snowflake-white.svg --replace-fail '#ffffff' '#${base05}'
 
