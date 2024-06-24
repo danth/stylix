@@ -9,7 +9,7 @@ with config.lib.stylix.colors.withHashtag;
   # Adapted from https://www.nushell.sh/book/coloring_and_theming.html#theming
   config.programs.nushell.extraConfig = lib.mkIf (config.stylix.enable && config.stylix.targets.nushell.enable) ''
     $env.config.color_config = {
-      seperator: "${base03}"
+      separator: "${base03}"
       leading_trailing_space_bg: "${base04}"
       header: "${base0B}"
       date: "${base0E}"
