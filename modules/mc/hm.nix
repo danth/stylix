@@ -3,11 +3,10 @@
 with lib;
 
 let
-  mcPackage = pkgs.mc;
   colors = config.lib.stylix.colors.withHashtag;
 in
 {
-  config = mkIf (builtins.elem mcPackage config.home.packages) {
+  config = mkIf (builtins.elem pkgs.mc config.home.packages) {
     home.file.".config/mc/ini".text = ''
       [Midnight-Commander]
       skin=stylix
