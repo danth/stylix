@@ -14,7 +14,7 @@ in
 
     home.file.".local/share/mc/skins/stylix.ini".text = ''
       [skin]
-      description = Stylix Theme Matching lsd Output
+      description = Stylix Generated Theme
       truecolors = true
 
       [Lines]
