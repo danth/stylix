@@ -53,11 +53,11 @@
     "base16-helix": {
       "flake": false,
       "locked": {
-        "lastModified": 1696727917,
-        "narHash": "sha256-FVrbPk+NtMra0jtlC5oxyNchbm8FosmvXIatkRbYy1g=",
+        "lastModified": 1720804751,
+        "narHash": "sha256-Ak6oCWZxWm1mv+TvtWF2OmVPYOnyr8tfIIIV0P17yc0=",
         "owner": "tinted-theming",
         "repo": "base16-helix",
-        "rev": "dbe1480d99fe80f08df7970e471fac24c05f2ddb",
+        "rev": "687ace01e99566bd48e984363da7185ddae913b2",
         "type": "github"
       },
       "original": {
