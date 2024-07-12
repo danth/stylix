@@ -230,7 +230,7 @@ in {
     qt = {
       enable = true;
       style.name = "breeze";
-      platformTheme = "kde";
+      platformTheme.name = "kde";
     };
 
     xdg.configFile."kdeglobals".text = "${formatConfig colorscheme}";
