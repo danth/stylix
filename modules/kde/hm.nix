@@ -236,11 +236,16 @@ in {
     home = {
       packages = with pkgs; [
         themePackage
-        # breeze-icons
+
+        # QT6 stuff (note that full does not mean "install all of KDE", just all of Qt6)
+        (hiPrio kdePackages.full)
         (hiPrio kdePackages.breeze-icons)
-        libsForQt5.breeze-icons
         (hiPrio kdePackages.breeze)
         (hiPrio kdePackages.plasma-integration)
+
+        # QT5 stuff
+        libsForQt5.full
+        libsForQt5.breeze-icons
         libsForQt5.breeze-qt5
         libsForQt5.plasma-integration
       ];
