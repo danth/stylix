@@ -240,7 +240,7 @@ in {
       style.name = "breeze";
     };
 
-    home.sessionVaraibles = {
+    home.sessionVariables = {
       QT_QPA_PLATFORMTHEME = "kde";
     };
 
