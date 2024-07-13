@@ -233,23 +233,54 @@ in {
     config.lib.stylix.mkEnableTarget "KDE" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.packages = with pkgs; [themePackage kdePackages.breeze-icons (hiPrio kdePackages.breeze) (hiPrio kdePackages.plasma-integration) libsForQt5.breeze-qt5 libsForQt5.plasma-integration];
+    home = {
+      packages = with pkgs; [
+        themePackage
+        breeze-icons
+        kdePackages.breeze-icons
+        libsForQt5.breeze-icons
+        (hiPrio kdePackages.breeze)
+        (hiPrio kdePackages.plasma-integration)
+        libsForQt5.breeze-qt5
+        libsForQt5.plasma-integration
+      ];
+
+      sessionVariables = {
+        QT_QPA_PLATFORMTHEME = "kde";
+        QT_STYLE_OVERRIDE = "breeze";
+      };
+
+      # plasma-apply-wallpaperimage is necessary to change the wallpaper
+      # after the first login.
+      activation.stylixLookAndFeel = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        global_path() {
+          for directory in /run/current-system/sw/bin /usr/bin /bin; do
+            if [[ -f "$directory/$1" ]]; then
+              printf '%s\n' "$directory/$1"
+              return 0
+            fi
+          done
+
+          return 1
+        }
+
+        if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+          "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
+        else
+          verboseEcho \
+            "plasma-apply-wallpaperimage: command not found"
+        fi
+      '';
+    };
 
     qt = {
       enable = true;
-    };
-
-    home.sessionVariables = {
-      QT_QPA_PLATFORMTHEME = "kde";
-      QT_STYLE_OVERRIDE = "breeze";
     };
 
     xdg.configFile."kdeglobals".text = "${formatConfig colorscheme}";
 
     xdg.systemDirs.config = ["${configPackage}"];
 
-    # plasma-apply-wallpaperimage is necessary to change the wallpaper
-    # after the first login.
     #
     # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
     # would still be applied without it if you logged out and back in.
@@ -261,24 +292,5 @@ in {
     # might be installed, and look there. The ideal solution would require
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
-    home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      global_path() {
-        for directory in /run/current-system/sw/bin /usr/bin /bin; do
-          if [[ -f "$directory/$1" ]]; then
-            printf '%s\n' "$directory/$1"
-            return 0
-          fi
-        done
-
-        return 1
-      }
-
-      if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-        "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-      else
-        verboseEcho \
-          "plasma-apply-wallpaperimage: command not found"
-      fi
-    '';
   };
 }
