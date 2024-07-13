@@ -237,8 +237,8 @@ in {
       packages = with pkgs; [
         themePackage
         breeze-icons
-        kdePackages.breeze-icons
-        libsForQt5.breeze-icons
+        (hiPrio kdePackages.breeze-icons)
+        # libsForQt5.breeze-icons
         (hiPrio kdePackages.breeze)
         (hiPrio kdePackages.plasma-integration)
         libsForQt5.breeze-qt5
