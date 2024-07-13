@@ -233,7 +233,7 @@ in {
     config.lib.stylix.mkEnableTarget "KDE" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.packages = with pkgs; [themePackage breeze-icons kdePackages.breeze kdePackages.plasma-integration libsForQt5.breeze-qt5];
+    home.packages = with pkgs; [themePackage breeze-icons kdePackages.breeze kdePackages.plasma-integration];
 
     qt = {
       enable = true;
