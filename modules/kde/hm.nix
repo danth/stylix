@@ -237,11 +237,11 @@ in {
 
     qt = {
       enable = true;
-      style.name = "breeze";
     };
 
     home.sessionVariables = {
       QT_QPA_PLATFORMTHEME = "kde";
+      QT_STYLE_OVERRIDE = "breeze";
     };
 
     xdg.configFile."kdeglobals".text = "${formatConfig colorscheme}";
