@@ -233,7 +233,12 @@ in {
     config.lib.stylix.mkEnableTarget "KDE" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home = {
+    home = let
+      envVars = {
+        QT_QPA_PLATFORMTHEME = "kde";
+        QT_STYLE_OVERRIDE = "breeze";
+      };
+    in {
       packages = with pkgs; [
         themePackage
 
@@ -250,10 +255,8 @@ in {
         libsForQt5.plasma-integration
       ];
 
-      sessionVariables = {
-        QT_QPA_PLATFORMTHEME = "kde";
-        QT_STYLE_OVERRIDE = "breeze";
-      };
+      sessionVariables = envVars;
+      systemd.user.sessionVariables = envVars;
 
       # plasma-apply-wallpaperimage is necessary to change the wallpaper
       # after the first login.
