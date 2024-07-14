@@ -232,74 +232,75 @@ in {
   options.stylix.targets.kde.enable =
     config.lib.stylix.mkEnableTarget "KDE" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home = let
-      envVars = {
-        QT_QPA_PLATFORMTHEME = "kde";
-        QT_STYLE_OVERRIDE = "breeze";
+  config = let
+    envVars = {
+      QT_QPA_PLATFORMTHEME = "kde";
+      QT_STYLE_OVERRIDE = "breeze";
+    };
+  in
+    lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
+      home = {
+        packages = with pkgs; [
+          themePackage
+
+          # QT6 stuff (note that full does not mean "install all of KDE", just all of Qt6)
+          (hiPrio kdePackages.full)
+          (hiPrio kdePackages.breeze-icons)
+          (hiPrio kdePackages.breeze)
+          (hiPrio kdePackages.plasma-integration)
+
+          # QT5 stuff
+          libsForQt5.full
+          libsForQt5.breeze-icons
+          libsForQt5.breeze-qt5
+          libsForQt5.plasma-integration
+        ];
+
+        sessionVariables = envVars;
+
+        # plasma-apply-wallpaperimage is necessary to change the wallpaper
+        # after the first login.
+        activation.stylixLookAndFeel = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          global_path() {
+            for directory in /run/current-system/sw/bin /usr/bin /bin; do
+              if [[ -f "$directory/$1" ]]; then
+                printf '%s\n' "$directory/$1"
+                return 0
+              fi
+            done
+
+            return 1
+          }
+
+          if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+            "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
+          else
+            verboseEcho \
+              "plasma-apply-wallpaperimage: command not found"
+          fi
+        '';
       };
-    in {
-      packages = with pkgs; [
-        themePackage
 
-        # QT6 stuff (note that full does not mean "install all of KDE", just all of Qt6)
-        (hiPrio kdePackages.full)
-        (hiPrio kdePackages.breeze-icons)
-        (hiPrio kdePackages.breeze)
-        (hiPrio kdePackages.plasma-integration)
+      systemd.user.sessionVariables = envVars;
 
-        # QT5 stuff
-        libsForQt5.full
-        libsForQt5.breeze-icons
-        libsForQt5.breeze-qt5
-        libsForQt5.plasma-integration
-      ];
+      qt = {
+        enable = true;
+      };
 
-      sessionVariables = envVars;
+      xdg.configFile."kdeglobals".text = "${formatConfig colorscheme}";
 
-      # plasma-apply-wallpaperimage is necessary to change the wallpaper
-      # after the first login.
-      activation.stylixLookAndFeel = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        global_path() {
-          for directory in /run/current-system/sw/bin /usr/bin /bin; do
-            if [[ -f "$directory/$1" ]]; then
-              printf '%s\n' "$directory/$1"
-              return 0
-            fi
-          done
+      xdg.systemDirs.config = ["${configPackage}"];
 
-          return 1
-        }
-
-        if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-          "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-        else
-          verboseEcho \
-            "plasma-apply-wallpaperimage: command not found"
-        fi
-      '';
+      #
+      # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
+      # would still be applied without it if you logged out and back in.
+      #
+      # Home Manager clears $PATH before running the activation script, but we
+      # want to avoid installing these tools explicitly because that would pull
+      # in large dependencies for people who aren't actually using KDE.
+      # The workaround used is to assume a list of common paths where the tools
+      # might be installed, and look there. The ideal solution would require
+      # changes to KDE to make it possible to update the wallpaper through
+      # config files alone.
     };
-
-    systemd.user.sessionVariables = envVars;
-
-    qt = {
-      enable = true;
-    };
-
-    xdg.configFile."kdeglobals".text = "${formatConfig colorscheme}";
-
-    xdg.systemDirs.config = ["${configPackage}"];
-
-    #
-    # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
-    # would still be applied without it if you logged out and back in.
-    #
-    # Home Manager clears $PATH before running the activation script, but we
-    # want to avoid installing these tools explicitly because that would pull
-    # in large dependencies for people who aren't actually using KDE.
-    # The workaround used is to assume a list of common paths where the tools
-    # might be installed, and look there. The ideal solution would require
-    # changes to KDE to make it possible to update the wallpaper through
-    # config files alone.
-  };
 }
