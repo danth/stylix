@@ -256,7 +256,6 @@ in {
       ];
 
       sessionVariables = envVars;
-      systemd.user.sessionVariables = envVars;
 
       # plasma-apply-wallpaperimage is necessary to change the wallpaper
       # after the first login.
@@ -280,6 +279,8 @@ in {
         fi
       '';
     };
+
+    systemd.user.sessionVariables = envVars;
 
     qt = {
       enable = true;
