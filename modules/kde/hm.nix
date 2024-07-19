@@ -250,11 +250,15 @@ in {
         (hiPrio kdePackages.breeze-icons)
         (hiPrio kdePackages.breeze)
         (hiPrio kdePackages.plasma-integration)
+        (hiPrio kdePackages.qqc2-breeze-style)
+        (hiPrio kdePackages.qqc2-desktop-style)
 
         # QT5 packages
         libsForQt5.full
         libsForQt5.breeze-icons
         libsForQt5.breeze-qt5
+        libsForQt5.qqc2-breeze-style
+        libsForQt5.qqc2-desktop-style
         libsForQt5.plasma-integration
       ];
 
