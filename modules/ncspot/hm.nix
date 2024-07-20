@@ -14,8 +14,9 @@
         primary = base05;
         secondary = base03;
         title = base06;
-        playing = base0A;
-        playing_bg = base00;
+        playing = base05;
+        playing_selected = base06;
+        playing_bg = base02;
         highlight = base05;
         highlight_bg = base02;
         error = base07;
