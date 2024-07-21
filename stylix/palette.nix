@@ -113,6 +113,7 @@ in
           Update Wallpaper by applying a lut filter to the image
         '';
       };
+
       method = lib.mkOption {
         type = with lib.types; functionTo (coercedTo package toString path);
         default = config.lib.stylix.imageEditors.lutgen;
