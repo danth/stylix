@@ -149,6 +149,7 @@ in
         readOnly = true;
         internal = true;
       };
+
       image = lib.mkOption {
         type = with lib.types; coercedTo package toString path;
         default = cfg.image;
