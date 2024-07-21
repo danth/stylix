@@ -249,7 +249,7 @@ in {
         (hiPrio kdePackages.full)
         (hiPrio kdePackages.breeze-icons)
         (hiPrio kdePackages.breeze)
-        (hiPrio kdePackages.plasma-integration)
+        # (hiPrio kdePackages.plasma-integration)
         (hiPrio kdePackages.qqc2-breeze-style)
         (hiPrio kdePackages.qqc2-desktop-style)
 
@@ -259,7 +259,7 @@ in {
         libsForQt5.breeze-qt5
         libsForQt5.qqc2-breeze-style
         libsForQt5.qqc2-desktop-style
-        libsForQt5.plasma-integration
+        # libsForQt5.plasma-integration
       ];
 
       sessionVariables = envVars;
