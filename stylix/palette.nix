@@ -1,10 +1,5 @@
 { palette-generator, base16 }:
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
+{ pkgs, lib, config, ... }:
 
 let
   cfg = config.stylix;
