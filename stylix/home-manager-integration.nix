@@ -28,6 +28,8 @@ let
       { path = [ "stylix" "fonts" "sizes" "terminal" ]; }
       { path = [ "stylix" "fonts" "sizes" "popups" ]; }
       { path = [ "stylix" "image" ]; }
+      { path = [ "stylix" "imageEditor" "enable"]; }
+      { path = [ "stylix" "imageEditor" "method"]; }
       { path = [ "stylix" "imageScalingMode" ]; }
       { path = [ "stylix" "opacity" "desktop" ]; }
       { path = [ "stylix" "opacity" "applications" ]; }

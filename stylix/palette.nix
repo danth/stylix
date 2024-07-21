@@ -1,5 +1,10 @@
 { palette-generator, base16 }:
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
   cfg = config.stylix;
@@ -20,7 +25,58 @@ let
   in json;
   generatedScheme = lib.importJSON paletteJSON;
 
-in {
+in
+{
+  imports = [
+    ./image-editors
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base01" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base02" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base03" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base04" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base05" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base06" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base07" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base08" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base09" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0A" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0B" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0C" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0D" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0E" ] "Using stylix.palette to override scheme is not supported anymore")
+
+    # Added: 2023-02-02
+    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0F" ] "Using stylix.palette to override scheme is not supported anymore")
+  ];
+
   options.stylix = {
     polarity = lib.mkOption {
       type = lib.types.enum [ "either" "light" "dark" ];
@@ -54,6 +110,26 @@ in {
         doesnt fix your monitor perfectly
       '';
     };
+    imageEditor = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Update Wallpaper by applying a lut filter to the image
+        '';
+      };
+      method = lib.mkOption {
+        type = with lib.types; functionTo (coercedTo package toString path);
+        default = config.lib.stylix.imageEditors.lutgen;
+        description = ''
+          A function to edit the image, takes one argument (the image)
+          and returns the resulting edited image
+        '';
+        example = ''
+          config.stylix.imageEditor.method = config.lib.stylix.imageEditors.lutgen;
+        '';
+      };
+    };
 
     generated = {
       json = lib.mkOption {
@@ -77,6 +153,13 @@ in {
         description = "The files storing the palettes in json and html.";
         readOnly = true;
         internal = true;
+      };
+      image = lib.mkOption {
+        type = with lib.types; coercedTo package toString path;
+        default = cfg.image;
+        readOnly = true;
+        internal = true;
+        apply = img: if cfg.imageEditor.enable then cfg.imageEditor.method img else img;
       };
     };
 

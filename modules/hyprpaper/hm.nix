@@ -7,8 +7,8 @@
     (config.stylix.enable && config.stylix.targets.hyprpaper.enable)
     {
       services.hyprpaper.settings = {
-        preload = [ "${config.stylix.image}" ];
-        wallpaper = [ ",${config.stylix.image}" ];
+        preload = [ "${config.stylix.generated.image}" ];
+        wallpaper = [ ",${config.stylix.generated.image}" ];
       };
     };
 }

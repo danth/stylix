@@ -14,8 +14,8 @@ in {
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
         picture-options = "zoom";
-        picture-uri = "file://${config.stylix.image}";
-        picture-uri-dark = "file://${config.stylix.image}";
+        picture-uri = "file://${config.stylix.generated.image}";
+        picture-uri-dark = "file://${config.stylix.generated.image}";
       };
 
       "org/gnome/desktop/interface" = {
