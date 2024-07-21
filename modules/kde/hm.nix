@@ -143,7 +143,7 @@ let
   themePackage = pkgs.runCommandLocal "stylix-kde-theme" {
     colorscheme = formatConfig colorscheme;
     wallpaperMetadata = builtins.toJSON wallpaperMetadata;
-    wallpaperImage = config.stylix.image;
+    wallpaperImage = config.stylix.generated.image;
     lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
     lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
   } ''
