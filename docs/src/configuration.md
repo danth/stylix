@@ -62,7 +62,7 @@ The current scheme can be previewed in a web browser at either
 ### Handmade schemes
 
 If you prefer a handmade color scheme, you can choose anything from
-[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes):
+[the Tinted Theming repository](https://github.com/tinted-theming/schemes):
 
 ```nix
 {
