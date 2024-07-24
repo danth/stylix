@@ -219,12 +219,6 @@ let
     printf '%s\n' "$kded5rc" >"$out/kded5rc"
     printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
   '';
-    
-  envVars = {
-    QT_QPA_PLATFORMTHEME = "kde"; 
-    QT_STYLE_OVERRIDE = "breeze";
-  }; 
-
 in {
   options.stylix.targets.kde.enable =
     config.lib.stylix.mkEnableTarget "KDE" true;
@@ -235,10 +229,10 @@ in {
       configFile."kdeglobals".text = "${formatConfig colorscheme}";
     };
 
-    systemd.user.sessionVariables = envVars;
-
     qt = {
       enable = true;
+      platformTheme.name = "kde";
+      style.name = "breeze";
     };
 
     home = {
@@ -261,8 +255,6 @@ in {
         libsForQt5.qqc2-desktop-style
         libsForQt5.plasma-integration
       ];
-
-      sessionVariables = envVars;
 
       # plasma-apply-wallpaperimage is necessary to change the wallpaper
       # after the first login.
