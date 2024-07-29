@@ -89,11 +89,11 @@ only the user override is used.
 
 When passing colors to unsupported targets or creating custom modules, it
 is possible to access values from the configured color scheme through
-`lib.stylix.colors`.
+`config.lib.stylix.colors`.
 An overview of the available values is shown below.
 
 ```nix
-lib.stylix.colors = {
+config.lib.stylix.colors = {
   base08 = "ff0000";
   base08-hex-r = "ff";
   base08-dec-r = "0.996094";
