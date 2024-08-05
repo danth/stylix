@@ -5,9 +5,9 @@
     enable =
       config.lib.stylix.mkEnableTarget "Neovim" true;
 
-    transparent_bg = {
+    transparentBackground = {
       main = lib.mkEnableOption "background transparency for the main Neovim window";
-      sign_column = lib.mkEnableOption "background transparency for the Neovim sign column";
+      signColumn = lib.mkEnableOption "background transparency for the Neovim sign column";
     };
   };
 
@@ -29,11 +29,11 @@
                 base0C = '${base0C}', base0D = '${base0D}', base0E = '${base0E}', base0F = '${base0F}'
               })
             '')
-            + (lib.mkIf cfg.transparent_bg.main ''
+            + (lib.mkIf cfg.transparentBackground.main ''
               vim.cmd.highlight({ "Normal", "guibg=NONE", "ctermbg=NONE" })
               vim.cmd.highlight({ "NonText", "guibg=NONE", "ctermbg=NONE" })
             '')
-            + (lib.mkIf cfg.transparent_bg.sign_column ''
+            + (lib.mkIf cfg.transparentBackground.signColumn ''
               vim.cmd.highlight({ "SignColumn", "guibg=NONE", "ctermbg=NONE" })
             '');
         };
