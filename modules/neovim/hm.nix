@@ -20,7 +20,7 @@
         plugins = lib.singleton {
           plugin = pkgs.vimPlugins.base16-nvim;
           type = "lua";
-          config =
+          config = lib.mkMerge [
             (with config.lib.stylix.colors.withHashtag; ''
               require('base16-colorscheme').setup({
                 base00 = '${base00}', base01 = '${base01}', base02 = '${base02}', base03 = '${base03}',
@@ -29,13 +29,14 @@
                 base0C = '${base0C}', base0D = '${base0D}', base0E = '${base0E}', base0F = '${base0F}'
               })
             '')
-            + (lib.mkIf cfg.transparentBackground.main ''
+            (lib.mkIf cfg.transparentBackground.main ''
               vim.cmd.highlight({ "Normal", "guibg=NONE", "ctermbg=NONE" })
               vim.cmd.highlight({ "NonText", "guibg=NONE", "ctermbg=NONE" })
             '')
-            + (lib.mkIf cfg.transparentBackground.signColumn ''
+            (lib.mkIf cfg.transparentBackground.signColumn ''
               vim.cmd.highlight({ "SignColumn", "guibg=NONE", "ctermbg=NONE" })
-            '');
+            '')
+          ];
         };
       };
   };
