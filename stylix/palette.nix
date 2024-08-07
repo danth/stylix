@@ -21,8 +21,8 @@ let
   generatedScheme = lib.importJSON paletteJSON;
 
 in {
-  # TODO link to doc on how to do instead
   imports = [
+    ./image-editors
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "Using stylix.palette to override scheme is not supported anymore")
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base01" ] "Using stylix.palette to override scheme is not supported anymore")
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base02" ] "Using stylix.palette to override scheme is not supported anymore")
@@ -75,6 +75,17 @@ in {
       '';
     };
 
+    imageEditor = {
+      enable = lib.mkEnableOption "Update `stylix.image` by applying `stylix.imageEditor.method` to the image";
+
+      method = lib.mkOption {
+        type = with lib.types; functionTo (coercedTo package toString path);
+        default = config.lib.stylix.imageEditors.lutgen;
+        description = "Edits the given `stylix.image` argument, outputs to `stylix.generated.image`";
+        example = "config.lib.stylix.imageEditors.lutgen;";
+      };
+    };
+
     generated = {
       json = lib.mkOption {
         type = lib.types.path;
@@ -97,6 +108,14 @@ in {
         description = "The files storing the palettes in json and html.";
         readOnly = true;
         internal = true;
+      };
+
+      image = lib.mkOption {
+        type = with lib.types; coercedTo package toString path;
+        default = cfg.image;
+        readOnly = true;
+        internal = true;
+        apply = img: if cfg.imageEditor.enable then cfg.imageEditor.method img else img;
       };
     };
 
