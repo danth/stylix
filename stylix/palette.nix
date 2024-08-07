@@ -20,8 +20,7 @@ let
   in json;
   generatedScheme = lib.importJSON paletteJSON;
 
-in
-{
+in {
   imports = [
     ./image-editors
     (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "Using stylix.palette to override scheme is not supported anymore")
@@ -105,25 +104,15 @@ in
         doesnt fix your monitor perfectly
       '';
     };
+
     imageEditor = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Update Wallpaper by applying a lut filter to the image
-        '';
-      };
+      enable = lib.mkEnableOption "Update `stylix.image` by applying `stylix.imageEditor.method` to the image";
 
       method = lib.mkOption {
         type = with lib.types; functionTo (coercedTo package toString path);
         default = config.lib.stylix.imageEditors.lutgen;
-        description = ''
-          A function to edit the image, takes one argument (the image)
-          and returns the resulting edited image
-        '';
-        example = ''
-          config.stylix.imageEditor.method = config.lib.stylix.imageEditors.lutgen;
-        '';
+        description = "Edits the given `stylix.image` argument, outputs to `stylix.generated.image`";
+        example = "config.lib.stylix.imageEditors.lutgen;";
       };
     };
 

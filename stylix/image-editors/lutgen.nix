@@ -10,5 +10,5 @@ let
   baseName = builtins.baseNameOf img;
 in
 pkgs.runCommand baseName { } ''
-  ${pkgs.lutgen}/bin/lutgen apply '${img}' -o $out -- ${colors}
+  ${pkgs.lutgen}/bin/lutgen apply '${img}' --output "$out" -- ${colors}
 ''
