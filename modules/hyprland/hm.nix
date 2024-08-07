@@ -5,6 +5,7 @@ with config.lib.stylix.colors;
 let
   rgb = color: "rgb(${color})";
   rgba = color: alpha: "rgba(${color}${alpha})";
+  cursorCfg = config.stylix.cursor;
 
   settings = {
     decoration."col.shadow" = rgba base00 "99";
@@ -24,6 +25,9 @@ let
       };
     };
     misc.background_color = rgb base00;
+    exec = [
+      "hyprctl setcursor ${cursorCfg.name} ${builtins.toString cursorCfg.size}"
+    ];
   };
 
 in {
