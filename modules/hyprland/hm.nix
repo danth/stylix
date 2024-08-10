@@ -41,9 +41,18 @@ in {
       && cfg.enable
       && config.wayland.windowManager.hyprland.enable
     )
-    {
-      services.hyprpaper.enable = cfg.hyprpaper.enable;
-      stylix.targets.hyprpaper.enable = cfg.hyprpaper.enable;
-      wayland.windowManager.hyprland.settings = settings;
-    };
+    (
+      lib.mkMerge [
+        {
+          wayland.windowManager.hyprland.settings = settings;
+        }
+
+        (
+          lib.mkIf cfg.hyprpaper.enable {
+            services.hyprpaper.enable = true;
+            stylix.targets.hyprpaper.enable = true;
+          }
+        )
+      ]
+    );
 }
