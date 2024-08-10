@@ -27,15 +27,23 @@ let
   };
 
 in {
-  options.stylix.targets.hyprland.enable =
-    config.lib.stylix.mkEnableTarget "Hyprland" true;
+  options.stylix.targets.hyprland = {
+    enable = config.lib.stylix.mkEnableTarget "Hyprland" true;
+    hyprpaper.enable = config.lib.stylix.mkEnableTarget "Hyprpaper" true;
+  };
 
-  config =
+  config = let
+    cfg = config.stylix.targets.hyprland;
+  in
     lib.mkIf
-    (config.stylix.enable && config.stylix.targets.hyprland.enable && config.wayland.windowManager.hyprland.enable)
+    (
+      config.stylix.enable
+      && cfg.enable
+      && config.wayland.windowManager.hyprland.enable
+    )
     {
-      services.hyprpaper.enable = true;
-      stylix.targets.hyprpaper.enable = true;
+      services.hyprpaper.enable = cfg.hyprpaper.enable;
+      stylix.targets.hyprpaper.enable = cfg.hyprpaper.enable;
       wayland.windowManager.hyprland.settings = settings;
     };
 }
