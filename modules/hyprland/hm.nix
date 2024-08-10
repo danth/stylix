@@ -1,11 +1,6 @@
 { config, lib, ... }:
 
-with config.lib.stylix.colors;
-
-let
-  rgb = color: "rgb(${color})";
-  rgba = color: alpha: "rgba(${color}${alpha})";
-in {
+{
   options.stylix.targets.hyprland = {
     enable = config.lib.stylix.mkEnableTarget "Hyprland" true;
     hyprpaper.enable = config.lib.stylix.mkEnableTarget "Hyprpaper" true;
@@ -23,7 +18,10 @@ in {
     (
       lib.mkMerge [
         {
-          wayland.windowManager.hyprland.settings = {
+          wayland.windowManager.hyprland.settings = let
+            rgb = color: "rgb(${color})";
+            rgba = color: alpha: "rgba(${color}${alpha})";
+          in with config.lib.stylix.colors; {
             decoration.shadow.color = rgba base00 "99";
             general = {
               "col.active_border" = rgb base0D;
