@@ -6,5 +6,8 @@ let
   };
 in ''
   source ${theme}
-  base16-${config.lib.stylix.colors.slug}
+
+  if test -n "$base16_theme" && status --is-interactive && test -z "$TMUX"
+    base16-${config.lib.stylix.colors.slug}
+  end
 ''
