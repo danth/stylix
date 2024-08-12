@@ -14,9 +14,12 @@
   };
 
   imports = [
+    # Added: 2024-08-06
     (lib.mkRenamedOptionModule
       [ "stylix" "targets" "nixvim" "transparent_bg" "main" ]
       [ "stylix" "targets" "nixvim" "transparentBackground" "main" ])
+
+    # Added: 2024-08-06
     (lib.mkRenamedOptionModule
       [ "stylix" "targets" "nixvim" "transparent_bg" "sign_column" ]
       [ "stylix" "targets" "nixvim" "transparentBackground" "signColumn" ])
