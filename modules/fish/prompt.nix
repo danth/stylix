@@ -6,5 +6,9 @@ let
   };
 in ''
   source ${theme}
-  base16-${config.lib.stylix.colors.slug}
+
+  # See https://github.com/tomyun/base16-fish/issues/7 for why this condition exists
+  if test -n "$base16_theme" && status --is-interactive && test -z "$TMUX"
+    base16-${config.lib.stylix.colors.slug}
+  end
 ''
