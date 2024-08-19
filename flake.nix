@@ -60,10 +60,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Interface flake systems.
-    systems = {
-      flake = false;
-      url = "path:stylix/systems.nix";
-    };
+    systems.url = "github:nix-systems/default";
   };
 
   outputs =
