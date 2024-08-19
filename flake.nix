@@ -37,6 +37,11 @@
       url = "github:edolstra/flake-compat";
     };
 
+    flake-utils = {
+      inputs.systems.follows = "systems";
+      url = "github:numtide/flake-utils";
+    };
+
     gnome-shell = {
       flake = false;
 
@@ -53,18 +58,18 @@
     };
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    # Interface flake systems.
+    systems = {
+      flake = false;
+      url = "path:stylix/systems.nix";
+    };
   };
 
   outputs =
     { nixpkgs, base16, self, ... }@inputs:
     {
-      packages = nixpkgs.lib.genAttrs [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "i686-linux"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ] (
+      packages = nixpkgs.lib.genAttrs inputs.flake-utils.lib.defaultSystems (
         system:
         let
           inherit (nixpkgs) lib;
