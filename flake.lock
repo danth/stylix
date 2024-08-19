@@ -240,7 +240,7 @@
       "flake": false,
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-4CDjAaoWvkUTFjjKdcDZG85k4vQfgR0K4+zgtqTW5ho=",
+        "narHash": "sha256-zklqYResGOhx59bPMTdCzf7qSwNnwP4I/mYLV/C48iI=",
         "path": "stylix/systems.nix",
         "type": "path"
       },
