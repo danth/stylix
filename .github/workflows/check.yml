@@ -13,23 +13,23 @@ permissions:
 jobs:
   evaluate:
     name: List packages
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
             extra-experimental-features = nix-command flakes
 
       - name: Set up cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+        uses: DeterminateSystems/magic-nix-cache-action@v8
 
       - name: List packages
         id: list-packages
         run: |
-          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-latest" else "macos-latest" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
+          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-22.04" else "macos-14" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
 
     outputs:
       packages: ${{ steps.list-packages.outputs.packages }}
@@ -48,14 +48,14 @@ jobs:
 
     steps:
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
             extra-experimental-features = nix-command flakes
 
       - name: Set up cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+        uses: DeterminateSystems/magic-nix-cache-action@v8
 
       - name: Check ${{ matrix.check.key }}
         run: nix -L check github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.check.type }}.${{ matrix.check.arch }}.${{ matrix.check.key }} --no-update-lock-file
