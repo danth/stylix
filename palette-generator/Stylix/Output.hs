@@ -10,7 +10,7 @@ toHexNum :: Double -> Word8
 toHexNum = truncate
 
 {- |
-Convert a colour to a hexdecimal string.
+Convert a colour to a hexadecimal string.
 
 >>> toHex (RGB 255 255 255)
 "ffffff"
