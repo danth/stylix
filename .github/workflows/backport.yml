@@ -10,7 +10,6 @@ permissions: {}
 
 jobs:
   backport:
-    name: Backport
     runs-on: ubuntu-latest
 
     if: >
@@ -23,23 +22,19 @@ jobs:
     steps:
       # Use a GitHub App rather than the default token so that GitHub Actions
       # workflows may run on the created pull request.
-      - name: Create GitHub access token
-        uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ vars.BACKPORT_APP_ID }}
           private-key: ${{ secrets.BACKPORT_PRIVATE_KEY }}
 
-      - name: Checkout original pull request
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           token: ${{ steps.app-token.outputs.token }}
 
-      - name: Create backport pull request
-        uses: korthout/backport-action@v3
+      - uses: korthout/backport-action@v3
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           pull_title: "[${target_branch}] ${pull_title}"
-          pull_description: |-
-            This is an automated backport of #${pull_number}.
+          pull_description: "This is an automated backport of #${pull_number}."
