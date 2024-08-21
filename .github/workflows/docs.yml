@@ -12,18 +12,18 @@ jobs:
     permissions:
       contents: read
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: DeterminateSystems/nix-installer-action@v16
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extra-conf: |
             extra-experimental-features = nix-command flakes
 
       - name: Set up cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+        uses: DeterminateSystems/magic-nix-cache-action@v8
 
       - name: Build docs
         run: nix -L build github:${{ github.repository }}/${{ github.sha }}#docs
@@ -49,7 +49,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Deploy docs to GitHub Pages
