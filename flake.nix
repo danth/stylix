@@ -86,6 +86,10 @@
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
       in {
+        devShells.default = pkgs.mkShell {
+          packages = [ inputs.home-manager.packages.${system}.default ];
+        };
+
         packages = let
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
