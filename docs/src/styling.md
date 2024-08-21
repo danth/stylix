@@ -11,7 +11,7 @@ applications that don't fit into any of the groups below. In this case it is up
 to the committer to make sure said application fits in stylistically with the
 rest of the themed applications.
 
-It is also importent to note that this is a growing theming guide and when theming an application and you find the guide to be lacking in any way in
+It is also important to note that this is a growing theming guide and when theming an application and you find the guide to be lacking in any way in
 terms of direction, you are encouraged to open an issue regarding what you would like to see added to the style guide.
 
 ## Terms
