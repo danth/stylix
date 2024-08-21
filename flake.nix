@@ -111,13 +111,20 @@
           };
         } self.packages.${system};
 
-        devShells.default = pkgs.mkShell {
-          inherit (self.checks.${system}.git-hooks) shellHook;
+        devShells = {
+          default = pkgs.mkShell {
+            inherit (self.checks.${system}.git-hooks) shellHook;
 
-          packages = [
-            inputs.home-manager.packages.${system}.default
-            self.checks.${system}.git-hooks.enabledPackages
-          ];
+            packages = [
+              inputs.home-manager.packages.${system}.default
+              self.checks.${system}.git-hooks.enabledPackages
+            ];
+          };
+
+          ghc = pkgs.mkShell {
+            inputsFrom = [ self.devShells.${system}.default ];
+            packages = [ pkgs.ghc ];
+          };
         };
 
         packages = let
