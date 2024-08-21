@@ -2,60 +2,37 @@ name: Check
 
 on:
   push:
-    branches:
-      - master
-      - release-**
-  pull_request:
 
 permissions:
   contents: read
 
 jobs:
-  evaluate:
-    name: List packages
+  get-derivations:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          extra-conf: |
-            extra-experimental-features = nix-command flakes
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
 
-      - name: Set up cache
-        uses: DeterminateSystems/magic-nix-cache-action@v8
-
-      - name: List packages
-        id: list-packages
+      - id: get-derivations
         run: |
-          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-24.04" else "macos-14" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
+          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-24.04" else "macos-14" end), key: .key})) | flatten) | flatten | "derivations=\(.)"' >> $GITHUB_OUTPUT
 
     outputs:
-      packages: ${{ steps.list-packages.outputs.packages }}
+      derivations: ${{ steps.get-derivations.outputs.derivations }}
 
   check:
-    needs: evaluate
+    runs-on: ${{ matrix.check.os }}
+
+    name: ${{ matrix.check.key }} on ${{ matrix.check.arch }}
+    needs: get-derivations
 
     strategy:
       fail-fast: false
       matrix:
-        check: ${{ fromJSON(needs.evaluate.outputs.packages) }}
-
-    name: ${{ matrix.check.key }} on ${{ matrix.check.arch }}
-
-    runs-on: ${{ matrix.check.os }}
+        check: ${{ fromJSON(needs.get-derivations.outputs.derivations) }}
 
     steps:
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          extra-conf: |
-            extra-experimental-features = nix-command flakes
-
-      - name: Set up cache
-        uses: DeterminateSystems/magic-nix-cache-action@v8
-
-      - name: Check ${{ matrix.check.key }}
-        run: nix -L check github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.check.type }}.${{ matrix.check.arch }}.${{ matrix.check.key }} --no-update-lock-file
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - run: nix -L check github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.check.type }}.${{ matrix.check.arch }}.${{ matrix.check.key }} --no-update-lock-file
