@@ -101,6 +101,7 @@
             deadnix.enable = true;
             statix.enable = true;
             typos.enable = true;
+            yamllint.enable = true;
           };
 
           src = ./.;
