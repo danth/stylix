@@ -106,7 +106,12 @@
         };
 
         devShells.default = pkgs.mkShell {
-          packages = [ inputs.home-manager.packages.${system}.default ];
+          inherit (inputs.self.checks.${system}.git-hooks) shellHook;
+
+          packages = with inputs; [
+            home-manager.packages.${system}.default
+            self.checks.${system}.git-hooks.enabledPackages
+          ];
         };
 
         packages = let
