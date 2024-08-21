@@ -27,6 +27,16 @@
       url = "github:numtide/flake-utils";
     };
 
+    git-hooks = {
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        nixpkgs-stable.follows = "git-hooks/nixpkgs";
+        nixpkgs.follows = "nixpkgs";
+      };
+
+      url = "github:cachix/git-hooks.nix";
+    };
+
     gnome-shell = {
       flake = false;
 
@@ -86,6 +96,15 @@
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
       in {
+        checks.git-hooks = inputs.git-hooks.lib.${system}.run {
+          hooks = {
+            deadnix.enable = true;
+            statix.enable = true;
+          };
+
+          src = ./.;
+        };
+
         devShells.default = pkgs.mkShell {
           packages = [ inputs.home-manager.packages.${system}.default ];
         };
