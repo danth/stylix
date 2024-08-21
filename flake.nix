@@ -101,6 +101,7 @@
             hooks = {
               deadnix.enable = true;
               statix.enable = true;
+              typos.enable = true;
             };
 
             src = ./.;

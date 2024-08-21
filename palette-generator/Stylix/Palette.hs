@@ -10,7 +10,7 @@ import Data.Vector ( (//) )
 import qualified Data.Vector as V
 import System.Random ( randomRIO )
 
--- | Extract the primary scale from a pallete.
+-- | Extract the primary scale from a palette.
 primary :: V.Vector a -> V.Vector a
 primary = V.take 8
 
