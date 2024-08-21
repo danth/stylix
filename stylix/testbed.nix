@@ -14,7 +14,7 @@ let
     security.sudo.wheelNeedsPassword = false;
 
     # The state version can safely track the latest release because the disk
-    # image is ephermal.
+    # image is ephemeral.
     system.stateVersion = config.system.nixos.release;
     home-manager.users.${username}.home.stateVersion = config.system.nixos.release;
 
