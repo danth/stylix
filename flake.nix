@@ -101,6 +101,7 @@
             hooks = {
               deadnix.enable = true;
               statix.enable = true;
+              stylish-haskell.enable = true;
               typos.enable = true;
               yamllint.enable = true;
             };
