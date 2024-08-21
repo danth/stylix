@@ -1,13 +1,13 @@
 module Data.Colour ( LAB(..), RGB(..), deltaE, lab2rgb, rgb2lab ) where
 
 data LAB = LAB { lightness :: Double
-               , channelA :: Double
-               , channelB :: Double
+               , channelA  :: Double
+               , channelB  :: Double
                }
 
-data RGB = RGB { red :: Double
+data RGB = RGB { red   :: Double
                , green :: Double
-               , blue :: Double
+               , blue  :: Double
                }
 
 -- Based on https://github.com/antimatter15/rgb-lab/blob/master/color.js
