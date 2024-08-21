@@ -2,12 +2,12 @@
 
 module Ai.Evolutionary ( Species(..), evolve ) where
 
-import Data.Ord ( Down(Down), comparing )
-import Data.Vector ( (!) )
-import qualified Data.Vector as V
-import Data.Vector.Algorithms.Intro ( selectBy )
-import System.Random ( randomRIO )
-import Text.Printf ( printf )
+import           Data.Ord                     (Down (Down), comparing)
+import           Data.Vector                  ((!))
+import qualified Data.Vector                  as V
+import           Data.Vector.Algorithms.Intro (selectBy)
+import           System.Random                (randomRIO)
+import           Text.Printf                  (printf)
 
 numSurvivors :: Int
 numSurvivors = 500
@@ -96,7 +96,7 @@ selectSurvivors environment population =
 shouldContinue :: [Double] -- ^ Fitness history
                -> Bool
 shouldContinue (x:y:_) = x /= y
-shouldContinue _ = True
+shouldContinue _       = True
 
 evolutionLoop :: Species e g
               => e -- ^ Environment
