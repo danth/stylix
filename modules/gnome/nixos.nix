@@ -22,7 +22,7 @@ in {
     # which will then download the pack regardless of its exclusion below.
     environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
 
-    nixpkgs.overlays = [(self: super: {
+    nixpkgs.overlays = [(_: super: {
       gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
         # Themes are usually applied via an extension, but extensions are
         # not available on the login screen. The only way to change the
