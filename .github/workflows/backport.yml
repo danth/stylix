@@ -1,8 +1,9 @@
-# Derived from https://github.com/NixOS/nixpkgs/blob/2ab6f6d61630889491f86396b27a76ffb6fbc7bb/.github/workflows/backport.yml
-
+---
+# Derived from
+# https://github.com/NixOS/nixpkgs/blob/2ab6f6d61630889491f86396b27a76ffb6fbc7bb/.github/workflows/backport.yml
 name: Backport
 
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request_target:
     types: [closed, labeled]
 
@@ -16,7 +17,10 @@ jobs:
       (
         github.repository_owner == 'danth' &&
         github.event.pull_request.merged == true &&
-        (github.event_name != 'labeled' || startsWith('backport', github.event.label.name))
+        (
+          github.event_name != 'labeled' ||
+          startsWith('backport', github.event.label.name)
+        )
       )
 
     steps:

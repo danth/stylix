@@ -1,6 +1,7 @@
+---
 name: Check
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
 
 permissions:
@@ -16,7 +17,46 @@ jobs:
 
       - id: get-derivations
         run: |
-          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-24.04" else "macos-14" end), key: .key})) | flatten) | flatten | "derivations=\(.)"' >> $GITHUB_OUTPUT
+          nix flake show --json \
+            github:${{
+              github.repository
+            }}/${{
+              github.event.pull_request.head.sha || github.sha
+            }} |
+            jq --compact-output --raw-output '
+              to_entries |
+              map(
+                .key as $type |
+                select($type == "checks" or $type == "packages") |
+                .value |
+                to_entries |
+                map(
+                  .key as $arch |
+                  select($arch == "x86_64-linux" or $arch == "x86_64-darwin") |
+                  .value |
+                  to_entries |
+                  map(
+                    {
+                      arch: $arch,
+                      key: .key,
+
+                      os: (
+                        if $arch == "x86_64-linux" then
+                          "ubuntu-24.04"
+                        else
+                          "macos-14"
+                        end
+                      ),
+
+                      type: $type,
+                    }
+                  )
+                ) |
+                flatten
+              ) |
+              flatten |
+              "derivations=\(.)"
+            ' >> $GITHUB_OUTPUT
 
     outputs:
       derivations: ${{ steps.get-derivations.outputs.derivations }}
@@ -35,4 +75,17 @@ jobs:
     steps:
       - uses: DeterminateSystems/nix-installer-action@v16
       - uses: DeterminateSystems/magic-nix-cache-action@v8
-      - run: nix -L check github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.check.type }}.${{ matrix.check.arch }}.${{ matrix.check.key }} --no-update-lock-file
+
+      - run: |
+          nix build --no-update-lock-file --print-build-logs \
+            github:${{
+              github.repository
+            }}/${{
+              github.event.pull_request.head.sha || github.sha
+            }}#${{
+              matrix.check.type
+            }}.${{
+              matrix.check.arch
+            }}.${{
+              matrix.check.key
+            }}
