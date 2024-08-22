@@ -1,13 +1,14 @@
 { config, lib, ... }:
 
 {
-  options.stylix.targets.zellij.enable =
-    config.lib.stylix.mkEnableTarget "zellij" true;
+  options.stylix.targets.zellij.enable = config.lib.stylix.mkEnableTarget "zellij" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.zellij.enable) {
-    programs.zellij.settings = {
-        theme = "stylix";
-        themes.stylix = with config.lib.stylix.colors.withHashtag; {
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.zellij.enable)
+      {
+        programs.zellij.settings = {
+          theme = "stylix";
+          themes.stylix = with config.lib.stylix.colors.withHashtag; {
             bg = base03;
             fg = base05;
             red = base08;
@@ -19,8 +20,8 @@
             cyan = base0C;
             black = base00;
             white = base07;
+          };
         };
-    };
-  };
+      };
 
 }

@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   cfg = config.stylix.targets.gtk;
@@ -8,15 +13,15 @@ let
     extension = "css";
   };
 
-  finalCss = pkgs.runCommandLocal "gtk.css" {} ''
+  finalCss = pkgs.runCommandLocal "gtk.css" { } ''
     cat ${baseCss} >>$out
     echo ${lib.escapeShellArg cfg.extraCss} >>$out
   '';
 
-in {
+in
+{
   options.stylix.targets.gtk = {
-    enable = config.lib.stylix.mkEnableTarget
-      "all GTK3, GTK4 and Libadwaita apps" true;
+    enable = config.lib.stylix.mkEnableTarget "all GTK3, GTK4 and Libadwaita apps" true;
 
     extraCss = lib.mkOption {
       description = ''

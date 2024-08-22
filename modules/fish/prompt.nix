@@ -4,7 +4,8 @@ let
   theme = config.lib.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-fish;
   };
-in ''
+in
+''
   source ${theme}
 
   # See https://github.com/tomyun/base16-fish/issues/7 for why this condition exists
