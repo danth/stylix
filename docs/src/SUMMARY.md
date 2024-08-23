@@ -13,7 +13,7 @@
 
 # Contributing
 
-- [Contributing](contributing.md)
+- [Commit Convention](commit_convention.md)
 - [Adding modules](modules.md)
 - [Testbeds](testbeds.md)
 - [Style guide](styling.md)
