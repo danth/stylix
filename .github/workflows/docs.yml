@@ -32,7 +32,7 @@ jobs:
         run: cp -r --dereference --no-preserve=mode,ownership result/ public/
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public/
 
@@ -54,4 +54,4 @@ jobs:
     steps:
       - name: Deploy docs to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
