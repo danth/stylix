@@ -17,9 +17,9 @@ in {
     # As Stylix is controlling the wallpaper, there is no need for this
     # pack of default wallpapers to be installed.
     # If you want to use one, you can set stylix.image to something like
-    # "${pkgs.gnome.gnome-backgrounds}/path/to/your/preferred/background"
+    # "${pkgs.gnome-backgrounds}/path/to/your/preferred/background"
     # which will then download the pack regardless of its exclusion below.
-    environment.gnome.excludePackages = [ pkgs.gnome.gnome-backgrounds ];
+    environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
 
     nixpkgs.overlays = [(self: super: {
       gnome = super.gnome.overrideScope (gnomeSelf: gnomeSuper: {
