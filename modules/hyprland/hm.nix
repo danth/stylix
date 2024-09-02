@@ -32,7 +32,7 @@ in {
 
   config =
     lib.mkIf
-    (config.stylix.enable && config.stylix.targets.hyprland.enable)
+    (config.stylix.enable && config.stylix.targets.hyprland.enable && config.wayland.windowManager.hyprland.enable)
     {
       services.hyprpaper.enable = true;
       stylix.targets.hyprpaper.enable = true;
