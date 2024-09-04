@@ -241,7 +241,7 @@ in {
 
         # QT6 packages (note that full does not mean "install all of KDE", just all of Qt6)
         (hiPrio kdePackages.full)
-        (hiPrio kdePackages.breeze-icons)
+        # (hiPrio kdePackages.breeze-icons)
         (hiPrio kdePackages.breeze)
         (hiPrio kdePackages.plasma-integration)
         (hiPrio kdePackages.qqc2-breeze-style)
@@ -249,7 +249,7 @@ in {
 
         # QT5 packages
         libsForQt5.full
-        libsForQt5.breeze-icons
+        # libsForQt5.breeze-icons
         libsForQt5.breeze-qt5
         libsForQt5.qqc2-breeze-style
         libsForQt5.qqc2-desktop-style
