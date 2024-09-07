@@ -4,6 +4,8 @@ with config.stylix.fonts;
 with config.lib.stylix.colors;
 
 let
+  cfg = config.stylix.targets.kde;
+
   formatValue = value:
     if builtins.isBool value
     then if value then "true" else "false"
@@ -123,6 +125,7 @@ let
       ServiceTypes = [ "Plasma/LookAndFeel" ];
       Website = "https://github.com/danth/stylix";
     };
+    KPackageStructure = "Plasma/LookAndFeel";
   };
 
   lookAndFeelDefaults = {
@@ -220,11 +223,54 @@ let
     printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
   '';
 
-in {
-  options.stylix.targets.kde.enable =
-    config.lib.stylix.mkEnableTarget "KDE" true;
+  activator = pkgs.writeShellScriptBin "stylix-set-kde-wallpaper" ''
+    set -eu
+    global_path() {
+      for directory in /run/current-system/sw/bin /usr/bin /bin; do
+        if [[ -f "$directory/$1" ]]; then
+          printf '%s\n' "$directory/$1"
+          return 0
+        fi
+      done
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
+      return 1
+    }
+
+    if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+      "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
+    else
+      echo "Skipping plasma-apply-wallpaperimage: command not found"
+    fi
+
+    if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+      "$look_and_feel" --apply stylix
+    else
+      echo "Skipping plasma-apply-lookandfeel: command not found"
+    fi
+  '';
+
+  activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdesetter";
+in {
+  options.stylix.targets.kde = {
+    enable = config.lib.stylix.mkEnableTarget "KDE" true;
+    service = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Wallpaper and appearance in Plasma can only be set with KDE tools via D-Bus connection.
+
+        However, home-manager activation happens before entering a user session
+        (unless started manually), causing these tools to fail. To work around this,
+        you can enable stylix service to automagically run these tools after login.
+
+        If wallpaper setting fails, we simply ignore it and let home-manager activation
+        continue as usual. To force stylix settings manually, you can try to run `stylix-set-kde-wallpaper`.
+      '';
+    };
+  };
+
+  config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.packages = [ themePackage ];
     xdg.systemDirs.config = [ "${configPackage}" ];
 
@@ -242,30 +288,22 @@ in {
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
     home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      global_path() {
-        for directory in /run/current-system/sw/bin /usr/bin /bin; do
-          if [[ -f "$directory/$1" ]]; then
-            printf '%s\n' "$directory/$1"
-            return 0
-          fi
-        done
-
-        return 1
-      }
-
-      if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-        "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-      else
-        verboseEcho \
-          "plasma-apply-wallpaperimage: command not found"
-      fi
-
-      if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
-        "$look_and_feel" --apply stylix
-      else
-        verboseEcho \
-          "Skipping plasma-apply-lookandfeel: command not found"
-      fi
+      ${activator}/bin/stylix-set-kde-wallpaper || verboseEcho \
+        "KDE theme setting failed. See `${activateDocs}`"
     '';
+
+    systemd.user.services.stylix-set-kde-wallpaper = lib.mkIf cfg.service {
+      Unit = {
+        Description = "KDE wallpaper setter for stylix";
+        Documentation = activateDocs;
+        After = [ "plasma-plasmashell.service" ];
+      };
+      Service = {
+        ExecStart = "${activator}/bin/stylix-set-kde-wallpaper";
+        Restart = "on-failure";
+        RestartSec = 1;
+      };
+      Install.WantedBy = [ "default.target" ];
+    };
   };
 }
