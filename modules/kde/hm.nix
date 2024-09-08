@@ -249,7 +249,7 @@ let
     fi
   '';
 
-  activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdesetter";
+  activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdeservice";
 in {
   options.stylix.targets.kde = {
     enable = config.lib.stylix.mkEnableTarget "KDE" true;
