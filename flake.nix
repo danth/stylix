@@ -42,6 +42,16 @@
       url = "github:numtide/flake-utils";
     };
 
+    git-hooks = {
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        nixpkgs-stable.follows = "git-hooks/nixpkgs";
+        nixpkgs.follows = "nixpkgs";
+      };
+
+      url = "github:cachix/git-hooks.nix";
+    };
+
     gnome-shell = {
       flake = false;
 
@@ -64,13 +74,56 @@
   };
 
   outputs =
-    { nixpkgs, base16, self, ... }@inputs:
+    {
+      nixpkgs,
+      base16,
+      self,
+      ...
+    }@inputs:
     inputs.flake-utils.lib.eachDefaultSystem (
-      system: let
+      system:
+      let
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        packages = let
+      in
+      {
+        checks.git-hooks = inputs.git-hooks.lib.${system}.run {
+          hooks = {
+            deadnix.enable = true;
+            hlint.enable = true;
+
+            nixfmt-rfc-style = {
+              enable = true;
+              settings.width = 80;
+            };
+
+            statix.enable = true;
+            stylish-haskell.enable = true;
+            typos.enable = true;
+            yamllint.enable = true;
+          };
+
+          src = ./.;
+        };
+
+        devShells = {
+          default = pkgs.mkShell {
+            inherit (inputs.self.checks.${system}.git-hooks) shellHook;
+
+            packages = with inputs; [
+              home-manager.packages.${system}.default
+              self.checks.${system}.git-hooks.enabledPackages
+            ];
+          };
+
+          ghc = pkgs.mkShell {
+            inputsFrom = [ self.devShells.${system}.default ];
+            packages = [ pkgs.ghc ];
+          };
+        };
+
+        packages =
+          let
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
               palette-generator = pkgs.callPackage ./palette-generator { };
@@ -78,41 +131,47 @@
 
             # Testbeds are virtual machines based on NixOS, therefore they are
             # only available for Linux systems.
-            testbedPackages = lib.optionalAttrs
-              (lib.hasSuffix "-linux" system)
-              (import ./stylix/testbed.nix { inherit pkgs inputs lib; });
+            testbedPackages = lib.optionalAttrs (lib.hasSuffix "-linux" system) (
+              import ./stylix/testbed.nix { inherit pkgs inputs lib; }
+            );
           in
-            universalPackages // testbedPackages;
+          universalPackages // testbedPackages;
       }
     )
     // {
-      nixosModules.stylix = { pkgs, ... }@args: {
-        imports = [
-          (import ./stylix/nixos inputs {
-            inherit (self.packages.${pkgs.system}) palette-generator;
-            base16 = base16.lib args;
-            homeManagerModule = self.homeManagerModules.stylix;
-          })
-        ];
-      };
+      nixosModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/nixos inputs {
+              inherit (self.packages.${pkgs.system}) palette-generator;
+              base16 = base16.lib args;
+              homeManagerModule = self.homeManagerModules.stylix;
+            })
+          ];
+        };
 
-      homeManagerModules.stylix = { pkgs, ... }@args: {
-        imports = [
-          (import ./stylix/hm inputs {
-            inherit (self.packages.${pkgs.system}) palette-generator;
-            base16 = base16.lib args;
-          })
-        ];
-      };
+      homeManagerModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/hm inputs {
+              inherit (self.packages.${pkgs.system}) palette-generator;
+              base16 = base16.lib args;
+            })
+          ];
+        };
 
-      darwinModules.stylix = { pkgs, ... }@args: {
-        imports = [
-          (import ./stylix/darwin inputs {
-            inherit (self.packages.${pkgs.system}) palette-generator;
-            base16 = base16.lib args;
-            homeManagerModule = self.homeManagerModules.stylix;
-          })
-        ];
-      };
+      darwinModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/darwin inputs {
+              inherit (self.packages.${pkgs.system}) palette-generator;
+              base16 = base16.lib args;
+              homeManagerModule = self.homeManagerModules.stylix;
+            })
+          ];
+        };
     };
 }

@@ -3,10 +3,10 @@
   lib,
   options,
   ...
-}: {
+}:
+{
   options.stylix.targets.nixvim = {
-    enable =
-      config.lib.stylix.mkEnableTarget "nixvim" true;
+    enable = config.lib.stylix.mkEnableTarget "nixvim" true;
     transparentBackground = {
       main = lib.mkEnableOption "background transparency for the main NeoVim window";
       signColumn = lib.mkEnableOption "background transparency for the NeoVim sign column";
@@ -16,40 +16,90 @@
   imports = [
     # Added: 2024-08-06
     (lib.mkRenamedOptionModule
-      [ "stylix" "targets" "nixvim" "transparent_bg" "main" ]
-      [ "stylix" "targets" "nixvim" "transparentBackground" "main" ])
+      [
+        "stylix"
+        "targets"
+        "nixvim"
+        "transparent_bg"
+        "main"
+      ]
+      [
+        "stylix"
+        "targets"
+        "nixvim"
+        "transparentBackground"
+        "main"
+      ]
+    )
 
     # Added: 2024-08-06
     (lib.mkRenamedOptionModule
-      [ "stylix" "targets" "nixvim" "transparent_bg" "sign_column" ]
-      [ "stylix" "targets" "nixvim" "transparentBackground" "signColumn" ])
+      [
+        "stylix"
+        "targets"
+        "nixvim"
+        "transparent_bg"
+        "sign_column"
+      ]
+      [
+        "stylix"
+        "targets"
+        "nixvim"
+        "transparentBackground"
+        "signColumn"
+      ]
+    )
   ];
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.nixvim.enable && (config.programs ? nixvim)) (
-    lib.optionalAttrs (builtins.hasAttr "nixvim" options.programs) {
-      programs.nixvim = {
-        colorschemes.base16 = {
-          colorscheme = {
-            inherit (config.lib.stylix.colors.withHashtag)
-              base00 base01 base02 base03 base04 base05 base06 base07
-              base08 base09 base0A base0B base0C base0D base0E base0F;
-          };
+  config =
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.targets.nixvim.enable
+        && (config.programs ? nixvim)
+      )
+      (
+        lib.optionalAttrs (builtins.hasAttr "nixvim" options.programs) {
+          programs.nixvim = {
+            colorschemes.base16 = {
+              colorscheme = {
+                inherit (config.lib.stylix.colors.withHashtag)
+                  base00
+                  base01
+                  base02
+                  base03
+                  base04
+                  base05
+                  base06
+                  base07
+                  base08
+                  base09
+                  base0A
+                  base0B
+                  base0C
+                  base0D
+                  base0E
+                  base0F
+                  ;
+              };
 
-          enable = true;
-        };
+              enable = true;
+            };
 
-        highlight = let
-          cfg = config.stylix.targets.nixvim;
-          transparent = {
-            bg = "none";
-            ctermbg = "none";
+            highlight =
+              let
+                cfg = config.stylix.targets.nixvim;
+                transparent = {
+                  bg = "none";
+                  ctermbg = "none";
+                };
+              in
+              {
+                Normal = lib.mkIf cfg.transparentBackground.main transparent;
+                NonText = lib.mkIf cfg.transparentBackground.main transparent;
+                SignColumn = lib.mkIf cfg.transparentBackground.signColumn transparent;
+              };
           };
-        in {
-          Normal = lib.mkIf cfg.transparentBackground.main transparent;
-          NonText = lib.mkIf cfg.transparentBackground.main transparent;
-          SignColumn = lib.mkIf cfg.transparentBackground.signColumn transparent;
-        };
-      };
-    }
-  );
+        }
+      );
 }

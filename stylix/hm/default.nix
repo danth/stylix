@@ -4,7 +4,8 @@ inputs:
 
 let
   autoload = import ../autoload.nix { inherit lib; } "hm";
-in {
+in
+{
   imports = [
     ../pixel.nix
     ../target.nix

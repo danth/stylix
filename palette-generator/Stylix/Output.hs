@@ -1,16 +1,16 @@
 module Stylix.Output ( makeOutputTable ) where
 
-import Data.Colour ( RGB(RGB) )
+import           Data.Colour (RGB (RGB))
 import qualified Data.Vector as V
-import Data.Word ( Word8 )
-import Text.JSON ( JSObject, toJSObject )
-import Text.Printf ( printf )
+import           Data.Word   (Word8)
+import           Text.JSON   (JSObject, toJSObject)
+import           Text.Printf (printf)
 
 toHexNum :: Double -> Word8
 toHexNum = truncate
 
 {- |
-Convert a colour to a hexdecimal string.
+Convert a colour to a hexadecimal string.
 
 >>> toHex (RGB 255 255 255)
 "ffffff"

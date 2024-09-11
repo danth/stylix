@@ -26,16 +26,20 @@ let
     misc.background_color = rgb base00;
   };
 
-in {
-  options.stylix.targets.hyprland.enable =
-    config.lib.stylix.mkEnableTarget "Hyprland" true;
+in
+{
+  options.stylix.targets.hyprland.enable = config.lib.stylix.mkEnableTarget "Hyprland" true;
 
   config =
     lib.mkIf
-    (config.stylix.enable && config.stylix.targets.hyprland.enable && config.wayland.windowManager.hyprland.enable)
-    {
-      services.hyprpaper.enable = true;
-      stylix.targets.hyprpaper.enable = true;
-      wayland.windowManager.hyprland.settings = settings;
-    };
+      (
+        config.stylix.enable
+        && config.stylix.targets.hyprland.enable
+        && config.wayland.windowManager.hyprland.enable
+      )
+      {
+        services.hyprpaper.enable = true;
+        stylix.targets.hyprpaper.enable = true;
+        wayland.windowManager.hyprland.settings = settings;
+      };
 }

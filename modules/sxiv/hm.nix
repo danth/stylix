@@ -3,9 +3,9 @@
 let
   inherit (config.lib.stylix) colors;
   inherit (config.stylix) fonts;
-in {
-  options.stylix.targets.sxiv.enable =
-    config.lib.stylix.mkEnableTarget "Sxiv" true;
+in
+{
+  options.stylix.targets.sxiv.enable = config.lib.stylix.mkEnableTarget "Sxiv" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.sxiv.enable) {
     xresources = {

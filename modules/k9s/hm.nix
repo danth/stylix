@@ -3,8 +3,7 @@
 with config.lib.stylix.colors.withHashtag;
 
 {
-  options.stylix.targets.k9s.enable =
-    config.lib.stylix.mkEnableTarget "k9s" true;
+  options.stylix.targets.k9s.enable = config.lib.stylix.mkEnableTarget "k9s" true;
 
   config = lib.mkIf config.stylix.targets.k9s.enable {
     programs.k9s.skins.skin = {
@@ -77,8 +76,14 @@ with config.lib.stylix.colors.withHashtag;
         views = {
           charts = {
             bgColor = "default";
-            defaultDialColors = [ base0C-hex base0D-hex ];
-            defaultChartColors = [ base0C-hex base0D-hex ];
+            defaultDialColors = [
+              base0C-hex
+              base0D-hex
+            ];
+            defaultChartColors = [
+              base0C-hex
+              base0D-hex
+            ];
           };
 
           table = {
