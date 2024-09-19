@@ -45,7 +45,6 @@ in pkgs.stdenvNoCC.mkDerivation {
     cp ${../README.md} src/README.md
     cp ${../gnome.png} src/gnome.png
     cp ${../kde.png} src/kde.png
-    cp ${../CONTRIBUTING.md} src/contributing.md
 
     # mdBook doesn't support this Markdown extension yet
     substituteInPlace **/*.md \

@@ -7,11 +7,23 @@
   options.stylix.targets.nixvim = {
     enable =
       config.lib.stylix.mkEnableTarget "nixvim" true;
-    transparent_bg = {
+    transparentBackground = {
       main = lib.mkEnableOption "background transparency for the main NeoVim window";
-      sign_column = lib.mkEnableOption "background transparency for the NeoVim sign column";
+      signColumn = lib.mkEnableOption "background transparency for the NeoVim sign column";
     };
   };
+
+  imports = [
+    # Added: 2024-08-06
+    (lib.mkRenamedOptionModule
+      [ "stylix" "targets" "nixvim" "transparent_bg" "main" ]
+      [ "stylix" "targets" "nixvim" "transparentBackground" "main" ])
+
+    # Added: 2024-08-06
+    (lib.mkRenamedOptionModule
+      [ "stylix" "targets" "nixvim" "transparent_bg" "sign_column" ]
+      [ "stylix" "targets" "nixvim" "transparentBackground" "signColumn" ])
+  ];
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.nixvim.enable && (config.programs ? nixvim)) (
     lib.optionalAttrs (builtins.hasAttr "nixvim" options.programs) {
@@ -33,9 +45,9 @@
             ctermbg = "none";
           };
         in {
-          Normal = lib.mkIf cfg.transparent_bg.main transparent;
-          NonText = lib.mkIf cfg.transparent_bg.main transparent;
-          SignColumn = lib.mkIf cfg.transparent_bg.sign_column transparent;
+          Normal = lib.mkIf cfg.transparentBackground.main transparent;
+          NonText = lib.mkIf cfg.transparentBackground.main transparent;
+          SignColumn = lib.mkIf cfg.transparentBackground.signColumn transparent;
         };
       };
     }

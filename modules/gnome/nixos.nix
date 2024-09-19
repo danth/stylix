@@ -17,24 +17,22 @@ in {
     # As Stylix is controlling the wallpaper, there is no need for this
     # pack of default wallpapers to be installed.
     # If you want to use one, you can set stylix.image to something like
-    # "${pkgs.gnome.gnome-backgrounds}/path/to/your/preferred/background"
+    # "${pkgs.gnome-backgrounds}/path/to/your/preferred/background"
     # which will then download the pack regardless of its exclusion below.
-    environment.gnome.excludePackages = [ pkgs.gnome.gnome-backgrounds ];
+    environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
 
     nixpkgs.overlays = [(self: super: {
-      gnome = super.gnome.overrideScope (gnomeSelf: gnomeSuper: {
-        gnome-shell = gnomeSuper.gnome-shell.overrideAttrs (oldAttrs: {
-          # Themes are usually applied via an extension, but extensions are
-          # not available on the login screen. The only way to change the
-          # theme there is by replacing the default.
-          postFixup = (oldAttrs.postFixup or "") + ''
-            cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
-              $out/share/gnome-shell/gnome-shell-theme.gresource
-          '';
-          patches = (oldAttrs.patches or []) ++ [
-            ./shell_remove_dark_mode.patch
-          ];
-        });
+      gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
+        # Themes are usually applied via an extension, but extensions are
+        # not available on the login screen. The only way to change the
+        # theme there is by replacing the default.
+        postFixup = (oldAttrs.postFixup or "") + ''
+          cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
+            $out/share/gnome-shell/gnome-shell-theme.gresource
+        '';
+        patches = (oldAttrs.patches or []) ++ [
+          ./shell_remove_dark_mode.patch
+        ];
       });
     })];
 
