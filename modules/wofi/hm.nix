@@ -13,7 +13,7 @@ in {
     programs.wofi.style = with colors; ''
       window {
         font-family: "${monospace.name}";
-        font-size: ${toString sizes.popups};
+        font-size: ${toString sizes.popups}pt;
 
         background-color: ${base00};
         color: ${base05};
