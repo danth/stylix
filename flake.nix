@@ -20,11 +20,6 @@
       url = "github:tinted-theming/base16-tmux";
     };
 
-    base16-kitty = {
-      flake = false;
-      url = "github:kdrag0n/base16-kitty";
-    };
-
     base16-vim = {
       flake = false;
       url = "github:tinted-theming/base16-vim";
@@ -61,6 +56,11 @@
 
     # Interface flake systems.
     systems.url = "github:nix-systems/default";
+
+    tinted-kitty = {
+      flake = false;
+      url = "github:tinted-theming/tinted-kitty";
+    };
   };
 
   outputs =
