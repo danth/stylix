@@ -6,7 +6,7 @@
 }:
 
 {
-  options.stylix.targets.regreet.enable = config.lib.stylix.mkEnableTarget "ReGreet " true;
+  options.stylix.targets.regreet.enable = config.lib.stylix.mkEnableTarget "ReGreet" true;
 
   config =
     lib.mkIf
