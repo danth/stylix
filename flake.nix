@@ -5,24 +5,9 @@
       url = "github:tomyun/base16-fish";
     };
 
-    base16-foot = {
-      flake = false;
-      url = "github:tinted-theming/base16-foot";
-    };
-
     base16-helix = {
       flake = false;
       url = "github:tinted-theming/base16-helix";
-    };
-
-    base16-tmux = {
-      flake = false;
-      url = "github:tinted-theming/base16-tmux";
-    };
-
-    base16-kitty = {
-      flake = false;
-      url = "github:kdrag0n/base16-kitty";
     };
 
     base16-vim = {
@@ -61,6 +46,21 @@
 
     # Interface flake systems.
     systems.url = "github:nix-systems/default";
+
+    tinted-foot = {
+      flake = false;
+      url = "github:tinted-theming/tinted-foot";
+    };
+
+    tinted-tmux = {
+      flake = false;
+      url = "github:tinted-theming/tinted-tmux";
+    };
+
+    tinted-kitty = {
+      flake = false;
+      url = "github:tinted-theming/tinted-kitty";
+    };
   };
 
   outputs =
