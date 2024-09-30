@@ -35,6 +35,8 @@
               misc               = ${base02}
             '';
           };
+          # Sidebar configuration is incompatible with the default navigation bar
+          sidebarConfig = false;
         };
         colorScheme = "base";
       };
