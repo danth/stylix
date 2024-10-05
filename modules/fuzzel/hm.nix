@@ -27,7 +27,6 @@ in {
 
       main = {
         font = "${config.stylix.fonts.sansSerif.name}:size=${toString config.stylix.fonts.sizes.popups}";
-        dpi-aware = "no";
       };
     };
 }
