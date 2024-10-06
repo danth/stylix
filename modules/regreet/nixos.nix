@@ -13,7 +13,7 @@
       (config.stylix.enable && config.stylix.targets.regreet.enable && pkgs.stdenv.hostPlatform.isLinux)
       {
         programs.regreet = {
-          settings.background.path = config.stylix.image;
+          settings.background.path = config.stylix.generated.image;
           font = {
             inherit (config.stylix.fonts.sansSerif) name package;
           };
