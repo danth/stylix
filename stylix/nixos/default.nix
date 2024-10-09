@@ -6,7 +6,7 @@ let
   autoload = import ../autoload.nix { inherit lib; } "nixos";
 in {
   imports = [
-    ../pixel.nix
+    ../nix-wallpaper.nix
     ../target.nix
     ../opacity.nix
     ./cursor.nix
