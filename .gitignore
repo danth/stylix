@@ -1,2 +1,5 @@
 result
 result-*
+
+# remove common editor specific files
+tags
