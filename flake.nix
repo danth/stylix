@@ -59,7 +59,15 @@
 
     tinted-kitty = {
       flake = false;
-      url = "github:tinted-theming/tinted-kitty";
+
+      # Lock the tinted-kitty input to prevent upstream breaking changes.
+      #
+      # Considering that Stylix eventually re-implements this input's
+      # functionality [1], it might be easiest to lock this input to avoid
+      # wasted maintenance effort.
+      #
+      # [1]: https://github.com/danth/stylix/issues/534
+      url = "github:tinted-theming/tinted-kitty/eb39e141db14baef052893285df9f266df041ff8";
     };
   };
 
