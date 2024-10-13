@@ -14,15 +14,28 @@
   };
 
   imports = [
-    # Added: 2024-08-06
-    (lib.mkRenamedOptionModule
-      [ "stylix" "targets" "nixvim" "transparent_bg" "main" ]
-      [ "stylix" "targets" "nixvim" "transparentBackground" "main" ])
+    (
+      lib.mkRenamedOptionModuleWith {
+        from = [ "stylix" "targets" "nixvim" "transparent_bg" "main" ];
+        sinceRelease = 2411;
+        to = [ "stylix" "targets" "nixvim" "transparentBackground" "main" ];
+      }
+    )
 
-    # Added: 2024-08-06
-    (lib.mkRenamedOptionModule
-      [ "stylix" "targets" "nixvim" "transparent_bg" "sign_column" ]
-      [ "stylix" "targets" "nixvim" "transparentBackground" "signColumn" ])
+    (
+      lib.mkRenamedOptionModuleWith {
+        from = [ "stylix" "targets" "nixvim" "transparent_bg" "sign_column" ];
+        sinceRelease = 2411;
+
+        to = [
+          "stylix"
+          "targets"
+          "nixvim"
+          "transparentBackground"
+          "signColumn"
+        ];
+      }
+    )
   ];
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.nixvim.enable && (config.programs ? nixvim)) (
