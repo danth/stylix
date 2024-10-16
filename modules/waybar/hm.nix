@@ -30,6 +30,14 @@ in
       default = false;
       description = "enables background colors on the right side of the bar";
     };
+    customStyle = lib.mkOption {
+      type = lib.types.nullOr (lib.types.either lib.types.path lib.types.lines);
+      default = null;
+      description = lib.mdDoc ''
+        Custom style.css, either a string or a file.
+        Pre-defined theme colors are available as CSS variables `base00` through `base0F`.
+      '';
+    };
   };
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.waybar.enable) {
@@ -54,9 +62,20 @@ in
           border-color: @base0D;
       }
     ''
-    + (builtins.readFile ./base.css)
-    + (if config.stylix.targets.waybar.enableLeftBackColors then (import ./colors.nix "left") else colorlessModules "left")
-    + (if config.stylix.targets.waybar.enableCenterBackColors then (import ./colors.nix "center") else colorlessModules "center")
-    + (if config.stylix.targets.waybar.enableRightBackColors then (import ./colors.nix "right") else colorlessModules "right");
+    + (if config.stylix.targets.waybar.customStyle != null
+      then
+        (
+          if builtins.isPath config.stylix.targets.waybar.customStyle
+          then (builtins.readFile config.stylix.targets.waybar.customStyle)
+          else config.stylix.targets.waybar.customStyle
+        )
+      else
+        (
+          (builtins.readFile ./base.css)
+          + (if config.stylix.targets.waybar.enableLeftBackColors then (import ./colors.nix "left") else colorlessModules "left")
+          + (if config.stylix.targets.waybar.enableCenterBackColors then (import ./colors.nix "center") else colorlessModules "center")
+          + (if config.stylix.targets.waybar.enableRightBackColors then (import ./colors.nix "right") else colorlessModules "right")
+          )
+      );
   };
 }
