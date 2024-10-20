@@ -4,6 +4,9 @@ let
   cfg = config.stylix.targets.foot;
 
   theme = config.lib.stylix.colors {
+    #NOTE: this is a temporary fix
+    use-ifd = "always";
+    check-parsed-config-yaml = false;
     templateRepo = config.lib.stylix.templates.tinted-foot;
   };
 
