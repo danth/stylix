@@ -12,7 +12,8 @@ in {
   config = lib.mkIf (
     config.stylix.enable
     && config.stylix.targets.gnome.enable
-    && config.services.xserver.desktopManager.gnome.enable
+    && (config.services.xserver.desktopManager.gnome.enable ||
+        config.services.xserver.displayManager.gdm.enable)
   ) {
     # As Stylix is controlling the wallpaper, there is no need for this
     # pack of default wallpapers to be installed.
