@@ -5,17 +5,17 @@
         package = lib.mkOption {
             description = "Package providing the icon theme.";
             type = lib.types.package;
-            default = nil;
+            default = null;
         };
         light = lib.mkOption {
             description = "Light icon theme name.";
             type = lib.types.str;
-            default = nil;
+            default = null;
         };
         dark = lib.mkOption {
             description = "Dark icon theme name.";
             type = lib.types.str;
-            default = nil;
+            default = null;
         };
     };
 }

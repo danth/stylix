@@ -10,18 +10,10 @@ in {
 			enable = true;
 			iconTheme = {
 				package = cfg.iconTheme.package;
-
-				if cfg.iconTheme.light != nil && cfg.iconTheme.dark != dark then
-					name = if pcfg.type == "light" then cfg.iconTheme.light
-					else if pcfg.type == "dark" then cfg.iconTheme.dark
-					else cfg.iconTheme.dark;
-					fi
-				else if cfg.iconTheme.dark != nil then
-					name = cfg.iconTheme.dark;
-				else if cfg.iconTheme.light != nil then
-					name = cfg.iconTheme.light;
-				fi
-			}
-		}
+				name = if pcfg.type == "light" then cfg.iconTheme.light
+				else if pcfg.type == "dark" then cfg.iconTheme.dark
+				else cfg.iconTheme.dark;
+			};
+		};
 	};
 }
