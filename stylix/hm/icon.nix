@@ -15,11 +15,11 @@ in {
 					name = if pcfg.type == "light" then cfg.iconTheme.light
 					else if pcfg.type == "dark" then cfg.iconTheme.dark
 					else cfg.iconTheme.dark;
-				if else cfg.iconTheme.dark != nil then
+					fi
+				else if cfg.iconTheme.dark != nil then
 					name = cfg.iconTheme.dark;
-				if else cfg.iconTheme.light != nil then
+				else if cfg.iconTheme.light != nil then
 					name = cfg.iconTheme.light;
-				fi
 			}
 		}
 	};
