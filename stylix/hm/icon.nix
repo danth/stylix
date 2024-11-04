@@ -20,6 +20,7 @@ in {
 					name = cfg.iconTheme.dark;
 				else if cfg.iconTheme.light != nil then
 					name = cfg.iconTheme.light;
+				fi
 			}
 		}
 	};
