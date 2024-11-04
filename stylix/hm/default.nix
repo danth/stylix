@@ -11,6 +11,7 @@ in {
     ../opacity.nix
     ./cursor.nix
     ./fonts.nix
+	./icon.nix
     (import ./palette.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)
   ] ++ autoload;
