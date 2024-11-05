@@ -2,10 +2,10 @@
 
 let
 	cfg = config.stylix.iconTheme;
-	pcfg = config.stylix.polarity;
+	polarity = config.stylix.polarity;
 in {
 	imports = [ ../icon.nix ];
-	config = lib.mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
+	config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
 		gtk = {
 			enable = true;
 			iconTheme = {
@@ -14,9 +14,10 @@ in {
 				  ({
 				    dark = cfg.dark;
 				    light = cfg.light;
-				  }."${pcfg}" or null)
+				  }."${polarity}" or null)
 				  cfg.dark
 				  cfg.light
+				  ""
 				]);
 			};
 		};
