@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-	cfg = config.stylix.icon;
+	cfg = config.stylix.iconTheme;
 	pcfg = config.stylix.polarity;
 in {
 	imports = [ ../icon.nix ];
@@ -10,9 +10,14 @@ in {
 			enable = true;
 			iconTheme = {
 				package = cfg.iconTheme.package;
-				name = if pcfg.type == "light" then cfg.iconTheme.light
-				else if pcfg.type == "dark" then cfg.iconTheme.dark
-				else cfg.iconTheme.dark;
+				name = builtins.head (lib.filter (x: !isNull x) [
+				  ({
+				    dark = cfg.iconTheme.dark;
+				    light = cfg.iconTheme.light;
+				  }."${pcfg.type}" or null)
+				  cfg.iconTheme.dark
+				  cfg.iconTheme.light
+				]);
 			};
 		};
 	};
