@@ -9,14 +9,14 @@ in {
 		gtk = {
 			enable = true;
 			iconTheme = {
-				package = cfg.iconTheme.package;
+				package = cfg.package;
 				name = builtins.head (lib.filter (x: !isNull x) [
 				  ({
-				    dark = cfg.iconTheme.dark;
-				    light = cfg.iconTheme.light;
+				    dark = cfg.dark;
+				    light = cfg.light;
 				  }."${pcfg.type}" or null)
-				  cfg.iconTheme.dark
-				  cfg.iconTheme.light
+				  cfg.dark
+				  cfg.light
 				]);
 			};
 		};
