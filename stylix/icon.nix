@@ -2,7 +2,7 @@
 
 {
     options.stylix.iconTheme = {
-        package = lib.mkOption {
+        enable = lib.mkOption {
             description = "enable/disable icon theming.";
             type = lib.types.bool;
             default = false;
