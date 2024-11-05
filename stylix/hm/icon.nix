@@ -10,7 +10,7 @@ in {
 			enable = true;
 			iconTheme = {
 				package = cfg.package;
-				name = cfg.dark;
+				name = builtins.trace "pcfg.type is ${pcfg.type}" cfg.dark;
 				# name = builtins.head (lib.filter (x: !isNull x) [
 				#   ({
 				#     dark = cfg.dark;
