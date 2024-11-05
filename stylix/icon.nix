@@ -4,7 +4,7 @@
     options.stylix.iconTheme = {
         package = lib.mkOption {
             description = "Package providing the icon theme.";
-            type = lib.types.nullOrpackage;
+            type = lib.types.nullOrPackage;
             default = null;
         };
         light = lib.mkOption {
