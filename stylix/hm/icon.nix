@@ -10,14 +10,14 @@ in {
 			enable = true;
 			iconTheme = {
 				package = cfg.package;
-				name = builtins.head (lib.filter (x: !isNull x) [
+				name = lib.filter (x: !isNull x) [
 				  ({
 				    dark = cfg.dark;
 				    light = cfg.light;
 				  }."${pcfg.type}" or null)
 				  cfg.dark
 				  cfg.light
-				]);
+				];
 			};
 		};
 	};
