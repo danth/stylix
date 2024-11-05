@@ -9,12 +9,12 @@
         };
         light = lib.mkOption {
             description = "Light icon theme name.";
-            type = lib.types.str;
+            type = lib.types.nullOr lib.types.str;
             default = null;
         };
         dark = lib.mkOption {
             description = "Dark icon theme name.";
-            type = lib.types.str;
+            type = lib.types.nullOr lib.types.str;
             default = null;
         };
     };
