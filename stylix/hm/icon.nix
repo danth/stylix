@@ -8,7 +8,6 @@ in {
 	config = lib.mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
 		gtk = {
 			inherit (cfg) enable;
-			enable = cfg.enable;
 			iconTheme = {
 				inherit (cfg) package;
 				name = builtins.head (lib.filter (x: !isNull x) [
