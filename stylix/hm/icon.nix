@@ -5,15 +5,15 @@ let
 	polarity = config.stylix.polarity;
 in {
 	imports = [ ../icon.nix ];
-	config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+	config = lib.mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
 		gtk = {
-			enable = true;
+			inherit (cfg) enable;
+			enable = cfg.enable;
 			iconTheme = {
-				package = cfg.package;
+				inherit (cfg) package;
 				name = builtins.head (lib.filter (x: !isNull x) [
 				  ({
-				    dark = cfg.dark;
-				    light = cfg.light;
+					inherit (cfg) dark light;
 				  }."${polarity}" or null)
 				  cfg.dark
 				  cfg.light
