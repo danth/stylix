@@ -2,12 +2,11 @@
 
 let
 	cfg = config.stylix.iconTheme;
-	polarity = config.stylix.polarity;
+	inherit (config.stylix) polarity;
 in {
 	imports = [ ../icon.nix ];
 	config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
 		gtk = {
-			# inherit (cfg) enable;
 			iconTheme = {
 				inherit (cfg) package;
 				name = builtins.head (lib.filter (x: !isNull x) [
