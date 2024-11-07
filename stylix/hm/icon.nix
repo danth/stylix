@@ -9,7 +9,7 @@ in {
 		gtk = {
 			iconTheme = {
 				inherit (cfg) package;
-				name = builtins.head (lib.filter (x: !isNull x) [
+				name = builtins.head (lib.filter (x: null != x) [
 				  ({
 					inherit (cfg) dark light;
 				  }."${polarity}" or null)
