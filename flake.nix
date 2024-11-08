@@ -50,7 +50,7 @@
     tinted-foot = {
       flake = false;
 
-      # Lock the tinted-kitty input to prevent upstream breaking changes.
+      # Lock the tinted-foot input to prevent upstream breaking changes.
       #
       # Considering that Stylix eventually re-implements this input's
       # functionality [1], it might be easiest to lock this input to avoid
