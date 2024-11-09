@@ -5,7 +5,7 @@ let
 	inherit (config.stylix) polarity;
 in {
 	imports = [ ../icon.nix ];
-	config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+	config = lib.mkIf (config.stylix.enable && cfg.enable) {
 		gtk = {
 			iconTheme = {
 				inherit (cfg) package;
