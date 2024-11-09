@@ -1,6 +1,7 @@
 { lib, pkgs, ... }:
 
 {
+  environment.loginShellInit = lib.getExe pkgs.hyprland;
   programs.hyprland.enable = true;
 
   home-manager.sharedModules = [{
