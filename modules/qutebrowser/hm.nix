@@ -21,7 +21,7 @@ in {
   options.stylix.targets.qutebrowser.enable =
     config.lib.stylix.mkEnableTarget "Qutebrowser" true;
 
-  config = lib.mkIf config.stylix.targets.qutebrowser.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.qutebrowser.enable) {
     programs.qutebrowser.settings = {
       colors = {
         completion = {
@@ -199,7 +199,7 @@ in {
           };
 
           indicator = {
-            error = error;
+            inherit error;
             start = secondary-info;
             stop = info;
           };

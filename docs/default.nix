@@ -43,7 +43,16 @@ in pkgs.stdenvNoCC.mkDerivation {
 
   patchPhase = ''
     cp ${../README.md} src/README.md
-    cp ${../CONTRIBUTING.md} src/contributing.md
+    cp ${../gnome.png} src/gnome.png
+    cp ${../kde.png} src/kde.png
+
+    # mdBook doesn't support this Markdown extension yet
+    substituteInPlace **/*.md \
+      --replace-quiet '> [!NOTE]' '> **Note**' \
+      --replace-quiet '> [!TIP]' '> **Tip**' \
+      --replace-quiet '> [!IMPORTANT]' '> **Important**' \
+      --replace-quiet '> [!WARNING]' '> **Warning**' \
+      --replace-quiet '> [!CAUTION]' '> **Caution**'
 
     # The "declared by" links point to a file which only exists when the docs
     # are built locally. This removes the links.

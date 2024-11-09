@@ -9,6 +9,6 @@ for:
         if kind == "directory"
           then let
             file = "${../modules}/${path}/${for}.nix";
-          in (if builtins.pathExists file then [ file ] else [ ])
+          in if builtins.pathExists file then [ file ] else [ ]
           else [ ])
       (builtins.readDir ../modules))

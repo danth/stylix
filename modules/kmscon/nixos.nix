@@ -3,7 +3,7 @@
   options.stylix.targets.kmscon.enable =
     config.lib.stylix.mkEnableTarget "the kmscon virtual console" true;
 
-  config.services.kmscon = lib.mkIf config.stylix.targets.kmscon.enable {
+  config.services.kmscon = lib.mkIf (config.stylix.enable && config.stylix.targets.kmscon.enable) {
     fonts = [config.stylix.fonts.monospace];
     extraConfig =
     let

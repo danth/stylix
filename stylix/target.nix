@@ -1,40 +1,48 @@
-{ config, lib, ... }@args:
+{ config, lib, ... }:
 
-with lib;
+{
+  options.stylix = {
+    enable = lib.mkOption {
+      description = ''
+        Whether to enable Stylix.
 
-let
-  fromOs = import ./fromos.nix { inherit lib args; };
-in {
-  options.stylix.autoEnable = mkOption {
-    description = "Whether to automatically enable styling for installed targets.";
-    type = types.bool;
-    default = fromOs [ "autoEnable" ] true;
+        When this is `false`, all theming is disabled and all other options
+        are ignored.
+      '';
+      type = lib.types.bool;
+      default = false;
+      example = true;
+    };
+
+    autoEnable = lib.mkOption {
+      description = ''
+        Whether to enable targets by default.
+
+        When this is `false`, all targets are disabled unless explicitly enabled.
+
+        When this is `true`, most targets are enabled by default. A small number
+        remain off by default, because they require further manual setup, or
+        they are only applicable in specific circumstances which cannot be
+        detected automatically.
+      '';
+      type = lib.types.bool;
+      default = true;
+      example = false;
+    };
   };
 
-  config.lib.stylix.mkEnableTarget =
+  config.lib.stylix.mkEnableTarget = let
+    cfg = config.stylix;
+  in
     humanName:
-
-    # If the module only touches options under its target (programs.target.*)
-    # then this can simply be `true`, as those options are already gated by the
-    # upstream enable option.
-    #
-    # Otherwise, use `config` to check whether the target is enabled.
-    #
-    # If some manual setup is required, or the module leads to the target
-    # being installed if it wasn't already, set this to `false`.
     autoEnable:
-
-    mkOption {
-      description = "Whether to style ${humanName}.";
-      type = types.bool;
-
-      # We can't substitute the target name into this description because some
-      # don't make sense: "if the desktop background using Feh is installed"
-      defaultText = literalMD ''
-        `true` if `stylix.autoEnable == true` and the target is installed,
-        otherwise `false`.
-      '';
-
-      default = config.stylix.autoEnable && autoEnable;
-    };
+      lib.mkEnableOption
+      "theming for ${humanName}"
+      // {
+        default = cfg.enable && cfg.autoEnable && autoEnable;
+        example = !autoEnable;
+      }
+      // lib.optionalAttrs autoEnable {
+        defaultText = lib.literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
+      };
 }

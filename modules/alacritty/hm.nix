@@ -9,7 +9,7 @@ in
 {
   options.stylix.targets.alacritty.enable = config.lib.stylix.mkEnableTarget "Alacritty" true;
 
-  config = lib.mkIf config.stylix.targets.alacritty.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.alacritty.enable) {
     programs.alacritty.settings = {
       font = with config.stylix.fonts; {
         normal = {
@@ -43,7 +43,7 @@ in
           white = base07;
           red = bright-red;
           green = bright-green;
-          yellow = yellow;
+          inherit yellow;
           blue = bright-blue;
           magenta = bright-magenta;
           cyan = bright-cyan;

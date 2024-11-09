@@ -1,9 +1,9 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.stylix.targets.kitty;
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-kitty;
+    templateRepo = config.lib.stylix.templates.tinted-kitty;
     target = if cfg.variant256Colors then "default-256" else "default";
   };
 in {

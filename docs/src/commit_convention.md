@@ -1,6 +1,4 @@
-# Contributing to Stylix
-
-## Commit messages
+# Commit Convention
 
 To keep things consistent, commit messages should follow a format
 [similar to Nixpkgs](https://github.com/NixOS/nixpkgs/blob/master/CONTRIBUTING.md#commit-conventions):
@@ -31,7 +29,7 @@ punctuation.
 Most commits to `master` will also include a pull request number in brackets
 after the summary. GitHub adds this automatically when creating a squash merge.
 
-### Old commits
+## Old commits
 
 Commits before 2024 did not follow any particular format.
 Some have emojis from [GitMoji](https://gitmoji.dev).

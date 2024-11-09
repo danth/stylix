@@ -1,9 +1,9 @@
-{pkgs, config, lib, ... }:
+{ config, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
-  bemenuOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
+  bemenuOpacity = lib.toHexString (((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100);
 in {
   options.stylix.targets.bemenu = {
     enable = config.lib.stylix.mkEnableTarget "bemenu" true;
@@ -25,7 +25,7 @@ in {
     };
   };
 
-  config = lib.mkIf config.stylix.targets.bemenu.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.bemenu.enable) {
     programs.bemenu.settings = with config.stylix.targets.bemenu; {
       tb = "${base01}${bemenuOpacity}"; # Title bg
       nb = "${base01}${bemenuOpacity}"; # Normal bg

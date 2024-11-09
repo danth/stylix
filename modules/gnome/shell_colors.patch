@@ -27,19 +27,6 @@ index 5b117ea71..67e7ce756 100644
 
    border-radius: 99px;
    padding: $base_padding $base_padding * 2;
-diff --git a/data/theme/gnome-shell-sass/_drawing.scss b/data/theme/gnome-shell-sass/_drawing.scss
-index 404c4dc81..f006b9347 100644
---- a/data/theme/gnome-shell-sass/_drawing.scss
-+++ b/data/theme/gnome-shell-sass/_drawing.scss
-@@ -143,7 +143,7 @@
- //
- // since buttons are all flat an borderless now the mixin is simpler
-
--@mixin button($t, $tc:$fg_color, $c:$bg_color, $flat: false, $osd: false) {
-+@mixin button($t, $tc:$fg_color, $c:$base_color, $flat: false, $osd: false) {
-
-   $button_bg_color: mix($tc, $c, $button_mix_factor);
-   transition-duration: 100ms;
 diff --git a/data/theme/gnome-shell-sass/widgets/_calendar.scss b/data/theme/gnome-shell-sass/widgets/_calendar.scss
 index fc054da38..8e31741c1 100644
 --- a/data/theme/gnome-shell-sass/widgets/_calendar.scss
@@ -51,55 +38,3 @@ index fc054da38..8e31741c1 100644
 +
 +  color: $fg_color !important;
  }
-
- /* Calendar */
-@@ -220,7 +222,7 @@
-   .weather-forecast-time {
-     @extend %numeric;
-     @extend %caption;
--    color: darken($fg_color,30%);
-+    color: transparentize($insensitive_fg_color, 0.5);
-     padding-top: 0.2em;
-     padding-bottom: 0.4em;
-   }
-diff --git a/data/theme/gnome-shell-sass/widgets/_panel.scss b/data/theme/gnome-shell-sass/widgets/_panel.scss
-index 6e7b3be14..3f37fdef5 100644
---- a/data/theme/gnome-shell-sass/widgets/_panel.scss
-+++ b/data/theme/gnome-shell-sass/widgets/_panel.scss
-@@ -1,11 +1,11 @@
- /* Top Bar */
- // a.k.a. the panel
-
--$privacy_indicator_color: $orange_3;
-+$privacy_indicator_color: $warning_color;
-
--$panel_bg_color: if($variant == 'light', $light_3, $dark_5);
--$panel_fg_color: if($variant == 'light', $fg_color, darken($fg_color, 5%));
--$panel_border_color: if($variant == 'light', darken($panel_bg_color, 2%), $panel_bg_color);
-+$panel_bg_color: $base_color;
-+$panel_fg_color: $fg_color;
-+$panel_border_color: transparentize($panel_bg_color, 0.9);
-
- $panel_system_fg_color: $system_fg_color; // always light for lockscreen, overview and other transparent panels
- $panel_height: 2.2em;
-diff --git a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-index 723afe7db..b23062294 100644
---- a/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-+++ b/data/theme/gnome-shell-sass/widgets/_quick-settings.scss
-@@ -110,13 +110,9 @@
-     & .icon {
-       icon-size: $base_icon_size*1.5; // a non-standard symbolic size but ok
-       border-radius: 999px;
--      padding: 1.5 * $base_padding;
--      background-color: transparentize($fg_color, 0.8);
--
--      &.active {
--        background-color: $selected_bg_color;
--        color: $selected_fg_color;
--      }
-+      padding: $base_padding;
-+      background-color: $bg_color;
-+      color: $fg_color;
-     }
-
-     & .title {

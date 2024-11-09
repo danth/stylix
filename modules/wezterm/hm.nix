@@ -3,9 +3,9 @@
 let colors = config.lib.stylix.colors.withHashtag;
 in {
   options.stylix.targets.wezterm.enable =
-    config.lib.stylix.mkEnableTarget "wezterm" config.programs.wezterm.enable;
+    config.lib.stylix.mkEnableTarget "wezterm" true;
 
-  config = lib.mkIf config.stylix.targets.wezterm.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.wezterm.enable && config.programs.wezterm.enable) {
 
     programs.wezterm.colorSchemes.stylix = with colors; {
       ansi = [ base00 base08 base0B base0A base0D base0E base0C base05 ];
@@ -58,9 +58,6 @@ in {
         local stylix_base_config = wezterm.config_builder()
         local stylix_user_config = stylix_wrapped_config()
         stylix_base_config = {
-            -- Set due to the default fancy tabs not respecting colorschemes
-            -- See https://github.com/wez/wezterm/issues/2615
-            use_fancy_tab_bar = false,
             color_scheme = "stylix",
             font = wezterm.font_with_fallback {
                 "${monospace.name}",
@@ -85,6 +82,32 @@ in {
                 inactive_titlebar_bg = "${base01}",
                 inactive_titlebar_fg = "${base05}",
                 inactive_titlebar_border_bottom = "${base03}",
+            },
+            colors = {
+              tab_bar = {
+                background = "${base01}",
+                inactive_tab_edge = "${base01}",
+                active_tab = {
+                  bg_color = "${base00}",
+                  fg_color = "${base05}",
+                },
+                inactive_tab = {
+                  bg_color = "${base03}",
+                  fg_color = "${base05}",
+                },
+                inactive_tab_hover = {
+                  bg_color = "${base05}",
+                  fg_color = "${base00}",
+                },
+                new_tab = {
+                  bg_color = "${base03}",
+                  fg_color = "${base05}",
+                },
+                new_tab_hover = {
+                  bg_color = "${base05}",
+                  fg_color = "${base00}",
+                },
+              },
             },
             command_palette_bg_color = "${base01}",
             command_palette_fg_color = "${base05}",

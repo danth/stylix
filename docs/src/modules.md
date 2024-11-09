@@ -37,6 +37,7 @@ All modules should have an enable option created using `mkEnableTarget`.
 This is similar to
 [`mkEnableOption`](https://nix-community.github.io/docnix/reference/lib/options/lib-options-mkenableoption/)
 from the standard library, however it integrates with
+[`stylix.enable`](./options/nixos.md#stylixenable) and
 [`stylix.autoEnable`](./options/nixos.md#stylixautoenable)
 and generates more specific documentation.
 
@@ -46,16 +47,29 @@ A general format for modules is shown below.
 { config, lib, ... }:
 
 {
-  stylix.targets.«name».enable = config.lib.stylix.mkEnableTarget "«human readable name»";
+  options.stylix.targets.«name».enable =
+    config.lib.stylix.mkEnableTarget "«human readable name»" true;
 
-  config = lib.mkIf config.stylix.targets.«name».enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable) {
+    programs.«name».backgroundColor = config.lib.stylix.colors.base00;
   };
 }
 ```
 
-The human readable name must fit into the following sentence:
+The human readable name will be inserted into the following sentence:
 
-> Whether to style «human readable name».
+> Whether to enable theming for «human readable name».
+
+If your module will touch options outside of `programs.«name»` or `services.«name»`,
+it should include an additional condition in `mkIf` to prevent any effects
+when the target is not installed.
+
+The boolean value after `mkEnableTarget` should be changed to `false` if
+one of the following applies:
+
+- The module requires further manual setup to work correctly.
+- There is no reliable way to detect whether the target is installed, *and*
+  enabling it unconditionally would cause problems.
 
 ## How to apply colors
 

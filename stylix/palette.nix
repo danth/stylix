@@ -1,11 +1,7 @@
 { palette-generator, base16 }:
-{ pkgs, lib, config, ... }@args:
-
-with lib;
+{ pkgs, lib, config, ... }:
 
 let
-  fromOs = import ./fromos.nix { inherit lib args; };
-
   cfg = config.stylix;
 
   paletteJSON = let
@@ -15,46 +11,20 @@ let
         ${lib.escapeShellArg "${cfg.image}"} \
         "$out"
     '';
-    palette = importJSON generatedJSON;
+    palette = lib.importJSON generatedJSON;
     scheme = base16.mkSchemeAttrs palette;
     json = scheme {
       template = ./palette.json.mustache;
       extension = ".json";
     };
   in json;
-  generatedScheme = importJSON paletteJSON;
-
-  override =
-    (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
-     then fromOs [ "override" ] {}
-     else {})
-    // cfg.override;
+  generatedScheme = lib.importJSON paletteJSON;
 
 in {
-  # TODO link to doc on how to do instead
-  imports = [
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base01" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base02" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base03" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base04" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base05" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base06" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base07" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base08" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base09" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0A" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0B" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0C" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0D" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0E" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0F" ] "Using stylix.palette to override scheme is not supported anymore")
-  ];
-
   options.stylix = {
-    polarity = mkOption {
-      type = types.enum [ "either" "light" "dark" ];
-      default = fromOs [ "polarity" ] "either";
+    polarity = lib.mkOption {
+      type = lib.types.enum [ "either" "light" "dark" ];
+      default = "either";
       description = ''
         Use this option to force a light or dark theme.
 
@@ -64,54 +34,61 @@ in {
       '';
     };
 
-    image = mkOption {
-      type = types.coercedTo types.package toString types.path;
+    image = lib.mkOption {
+      type = with lib.types; coercedTo package toString path;
       description = ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
-      default = fromOs [ "image" ] null;
+    };
+
+    imageScalingMode = lib.mkOption {
+      type = lib.types.enum [ "stretch" "fill" "fit" "center" "tile" ];
+      default = "fill";
+      description = ''
+        Wallpaper scaling mode;
+
+        This is the scaling mode your wallpaper image will use assuming it
+        doesnt fix your monitor perfectly
+      '';
     };
 
     generated = {
-      json = mkOption {
-        type = types.path;
+      json = lib.mkOption {
+        type = lib.types.path;
         description = "The result of palette-generator.";
         readOnly = true;
         internal = true;
         default = paletteJSON;
       };
 
-      palette = mkOption {
-        type = types.attrs;
+      palette = lib.mkOption {
+        type = lib.types.attrs;
         description = "The imported json";
         readOnly = true;
         internal = true;
         default = generatedScheme;
       };
 
-      fileTree = mkOption {
-        type = types.raw;
+      fileTree = lib.mkOption {
+        type = lib.types.raw;
         description = "The files storing the palettes in json and html.";
         readOnly = true;
         internal = true;
       };
     };
 
-    base16Scheme = mkOption {
+    base16Scheme = lib.mkOption {
       description = ''
         A scheme following the base16 standard.
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type = with types; oneOf [ path lines attrs ];
-      default =
-        if cfg.image != fromOs [ "image" ] null
-          then generatedScheme
-          else fromOs [ "base16Scheme" ] generatedScheme;
-      defaultText = literalMD ''
+      type = with lib.types; oneOf [ path lines attrs ];
+      default = generatedScheme;
+      defaultText = lib.literalMD ''
         The colors used in the theming.
 
         Those are automatically selected from the background image by default,
@@ -119,15 +96,15 @@ in {
       '';
     };
 
-    override = mkOption {
+    override = lib.mkOption {
       description = ''
         An override that will be applied to stylix.base16Scheme when generating
-        lib.stylix.colors.
+        config.lib.stylix.colors.
 
         Takes anything that a scheme generated by base16nix can take as argument
         to override.
       '';
-      type = types.attrs;
+      type = lib.types.attrs;
       default = {};
     };
   };
@@ -135,7 +112,7 @@ in {
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
-    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
+    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
     lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
 
     stylix.generated.fileTree = {

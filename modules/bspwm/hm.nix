@@ -6,12 +6,12 @@ in {
   options.stylix.targets.bspwm.enable =
     config.lib.stylix.mkEnableTarget "bspwm" true;
 
-  config = lib.mkIf config.stylix.targets.bspwm.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.bspwm.enable) {
     xsession.windowManager.bspwm.settings = {
-      active_border_color = colors.base08;
-      normal_border_color = colors.base02;
-      focused_border_color = colors.base0F;
-      presel_feedback_color = colors.base08;
+      normal_border_color = colors.base03;
+      active_border_color = colors.base0C;
+      focused_border_color = colors.base0D;
+      presel_feedback_color = colors.base00;
     };
   };
 }

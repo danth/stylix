@@ -1,0 +1,13 @@
+---
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+
+    commit-message:
+      prefix: ci
+
+    directory: /
+
+    schedule:
+      interval: daily

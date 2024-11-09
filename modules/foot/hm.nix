@@ -1,10 +1,10 @@
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.stylix.targets.foot;
 
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-foot;
+    templateRepo = config.lib.stylix.templates.tinted-foot;
   };
 
 in {

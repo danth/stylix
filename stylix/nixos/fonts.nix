@@ -1,11 +1,11 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.stylix.fonts;
 in {
   imports = [ ../fonts.nix ];
-  config.fonts = {
-    packages = cfg.packages;
+  config.fonts = lib.mkIf config.stylix.enable {
+    inherit (cfg) packages;
 
     fontconfig.defaultFonts = {
       monospace = [ cfg.monospace.name ];

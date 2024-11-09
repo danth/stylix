@@ -5,10 +5,10 @@
   ...
 }: {
   options.stylix.targets.yazi = {
-    enable = config.lib.stylix.mkEnableTarget "Yazi" config.programs.yazi.enable;
+    enable = config.lib.stylix.mkEnableTarget "Yazi" true;
   };
 
-  config = lib.mkIf config.stylix.targets.yazi.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.yazi.enable) {
     programs.yazi.theme = with config.lib.stylix.colors.withHashtag; let
       mkFg = fg: {inherit fg;};
       mkBg = bg: {inherit bg;};
