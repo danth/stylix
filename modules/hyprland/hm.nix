@@ -7,7 +7,7 @@ let
   rgba = color: alpha: "rgba(${color}${alpha})";
 
   settings = {
-    decoration."col.shadow" = rgba base00 "99";
+    decoration.shadow.color = rgba base00 "99";
     general = {
       "col.active_border" = rgb base0D;
       "col.inactive_border" = rgb base03;
