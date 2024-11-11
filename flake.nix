@@ -70,6 +70,11 @@
       url = "github:tinted-theming/tinted-foot/fd1b924b6c45c3e4465e8a849e67ea82933fcbe4";
     };
 
+    tinted-zed = {
+      flake = false;
+      url = "github:tinted-theming/base16-zed";
+    };
+
     tinted-tmux = {
       flake = false;
       url = "github:tinted-theming/tinted-tmux";
