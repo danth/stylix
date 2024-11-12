@@ -2,8 +2,7 @@
 
 with config.lib.stylix;
 {
-  options.stylix.targets.hyprlock.enable =
-    mkEnableTarget "Hyprlock" true;
+  options.stylix.targets.hyprlock.enable = mkEnableTarget "Hyprlock" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.hyprlock.enable) {
     programs.hyprlock.settings = {
