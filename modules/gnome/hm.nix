@@ -1,13 +1,18 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   inherit (config.stylix.fonts) sansSerif serif monospace;
   fontSize = toString config.stylix.fonts.sizes.applications;
   documentFontSize = toString (config.stylix.fonts.sizes.applications - 1);
 
-in {
-  options.stylix.targets.gnome.enable =
-    config.lib.stylix.mkEnableTarget "GNOME" true;
+in
+{
+  options.stylix.targets.gnome.enable = config.lib.stylix.mkEnableTarget "GNOME" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gnome.enable) {
     dconf.settings = {
@@ -23,9 +28,7 @@ in {
         # settings tile is removed. The value is still used by Epiphany to
         # request dark mode for websites which support it.
         color-scheme =
-          if config.stylix.polarity == "dark"
-          then "prefer-dark"
-          else "default";
+          if config.stylix.polarity == "dark" then "prefer-dark" else "default";
 
         # Some GTK apps will use these font settings if they exist.
         # i.e emacs-pgtk.
@@ -39,10 +42,12 @@ in {
 
     xdg.dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
       source =
-        let theme = pkgs.callPackage ./theme.nix {
-          inherit (config.lib.stylix) colors templates;
-        };
-        in "${theme}/share/gnome-shell/gnome-shell.css";
+        let
+          theme = pkgs.callPackage ./theme.nix {
+            inherit (config.lib.stylix) colors templates;
+          };
+        in
+        "${theme}/share/gnome-shell/gnome-shell.css";
       onChange = ''
         if [[ -x "$(command -v gnome-extensions)" ]]; then
           gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com

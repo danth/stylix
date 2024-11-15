@@ -10,7 +10,11 @@
 
   config =
     lib.mkIf
-      (config.stylix.enable && config.stylix.targets.regreet.enable && pkgs.stdenv.hostPlatform.isLinux)
+      (
+        config.stylix.enable
+        && config.stylix.targets.regreet.enable
+        && pkgs.stdenv.hostPlatform.isLinux
+      )
       {
         programs.regreet = {
           settings.background.path = config.stylix.image;

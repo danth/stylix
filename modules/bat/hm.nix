@@ -1,8 +1,7 @@
 { config, lib, ... }:
 
 {
-  options.stylix.targets.bat.enable =
-    config.lib.stylix.mkEnableTarget "Bat" true;
+  options.stylix.targets.bat.enable = config.lib.stylix.mkEnableTarget "Bat" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.bat.enable) {
     programs.bat = {
