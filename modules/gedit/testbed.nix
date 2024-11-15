@@ -1,8 +1,10 @@
 { pkgs, ... }:
 
-let package = pkgs.gedit;
+let
+  package = pkgs.gedit;
 
-in {
+in
+{
   stylix.testbed.application = {
     enable = true;
     name = "org.gnome.gedit";

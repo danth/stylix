@@ -1,12 +1,14 @@
 { haskellPackages, stdenvNoCC }:
 
 let
-  ghc = haskellPackages.ghcWithPackages (ps: with ps; [
-    JuicyPixels
-    json
-    random
-    vector-algorithms
-  ]);
+  ghc = haskellPackages.ghcWithPackages (
+    ps: with ps; [
+      JuicyPixels
+      json
+      random
+      vector-algorithms
+    ]
+  );
 
   # `nix build .#palette-generator.passthru.docs` and open in a web browser
   docs = stdenvNoCC.mkDerivation {
@@ -22,7 +24,8 @@ let
     dontFixup = true;
   };
 
-in stdenvNoCC.mkDerivation {
+in
+stdenvNoCC.mkDerivation {
   name = "palette-generator";
 
   src = ./.;
@@ -35,5 +38,7 @@ in stdenvNoCC.mkDerivation {
     install -D Stylix/Main $out/bin/palette-generator
   '';
 
-  passthru = { inherit docs; };
+  passthru = {
+    inherit docs;
+  };
 }

@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.stylix.cursor;
 
-in {
+in
+{
   imports = [ ../cursor.nix ];
 
   config = lib.mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
