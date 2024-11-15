@@ -1,18 +1,22 @@
 { pkgs, ... }:
 
-let package = pkgs.alacritty;
+let
+  package = pkgs.alacritty;
 
-in {
+in
+{
   stylix.testbed.application = {
     enable = true;
     name = "Alacritty";
     inherit package;
   };
 
-  home-manager.sharedModules = [{
-    programs.alacritty = {
-      enable = true;
-      inherit package;
-    };
-  }];
+  home-manager.sharedModules = [
+    {
+      programs.alacritty = {
+        enable = true;
+        inherit package;
+      };
+    }
+  ];
 }

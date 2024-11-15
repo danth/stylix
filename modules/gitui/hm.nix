@@ -2,7 +2,8 @@
 let
   inherit (config.lib.stylix) colors;
 
-  mkRgb = color:
+  mkRgb =
+    color:
     let
       r = colors."${color}-rgb-r";
       g = colors."${color}-rgb-g";
