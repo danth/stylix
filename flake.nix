@@ -49,7 +49,15 @@
 
     tinted-foot = {
       flake = false;
-      url = "github:tinted-theming/tinted-foot";
+
+      # Lock the tinted-foot input to prevent upstream breaking changes.
+      #
+      # Considering that Stylix eventually re-implements this input's
+      # functionality [1], it might be easiest to lock this input to avoid
+      # wasted maintenance effort.
+      #
+      # [1]: https://github.com/danth/stylix/issues/571
+      url = "github:tinted-theming/tinted-foot/fd1b924b6c45c3e4465e8a849e67ea82933fcbe4";
     };
 
     tinted-tmux = {
