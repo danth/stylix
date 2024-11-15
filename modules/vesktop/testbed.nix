@@ -1,8 +1,10 @@
 { pkgs, ... }:
 
-let package = pkgs.vesktop;
+let
+  package = pkgs.vesktop;
 
-in {
+in
+{
   stylix.testbed.application = {
     enable = true;
     name = "vesktop";

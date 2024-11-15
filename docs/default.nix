@@ -1,28 +1,38 @@
-{ pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 let
-  makeOptionsDoc = configuration: pkgs.nixosOptionsDoc {
-    inherit (configuration) options;
+  makeOptionsDoc =
+    configuration:
+    pkgs.nixosOptionsDoc {
+      inherit (configuration) options;
 
-    # Filter out any options not beginning with `stylix`
-    transformOptions = option: option // {
-      visible = option.visible &&
-        builtins.elemAt option.loc 0 == "stylix";
+      # Filter out any options not beginning with `stylix`
+      transformOptions =
+        option:
+        option
+        // {
+          visible = option.visible && builtins.elemAt option.loc 0 == "stylix";
+        };
     };
-  };
 
-  nixos = makeOptionsDoc
-    (lib.nixosSystem {
+  nixos = makeOptionsDoc (
+    lib.nixosSystem {
       inherit (pkgs) system;
       modules = [
         inputs.home-manager.nixosModules.home-manager
         inputs.self.nixosModules.stylix
         ./settings.nix
       ];
-    });
+    }
+  );
 
-  homeManager = makeOptionsDoc
-    (inputs.home-manager.lib.homeManagerConfiguration {
+  homeManager = makeOptionsDoc (
+    inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       modules = [
         inputs.self.homeManagerModules.stylix
@@ -35,9 +45,11 @@ let
           };
         }
       ];
-    });
+    }
+  );
 
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "stylix-book";
   src = ./.;
 

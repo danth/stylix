@@ -4,17 +4,19 @@ with config.stylix.fonts;
 
 let
   inherit (config.lib.formats.rasi) mkLiteral;
-  mkRgba = opacity: color:
+  mkRgba =
+    opacity: color:
     let
       c = config.lib.stylix.colors;
       r = c."${color}-rgb-r";
       g = c."${color}-rgb-g";
       b = c."${color}-rgb-b";
     in
-      mkLiteral
-        "rgba ( ${r}, ${g}, ${b}, ${opacity} % )";
+    mkLiteral "rgba ( ${r}, ${g}, ${b}, ${opacity} % )";
   mkRgb = mkRgba "100";
-  rofiOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
+  rofiOpacity = builtins.toString (
+    builtins.ceil (config.stylix.opacity.popups * 100)
+  );
 in
 {
   options.stylix.targets.rofi.enable =

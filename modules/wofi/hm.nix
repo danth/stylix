@@ -3,9 +3,11 @@
   lib,
   ...
 }:
-with config.stylix.fonts; let
+with config.stylix.fonts;
+let
   colors = config.lib.stylix.colors.withHashtag;
-in {
+in
+{
   options.stylix.targets.wofi.enable =
     config.lib.stylix.mkEnableTarget "wofi" config.programs.wofi.enable;
 

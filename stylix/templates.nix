@@ -1,5 +1,4 @@
-inputs:
-{
+inputs: {
   config.lib.stylix.templates = {
     inherit (inputs)
       base16-fish

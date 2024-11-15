@@ -6,7 +6,8 @@ let
     templateRepo = config.lib.stylix.templates.tinted-kitty;
     target = if cfg.variant256Colors then "default-256" else "default";
   };
-in {
+in
+{
   options.stylix.targets.kitty = {
     enable = config.lib.stylix.mkEnableTarget "Kitty" true;
 
@@ -26,7 +27,9 @@ in {
         inherit (config.stylix.fonts.monospace) package name;
         size = config.stylix.fonts.sizes.terminal;
       };
-      settings.background_opacity = with config.stylix.opacity; "${builtins.toString terminal}";
+      settings.background_opacity =
+        with config.stylix.opacity;
+        "${builtins.toString terminal}";
       extraConfig = ''
         include ${theme}
       '';
