@@ -1,4 +1,4 @@
-{ lib }:
+{ lib, inputs }:
 
 # string -> [ path ]
 # List include path for either nixos modules or hm modules
@@ -8,7 +8,7 @@ for:
       (path: kind:
         if kind == "directory"
           then let
-            file = "${../modules}/${path}/${for}.nix";
+            file = "${inputs.self}/modules/${path}/${for}.nix";
           in if builtins.pathExists file then [ file ] else [ ]
           else [ ])
-      (builtins.readDir ../modules))
+      (builtins.readDir "${inputs.self}/modules"))
