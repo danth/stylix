@@ -1,0 +1,15 @@
+---
+name: Nix Flake Check
+
+on:  # yamllint disable-line rule:truthy
+  push:
+
+jobs:
+  nix-flake-check:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - run: nix flake check

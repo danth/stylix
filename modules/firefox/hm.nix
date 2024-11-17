@@ -8,12 +8,12 @@ let
       "font.name.serif.x-western" = config.stylix.fonts.serif.name;
     };
   };
-  makeProfileSettingsPair = profileName:
-    lib.nameValuePair profileName profileSettings;
-in {
+  makeProfileSettingsPair =
+    profileName: lib.nameValuePair profileName profileSettings;
+in
+{
   options.stylix.targets.firefox = {
-    enable =
-      config.lib.stylix.mkEnableTarget "Firefox" true;
+    enable = config.lib.stylix.mkEnableTarget "Firefox" true;
 
     profileNames = lib.mkOption {
       description = "The Firefox profile names to apply styling on.";
@@ -22,8 +22,11 @@ in {
     };
   };
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.firefox.enable) {
-    programs.firefox.profiles = lib.listToAttrs
-      (map makeProfileSettingsPair config.stylix.targets.firefox.profileNames);
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.firefox.enable)
+      {
+        programs.firefox.profiles = lib.listToAttrs (
+          map makeProfileSettingsPair config.stylix.targets.firefox.profileNames
+        );
+      };
 }
