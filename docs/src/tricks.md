@@ -76,9 +76,6 @@ by adding the following `disableModules` line next to importing stylix
 itself:
 
 ```nix
-  imports = [
-    flake.inputs.stylix.nixosModules.stylix
-  ];
-  disabledModules = [ "${flake.inputs.stylix}/modules/<some-module>/nixos.nix" ];
-
+imports = [ flake.inputs.stylix.nixosModules.stylix ];
+disabledModules = [ "${flake.inputs.stylix}/modules/<some-module>/nixos.nix" ];
 ```
