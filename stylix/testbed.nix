@@ -30,12 +30,12 @@ let
       (name: _:
         let testbed = {
           inherit name;
-          module = "${../modules}/${name}/testbed.nix";
+          module = "${inputs.self}/modules/${name}/testbed.nix";
         };
         in
           lib.optional (builtins.pathExists testbed.module) testbed
       )
-      (builtins.readDir ../modules));
+      (builtins.readDir "${inputs.self}/modules"));
 
   makeTestbed =
     testbed: stylix:
