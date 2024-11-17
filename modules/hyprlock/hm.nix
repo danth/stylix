@@ -6,7 +6,7 @@ with config.lib.stylix;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.hyprlock.enable) {
     programs.hyprlock.settings = {
-      background.path = config.stylix.image;
+      background.path = toString config.stylix.image;
       input-field = with colors; {
         outer_color = "rgb(${base03})";
         inner_color = "rgb(${base00})";
