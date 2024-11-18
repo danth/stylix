@@ -3,7 +3,7 @@ inputs:
 { lib, ... }:
 
 let
-  autoload = import ../autoload.nix { inherit lib; } "hm";
+  autoload = import ../autoload.nix { inherit lib inputs; } "hm";
 in {
   imports = [
     ../pixel.nix
