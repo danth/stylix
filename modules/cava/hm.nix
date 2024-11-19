@@ -3,8 +3,8 @@
 let 
 
   mkGradient = colors: lib.listToAttrs (lib.imap0 (i: c: lib.nameValuePair "gradient_color_${toString (i+1)}" "'#${c}'") colors) // {
-    gradient = "1";
-    gradient_count = toString (builtins.length colors);
+    gradient = 1;
+    gradient_count = builtins.length colors;
   };
 
   rainbowColors = with config.lib.stylix.colors; [
