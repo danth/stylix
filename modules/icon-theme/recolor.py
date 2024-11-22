@@ -534,14 +534,13 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float]) -> Image:
     """ Replace every instance of color within the given list with their monochrome equivalent in the given image, determined by the given hue, saturation and lightness offset. """
 
     mode = img.mode
-    h, s, l_offset = hsl
+    h, s, _ = hsl
 
     if s == 0:
         if mode == "RGBA": img = img.convert("LA")
         else: img = img.convert("L")
     else:
         width, height = img.size
-        l_offset = (l_offset - 0.5) * 2 # Remapping.
 
         for x in range(width):
             for y in range(height):
