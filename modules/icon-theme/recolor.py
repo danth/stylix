@@ -574,10 +574,10 @@ def apply_palette_to_img(img:Image, new_colors:Dict[str,Lab], args) -> Image:
 
     new_palette = []
     for color in hex_palette:
-        new_color = hex_to_rgb(closest_match(color, new_colors))
+        new_color = closest_match(color, new_colors)
         h, s, _ = hex_to_hsl(new_color)
         _, __, old_l = hex_to_hsl(color)
-        new_color = rgb_to_hex(hsl_to_rgb((h, s, old_l)))
+        new_color = hsl_to_rgb((h, s, old_l))
         new_palette.extend(new_color)
 
     img.putpalette(new_palette)
