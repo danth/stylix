@@ -6,13 +6,20 @@
 # Desc: A program for recoloring icon packs, themes and wallpapers. For NovaOS.
 # Auth: Nicklas Vraa
 
-from typing import List, Set, Tuple, Dict, Optional
+from typing import Annotated,List, Set, Tuple, Dict, Optional
 from tqdm import tqdm
-from colormath.color_objects import sRGBColor, LabColor # noqa
-from colormath.color_conversions import convert_color # noqa
-from colormath.color_diff import delta_e_cie2000 # noqa
+# from basic_colormath.type_hints import RGB, Lab
+from basic_colormath.distance import rgb_to_lab, get_delta_e_lab
 from PIL import Image, ImageDraw # noqa
 import os, re, shutil, json, subprocess, argparse, random # noqa
+
+# Using custom type hints as the default ones in basic_colormath.type_hits arent compatible past python 3.8
+RGB = Annotated[tuple[float, float, float], ([0, 255], [0, 255], [0, 255])]
+Lab = Annotated[tuple[float, float, float], ([0, 100], [-128, 127], [-128, 127])]
+def LabColor(L:float, a:float, b:float) -> Lab:
+    return L, a, b
+def sRGBColor(r:float, g:float, b:float) -> RGB:
+    return r,g,b
 
 # Global constants -------------------------------------------------------------
 
@@ -302,18 +309,21 @@ def norm_hsl(h:int, s:int, l:int) -> Tuple[float,float,float]:
 
 # Preprocessing ----------------------------------------------------------------
 
-def expand_css_rgba(match) -> str:
+def expand_css_rgb(match) -> str:
     """ Used by the css_to_hex function. """
-    return rgba_to_hex((
+    return rgb_to_hex((
         int(match.group(1)), int(match.group(2)),
-        int(match.group(3)), float(match.group(4))
-    ))
+        int(match.group(3)))
+    )
 
 def css_to_hex(text:str) -> str:
     """ Returns the given string with css rgba functions and named colors substituted for their corresponding hexadecimal codes. """
 
     text = re.sub(r"rgba\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([\d.]+)\)",
-                  expand_css_rgba, text)
+                  expand_css_rgb, text)
+
+    text = re.sub(r"rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)",
+                  expand_css_rgb, text)
 
     for key in name_to_hex_dict:
         text = re.sub(key + r"\b", name_to_hex_dict[key], text)
@@ -344,13 +354,13 @@ def expand_all_hex(text:str) -> str:
 
 # Color comparision ------------------------------------------------------------
 
-def generate_palette_dict(colors:List[str]) -> Dict[str,LabColor]:
+def generate_palette_dict(colors:List[str]) -> Dict[str,Lab]:
     """ Returns a dictionary mapping hexadecimal colors to lab colors. """
     palette_dict = {}
 
     for color in colors:
         r, g, b = hex_to_rgb(color)
-        palette_dict[color] = convert_color(sRGBColor(r,g,b), LabColor)
+        palette_dict[color] = rgb_to_lab(sRGBColor(r,g,b))
 
     return palette_dict
 
@@ -383,7 +393,7 @@ def get_file_colors(text:str) -> Set[str]:
 
     return colors
 
-def closest_match(color:str, palette:Dict[str,LabColor]) -> str:
+def closest_match(color:str, palette:Dict[str,Lab]) -> str:
     """ Compare the similarity of colors in the CIELAB colorspace. Return the closest match, i.e. the palette entry with the smallest euclidian distance to the given color. """
 
     closest_color = None
@@ -396,42 +406,16 @@ def closest_match(color:str, palette:Dict[str,LabColor]) -> str:
 
         if lab_color is None:
             r, g, b = hex_to_rgb(color)
-            lab_color = convert_color(sRGBColor(r,g,b), LabColor)
+            lab_color = rgb_to_lab(sRGBColor(r,g,b))
             hex_to_lab_dict[color] = lab_color
 
-        distance = delta_e_cie2000(lab_color, palette[entry])
+        distance = get_delta_e_lab(lab_color, palette[entry])
 
         if distance < min_distance:
             min_distance = distance
             closest_color = entry
 
     return closest_color
-
-def apply_modifications(old_color, new_color_hsl:Tuple[float,float,float], args) -> Tuple[float,float,float]:
-    h, s, l = new_color_hsl
-
-    _, __, old_color_l = hex_to_hsl(old_color)
-
-    if old_color_l > args.foreground_threshold:
-        if args.foreground_saturation != None:
-            s = args.foreground_saturation
-        if args.foreground_saturation_multiply != None:
-            s = min(1, s * args.foreground_saturation_multiply)
-        if args.foreground_light != None:
-            l = args.foreground_light
-        if args.foreground_light_multiply!= None:
-            l = min(1, l * args.foreground_light_multiply)
-    else:
-        if args.accent_saturation != None:
-            s = args.accent_saturation
-        if args.accent_saturation_multiply != None:
-            s = min(1, s * args.accent_saturation_multiply)
-        if args.accent_light != None:
-            l = args.accent_light
-        if args.accent_light_multiply!= None:
-            l = min(1, l * args.accent_light_multiply)
-
-    return h, s, l
 
 # Pack management --------------------------------------------------------------
 
@@ -515,50 +499,38 @@ def copy_pack(src_path:str, dest_path:str, name:str) -> str:
 
 # Vector-based recoloring ------------------------------------------------------
 
-def apply_monotones_to_vec(text:str, colors:Set[str], hsl:Tuple[float,float,float], args) -> str:
+def apply_monotones_to_vec(text:str, colors:Set[str], hsl:Tuple[float,float,float]) -> str:
     """ Replace every instance of color within the given list with their monochrome equivalent in the given string representing an svg-file, determined by the given hue, saturation and lightness offset. """
 
-    h, s, l_offset = hsl
+    h, s, _ = hsl
 
     if s == 0:
         for color in colors:
             graytone = hex_to_gray(color)
             text = re.sub(color, graytone, text)
     else:
-        l_offset = (l_offset - 0.5) * 2 # Remapping.
-
         for color in colors:
-            graytone = hex_to_gray(color)
-            r, g, b = hex_to_rgb(graytone)
-            l = (0.21*r + 0.72*g + 0.07*b)/255
-            l = max(0, min(l+l_offset, 1))
-            monochrome = rgb_to_hex(hsl_to_rgb(apply_modifications(color, (h, s, l), args)))
-            text = re.sub(color, monochrome, text)
+            _, __, old_l = hex_to_hsl(color)
+            new_color = rgb_to_hex(hsl_to_rgb((h, s, old_l)))
+            text = re.sub(color, new_color, text)
 
     return text
 
-def apply_palette_to_vec(text:str, colors:Set[str], new_colors:Dict[str,LabColor], args) -> str:
+def apply_palette_to_vec(text:str, colors:Set[str], new_colors:Dict[str,Lab]) -> str:
     """ Replace hexadecimal color codes in a given svg/xml/css string with their closest matches within the given color palette. """
 
     for color in colors:
         new_color = closest_match(color, new_colors)
-        new_color = rgb_to_hex(hsl_to_rgb(apply_modifications(color, hex_to_hsl(new_color), args)))
+        h, s, _ = hex_to_hsl(new_color)
+        _, __, old_l = hex_to_hsl(color)
+        new_color = rgb_to_hex(hsl_to_rgb((h, s, old_l)))
         text = re.sub(color, new_color, text)
-
-    return text
-
-def apply_mapping_to_vec(text:str, colors:Set[str], map:Dict[str,str]) -> str:
-    """ Replace hexadecimal color codes in a given svg/xml/css string according to a given color mapping. """
-
-    for color in colors:
-        if color in map:
-            text = re.sub(color, map[color], text)
 
     return text
 
 # Pixel-based recoloring -------------------------------------------------------
 
-def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Image:
+def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float]) -> Image:
     """ Replace every instance of color within the given list with their monochrome equivalent in the given image, determined by the given hue, saturation and lightness offset. """
 
     mode = img.mode
@@ -578,10 +550,8 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Ima
                 else:
                     r, g, b = img.getpixel((x, y))
 
-                l = (0.21*r + 0.72*g + 0.07*b)/255
-                l = max(0, min(l+l_offset, 1))
-
-                new_color = hsl_to_rgb(apply_modifications(rgb_to_hex((r, g, b)), (h, s, l), args))
+                _, __, old_l = rgb_to_hsl((r, g, b))
+                new_color = hsl_to_rgb((h, s, old_l))
 
                 if mode == "RGBA":
                     img.putpixel((x,y), new_color + (a,))
@@ -590,7 +560,7 @@ def apply_monotones_to_img(img:Image, hsl:Tuple[float,float,float], args) -> Ima
 
     return img
 
-def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Image:
+def apply_palette_to_img(img:Image, new_colors:Dict[str,Lab], args) -> Image:
     """ Replace colors in a given image with the closest match within a given color palette. """
 
     if args.smooth: img = img.convert("P", palette=Image.ADAPTIVE, colors=256)
@@ -605,116 +575,15 @@ def apply_palette_to_img(img:Image, new_colors:Dict[str,LabColor], args) -> Imag
     new_palette = []
     for color in hex_palette:
         new_color = hex_to_rgb(closest_match(color, new_colors))
-        new_color = hsl_to_rgb(apply_modifications(color, rgb_to_hsl(new_color), args))
+        h, s, _ = hex_to_hsl(new_color)
+        _, __, old_l = hex_to_hsl(color)
+        new_color = rgb_to_hex(hsl_to_rgb((h, s, old_l)))
         new_palette.extend(new_color)
 
     img.putpalette(new_palette)
     return img
 
-def apply_mapping_to_img(img:Image, map:Dict[str,str], smooth:bool) -> Image:
-    """ Replace colors in a given image according to a given mapping. """
-
-    #raise Exception("Function not yet implemented.")
-
-    if smooth: img = img.convert("P", palette=Image.ADAPTIVE, colors=256)
-    else: img = img.convert("P")
-
-    palette = img.getpalette()
-
-    rgb_palette = [(palette[i], palette[i+1], palette[i+2]) for i in range(0, len(palette), 3)]
-
-    hex_palette = ["#%02x%02x%02x" % rgb for rgb in rgb_palette]
-
-    new_palette = []
-    for color in hex_palette:
-        if color in map:
-            new_palette.extend(hex_to_rgb(map[color]))
-        else:
-            new_palette.extend(hex_to_rgb(color))
-
-    img.putpalette(new_palette)
-    return img
-
 # User interface functions -----------------------------------------------------
-def recolor(src_path:str, dest_path:str, name:str, replacement) -> None:
-    """ Recursively copies and converts a source folder into a destination, given either an hsl color, a palette, or a color mapping. """
-
-    check_path(src_path)
-    check_path(dest_path)
-
-    new_colors, smooth, op = get_input_colors(replacement)
-    dest_path = copy_pack(src_path, dest_path, name)
-
-    # Recolor vector graphics.
-    paths = get_paths(dest_path, [".svg", ".xml"])
-    for path in tqdm(paths, desc="svg", disable=is_empty(paths)):
-        with open(path, 'r') as file: x = file.read()
-
-        x = expand_all_hex(x)
-        colors = get_file_colors(x)
-
-        if op == "color":
-            x = apply_monotones_to_vec(x, colors, new_colors)
-        elif op == "palette":
-            x = apply_palette_to_vec(x, colors, new_colors)
-        elif op == "mapping":
-            x = apply_mapping_to_vec(x, colors, new_colors)
-
-        with open(path, 'w') as file: file.write(x)
-
-    # Recolor stylesheets.
-    paths = get_paths(dest_path, [".css", "rc"])
-    for path in tqdm(paths, desc="css", disable=is_empty(paths)):
-        with open(path, 'r') as file: x = file.read()
-
-        x = css_to_hex(x)
-        x = expand_all_hex(x)
-        colors = get_file_colors(x)
-
-        if op == "color":
-            x = apply_monotones_to_vec(x, colors, new_colors)
-        elif op == "palette":
-            x = apply_palette_to_vec(x, colors, new_colors)
-        elif op == "mapping":
-            x = apply_mapping_to_vec(x, colors, new_colors)
-
-        x = hex_to_css(x)
-        with open(path, 'w') as file: file.write(x)
-
-    # Recolor pngs.
-    paths = get_paths(dest_path, [".png"])
-    for path in tqdm(paths, desc="png", disable=is_empty(paths)):
-        x = Image.open(path)
-        x = x.convert("RGBA")
-        a = x.split()[3] # Save original alpha channel.
-
-        if op == "color":
-            x = apply_monotones_to_img(x, new_colors)
-        elif op == "palette":
-            x = apply_palette_to_img(x, new_colors, smooth)
-        elif op == "mapping":
-            x = apply_mapping_to_img(x, new_colors, smooth)
-
-        x = x.convert("RGBA")
-        r,g,b,_ = x.split()
-        x = Image.merge("RGBA",(r,g,b,a)) # Restore original alpha channel.
-        x.save(path)
-
-    # Recolor jpgs.
-    paths = get_paths(dest_path, [".jpg", ".jpeg"])
-    for path in tqdm(paths, desc="jpg", disable=is_empty(paths)):
-        x = Image.open(path)
-        x = x.convert("RGB")
-
-        if op == "color":
-            x = apply_monotones_to_img(x, new_colors)
-        elif op == "palette":
-            x = apply_palette_to_img(x, new_colors, smooth)
-        elif op == "mapping":
-            x = apply_mapping_to_img(x, new_colors, smooth)
-
-        x = x.convert("RGB")
-        x.save(path)
 
 def recolor_modified(op:str, args) -> None:
     """ Recursively copies and converts a source folder into a destination, given either an hsl color, a palette, or a color mapping. """
@@ -729,13 +598,14 @@ def recolor_modified(op:str, args) -> None:
     for path in tqdm(paths, desc="svg", disable=is_empty(paths)):
         with open(path, 'r') as file: x = file.read()
 
+        x = css_to_hex(x)
         x = expand_all_hex(x)
         colors = get_file_colors(x)
 
         if op == "monochrome":
-            x = apply_monotones_to_vec(x, colors, random.choice(args.monochrome), args)
+            x = apply_monotones_to_vec(x, colors, random.choice(args.monochrome))
         elif op == "palette":
-            x = apply_palette_to_vec(x, colors, args.palette, args)
+            x = apply_palette_to_vec(x, colors, args.palette)
 
         with open(path, 'w') as file: file.write(x)
 
@@ -749,9 +619,9 @@ def recolor_modified(op:str, args) -> None:
         colors = get_file_colors(x)
 
         if op == "monochrome":
-            x = apply_monotones_to_vec(x, colors, random.choice(args.monochrome), args)
+            x = apply_monotones_to_vec(x, colors, random.choice(args.monochrome))
         elif op == "palette":
-            x = apply_palette_to_vec(x, colors, args.palette, args)
+            x = apply_palette_to_vec(x, colors, args.palette)
 
         x = hex_to_css(x)
         with open(path, 'w') as file: file.write(x)
@@ -764,7 +634,7 @@ def recolor_modified(op:str, args) -> None:
         a = x.split()[3] # Save original alpha channel.
 
         if op == "monochrome":
-            x = apply_monotones_to_img(x, random.choice(args.monochrome), args)
+            x = apply_monotones_to_img(x, random.choice(args.monochrome))
         elif op == "palette":
             x = apply_palette_to_img(x, args.palette, args)
 
@@ -780,106 +650,15 @@ def recolor_modified(op:str, args) -> None:
         x = x.convert("RGB")
 
         if op == "monochrome":
-            x = apply_monotones_to_img(x, random.choice(args.monochrome), args)
+            x = apply_monotones_to_img(x, random.choice(args.monochrome))
         elif op == "palette":
             x = apply_palette_to_img(x, args.palette, args)
 
         x = x.convert("RGB")
         x.save(path)
 
-def extract_colors(src_path:str, num_colors:int=8, save_path:str=None, pixels:int=50, cols:int=10) -> List[str]:
-    """ Returns and optionally saves the color palette of the given image, as its own image. Optionally specify the number of unique colors you want to be found. """
-
-    check_path(src_path)
-    _, ext = os.path.splitext(src_path)
-
-    if ext == ".svg":
-        with open(src_path, 'r') as file:
-            svg = file.read()
-
-        colors = list(get_file_colors(svg))
-        num_colors = len(colors)
-
-    else:
-        img = Image.open(src_path)
-
-        colors = img.convert('P', palette=Image.ADAPTIVE, colors=num_colors)
-        colors = colors.getpalette()[0:num_colors*3]
-
-        colors = ['#{:02X}{:02X}{:02X}'.format(colors[i], colors[i+1], colors[i+2]) for i in range(0, len(colors), 3)]
-
-    if save_path != None:
-        check_path(save_path)
-
-        if num_colors < cols: cols = num_colors
-
-        rows = -(-len(colors) // cols)
-        width = cols * pixels; height = rows * pixels
-
-        img = Image.new("RGBA", (width, height))
-        draw = ImageDraw.Draw(img)
-
-        for i, hex_color in enumerate(colors):
-            row = i // cols; col = i % cols
-            x0 = col * pixels; y0 = row * pixels
-            x1 = x0 + pixels; y1 = y0 + pixels
-            draw.rectangle([x0, y0, x1, y1], fill=hex_color)
-
-        img.save(save_path, format="png")
-
-    return colors
-
-def clean_svg(src_path:str, dest_path:str=None) -> str:
-    """ Removes needless metadata from svgs and optionally saves as copy, if output path is specified. """
-
-    check_path(src_path)
-    with open(src_path, 'r') as f:
-        svg = f.read()
-
-    patterns = [
-        r".*xmlns:.*\n",
-        r"\s*<metadata[\s\S]*?<\/metadata.*",
-        r"\s*<sodipodi[\s\S]*?<\/sodipodi.*",
-    ]
-
-    for pattern in patterns:
-        svg = re.sub(pattern, '', svg)
-
-    if dest_path is None: dest_path = src_path
-    else: check_path(dest_path)
-
-    with open(dest_path, 'w') as f:
-        f.write(svg)
-
-def add_backdrop(src_path:str, dest_path:str, name:str, color:str="#000000", padding=0, rounding=0):
-    """ Add a customizable backdrop to all svg-based icons. Optionally specify the backdrop color, the padding to the edge of the graphic, and the corner rounding factor. """
-
-    check_path(src_path)
-    check_path(dest_path)
-    dest_path = copy_pack(src_path, dest_path, name)
-    svg_paths = get_paths(dest_path, [".svg"])
-
-    for path in tqdm(svg_paths, desc="Changing svgs  ", unit="file"):
-        with open(path, 'r') as file:
-            svg = file.read()
-
-        width = int(re.search(r'<svg.*width=\"(\d*)\"', svg).group(1))
-        height = int(re.search(r'<svg.*height=\"(\d*)\"', svg).group(1))
-        pos = re.search(r'<svg.*>\n', svg).end()
-
-        backdrop = '<rect fill="' + color + '" x="' + str(padding) + '" y="' + str(padding) + '" width="' + str(width-2*padding) + '" height="' + str(height-2*padding) + '" rx="' + str(rounding * (width / 2)) + '" ry="' + str(rounding * (height / 2)) + '"/>'
-
-        credit = "\n<!-- Inserted by Color Manager -->\n"
-        svg = svg[:pos] + credit + backdrop + credit + svg[pos:]
-
-        with open(path, 'w') as file:
-            file.write(svg)
-
 def list_of_strings(arg):
     return arg.split(',')
-
-def str_float(arg):
-    return float(arg)
 
 def main():
     parser = argparse.ArgumentParser(description='Recolor an image.')
@@ -888,15 +667,6 @@ def main():
     parser.add_argument('--monochrome', type=list_of_strings)
     parser.add_argument('--palette', type=list_of_strings)
     parser.add_argument('--smooth', type=bool, default=True)
-    parser.add_argument('--foreground-threshold', type=str_float, default=0.85)
-    parser.add_argument('--accent-saturation', type=str_float)
-    parser.add_argument('--accent-saturation-multiply', type=str_float)
-    parser.add_argument('--foreground-saturation', type=str_float)
-    parser.add_argument('--foreground-saturation-multiply', type=str_float)
-    parser.add_argument('--accent-light', type=str_float)
-    parser.add_argument('--accent-light-multiply', type=str_float)
-    parser.add_argument('--foreground-light', type=str_float)
-    parser.add_argument('--foreground-light-multiply', type=str_float)
 
     args = parser.parse_args()
 

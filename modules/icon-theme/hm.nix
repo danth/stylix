@@ -2,24 +2,34 @@
 
 let
   cfg = config.stylix.targets.iconTheme;
-  pythonEnv = pkgs.python3.withPackages
-    (ps: with ps; [
+  basic-colormath = pkgs.python3.pkgs.buildPythonPackage rec {
+    pname = "basic-colormath";
+    version = "0.5.0";
+    pyproject = true;
+
+    src = pkgs.fetchPypi {
+      inherit version;
+      pname = "basic_colormath";
+      hash = "sha256-p/uNuNg5kqKIkeMmX5sWY8umGAg0E4/otgQxhzIuo0E=";
+    };
+
+    propagatedBuildInputs = with pkgs.python3.pkgs; [
+      setuptools
+      setuptools-scm
+      pillow
+    ];
+  };
+  pythonEnv = pkgs.python3.withPackages (
+    ps: with ps; [
+      basic-colormath
       colormath
       tqdm
       pillow
-    ]);
+    ]
+  );
   recolorScript = with cfg.recolor; ''
     ${pythonEnv}/bin/python ${./recolor.py} --src $out/share/icons \
       --smooth '${toString smooth}' \
-      --foreground-threshold ${foregroundThreshold} \
-    ${lib.optionalString (accentSaturation != null) "--accent-saturation ${accentSaturation}"} \
-      ${lib.optionalString (accentSaturationMultiply != null) "--accent-saturation-multiply ${accentSaturationMultiply}"} \
-      ${lib.optionalString (accentLight != null) "--accent-light ${accentLight}"} \
-      ${lib.optionalString (accentLightMultiply != null) "--accent-light-multiply ${accentLightMultiply}"} \
-      ${lib.optionalString (foregroundSaturation != null) "--foreground-saturation ${foregroundSaturation}"} \
-      ${lib.optionalString (foregroundSaturationMultiply != null) "--foreground-saturation-multiply ${foregroundSaturationMultiply}"} \
-      ${lib.optionalString (foregroundLight != null) "--foreground-light ${foregroundLight}"} \
-      ${lib.optionalString (foregroundLightMultiply != null) "--foreground-light-multiply ${foregroundLightMultiply}"} \
       ${if cfg.recolor.mode == "monochrome" then
         "--monochrome '${builtins.concatStringsSep "," cfg.recolor.colors}'"
       else
@@ -63,93 +73,19 @@ in
         type = lib.types.bool;
         default = true;
       };
-      foregroundThreshold = lib.mkOption {
-        description = ''This speicifes the max distance from white for which the color will be considered foreground.
-          anything smaller and the 'foreground' modifications will be used, anything larger
-          and the accent modifications will be used.
-          Values between 0.0 and 1.0.
-        '';
-        type = lib.types.str;
-        default = "0.85";
-      };
-      accentSaturation = lib.mkOption {
-        description = ''Override icon accent colors saturation with custom value.
-          Values between 0.0 and 1.0.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      accentSaturationMultiply = lib.mkOption {
-        description = ''Multiply icon accent colors saturation by value.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      accentLight = lib.mkOption {
-        description = ''Override icon accent colors light with custom value.
-          Values between 0.0 and 1.0.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      accentLightMultiply = lib.mkOption {
-        description = ''Multiply icon accent colors light by value.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      foregroundSaturation = lib.mkOption {
-        description = ''Override icon foreground colors saturation with custom value.
-          Values between 0.0 and 1.0.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      foregroundSaturationMultiply = lib.mkOption {
-        description = ''Multiply icon foreground colors saturation by value.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      foregroundLight = lib.mkOption {
-        description = ''Override icon foreground colors light with custom value.
-          Values between 0.0 and 1.0.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
-      foregroundLightMultiply = lib.mkOption {
-        description = ''Multiply icon foreground colors light by value.'';
-        type = (lib.types.nullOr lib.types.str);
-        default = null;
-      };
       colors = lib.mkOption {
         description = "The color list";
         type = lib.types.listOf (lib.types.str);
-        default =
-          if cfg.recolor.mode == "monochrome" then
-            with config.lib.stylix.colors.withHashtag; [
-              base08
-              base09
-              base0A
-              base0B
-              base0C
-              base0D
-              base0E
-              base0F
-            ]
-          else
-            with config.lib.stylix.colors.withHashtag; [
-              base00
-              base01
-              base02
-              base03
-              base04
-              base05
-              base06
-              base07
-              base08
-              base09
-              base0A
-              base0B
-              base0C
-              base0D
-              base0E
-              base0F
-            ];
+        default =  with config.lib.stylix.colors.withHashtag; [
+          base08
+          base09
+          base0A
+          base0B
+          base0C
+          base0D
+          base0E
+          base0F
+        ];
       };
     };
   };
