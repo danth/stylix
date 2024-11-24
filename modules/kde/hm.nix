@@ -288,22 +288,19 @@ in {
     # changes to KDE to make it possible to update the wallpaper through
     # config files alone.
     home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      ${activator}/bin/stylix-set-kde-wallpaper || verboseEcho \
+      ${lib.getExe activator} || verboseEcho \
         "KDE theme setting failed. See `${activateDocs}`"
     '';
 
-    systemd.user.services.stylix-set-kde-wallpaper = lib.mkIf cfg.service {
-      Unit = {
-        Description = "KDE wallpaper setter for stylix";
-        Documentation = activateDocs;
-        After = [ "plasma-plasmashell.service" ];
-      };
-      Service = {
-        ExecStart = "${activator}/bin/stylix-set-kde-wallpaper";
-        Restart = "on-failure";
-        RestartSec = 1;
-      };
-      Install.WantedBy = [ "default.target" ];
-    };
+    home.file."stylix-activator" = {
+          target = ".config/autostart/stylix-activator.desktop";
+          text = ''
+            [Desktop Entry]
+            Type=Application
+            Exec=${lib.getExe activator}
+            Name=Stylix Activator
+            X-KDE-AutostartScript=true
+          '';
+        };
   };
 }
