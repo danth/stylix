@@ -3,6 +3,7 @@
 let
   themeFile = config.lib.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-vim;
+    target = "base16";
   };
 
   themePlugin = pkgs.vimUtils.buildVimPlugin {
