@@ -27,8 +27,21 @@ in {
       extensions = [ themeExtension ];
       userSettings = {
         "workbench.colorTheme" = "Stylix";
-        "terminal.integrated.fontFamily" = "'${monospace.name}'";
-        "editor.fontFamily" = "'${monospace.name}'";
+        "editor.fontFamily" = monospace.name;
+        "editor.inlayHints.fontFamily" = monospace.name;
+        "editor.inlineSuggest.fontFamily" = monospace.name;
+        "scm.inputFontFamily" = monospace.name;
+        "debug.console.fontFamily" = monospace.name;
+        "markdown.preview.fontFamily" = sansSerif.name;
+        "chat.editor.fontFamily" = monospace.name;
+        "editor.fontSize" = builtins.floor (sizes.terminal * 4 / 3 + 0.5); # pt to px
+        "editor.minimap.sectionHeaderFontSize" = builtins.floor (sizes.terminal * 4 / 3 * 9 / 14 + 0.5); # pt to px, then 9/14 for proper relative sizing
+        "scm.inputFontSize" = builtins.floor (sizes.terminal * 4 / 3 * 13 / 14 + 0.5);
+        "screencastMode.fontSize" = builtins.floor (sizes.terminal * 4 / 3 * 56 / 14 + 0.5);
+        "debug.console.fontSize" = builtins.floor (sizes.terminal * 4 / 3 + 0.5);
+        "markdown.preview.fontSize" = builtins.floor (sizes.terminal * 4 / 3 + 0.5);
+        "terminal.integrated.fontSize" = builtins.floor (sizes.terminal * 4 / 3 + 0.5);
+        "chat.editor.fontSize" = builtins.floor (sizes.terminal * 4 / 3 + 0.5);
       };
     };
   };
