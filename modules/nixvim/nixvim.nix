@@ -70,7 +70,7 @@ in {
       })
       {
         programs.nixvim = {
-          highlight = let
+          highlightOverride = let
             transparent = {
               bg = "none";
               ctermbg = "none";
