@@ -21,8 +21,8 @@ jobs:
       )
 
     steps:
-      # Use a GitHub App rather than the default token so that GitHub Actions workflows
-      # may run on the created pull request
+      # Use a GitHub App rather than the default token so that GitHub Actions
+      # workflows may run on the created pull request.
       - name: Create GitHub access token
         uses: actions/create-github-app-token@v1
         id: app-token
