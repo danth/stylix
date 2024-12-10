@@ -66,7 +66,7 @@ in
         (setq base16-theme-256-color-source 'colors)
         (load-theme 'base16-stylix t)
         ;; Set font
-        (set-face-attribute 'default t :font (font-spec :family "${monospace.name}" :size ${emacsSize}))
+        (set-face-attribute 'default nil :font (font-spec :family "${monospace.name}" :size ${emacsSize}))
         ;; -----------------------------
         ;; set opacity
         (add-to-list 'default-frame-alist '(alpha-background . ${emacsOpacity}))
