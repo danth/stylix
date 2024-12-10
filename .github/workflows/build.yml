@@ -58,4 +58,4 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Build ${{ matrix.build.key }}
-        run: nix -L build github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.build.type }}.${{ matrix.build.arch }}.${{ matrix.build.key }}
+        run: nix -L build github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.build.type }}.${{ matrix.build.arch }}.${{ matrix.build.key }} --no-update-lock-file
