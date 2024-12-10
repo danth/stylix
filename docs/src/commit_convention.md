@@ -28,8 +28,3 @@ punctuation.
 
 Most commits to `master` will also include a pull request number in brackets
 after the summary. GitHub adds this automatically when creating a squash merge.
-
-## Old commits
-
-Commits before 2024 did not follow any particular format.
-Some have emojis from [GitMoji](https://gitmoji.dev).
