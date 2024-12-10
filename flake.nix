@@ -39,10 +39,10 @@
     # The 'home-manager' input is used to generate the documentation.
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.11";
     };
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     # Interface flake systems.
     systems.url = "github:nix-systems/default";
