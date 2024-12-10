@@ -71,6 +71,11 @@ one of the following applies:
 - There is no reliable way to detect whether the target is installed, *and*
   enabling it unconditionally would cause problems.
 
+## Testbeds
+
+Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
+mandatory.
+
 ## How to apply colors
 
 Refer to the [style guide](./styling.md) to see how colors are named,
