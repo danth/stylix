@@ -1,3 +1,6 @@
+# Consider also updating the LibreWolf module when updating this module,
+# as they are very similar.
+
 { config, lib, ... }:
 
 let
