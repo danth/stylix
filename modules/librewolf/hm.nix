@@ -1,5 +1,4 @@
-# Consider also updating the LibreWolf module when updating this module,
-# as they are very similar.
+# This module is a copy of the Firefox module.
 
 { config, lib, ... }:
 
@@ -14,19 +13,19 @@ let
   makeProfileSettingsPair = profileName:
     lib.nameValuePair profileName profileSettings;
 in {
-  options.stylix.targets.firefox = {
+  options.stylix.targets.librewolf = {
     enable =
-      config.lib.stylix.mkEnableTarget "Firefox" true;
+      config.lib.stylix.mkEnableTarget "Librewolf" true;
 
     profileNames = lib.mkOption {
-      description = "The Firefox profile names to apply styling on.";
+      description = "The Librewolf profile names to apply styling on.";
       type = lib.types.listOf lib.types.str;
       default = [ ];
     };
   };
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.firefox.enable) {
-    programs.firefox.profiles = lib.listToAttrs
-      (map makeProfileSettingsPair config.stylix.targets.firefox.profileNames);
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.librewolf.enable) {
+    programs.librewolf.profiles = lib.listToAttrs
+      (map makeProfileSettingsPair config.stylix.targets.librewolf.profileNames);
   };
 }
