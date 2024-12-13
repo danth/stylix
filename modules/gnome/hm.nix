@@ -25,7 +25,7 @@ in {
           else if imageScalingMode == "center"
           then "centered"
           # Seemingly no tile support... :(
-          else "Zoom";
+          else "zoom";
         picture-uri = "file://${config.stylix.image}";
         picture-uri-dark = "file://${config.stylix.image}";
       };
