@@ -16,7 +16,6 @@ in {
         picture-options = let
           inherit (config.stylix) imageScalingMode;
         in
-          # TODO: Test these values
           if imageScalingMode == "fit"
           then "scaled"
           else if imageScalingMode == "fill"
@@ -25,8 +24,8 @@ in {
           then "stretched"
           else if imageScalingMode == "center"
           then "centered"
-          # Tile
-          else "wallpaper";
+          # Seemingly no tile support... :(
+          else "Zoom";
         picture-uri = "file://${config.stylix.image}";
         picture-uri-dark = "file://${config.stylix.image}";
       };
