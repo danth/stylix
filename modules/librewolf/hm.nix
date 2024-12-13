@@ -1,3 +1,5 @@
+# This module is a copy of the Firefox module.
+
 { config, lib, ... }:
 
 let
