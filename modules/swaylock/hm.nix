@@ -26,7 +26,7 @@ in {
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.swaylock.enable && pkgs.stdenv.hostPlatform.isLinux) {
     programs.swaylock.settings = {
       color = outside;
-      scaling = "fill";
+      scaling = config.stylix.imageScalingMode;
       inside-color = inside;
       inside-clear-color = inside;
       inside-caps-lock-color = inside;

@@ -13,7 +13,20 @@
       (config.stylix.enable && config.stylix.targets.regreet.enable && pkgs.stdenv.hostPlatform.isLinux)
       {
         programs.regreet = {
-          settings.background.path = config.stylix.image;
+          settings.background = {
+            path = config.stylix.image;
+            fit = let
+              inherit (config.stylix) imageScalingMode;
+            in
+              if imageScalingMode == "fill"
+              then "Cover"
+              else if imageScalingMode == "fit"
+              then "Contain"
+              else if imageScalingMode == "stretch"
+              then "Fill"
+              # No other available options
+              else null;
+          };
           font = {
             inherit (config.stylix.fonts.sansSerif) name package;
           };

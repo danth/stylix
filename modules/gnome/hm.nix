@@ -13,7 +13,19 @@ in {
     dconf.settings = {
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
-        picture-options = "zoom";
+        picture-options = let
+          inherit (config.stylix) imageScalingMode;
+        in
+          if imageScalingMode == "fit"
+          then "scaled"
+          else if imageScalingMode == "fill"
+          then "zoom"
+          else if imageScalingMode == "stretch"
+          then "stretched"
+          else if imageScalingMode == "center"
+          then "centered"
+          # Seemingly no tile support... :(
+          else "zoom";
         picture-uri = "file://${config.stylix.image}";
         picture-uri-dark = "file://${config.stylix.image}";
       };
