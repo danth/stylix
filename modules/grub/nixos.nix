@@ -23,6 +23,17 @@ let
       ${pkgs.grub2}/bin/grub-mkfont $font --output $out --size ${toString sizes.applications}
     '';
 
+  inherit (config.stylix) imageScalingMode;
+
+  image-scale =
+    if imageScalingMode == "fill"
+    then "crop"
+    else if imageScalingMode == "fit"
+    then "fitheight"
+    else if imageScalingMode == "center"
+    then "padding"
+    # Grub doesn't seem to support tile
+    else "crop";
 in {
   options.stylix.targets.grub = {
     enable = config.lib.stylix.mkEnableTarget "GRUB" true;
@@ -46,7 +57,7 @@ in {
     theme = pkgs.runCommand "stylix-grub" {
       themeTxt = ''
         desktop-image: "background.png"
-        desktop-image-scale-method: "crop"
+        desktop-image-scale-method: "${image-scale}"
         desktop-color: "${base00}"
 
         title-text: ""
