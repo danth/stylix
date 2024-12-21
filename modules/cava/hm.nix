@@ -20,10 +20,15 @@ let
 in {
   options.stylix.targets.cava = {
     enable = config.lib.stylix.mkEnableTarget "CAVA" true;
-    rainbow.enable = lib.mkEnableOption "rainbow gradient theming";
+    rainbow.enable = config.lib.stylix.mkEnableTarget "rainbow gradient theming" false;
   };
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.cava.enable) {
-    programs.cava.settings.color = lib.mkIf config.stylix.targets.cava.rainbow.enable (mkGradient rainbowColors);
-  };
+  config = let
+    cfg = config.stylix.targets.cava;
+  in
+    lib.mkIf (config.stylix.enable && cfg.enable) {
+      programs.cava.settings.color = lib.mkIf cfg.rainbow.enable (
+        mkGradient rainbowColors
+      );
+    };
 }
