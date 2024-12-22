@@ -54,8 +54,8 @@ in {
       };
     })
 
-    # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
-    (lib.mkIf (cfg.enable && cfg.flatpakSupport.enable) {
+    (lib.mkIf (cfg.enable && cfg.flatpakSupport.enable) ({
+      # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
       home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenv.mkDerivation {
         name = "flattenedGtkTheme";
         src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
@@ -69,13 +69,11 @@ in {
           cat "$config" >> $out/gtk-4.0/gtk.css
         '';
       };
-    })
-
-    # Let Flatpak apps read the theme and force them to use it.
-    (lib.mkIf (cfg.enable && cfg.flatpakSupport.enable) (let
+    } // (let
         filesystem = "${config.home.homeDirectory}/.themes/${config.gtk.theme.name}:ro";
         theme = config.gtk.theme.name;
       in if lib.hasAttrByPath ["services" "flatpak" "overrides"] options then {
+        # Let Flatpak apps read the theme and force them to use it.
         # This requires nix-flatpak to be imported externally.
         services.flatpak.overrides.global = {
           Context.filesystems = [filesystem];
@@ -91,6 +89,6 @@ in {
           GTK_THEME=${theme}
         '';
       }
-    ))
+    )))
   ];
 }
