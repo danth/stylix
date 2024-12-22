@@ -29,25 +29,56 @@ in {
         window.background { border-radius: 0; }
       '';
     };
+
+    flatpakSupport.enable = lib.mkEnableOption "support for theming Flatpak apps";
   };
 
-  config = lib.mkIf cfg.enable {
-    # programs.dconf.enable = true; required in system config
-    gtk = {
-      enable = true;
-      font = {
-        inherit (config.stylix.fonts.sansSerif) package name;
-        size = config.stylix.fonts.sizes.applications;
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
+      # programs.dconf.enable = true; required in system config
+      gtk = {
+        enable = true;
+        font = {
+          inherit (config.stylix.fonts.sansSerif) package name;
+          size = config.stylix.fonts.sizes.applications;
+        };
+        theme = {
+          package = pkgs.adw-gtk3;
+          name = "adw-gtk3";
+        };
       };
-      theme = {
-        package = pkgs.adw-gtk3;
-        name = "adw-gtk3";
-      };
-    };
 
-    xdg.configFile = {
-      "gtk-3.0/gtk.css".source = finalCss;
-      "gtk-4.0/gtk.css".source = finalCss;
-    };
-  };
+      xdg.configFile = {
+        "gtk-3.0/gtk.css".source = finalCss;
+        "gtk-4.0/gtk.css".source = finalCss;
+      };
+    })
+
+    (lib.mkIf (cfg.enable && cfg.flatpakSupport.enable) {
+      # Let Flatpak apps read the theme and force them to use it.
+      # This is likely incompatible with other modules that write to this file.
+      xdg.dataFile."flatpak/overrides/global".text = ''
+        [Context]
+        filesystems=${config.home.homeDirectory}/.themes/${config.gtk.theme.name}:ro
+
+        [Environment]
+        GTK_THEME=${config.gtk.theme.name}
+      '';
+
+      # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
+      home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenv.mkDerivation {
+        name = "flattenedGtkTheme";
+        src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
+
+        installPhase = ''
+          mkdir $out
+          cp -rL . $out
+
+          config="${config.xdg.configFile."gtk-3.0/gtk.css".source}"
+          cat "$config" >> $out/gtk-3.0/gtk.css
+          cat "$config" >> $out/gtk-4.0/gtk.css
+        '';
+      };
+    })
+  ];
 }
