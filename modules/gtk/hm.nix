@@ -56,7 +56,7 @@ in {
 
     (lib.mkIf (cfg.enable && cfg.flatpakSupport.enable) ({
       # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
-      home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenv.mkDerivation {
+      home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenvNoCC.mkDerivation {
         name = "flattenedGtkTheme";
         src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
 
