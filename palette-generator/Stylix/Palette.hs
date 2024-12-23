@@ -72,7 +72,7 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
           + sum (V.map (difference accentValue) $ accent lightnesses)
 
         scheme = case polarity of
-          "either" -> min lightScheme darkScheme darkerScheme
+          "either" -> min lightScheme darkScheme
           "light" -> lightScheme
           "dark" -> darkScheme
           "darker" -> darkerScheme
