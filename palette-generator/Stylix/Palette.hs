@@ -72,9 +72,10 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
           + sum (V.map (difference accentValue) $ accent lightnesses)
 
         scheme = case polarity of
-          "either" -> min lightScheme darkScheme
+          "either" -> min lightScheme darkScheme darkerScheme
           "light" -> lightScheme
           "dark" -> darkScheme
+          "darker" -> darkerScheme
           _ -> error ("Invalid polarity: " ++ polarity)
 
         {-
@@ -90,3 +91,6 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
         -}
         darkScheme
           = lightnessError (V.fromList [10, 30, 45, 65, 75, 90, 95, 95]) 60
+
+        darkerScheme
+          = lightnessError (V.fromList [5, 15, 20, 30, 40, 80, 95, 95]) 60
