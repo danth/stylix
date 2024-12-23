@@ -63,7 +63,7 @@ in {
 
         installPhase = ''
           mkdir $out
-          cp -rL . $out
+          cp --recursive $src $out
 
           config="${config.xdg.configFile."gtk-3.0/gtk.css".source}"
           cat "$config" >> $out/gtk-3.0/gtk.css
