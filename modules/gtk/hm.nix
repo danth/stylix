@@ -12,7 +12,6 @@ let
     cat ${baseCss} >>$out
     echo ${lib.escapeShellArg cfg.extraCss} >>$out
   '';
-
 in {
   options.stylix.targets.gtk = {
     enable = config.lib.stylix.mkEnableTarget
@@ -34,8 +33,8 @@ in {
       config.lib.stylix.mkEnableTarget "support for theming Flatpak apps" true;
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
       # programs.dconf.enable = true; required in system config
       gtk = {
         enable = true;
@@ -53,39 +52,46 @@ in {
         "gtk-3.0/gtk.css".source = finalCss;
         "gtk-4.0/gtk.css".source = finalCss;
       };
-    })
+    }
 
-    (lib.mkIf (cfg.enable && cfg.flatpakSupport.enable) ({
-      # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
-      home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenvNoCC.mkDerivation {
-        name = "flattenedGtkTheme";
-        src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
+    (lib.mkIf cfg.flatpakSupport.enable (lib.mkMerge [
+      {
+        # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
+        home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenvNoCC.mkDerivation {
+          name = "flattenedGtkTheme";
+          src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
 
-        installPhase = ''
-          cp --recursive . $out
-          cat ${finalCss} | tee --append $out/gtk-{3,4}.0/gtk.css
-        '';
-      };
-    } // (let
-        filesystem = "${config.home.homeDirectory}/.themes/${config.gtk.theme.name}:ro";
-        theme = config.gtk.theme.name;
-      in if lib.hasAttrByPath ["services" "flatpak" "overrides"] options then {
-        # Let Flatpak apps read the theme and force them to use it.
-        # This requires nix-flatpak to be imported externally.
-        services.flatpak.overrides.global = {
-          Context.filesystems = [filesystem];
-          Environment.GTK_THEME = theme;
+          installPhase = ''
+            cp --recursive . $out
+            cat ${finalCss} | tee --append $out/gtk-{3,4}.0/gtk.css
+          '';
         };
-      } else {
-        # This is likely incompatible with other modules that write to this file.
-        xdg.dataFile."flatpak/overrides/global".text = ''
-          [Context]
-          filesystems=${filesystem}
-
-          [Environment]
-          GTK_THEME=${theme}
-        '';
       }
-    )))
-  ];
+      (
+        let
+          filesystem = "${config.home.homeDirectory}/.themes/${config.gtk.theme.name}:ro";
+          theme = config.gtk.theme.name;
+        in
+          if lib.hasAttrByPath ["services" "flatpak" "overrides"] options
+          then {
+            # Let Flatpak apps read the theme and force them to use it.
+            # This requires nix-flatpak to be imported externally.
+            services.flatpak.overrides.global = {
+              Context.filesystems = [filesystem];
+              Environment.GTK_THEME = theme;
+            };
+          }
+          else {
+            # This is likely incompatible with other modules that write to this file.
+            xdg.dataFile."flatpak/overrides/global".text = ''
+              [Context]
+              filesystems=${filesystem}
+
+              [Environment]
+              GTK_THEME=${theme}
+            '';
+          }
+      )
+    ]))
+  ]);
 }
