@@ -248,7 +248,7 @@ in {
         };
 
         webpage = let
-          isDark = config.stylix.polarity == "dark" || config.stylix.polarity == "darker";
+          isDark = config.stylix.polarity == "dark" || config.stylix.polarity == "darker" || config.stylix.polarity == "even-darker";
         in {
           darkmode.enabled = lib.mkIf isDark (lib.mkDefault true);
 

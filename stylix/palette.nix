@@ -23,7 +23,7 @@ let
 in {
   options.stylix = {
     polarity = lib.mkOption {
-      type = lib.types.enum [ "either" "light" "dark" "darker" ];
+      type = lib.types.enum [ "either" "light" "dark" "darker" "even-darker" ];
       default = "either";
       description = ''
         Use this option to force a light or dark theme.

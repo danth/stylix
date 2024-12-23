@@ -76,6 +76,7 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
           "light" -> lightScheme
           "dark" -> darkScheme
           "darker" -> darkerScheme
+          "even-darker" -> evenDarkerScheme
           _ -> error ("Invalid polarity: " ++ polarity)
 
         {-
@@ -94,3 +95,6 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
 
         darkerScheme
           = lightnessError (V.fromList [5, 10, 15, 20, 70, 80, 95, 95]) 60
+
+        evenDarkerScheme
+          = lightnessError (V.fromList [2, 4, 8, 10, 70, 80, 95, 95]) 60
