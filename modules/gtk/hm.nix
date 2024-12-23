@@ -62,12 +62,10 @@ in {
         src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
 
         installPhase = ''
-          mkdir $out
-          cp --recursive $src $out
+          cp --recursive . $out
 
-          config="${config.xdg.configFile."gtk-3.0/gtk.css".source}"
-          cat "$config" >> $out/gtk-3.0/gtk.css
-          cat "$config" >> $out/gtk-4.0/gtk.css
+          cat ${finalCss} >> $out/gtk-3.0/gtk.css
+          cat ${finalCss} >> $out/gtk-4.0/gtk.css
         '';
       };
     } // (let
