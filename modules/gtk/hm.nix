@@ -63,9 +63,7 @@ in {
 
         installPhase = ''
           cp --recursive . $out
-
-          cat ${finalCss} >> $out/gtk-3.0/gtk.css
-          cat ${finalCss} >> $out/gtk-4.0/gtk.css
+          cat ${finalCss} | tee --append $out/gtk-{3,4}.0/gtk.css
         '';
       };
     } // (let
