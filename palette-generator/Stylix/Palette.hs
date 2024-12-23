@@ -94,7 +94,7 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
           = lightnessError (V.fromList [10, 30, 45, 65, 75, 90, 95, 95]) 60
 
         darkerScheme
-          = lightnessError (V.fromList [5, 10, 15, 20, 70, 80, 95, 95]) 60
+          = lightnessError (V.fromList [5, 10, 15, 60, 70, 80, 95, 95]) 60
 
         evenDarkerScheme
-          = lightnessError (V.fromList [2, 4, 8, 10, 70, 80, 95, 95]) 60
+          = lightnessError (V.fromList [2, 4, 8, 55, 70, 80, 95, 95]) 60
