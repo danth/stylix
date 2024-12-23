@@ -1,9 +1,10 @@
-{ config, lib, ... }:
-
+{
+  config,
+  lib,
+  ...
+}:
 with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
-
-let
+with config.stylix.fonts; let
   background = base00;
   secondary-background = base01;
   selection-background = base03;
@@ -247,7 +248,7 @@ in {
         };
 
         webpage = let
-          isDark = config.stylix.polarity == "dark";
+          isDark = config.stylix.polarity == "dark" || config.stylix.polarity == "darker";
         in {
           darkmode.enabled = lib.mkIf isDark (lib.mkDefault true);
 
