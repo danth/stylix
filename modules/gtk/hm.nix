@@ -30,7 +30,8 @@ in {
       '';
     };
 
-    flatpakSupport.enable = lib.mkEnableOption "support for theming Flatpak apps";
+    flatpakSupport.enable =
+      config.lib.stylix.mkEnableTarget "support for theming Flatpak apps" true;
   };
 
   config = lib.mkMerge [
