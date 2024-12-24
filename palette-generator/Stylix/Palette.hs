@@ -10,6 +10,10 @@ import Data.Vector ( (//) )
 import qualified Data.Vector as V
 import System.Random ( randomRIO )
 
+-- Adjust value according to coefficients
+adjustValue :: Double -> Double->  Double -> Double -> Double
+adjustValue v a b x = minimum [maximum [0.0, v*(a*x+b)], 100.0]
+
 -- | Extract the primary scale from a pallete.
 primary :: V.Vector a -> V.Vector a
 primary = V.take 8
@@ -34,17 +38,17 @@ randomFromImage image = do
       color = RGB (fromIntegral r) (fromIntegral g) (fromIntegral b)
   return $ rgb2lab color
 
-instance Species (String, Image PixelRGB8) (V.Vector LAB) where
-  generate (_, image) = V.replicateM 16 $ randomFromImage image
+instance Species (String,Double,Double, Image PixelRGB8) (V.Vector LAB) where
+  generate (_,_,_, image) = V.replicateM 16 $ randomFromImage image
 
   crossover _ a b = return $ alternatingZip a b
 
-  mutate (_, image) palette = do
+  mutate (_,_,_, image) palette = do
     index <- randomRIO (0, 15)
     colour <- randomFromImage image
     return $ palette // [(index, colour)]
 
-  fitness (polarity, _) palette
+  fitness (polarity,primaryScaleDark,primaryScaleLight, _) palette
     = realToFrac $ accentDifference - (primarySimilarity/10) - scheme
       where
         -- The primary scale should use similar colours, to an extent.
@@ -75,8 +79,6 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
           "either" -> min lightScheme darkScheme
           "light" -> lightScheme
           "dark" -> darkScheme
-          "darker" -> darkerScheme
-          "even-darker" -> evenDarkerScheme
           _ -> error ("Invalid polarity: " ++ polarity)
 
         {-
@@ -84,17 +86,51 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
         The accent colours are slightly darker.
         -}
         lightScheme
-          = lightnessError (V.fromList [90, 70, 55, 35, 25, 10, 5, 5]) 40
+          = lightnessError (V.fromList [
+            (adjustValue 90.0 0.1 0.0 primaryScaleLight), 
+            (adjustValue 70.0 0.963 0.037 primaryScaleLight),
+            (adjustValue 55.0 0.913 0.087 primaryScaleLight),
+            (adjustValue 35.0 0.167 0.883 primaryScaleLight),
+            (adjustValue 25.0 0.078 0.922 primaryScaleLight),
+            (adjustValue 10.0 0.056 0.944 primaryScaleLight),
+            (adjustValue 5.0 0.0 1.0 primaryScaleLight),
+            (adjustValue 5.0 0.0 1.0 primaryScaleLight)
+          ]) 40
+
+        -- 0.1, 0.133,0.178,0.85,0.93,0.95,1.0,1.0 for 0.1 scale
+        -- f(x) = ax+b for multiplier (light)
+        -- 1.0, 0.0
+        -- 0.963, 0.037
+        -- 0.913, 0.087
+        -- 0.167, 0.833
+        -- 0.078, 0.922
+        -- 0.056, 0.944
+        -- 0.0, 1.0
+        -- 0.0, 1.0
 
         {-
         For dark themes, the background is dark and the text is bright.
         The accent colours are slightly brighter.
         -}
         darkScheme
-          = lightnessError (V.fromList [10, 30, 45, 65, 75, 90, 95, 95]) 60
-
-        darkerScheme
-          = lightnessError (V.fromList [5, 10, 15, 60, 70, 80, 95, 95]) 60
-
-        evenDarkerScheme
-          = lightnessError (V.fromList [2, 4, 8, 55, 70, 80, 95, 95]) 60
+          = lightnessError (V.fromList [
+            (adjustValue 10.0 1.0 0.0 primaryScaleDark), 
+            (adjustValue 30.0 0.963 0.037 primaryScaleDark),
+            (adjustValue 45.0 0.913 0.087 primaryScaleDark),
+            (adjustValue 65.0 0.167 0.883 primaryScaleDark),
+            (adjustValue 75.0 0.078 0.922 primaryScaleDark),
+            (adjustValue 90.0 0.056 0.944 primaryScaleDark),
+            (adjustValue 95.0 0.0 1.0 primaryScaleDark),
+            (adjustValue 95.0 0.0 1.0 primaryScaleDark)
+            ]) 60
+        
+        -- 0.1, 0.133,0.178,0.85,0.93,0.95,1.0,1.0 for 0.1 scale
+        -- f(x) = ax+b for multiplier (dark)
+        -- 1.0, 0.0
+        -- 0.963, 0.037
+        -- 0.913, 0.087
+        -- 0.167, 0.833
+        -- 0.078, 0.922
+        -- 0.056, 0.944
+        -- 0.0, 1.0
+        -- 0.0, 1.0

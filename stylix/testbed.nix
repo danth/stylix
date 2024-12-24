@@ -1,14 +1,17 @@
-{ pkgs, inputs, lib, ... }:
-
-let
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
   username = "guest";
 
-  commonModule = { config, ... }: {
+  commonModule = {config, ...}: {
     users.users.${username} = {
       description = "Guest";
       hashedPassword = "";
       isNormalUser = true;
-      extraGroups = [ "wheel" ];
+      extraGroups = ["wheel"];
     };
 
     security.sudo.wheelNeedsPassword = false;
@@ -25,83 +28,83 @@ let
     };
   };
 
-  autoload = builtins.concatLists
+  autoload =
+    builtins.concatLists
     (lib.mapAttrsToList
-      (name: _:
-        let testbed = {
-          inherit name;
-          module = "${inputs.self}/modules/${name}/testbed.nix";
-        };
+      (
+        name: _: let
+          testbed = {
+            inherit name;
+            module = "${inputs.self}/modules/${name}/testbed.nix";
+          };
         in
           lib.optional (builtins.pathExists testbed.module) testbed
       )
       (builtins.readDir "${inputs.self}/modules"));
 
-  makeTestbed =
-    testbed: stylix:
-    let
-      name = "testbed-${testbed.name}-${stylix.polarity}";
+  makeTestbed = testbed: stylix: let
+    name = "testbed-${testbed.name}-${stylix.polarity.force}";
 
-      system = lib.nixosSystem {
-        inherit (pkgs) system;
+    system = lib.nixosSystem {
+      inherit (pkgs) system;
 
-        modules = [
-          commonModule
-          inputs.self.nixosModules.stylix
-          inputs.home-manager.nixosModules.home-manager
-          testbed.module
+      modules = [
+        commonModule
+        inputs.self.nixosModules.stylix
+        inputs.home-manager.nixosModules.home-manager
+        testbed.module
 
-          {
-            inherit stylix;
-            system.name = name;
-          }
-        ];
-      };
+        {
+          inherit stylix;
+          system.name = name;
+        }
+      ];
+    };
 
-      script = pkgs.writeShellApplication {
-        inherit name;
-        text = ''
-          cleanup() {
-            if rm --recursive "$directory"; then
-              printf '%s\n' 'Virtualisation disk image removed.'
-            fi
-          }
+    script = pkgs.writeShellApplication {
+      inherit name;
+      text = ''
+        cleanup() {
+          if rm --recursive "$directory"; then
+            printf '%s\n' 'Virtualisation disk image removed.'
+          fi
+        }
 
-          # We create a temporary directory rather than a temporary file, since
-          # temporary files are created empty and are not valid disk images.
-          directory="$(mktemp --directory)"
-          trap cleanup EXIT
+        # We create a temporary directory rather than a temporary file, since
+        # temporary files are created empty and are not valid disk images.
+        directory="$(mktemp --directory)"
+        trap cleanup EXIT
 
-          NIX_DISK_IMAGE="$directory/nixos.qcow2" \
-            ${lib.getExe system.config.system.build.vm}
-        '';
-      };
-    in
-      lib.nameValuePair name script;
+        NIX_DISK_IMAGE="$directory/nixos.qcow2" \
+          ${lib.getExe system.config.system.build.vm}
+      '';
+    };
+  in
+    lib.nameValuePair name script;
 
   # This generates a copy of each testbed for each of the following themes.
-  makeTestbeds = testbed: map (makeTestbed testbed) [
-    {
-      enable = true;
-      image = pkgs.fetchurl {
-        name = "three-bicycles.jpg";
-        url = "https://unsplash.com/photos/hwLAI5lRhdM/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzYxNDcwfA&force=true";
-        hash = "sha256-S0MumuBGJulUekoGI2oZfUa/50Jw0ZzkqDDu1nRkFUA=";
-      };
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
-      polarity = "light";
-    }
-    {
-      enable = true;
-      image = pkgs.fetchurl {
-        name = "mountains.jpg";
-        url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
-        hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
-      };
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
-      polarity = "dark";
-    }
-  ];
-
+  makeTestbeds = testbed:
+    map (makeTestbed testbed) [
+      {
+        enable = true;
+        image = pkgs.fetchurl {
+          name = "three-bicycles.jpg";
+          url = "https://unsplash.com/photos/hwLAI5lRhdM/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzYxNDcwfA&force=true";
+          hash = "sha256-S0MumuBGJulUekoGI2oZfUa/50Jw0ZzkqDDu1nRkFUA=";
+        };
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
+        polarity.force = "light";
+      }
+      {
+        enable = true;
+        image = pkgs.fetchurl {
+          name = "mountains.jpg";
+          url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
+          hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
+        };
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
+        polarity.force = "dark";
+      }
+    ];
 in
   lib.listToAttrs (lib.flatten (map makeTestbeds autoload))

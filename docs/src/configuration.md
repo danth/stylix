@@ -47,11 +47,11 @@ If you only set a wallpaper, Stylix will use a
 to create a color scheme. The quality of these schemes can vary, but more
 colorful images tend to have better results.
 
-You can force a light or dark scheme using the polarity option:
+You can force a light or dark scheme using the `polarity.force` option:
 
 ```nix
 {
-  stylix.polarity = "dark";
+  stylix.force.polarity = "dark";
 }
 ```
 

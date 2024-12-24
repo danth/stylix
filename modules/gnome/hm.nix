@@ -37,7 +37,7 @@ in {
         # settings tile is removed. The value is still used by Epiphany to
         # request dark mode for websites which support it.
         color-scheme =
-          if config.stylix.polarity == "dark" || config.stylix.polarity == "darker" || config.stylix.polarity == "even-darker"
+          if config.stylix.polarity.force == "dark"
           then "prefer-dark"
           else "default";
 
