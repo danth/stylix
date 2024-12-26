@@ -19,7 +19,7 @@ in {
       home.activation.adwaitaForSteam = let
         shellScript = pkgs.writeShellScript "adwaitaForSteam" ''
           rm -f "$HOME/.cache/AdwSteamInstaller/extracted/custom/custom.css"
-          ${lib.getExe pkgs.adwsteamgtk}  -i
+          ${lib.getExe pkgs.adwsteamgtk} --install
         '';
       in
         config.lib.dag.entryAfter ["writeBoundary" "dconfSettings"] ''
