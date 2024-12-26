@@ -33,7 +33,6 @@ in {
         template = ./custom.mustache;
         extension = "css";
       };
-
     })
   ]);
 }
