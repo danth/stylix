@@ -72,7 +72,7 @@ in {
           filesystem = "${config.home.homeDirectory}/.themes/${config.gtk.theme.name}:ro";
           theme = config.gtk.theme.name;
         in
-          if lib.hasAttrByPath ["services" "flatpak" "overrides"] options
+          if options ? services.flatpak.overrides
           then {
             # Let Flatpak apps read the theme and force them to use it.
             # This requires nix-flatpak to be imported externally.
