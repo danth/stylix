@@ -9,6 +9,7 @@ inputs: {
       tinted-kitty
       tinted-tmux
       tinted-zed
+      firefox-gnome-theme
       ;
   };
 }
