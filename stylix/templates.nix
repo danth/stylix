@@ -9,6 +9,7 @@ inputs:
       tinted-foot
       tinted-kitty
       tinted-tmux
+      firefox-gnome-theme
       ;
   };
 }
