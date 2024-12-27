@@ -47,7 +47,7 @@
         (
           lib.mkIf cfg.hyprpaper.enable {
             services.hyprpaper.enable = true;
-            stylix.targets.hyprpaper.enable = true;
+            stylix.targets.hyprpaper.enable = lib.mkDefault true;
           }
         )
       ]
