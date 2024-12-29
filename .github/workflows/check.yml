@@ -13,7 +13,7 @@ permissions:
 jobs:
   evaluate:
     name: List packages
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Install Nix
@@ -29,7 +29,7 @@ jobs:
       - name: List packages
         id: list-packages
         run: |
-          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-22.04" else "macos-14" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
+          nix flake show github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }} --json | jq -rc 'to_entries | map(.key as $type | select($type == "checks" or $type == "packages") | .value | to_entries | map(.key as $arch | select($arch == "x86_64-linux" or $arch == "x86_64-darwin") | .value | to_entries | map({type: $type, arch: $arch, os: (if $arch == "x86_64-linux" then "ubuntu-24.04" else "macos-14" end), key: .key})) | flatten) | flatten | "packages=\(.)"' >> $GITHUB_OUTPUT
 
     outputs:
       packages: ${{ steps.list-packages.outputs.packages }}
