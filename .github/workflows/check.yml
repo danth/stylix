@@ -1,4 +1,4 @@
-name: Build
+name: Check
 
 on:
   push:
@@ -34,17 +34,17 @@ jobs:
     outputs:
       packages: ${{ steps.list-packages.outputs.packages }}
 
-  build:
+  check:
     needs: evaluate
 
     strategy:
       fail-fast: false
       matrix:
-        build: ${{ fromJSON(needs.evaluate.outputs.packages) }}
+        check: ${{ fromJSON(needs.evaluate.outputs.packages) }}
 
-    name: ${{ matrix.build.key }} on ${{ matrix.build.arch }}
+    name: ${{ matrix.check.key }} on ${{ matrix.check.arch }}
 
-    runs-on: ${{ matrix.build.os }}
+    runs-on: ${{ matrix.check.os }}
 
     steps:
       - name: Install Nix
@@ -57,5 +57,5 @@ jobs:
       - name: Set up cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Build ${{ matrix.build.key }}
-        run: nix -L build github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.build.type }}.${{ matrix.build.arch }}.${{ matrix.build.key }} --no-update-lock-file
+      - name: Check ${{ matrix.check.key }}
+        run: nix -L check github:${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}#${{ matrix.check.type }}.${{ matrix.check.arch }}.${{ matrix.check.key }} --no-update-lock-file
