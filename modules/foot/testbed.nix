@@ -5,7 +5,7 @@ let package = pkgs.foot;
 in {
   stylix.testbed.application = {
     enable = true;
-    name = "org.codeberg.dnkl.foot";
+    name = "foot";
     inherit package;
   };
 
