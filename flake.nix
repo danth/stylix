@@ -96,14 +96,16 @@
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
       in {
-        checks.git-hooks = inputs.git-hooks.lib.${system}.run {
-          hooks = {
-            deadnix.enable = true;
-            statix.enable = true;
-          };
+        checks = lib.attrsets.unionOfDisjoint {
+          git-hooks = inputs.git-hooks.lib.${system}.run {
+            hooks = {
+              deadnix.enable = true;
+              statix.enable = true;
+            };
 
-          src = ./.;
-        };
+            src = ./.;
+          };
+        } self.packages.${system};
 
         devShells.default = pkgs.mkShell {
           inherit (self.checks.${system}.git-hooks) shellHook;
