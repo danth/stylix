@@ -48,10 +48,22 @@ in {
       type = lib.types.enum [ "stretch" "fill" "fit" "center" "tile" ];
       default = "fill";
       description = ''
-        Wallpaper scaling mode;
+        Scaling mode for the wallpaper image.
 
-        This is the scaling mode your wallpaper image will use assuming it
-        doesnt fix your monitor perfectly
+        `stretch`
+        : Stretch the image to cover the screen.
+
+        `fill`
+        : Scale the image to fill the screen, potentially cropping it.
+
+        `fit`
+        : Scale the image to fit the screen without being cropped.
+
+        `center`
+        : Center the image without resizing it.
+
+        `tile`
+        : Tile the image to cover the screen.
       '';
     };
 
