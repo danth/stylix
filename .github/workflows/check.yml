@@ -23,38 +23,30 @@ jobs:
             }}/${{
               github.event.pull_request.head.sha || github.sha
             }} |
-            jq --compact-output --raw-output '
-              to_entries |
-              map(
-                .key as $type |
-                select($type == "checks" or $type == "packages") |
-                .value |
-                to_entries |
-                map(
-                  .key as $arch |
-                  select($arch == "x86_64-linux" or $arch == "x86_64-darwin") |
-                  .value |
-                  to_entries |
-                  map(
-                    {
-                      arch: $arch,
-                      key: .key,
+            jq --raw-output '
+              def format_output($arch; $type):
+                {
+                  arch: $arch,
+                  key: .,
 
-                      os: (
-                        if $arch == "x86_64-linux" then
-                          "ubuntu-24.04"
-                        else
-                          "macos-14"
-                        end
-                      ),
+                  os: (
+                    if $arch == "x86_64-linux" then
+                      "ubuntu-24.04"
+                    else
+                      "macos-14"
+                    end
+                  ),
 
-                      type: $type,
-                    }
-                  )
-                ) |
-                flatten
-              ) |
-              flatten |
+                  type: $type
+                };
+
+              [
+                ["x86_64-linux", "x86_64-darwin"][] as $arch |
+                (.checks[$arch] | keys) as $checks |
+                (.packages[$arch] | keys) as $packages |
+                (($checks - $packages)[] | format_output($arch; "checks")),
+                ($packages[] | format_output($arch; "packages"))
+              ] |
               "derivations=\(.)"
             ' >> $GITHUB_OUTPUT
 
