@@ -42,7 +42,7 @@
       url = "github:nix-community/home-manager";
     };
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Interface flake systems.
     systems.url = "github:nix-systems/default";
