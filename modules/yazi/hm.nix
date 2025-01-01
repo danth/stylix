@@ -44,11 +44,11 @@
         progress_label = mkBoth base05 base00;
         progress_normal = mkBoth base05 base00;
         progress_error = mkBoth red base00;
-        permissions_t = mkFg blue;
-        permissions_r = mkFg yellow;
-        permissions_w = mkFg red;
-        permissions_x = mkFg green;
-        permissions_s = mkFg cyan;
+        perm_type = mkFg blue;
+        perm_read = mkFg yellow;
+        perm_write = mkFg red;
+        perm_exec = mkFg green;
+        perm_sep = mkFg cyan;
       };
 
       pick = {
