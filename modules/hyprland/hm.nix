@@ -1,6 +1,8 @@
 { config, lib, ... }:
 
 {
+  imports = [../hyprpaper/hm.nix];
+
   options.stylix.targets.hyprland = {
     enable = config.lib.stylix.mkEnableTarget "Hyprland" true;
     hyprpaper.enable = config.lib.stylix.mkEnableTarget "Hyprpaper" true;
