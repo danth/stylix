@@ -3,6 +3,7 @@
   lib,
   ...
 }: let
+  # Adapted from https://github.com/sanweiya/fcitx5-mellow-themes under the BSD 2 license (compatible with this project's license (MIT))
   theme = config.lib.stylix.colors {
     template = ./theme.conf.mustache;
     extension = "conf";
