@@ -1,8 +1,10 @@
 { pkgs, ... }:
 
-let package = pkgs.chromium;
+let
+  package = pkgs.chromium;
 
-in {
+in
+{
   stylix.testbed.application = {
     enable = true;
     name = "chromium-browser";

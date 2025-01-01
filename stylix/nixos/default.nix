@@ -1,10 +1,15 @@
 inputs:
-{ palette-generator, base16, homeManagerModule }:
+{
+  palette-generator,
+  base16,
+  homeManagerModule,
+}:
 { lib, ... }:
 
 let
   autoload = import ../autoload.nix { inherit lib inputs; } "nixos";
-in {
+in
+{
   imports = [
     ../pixel.nix
     ../target.nix

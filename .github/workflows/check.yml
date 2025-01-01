@@ -1,0 +1,83 @@
+---
+name: Check
+
+on:  # yamllint disable-line rule:truthy
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  get-derivations:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - id: get-derivations
+        run: |
+          nix flake show --json \
+            github:${{
+              github.repository
+            }}/${{
+              github.event.pull_request.head.sha || github.sha
+            }} |
+            jq --raw-output '
+              def format_output($arch; $type):
+                {
+                  arch: $arch,
+                  key: .,
+
+                  os: (
+                    if $arch == "x86_64-linux" then
+                      "ubuntu-24.04"
+                    else
+                      "macos-14"
+                    end
+                  ),
+
+                  type: $type
+                };
+
+              [
+                ["x86_64-linux", "x86_64-darwin"][] as $arch |
+                (.checks[$arch] | keys) as $checks |
+                (.packages[$arch] | keys) as $packages |
+                (($checks - $packages)[] | format_output($arch; "checks")),
+                ($packages[] | format_output($arch; "packages"))
+              ] |
+              "derivations=\(.)"
+            ' >> $GITHUB_OUTPUT
+
+    outputs:
+      derivations: ${{ steps.get-derivations.outputs.derivations }}
+
+  check:
+    runs-on: ${{ matrix.check.os }}
+
+    name: ${{ matrix.check.key }} on ${{ matrix.check.arch }}
+    needs: get-derivations
+
+    strategy:
+      fail-fast: false
+      matrix:
+        check: ${{ fromJSON(needs.get-derivations.outputs.derivations) }}
+
+    steps:
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - run: |
+          nix build --no-update-lock-file --print-build-logs \
+            github:${{
+              github.repository
+            }}/${{
+              github.event.pull_request.head.sha || github.sha
+            }}#${{
+              matrix.check.type
+            }}.${{
+              matrix.check.arch
+            }}.${{
+              matrix.check.key
+            }}
