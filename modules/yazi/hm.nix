@@ -102,11 +102,11 @@
 
         (mkRule "application/zip" magenta)
         (mkRule "application/gzip" magenta)
-        (mkRule "application/x-tar" magenta)
-        (mkRule "application/x-bzip" magenta)
-        (mkRule "application/x-bzip2" magenta)
-        (mkRule "application/x-7z-compressed" magenta)
-        (mkRule "application/x-rar" magenta)
+        (mkRule "application/tar" magenta)
+        (mkRule "application/bzip" magenta)
+        (mkRule "application/bzip2" magenta)
+        (mkRule "application/7z-compressed" magenta)
+        (mkRule "application/rar" magenta)
         (mkRule "application/xz" magenta)
 
         (mkRule "application/doc" green)
