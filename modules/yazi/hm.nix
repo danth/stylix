@@ -36,11 +36,16 @@
         border_style = mkFg base04;
       };
 
+      mode = {
+        normal_main = (mkBoth base00 blue) // {bold = true;};
+        normal_alt = mkBoth blue base00;
+        select_main = (mkBoth base00 green) // {bold = true;};
+        select_alt = mkBoth green base00;
+        unset_main = (mkBoth base00 brown) // {bold = true;};
+        unset_alt = mkBoth brown base00;
+      };
+
       status = {
-        separator_style = mkSame base01;
-        mode_normal = (mkBoth base00 blue) // {bold = true;};
-        mode_select = (mkBoth base00 green) // {bold = true;};
-        mode_unset = (mkBoth base00 brown) // {bold = true;};
         progress_label = mkBoth base05 base00;
         progress_normal = mkBoth base05 base00;
         progress_error = mkBoth red base00;
