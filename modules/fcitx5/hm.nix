@@ -17,9 +17,7 @@
   };
 in {
   options.stylix.targets.fcitx5.enable =
-    config.lib.stylix.mkEnableTarget
-    "fcitx5"
-    true;
+    config.lib.stylix.mkEnableTarget "fcitx5" true;
 
   config =
     lib.mkIf (
