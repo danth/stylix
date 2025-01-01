@@ -51,7 +51,7 @@
         permissions_s = mkFg cyan;
       };
 
-      select = {
+      pick = {
         border = mkFg blue;
         active = mkFg magenta;
         inactive = mkFg base05;
