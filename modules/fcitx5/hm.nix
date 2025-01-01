@@ -26,8 +26,10 @@ in {
       config.stylix.enable
       && config.stylix.targets.fcitx5.enable
     ) {
-      xdg.dataFile."fcitx5/themes/stylix/theme.conf".source = theme;
-      xdg.dataFile."fcitx5/themes/stylix/panel.svg".source = panel;
-      xdg.dataFile."fcitx5/themes/stylix/highlight.svg".source = highlight;
+      xdg.dataFile = {
+        "fcitx5/themes/stylix/highlight.svg".source = highlight;
+        "fcitx5/themes/stylix/panel.svg".source = panel;
+        "fcitx5/themes/stylix/theme.conf".source = theme;
+      };
     };
 }
