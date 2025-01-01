@@ -28,8 +28,8 @@
         preview_hovered = hovered;
         find_keyword = (mkFg base0B) // {bold = true;};
         find_position = mkFg base05;
-        marker_selected = mkSame base0B;
-        marker_copied = mkSame base0A;
+        marker_selected = mkSame base0A;
+        marker_copied = mkSame base0B;
         marker_cut = mkSame base08;
         tab_active = mkBoth base00 base0D;
         tab_inactive = mkBoth base05 base01;
