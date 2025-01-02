@@ -3,6 +3,7 @@
 let
   themeFile = config.lib.stylix.colors {
     templateRepo = config.lib.stylix.templates.base16-vim;
+    target = "base16";
   };
 
   themePlugin = pkgs.vimUtils.buildVimPlugin {
@@ -51,10 +52,9 @@ let
 
 in {
   options.stylix.targets.vim.enable =
-    config.lib.stylix.mkEnableTarget "Vim and/or Neovim" true;
+    config.lib.stylix.mkEnableTarget "Vim" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.vim.enable) {
     programs.vim = vimOptions;
-    programs.neovim = vimOptions;
   };
 }

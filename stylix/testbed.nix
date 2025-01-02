@@ -25,17 +25,73 @@ let
     };
   };
 
+  applicationModule = { config, lib, ... }: {
+    options.stylix.testbed.application = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable a standard configuration for testing individual
+          applications.
+
+          This will automatically log in as the `${username}` user, then launch
+          the application from its desktop entry.
+
+          This is currently based on GNOME, but the specific desktop environment
+          used may change in the future.
+        '';
+      };
+
+      name = lib.mkOption {
+        type = lib.types.str;
+        description = ''
+          The name of the desktop entry for the application, without the
+          `.desktop` extension.
+        '';
+      };
+
+      package = lib.mkOption {
+        type = lib.types.package;
+        description = ''
+          The application being tested.
+        '';
+      };
+    };
+
+    config = lib.mkIf config.stylix.testbed.application.enable {
+      services.xserver = {
+        enable = true;
+        displayManager.gdm.enable = true;
+        desktopManager.gnome.enable = true;
+      };
+
+      services.displayManager.autoLogin = {
+        enable = true;
+        user = username;
+      };
+
+      # Disable the GNOME tutorial which pops up on first login.
+      environment.gnome.excludePackages = [ pkgs.gnome-tour ];
+
+      environment.systemPackages = [
+        (pkgs.makeAutostartItem {
+          inherit (config.stylix.testbed.application) name package;
+        })
+      ];
+    };
+  };
+
   autoload = builtins.concatLists
     (lib.mapAttrsToList
       (name: _:
         let testbed = {
           inherit name;
-          module = "${../modules}/${name}/testbed.nix";
+          module = "${inputs.self}/modules/${name}/testbed.nix";
         };
         in
           lib.optional (builtins.pathExists testbed.module) testbed
       )
-      (builtins.readDir ../modules));
+      (builtins.readDir "${inputs.self}/modules"));
 
   makeTestbed =
     testbed: stylix:
@@ -47,6 +103,7 @@ let
 
         modules = [
           commonModule
+          applicationModule
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
           testbed.module

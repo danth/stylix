@@ -3,7 +3,7 @@ inputs:
 { lib, ... }:
 
 let
-  autoload = import ../autoload.nix { inherit lib; } "hm";
+  autoload = import ../autoload.nix { inherit lib inputs; } "hm";
 in {
   imports = [
     ../pixel.nix
@@ -11,6 +11,7 @@ in {
     ../opacity.nix
     ./cursor.nix
     ./fonts.nix
+	./icon.nix
     (import ./palette.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)
   ] ++ autoload;

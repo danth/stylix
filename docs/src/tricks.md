@@ -35,7 +35,7 @@ let
   wallpaper = pkgs.runCommand "image.png" {} ''
         COLOR=$(${pkgs.yq}/bin/yq -r .base00 ${theme})
         COLOR="#"$COLOR
-        ${pkgs.imagemagick}/bin/magick convert -size 1920x1080 xc:$COLOR $out
+        ${pkgs.imagemagick}/bin/magick -size 1920x1080 xc:$COLOR $out
   '';
 in {
   stylix = {
@@ -56,4 +56,26 @@ Which is neatly implemented as a single function in `lib.stylix.pixel`:
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
   };
 }
+```
+
+## Completely disabling some stylix targets
+
+Nixpkgs module system sometimes works in non-intuitive ways, e.g. parts
+of the configuration guarded by `lib.mkIf` are still being descended
+into. This means that every **loaded** (and not enabled) module must
+be compatible with others - in the sense that **every** option that is
+mentioned in the disabled parts of the configuration still needs to be
+defined somewhere.
+
+Sometimes that can be a problem, when your particular configuration
+diverges enough from what stylix expects. In that case you can try
+stubbing all the missing options in your configuration.
+
+Or in a much clearer fashion you can just disable offending stylix targets
+by adding the following `disableModules` line next to importing stylix
+itself:
+
+```nix
+imports = [ flake.inputs.stylix.nixosModules.stylix ];
+disabledModules = [ "${flake.inputs.stylix}/modules/<some-module>/nixos.nix" ];
 ```
