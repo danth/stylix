@@ -264,24 +264,7 @@ let
 
   activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdeservice";
 in {
-  options.stylix.targets.kde = {
-    enable = config.lib.stylix.mkEnableTarget "KDE" true;
-    service = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Wallpaper and appearance in Plasma can only be set with KDE tools via D-Bus connection.
-
-        However, home-manager activation happens before entering a user session
-        (unless started manually), causing these tools to fail. To work around this,
-        you can enable stylix service to automagically run these tools after login.
-
-        If wallpaper setting fails, we simply ignore it and let home-manager activation
-        continue as usual. To force stylix settings manually, you can try to run `stylix-set-kde-wallpaper`.
-      '';
-    };
-  };
+  options.stylix.targets.kde.enable = config.lib.stylix.mkEnableTarget "KDE" true;
 
   config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home = {
