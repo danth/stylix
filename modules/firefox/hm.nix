@@ -23,7 +23,13 @@ in {
         default = [];
       };
 
-      firefoxGnomeTheme.enable = config.lib.stylix.mkEnableTarget "Firefox GNOME theme" false;
+      firefoxGnomeTheme.enable =
+        config.lib.stylix.mkEnableTarget
+        ''
+          [Firefox GNOME
+          theme](https://github.com/rafaelmardojai/firefox-gnome-theme)
+        ''
+        false;
     })
   targets);
 
