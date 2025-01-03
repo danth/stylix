@@ -6,8 +6,10 @@ let
   documentFontSize = toString (config.stylix.fonts.sizes.applications - 1);
 
 in {
-  options.stylix.targets.gnome.enable =
-    config.lib.stylix.mkEnableTarget "GNOME" true;
+  options.stylix.targets.gnome = {
+    enable = config.lib.stylix.mkEnableTarget "GNOME" true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "GNOME";
+  };
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gnome.enable) {
     dconf.settings = {
@@ -26,8 +28,8 @@ in {
           then "centered"
           # Seemingly no tile support... :(
           else "zoom";
-        picture-uri = "file://${config.stylix.image}";
-        picture-uri-dark = "file://${config.stylix.image}";
+        picture-uri = lib.mkIf config.stylix.targets.gnome.wallpaper "file://${config.stylix.image}";
+        picture-uri-dark = lib.mkIf config.stylix.targets.gnome.wallpaper "file://${config.stylix.image}";
       };
 
       "org/gnome/desktop/interface" = {

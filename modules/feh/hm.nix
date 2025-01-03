@@ -1,15 +1,18 @@
 { pkgs, config, lib, ... }:
 
 {
-  options.stylix.targets.feh.enable =
-    config.lib.stylix.mkEnableTarget
-    "the desktop background using Feh"
-    true;
+  options.stylix.targets.feh = {
+    enable = config.lib.stylix.mkEnableTarget
+             "the desktop background using Feh"
+             true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "Feh";
+  };
 
   config.xsession.initExtra =
     lib.mkIf (
       config.stylix.enable
       && config.stylix.targets.feh.enable
+      && config.stylix.targets.feh.wallpaper
       && (
         with config.xsession.windowManager;
         bspwm.enable
