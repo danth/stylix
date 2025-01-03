@@ -4,6 +4,8 @@ with config.stylix.fonts;
 with config.lib.stylix.colors;
 
 let
+  cfg = config.stylix.targets.kde;
+
   formatValue = value:
     if builtins.isBool value
     then if value then "true" else "false"
@@ -123,6 +125,7 @@ let
       ServiceTypes = [ "Plasma/LookAndFeel" ];
       Website = "https://github.com/danth/stylix";
     };
+    KPackageStructure = "Plasma/LookAndFeel";
   };
 
   lookAndFeelDefaults = {
@@ -220,52 +223,73 @@ let
     printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
   '';
 
+  # plasma-apply-wallpaperimage is necessary to change the wallpaper
+  # after the first login.
+  #
+  # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
+  # would still be applied without it if you logged out and back in.
+  #
+  # Home Manager clears $PATH before running the activation script, but we
+  # want to avoid installing these tools explicitly because that would pull
+  # in large dependencies for people who aren't actually using KDE.
+  # The workaround used is to assume a list of common paths where the tools
+  # might be installed, and look there. The ideal solution would require
+  # changes to KDE to make it possible to update the wallpaper through
+  # config files alone.
+  activator = pkgs.writeShellScriptBin "stylix-set-kde-wallpaper" ''
+    set -eu
+    global_path() {
+      for directory in /run/current-system/sw/bin /usr/bin /bin; do
+        if [[ -f "$directory/$1" ]]; then
+          printf '%s\n' "$directory/$1"
+          return 0
+        fi
+      done
+
+      return 1
+    }
+
+    if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+      "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
+    else
+      echo "Skipping plasma-apply-wallpaperimage: command not found"
+    fi
+
+    if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+      "$look_and_feel" --apply stylix
+    else
+      echo "Skipping plasma-apply-lookandfeel: command not found"
+    fi
+  '';
+
+  activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdeservice";
 in {
-  options.stylix.targets.kde.enable =
-    config.lib.stylix.mkEnableTarget "KDE" true;
+  options.stylix.targets.kde.enable = config.lib.stylix.mkEnableTarget "KDE" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.packages = [ themePackage ];
-    xdg.systemDirs.config = [ "${configPackage}" ];
+  config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+    home = {
+      packages = [ themePackage ];
 
-    # plasma-apply-wallpaperimage is necessary to change the wallpaper
-    # after the first login.
-    #
-    # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
-    # would still be applied without it if you logged out and back in.
-    #
-    # Home Manager clears $PATH before running the activation script, but we
-    # want to avoid installing these tools explicitly because that would pull
-    # in large dependencies for people who aren't actually using KDE.
-    # The workaround used is to assume a list of common paths where the tools
-    # might be installed, and look there. The ideal solution would require
-    # changes to KDE to make it possible to update the wallpaper through
-    # config files alone.
-    home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      global_path() {
-        for directory in /run/current-system/sw/bin /usr/bin /bin; do
-          if [[ -f "$directory/$1" ]]; then
-            printf '%s\n' "$directory/$1"
-            return 0
-          fi
-        done
+      # This activation entry will run the theme activator when the homeConfiguration is activated
+      # Note: This only works in an already running Plasma session.
+      activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${lib.getExe activator} || verboseEcho \
+          "KDE theme setting failed. See `${activateDocs}`"
+      '';
+    };
 
-        return 1
-      }
-
-      if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-        "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-      else
-        verboseEcho \
-          "plasma-apply-wallpaperimage: command not found"
-      fi
-
-      if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
-        "$look_and_feel" --apply stylix
-      else
-        verboseEcho \
-          "Skipping plasma-apply-lookandfeel: command not found"
-      fi
-    '';
+    xdg = {
+      systemDirs.config = [ "${configPackage}" ];
+      
+      # This desktop entry will run the theme activator when a new Plasma session is started
+      # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
+      configFile."autostart/stylix-activator.desktop".text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=${lib.getExe activator}
+        Name=Stylix Activator
+        X-KDE-AutostartScript=true
+      '';
+    };
   };
 }
