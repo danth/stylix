@@ -4,7 +4,7 @@
 let
   cfg = config.stylix;
 
-  paletteJSON = let
+  paletteJSON = lib.mkIf (cfg.image != null) ( let
     generatedJSON = pkgs.runCommand "palette.json" { } ''
       ${palette-generator}/bin/palette-generator \
         "${cfg.polarity}" \
@@ -17,7 +17,7 @@ let
       template = ./palette.json.mustache;
       extension = ".json";
     };
-  in json;
+  in json);
   generatedScheme = lib.importJSON paletteJSON;
 
 in {
@@ -35,13 +35,14 @@ in {
     };
 
     image = lib.mkOption {
-      type = with lib.types; coercedTo package toString path;
+      type = with lib.types; nullOr (coercedTo package toString path);
       description = ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
+      default = null;
     };
 
     imageScalingMode = lib.mkOption {
@@ -99,7 +100,7 @@ in {
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
       type = with lib.types; oneOf [ path lines attrs ];
-      default = generatedScheme;
+      default = lib.mkIf (cfg.image != null) generatedScheme;
       defaultText = lib.literalMD ''
         The colors used in the theming.
 
@@ -124,6 +125,14 @@ in {
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
+
+    assertions = [
+      {
+        assertion = cfg.image != null || cfg.base16Scheme != null;
+        message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
+      }
+    ];
+
     lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
     lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
 

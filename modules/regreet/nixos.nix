@@ -6,14 +6,17 @@
 }:
 
 {
-  options.stylix.targets.regreet.enable = config.lib.stylix.mkEnableTarget "ReGreet" true;
+  options.stylix.targets.regreet = {
+    enable = config.lib.stylix.mkEnableTarget "ReGreet" true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "ReGreet";
+  };
 
   config =
     lib.mkIf
       (config.stylix.enable && config.stylix.targets.regreet.enable && pkgs.stdenv.hostPlatform.isLinux)
       {
         programs.regreet = {
-          settings.background = {
+          settings.background = lib.mkIf config.stylix.targets.regreet.wallpaper {
             path = config.stylix.image;
             fit = let
               inherit (config.stylix) imageScalingMode;

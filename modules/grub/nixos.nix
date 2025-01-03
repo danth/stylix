@@ -38,11 +38,7 @@ in {
   options.stylix.targets.grub = {
     enable = config.lib.stylix.mkEnableTarget "GRUB" true;
 
-    useImage = lib.mkOption {
-      description = "Whether to use your wallpaper image as the GRUB background.";
-      type = lib.types.bool;
-      default = false;
-    };
+    wallpaper = config.lib.stylix.mkEnableWallpaper "GRUB" // { default = false; };
   };
 
   config.boot.loader.grub = lib.mkIf (config.stylix.enable && config.stylix.targets.grub.enable) {
@@ -107,7 +103,7 @@ in {
       mkdir $out
       cp $themeTxtPath $out/theme.txt
 
-      ${if config.stylix.targets.grub.useImage
+      ${if config.stylix.targets.grub.wallpaper
       # Make sure the background image is .png by asking to convert it
       then
         "${pkgs.imagemagick}/bin/convert ${config.stylix.image} png32:$out/background.png"

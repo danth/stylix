@@ -13,14 +13,7 @@ let
 in {
   options.stylix.targets.swaylock = {
     enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
-    useImage = lib.mkOption {
-      description = ''
-        Whether to use your wallpaper image for the Swaylock background.
-        If this is disabled, a plain color will be used instead.
-      '';
-      type = lib.types.bool;
-      default = true;
-    };
+    wallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock";
   };
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.swaylock.enable && pkgs.stdenv.hostPlatform.isLinux) {
@@ -48,7 +41,7 @@ in {
       text-caps-lock-color = text;
       text-ver-color = text;
       text-wrong-color = text;
-    } // lib.optionalAttrs config.stylix.targets.swaylock.useImage {
+    } // lib.optionalAttrs config.stylix.targets.swaylock.wallpaper {
       image = "${config.stylix.image}";
     };
   };
