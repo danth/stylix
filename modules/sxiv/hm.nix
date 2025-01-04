@@ -3,7 +3,8 @@
 let
   inherit (config.lib.stylix) colors;
   inherit (config.stylix) fonts;
-in {
+in
+{
   options.stylix.targets.sxiv.enable =
     config.lib.stylix.mkEnableTarget "Sxiv" true;
 

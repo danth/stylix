@@ -1,10 +1,12 @@
 { config, lib, ... }:
 {
-  options.stylix.targets.kubecolor.enable = config.lib.stylix.mkEnableTarget "kubecolor" true;
+  options.stylix.targets.kubecolor.enable =
+    config.lib.stylix.mkEnableTarget "kubecolor" true;
 
   config = lib.mkIf config.stylix.targets.kubecolor.enable {
     programs.kubecolor.settings = {
-      preset = if config.stylix.polarity == "either" then "" else "${config.stylix.polarity}";
+      preset =
+        if config.stylix.polarity == "either" then "" else "${config.stylix.polarity}";
       theme = {
         base = {
           info = "fg=${config.lib.stylix.colors.withHashtag.base05-hex}";

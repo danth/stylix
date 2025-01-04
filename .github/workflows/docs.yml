@@ -1,57 +1,36 @@
+---
 name: Docs
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
 
+concurrency:
+  cancel-in-progress: true
+  group: pages
+
 jobs:
-  build:
-    name: Build
+  docs:
+    runs-on: ubuntu-24.04
 
     permissions:
       contents: read
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          extra-conf: |
-            extra-experimental-features = nix-command flakes
-
-      - name: Set up cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - name: Build docs
-        run: nix -L build github:${{ github.repository }}/${{ github.sha }}#docs
-
-      - name: Prepare docs for upload
-        run: cp -r --dereference --no-preserve=mode,ownership result/ public/
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public/
-
-  deploy:
-    name: Deploy
-
-    needs: build
-
-    permissions:
-      pages: write
       id-token: write
+      pages: write
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy docs to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - run: nix build .#docs
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: result
+
+      - uses: actions/deploy-pages@v4

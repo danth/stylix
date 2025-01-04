@@ -1,16 +1,18 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Stylix.Palette ( ) where
 
-import Ai.Evolutionary ( Species(..) )
-import Codec.Picture ( Image(imageWidth, imageHeight), PixelRGB8(PixelRGB8), pixelAt )
-import Data.Colour ( LAB(lightness), RGB(RGB), deltaE, rgb2lab )
-import Data.List ( delete )
-import Data.Vector ( (//) )
-import qualified Data.Vector as V
-import System.Random ( randomRIO )
+import           Ai.Evolutionary (Species (..))
+import           Codec.Picture   (Image (imageHeight, imageWidth),
+                                  PixelRGB8 (PixelRGB8), pixelAt)
+import           Data.Colour     (LAB (lightness), RGB (RGB), deltaE, rgb2lab)
+import           Data.List       (delete)
+import           Data.Vector     ((//))
+import qualified Data.Vector     as V
+import           System.Random   (randomRIO)
 
--- | Extract the primary scale from a pallete.
+-- | Extract the primary scale from a palette.
 primary :: V.Vector a -> V.Vector a
 primary = V.take 8
 
@@ -73,9 +75,9 @@ instance Species (String, Image PixelRGB8) (V.Vector LAB) where
 
         scheme = case polarity of
           "either" -> min lightScheme darkScheme
-          "light" -> lightScheme
-          "dark" -> darkScheme
-          _ -> error ("Invalid polarity: " ++ polarity)
+          "light"  -> lightScheme
+          "dark"   -> darkScheme
+          _        -> error ("Invalid polarity: " ++ polarity)
 
         {-
         For light themes, the background is bright and the text is dark.

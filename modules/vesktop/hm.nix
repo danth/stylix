@@ -6,9 +6,12 @@ let
   };
 in
 {
-  options.stylix.targets.vesktop.enable = config.lib.stylix.mkEnableTarget "Vesktop" true;
+  options.stylix.targets.vesktop.enable =
+    config.lib.stylix.mkEnableTarget "Vesktop" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.vesktop.enable) {
-    xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.vesktop.enable)
+      {
+        xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
+      };
 }

@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 with config.stylix.fonts;
 with config.lib.stylix.colors;
@@ -6,12 +11,15 @@ with config.lib.stylix.colors;
 let
   cfg = config.stylix.targets.kde;
 
-  formatValue = value:
-    if builtins.isBool value
-    then if value then "true" else "false"
-    else builtins.toString value;
+  formatValue =
+    value:
+    if builtins.isBool value then
+      if value then "true" else "false"
+    else
+      builtins.toString value;
 
-  formatSection = path: data:
+  formatSection =
+    path: data:
     let
       header = lib.concatStrings (map (p: "[${p}]") path);
       formatChild = name: formatLines (path ++ [ name ]);
@@ -20,23 +28,24 @@ let
       directChildren = partitioned.right;
       indirectChildren = partitioned.wrong;
     in
-      lib.optional (directChildren != []) header ++
-      directChildren ++
-      lib.flatten indirectChildren;
+    lib.optional (directChildren != [ ]) header
+    ++ directChildren
+    ++ lib.flatten indirectChildren;
 
-  formatLines = path: data:
-    if builtins.isAttrs data
-    then
-      if data?_immutable
-      then
-        if builtins.isAttrs data.value
-        then formatSection (path ++ [ "$i" ]) data.value
-        else "${lib.last path}[$i]=${formatValue data.value}"
-      else formatSection path data
-    else "${lib.last path}=${formatValue data}";
+  formatLines =
+    path: data:
+    if builtins.isAttrs data then
+      if data ? _immutable then
+        if builtins.isAttrs data.value then
+          formatSection (path ++ [ "$i" ]) data.value
+        else
+          "${lib.last path}[$i]=${formatValue data.value}"
+      else
+        formatSection path data
+    else
+      "${lib.last path}=${formatValue data}";
 
-  formatConfig = data:
-    lib.concatStringsSep "\n" (formatLines [] data);
+  formatConfig = data: lib.concatStringsSep "\n" (formatLines [ ] data);
 
   # Marking a setting as immutable should prevent it being overwritten
   # through the system settings menu.
@@ -48,9 +57,9 @@ let
   # PascalCase is the standard naming for color scheme files. Schemes named
   # in kebab-case will load when selected manually, but don't work with a
   # look and feel package.
-  colorschemeSlug = lib.concatStrings
-    (builtins.filter builtins.isString
-      (builtins.split "[^a-zA-Z]" scheme));
+  colorschemeSlug = lib.concatStrings (
+    builtins.filter builtins.isString (builtins.split "[^a-zA-Z]" scheme)
+  );
 
   colorEffect = {
     ColorEffect = 0;
@@ -143,41 +152,44 @@ let
 
   # Contains a wallpaper package, a colorscheme file, and a look and feel
   # package which depends on both.
-  themePackage = pkgs.runCommandLocal "stylix-kde-theme" {
-    colorscheme = formatConfig colorscheme;
-    wallpaperMetadata = builtins.toJSON wallpaperMetadata;
-    wallpaperImage = config.stylix.image;
-    lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
-    lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
-  } ''
-    write_text() {
-      mkdir --parents "$(dirname "$2")"
-      printf '%s\n' "$1" >"$2"
-    }
+  themePackage =
+    pkgs.runCommandLocal "stylix-kde-theme"
+      {
+        colorscheme = formatConfig colorscheme;
+        wallpaperMetadata = builtins.toJSON wallpaperMetadata;
+        wallpaperImage = config.stylix.image;
+        lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
+        lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
+      }
+      ''
+        write_text() {
+          mkdir --parents "$(dirname "$2")"
+          printf '%s\n' "$1" >"$2"
+        }
 
-    PATH="${pkgs.imagemagick}/bin:$PATH"
+        PATH="${pkgs.imagemagick}/bin:$PATH"
 
-    wallpaper="$out/share/wallpapers/stylix"
-    look_and_feel="$out/share/plasma/look-and-feel/stylix"
+        wallpaper="$out/share/wallpapers/stylix"
+        look_and_feel="$out/share/plasma/look-and-feel/stylix"
 
-    mkdir --parents "$wallpaper/contents/images"
+        mkdir --parents "$wallpaper/contents/images"
 
-    magick \
-      "$wallpaperImage" \
-      -thumbnail 400x250 \
-      "$wallpaper/contents/screenshot.png"
+        magick \
+          "$wallpaperImage" \
+          -thumbnail 400x250 \
+          "$wallpaper/contents/screenshot.png"
 
-    dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
-    magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+        dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
+        magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
 
-    write_text \
-      "$colorscheme" \
-      "$out/share/color-schemes/${colorschemeSlug}.colors"
+        write_text \
+          "$colorscheme" \
+          "$out/share/color-schemes/${colorschemeSlug}.colors"
 
-    write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
-    write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
-    write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
-  '';
+        write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
+        write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
+        write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
+      '';
 
   # The cursor theme can be configured through a look and feel package,
   # however its size cannot.
@@ -211,17 +223,20 @@ let
     };
   };
 
-  configPackage = pkgs.runCommandLocal "stylix-kde-config" {
-    kcminputrc = formatConfig kcminputrc;
-    kded5rc = formatConfig kded5rc;
-    kdeglobals = formatConfig kdeglobals;
-  } ''
-    mkdir "$out"
+  configPackage =
+    pkgs.runCommandLocal "stylix-kde-config"
+      {
+        kcminputrc = formatConfig kcminputrc;
+        kded5rc = formatConfig kded5rc;
+        kdeglobals = formatConfig kdeglobals;
+      }
+      ''
+        mkdir "$out"
 
-    printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
-    printf '%s\n' "$kded5rc" >"$out/kded5rc"
-    printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
-  '';
+        printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
+        printf '%s\n' "$kded5rc" >"$out/kded5rc"
+        printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
+      '';
 
   # plasma-apply-wallpaperimage is necessary to change the wallpaper
   # after the first login.
@@ -263,33 +278,37 @@ let
   '';
 
   activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdeservice";
-in {
+in
+{
   options.stylix.targets.kde.enable = config.lib.stylix.mkEnableTarget "KDE" true;
 
-  config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home = {
-      packages = [ themePackage ];
+  config =
+    lib.mkIf
+      (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux)
+      {
+        home = {
+          packages = [ themePackage ];
 
-      # This activation entry will run the theme activator when the homeConfiguration is activated
-      # Note: This only works in an already running Plasma session.
-      activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        ${lib.getExe activator} || verboseEcho \
-          "KDE theme setting failed. See `${activateDocs}`"
-      '';
-    };
+          # This activation entry will run the theme activator when the homeConfiguration is activated
+          # Note: This only works in an already running Plasma session.
+          activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            ${lib.getExe activator} || verboseEcho \
+              "KDE theme setting failed. See `${activateDocs}`"
+          '';
+        };
 
-    xdg = {
-      systemDirs.config = [ "${configPackage}" ];
-      
-      # This desktop entry will run the theme activator when a new Plasma session is started
-      # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
-      configFile."autostart/stylix-activator.desktop".text = ''
-        [Desktop Entry]
-        Type=Application
-        Exec=${lib.getExe activator}
-        Name=Stylix Activator
-        X-KDE-AutostartScript=true
-      '';
-    };
-  };
+        xdg = {
+          systemDirs.config = [ "${configPackage}" ];
+
+          # This desktop entry will run the theme activator when a new Plasma session is started
+          # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
+          configFile."autostart/stylix-activator.desktop".text = ''
+            [Desktop Entry]
+            Type=Application
+            Exec=${lib.getExe activator}
+            Name=Stylix Activator
+            X-KDE-AutostartScript=true
+          '';
+        };
+      };
 }
