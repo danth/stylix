@@ -23,6 +23,16 @@ screens, and display managers.
 ```
 <small>Minimal `flake.nix` for a NixOS configuration.</small>
 
+If you are using a stable release of NixOS, ensure that you use the matching
+Stylix release. For example:
+
+```nix
+{
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+  stylix.url = "github:danth/stylix/release-24.11";
+}
+```
+
 Many applications cannot be configured system wide, so Stylix will also need
 [Home Manager][nix-hm] to be able to change their settings within your home
 directory.
@@ -93,6 +103,17 @@ is managed by someone else.
 }
 ```
 <small>Minimal `flake.nix` for a Home Manager configuration.</small>
+
+If you are using a stable release of Home Manager, ensure that you use the
+matching Stylix release. For example:
+
+```nix
+{
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+  home-manager.url = "github:nix-community/home-manager/release-24.11";
+  stylix.url = "github:danth/stylix/release-24.11";
+}
+```
 
 If you choose to use both NixOS and Home Manager but configure them separately,
 you will need to copy the settings described below into both of your
