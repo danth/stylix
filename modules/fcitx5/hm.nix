@@ -21,16 +21,20 @@
     extension = "svg";
   };
 in {
-  options.stylix.targets.fcitx5.enable = config.lib.stylix.mkEnableTarget "fcitx5" true;
+  options.stylix.targets.fcitx5.enable =
+    config.lib.stylix.mkEnableTarget "fcitx5" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.fcitx5.enable) {
-    xdg.dataFile = {
-      "fcitx5/themes/stylix/theme.conf".source = theme;
-      "fcitx5/themes/stylix/panel.svg".source = panel;
-      "fcitx5/themes/stylix/highlight.svg".source = highlight;
-      "fcitx5/themes/stylix-kwin/theme.conf".source = theme-kwin;
-      "fcitx5/themes/stylix-kwin/panel.svg".source = panel;
-      "fcitx5/themes/stylix-kwin/highlight.svg".source = highlight;
+  config =
+    lib.mkIf
+    (config.stylix.enable && config.stylix.targets.fcitx5.enable)
+    {
+      xdg.dataFile = {
+        "fcitx5/themes/stylix/theme.conf".source = theme;
+        "fcitx5/themes/stylix/panel.svg".source = panel;
+        "fcitx5/themes/stylix/highlight.svg".source = highlight;
+        "fcitx5/themes/stylix-kwin/theme.conf".source = theme-kwin;
+        "fcitx5/themes/stylix-kwin/panel.svg".source = panel;
+        "fcitx5/themes/stylix-kwin/highlight.svg".source = highlight;
+      };
     };
-  };
 }
