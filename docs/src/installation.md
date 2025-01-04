@@ -116,9 +116,8 @@ matching Stylix release. For example:
 ```
 
 If you choose to use both NixOS and Home Manager but configure them separately,
-you will need to copy the settings described below into both of your
-configurations, as keeping them separate means that they cannot follow each
-other automatically.
+you will need to copy your theme into both of your configurations, as keeping them
+separate means they cannot follow each other automatically.
 
 ## Without flakes
 
