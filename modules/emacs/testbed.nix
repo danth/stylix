@@ -1,18 +1,22 @@
 { pkgs, ... }:
 
-let package = pkgs.emacs;
+let
+  package = pkgs.emacs;
 
-in {
+in
+{
   stylix.testbed.application = {
     enable = true;
     name = "emacs";
     inherit package;
   };
 
-  home-manager.sharedModules = [{
-    programs.emacs = {
-      enable = true;
-      inherit package;
-    };
-  }];
+  home-manager.sharedModules = [
+    {
+      programs.emacs = {
+        enable = true;
+        inherit package;
+      };
+    }
+  ];
 }

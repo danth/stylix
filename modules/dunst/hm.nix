@@ -3,8 +3,11 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
-  dunstOpacity = lib.toHexString (((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100);
-in {
+  dunstOpacity = lib.toHexString (
+    ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
+  );
+in
+{
   options.stylix.targets.dunst.enable =
     config.lib.stylix.mkEnableTarget "Dunst" true;
 

@@ -6,26 +6,33 @@
 }:
 
 {
-  options.stylix.targets.regreet.enable = config.lib.stylix.mkEnableTarget "ReGreet" true;
+  options.stylix.targets.regreet.enable =
+    config.lib.stylix.mkEnableTarget "ReGreet" true;
 
   config =
     lib.mkIf
-      (config.stylix.enable && config.stylix.targets.regreet.enable && pkgs.stdenv.hostPlatform.isLinux)
+      (
+        config.stylix.enable
+        && config.stylix.targets.regreet.enable
+        && pkgs.stdenv.hostPlatform.isLinux
+      )
       {
         programs.regreet = {
           settings.background = {
             path = config.stylix.image;
-            fit = let
-              inherit (config.stylix) imageScalingMode;
-            in
-              if imageScalingMode == "fill"
-              then "Cover"
-              else if imageScalingMode == "fit"
-              then "Contain"
-              else if imageScalingMode == "stretch"
-              then "Fill"
+            fit =
+              let
+                inherit (config.stylix) imageScalingMode;
+              in
+              if imageScalingMode == "fill" then
+                "Cover"
+              else if imageScalingMode == "fit" then
+                "Contain"
+              else if imageScalingMode == "stretch" then
+                "Fill"
               # No other available options
-              else null;
+              else
+                null;
           };
           font = {
             inherit (config.stylix.fonts.sansSerif) name package;
