@@ -17,11 +17,10 @@ in
         nixpkgs.overlays = [
           (_: prev: {
             gnome-text-editor = prev.gnome-text-editor.overrideAttrs (oldAttrs: {
-              postFixup =
-                (oldAttrs.postFixup or "")
-                + ''
-                  cp ${style} $out/share/gnome-text-editor/styles/stylix.xml
-                '';
+              postFixup = ''
+                ${oldAttrs.postFixup or ""}
+                cp ${style} $out/share/gnome-text-editor/styles/stylix.xml
+              '';
             });
           })
         ];
