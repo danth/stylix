@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
+
       - uses: DeterminateSystems/nix-installer-action@v16
       - uses: DeterminateSystems/magic-nix-cache-action@v8
 
@@ -23,32 +27,90 @@ jobs:
             }}/${{
               github.event.pull_request.head.sha || github.sha
             }} |
-            jq --raw-output '
-              def format_output($arch; $type):
-                {
-                  arch: $arch,
-                  key: .,
+            jq \
+              --argjson changed_files "$(
+                if ${{ github.event_name == 'pull_request' }}; then
+                  git diff --name-only HEAD~1 HEAD
+                else
+                  git diff --name-only \
+                    ${{ github.event.before }} ${{ github.event.after }}
+                fi |
+                  jq --raw-input --raw-output --slurp 'split("\n")[:-1]'
+              )" \
+              --raw-output \
+              '
+                def format_output($arch; $type):
+                  {
+                    arch: $arch,
+                    key: .,
 
-                  os: (
-                    if $arch == "x86_64-linux" then
-                      "ubuntu-24.04"
-                    else
-                      "macos-14"
-                    end
-                  ),
+                    os: (
+                      if $arch == "x86_64-linux" then
+                        "ubuntu-24.04"
+                      else
+                        "macos-14"
+                      end
+                    ),
 
-                  type: $type
-                };
+                    type: $type
+                  };
 
-              [
-                ["x86_64-linux", "x86_64-darwin"][] as $arch |
-                (.checks[$arch] | keys) as $checks |
-                (.packages[$arch] | keys) as $packages |
-                (($checks - $packages)[] | format_output($arch; "checks")),
-                ($packages[] | format_output($arch; "packages"))
-              ] |
-              "derivations=\(.)"
-            ' >>$GITHUB_OUTPUT
+                [
+                  ["x86_64-linux", "x86_64-darwin"][] as $arch |
+                  (.checks[$arch] | keys) as $checks |
+                  (.packages[$arch] | keys) as $packages |
+                  (($checks - $packages)[] | format_output($arch; "checks")),
+                  ($packages[] | format_output($arch; "packages"))
+                ] as $derivations |
+
+                # Keep everything when touching critical files.
+                if (
+                  $changed_files |
+                  any(
+                    . == "flake.lock" or
+                    (. | startswith("stylix/")) or
+                    (. | startswith(".github/workflows/"))
+                  )
+                ) then
+                  $derivations
+
+                else
+                  $derivations |
+                  map(
+                    select(
+                      if .key == "nix-flake-check" then
+                        ($changed_files | any(. == "flake.nix"))
+
+                      elif .key == "docs" then
+                        ($changed_files | any(startswith("docs/")))
+
+                      elif .key == "palette-generator" then
+                        ($changed_files | any(startswith("palette-generator/")))
+
+                      elif (.key | test("^testbed-[^-]+-")) then
+                        (
+                          .key | capture("^testbed-(?<module>[^-]+)") | .module
+                        ) as $module |
+                        (
+                          $changed_files |
+                          any(startswith("modules/\($module)/"))
+                        )
+
+                      # Always keep the git-hooks derivation.
+                      elif .key == "git-hooks" then
+                        true
+
+                      else
+                        error(
+                          "Derivation must be handled or explicitly ignored: " +
+                          .key
+                        )
+                      end
+                    )
+                  )
+                end |
+                "derivations=\(.)"
+              ' >>$GITHUB_OUTPUT
 
     outputs:
       derivations: ${{ steps.get-derivations.outputs.derivations }}
