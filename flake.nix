@@ -167,9 +167,13 @@
                       (($checks - $packages)[] | "checks.${system}.\(.)"),
                       ($packages[] | "packages.${system}.\(.)")
                     ' |
-                    parallel --bar --halt now,fail=1 '
-                      nix build --no-update-lock-file --verbose .#{}
-                    '
+                    parallel \
+                      --bar \
+                      --color \
+                      --color-failed \
+                      --halt now,fail=1 \
+                      --tagstring '{}' \
+                      'nix build --no-update-lock-file --verbose .#{}'
                 '';
               };
 
