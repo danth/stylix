@@ -21,7 +21,6 @@ in
       {
         programs.zed-editor.userSettings = {
           "theme" = "Base16 ${config.lib.stylix.colors.scheme-name}";
-
           "ui_font_family" = config.stylix.fonts.sansSerif.name;
           "ui_font_size" = config.stylix.fonts.sizes.applications;
           "buffer_font_family" = config.stylix.fonts.monospace.name;
