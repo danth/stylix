@@ -155,7 +155,7 @@
                 ];
 
                 text = ''
-                  nix flake show --json --no-update-lock-file |
+                  nix flake show --json --no-update-lock-file ${self} |
                     jq --raw-output '
                       ((.checks."${system}" // {}) | keys) as $checks |
                       ((.packages."${system}" // {}) | keys) as $packages |
@@ -168,7 +168,10 @@
                       --color-failed \
                       --halt now,fail=1 \
                       --tagstring '{}' \
-                      'nix build --no-update-lock-file --print-build-logs .#{}'
+                      '
+                        nix build --no-update-lock-file --print-build-logs \
+                          ${self}#{}
+                      '
                 '';
               };
 
