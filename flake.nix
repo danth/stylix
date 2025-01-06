@@ -168,7 +168,7 @@
                       --color-failed \
                       --halt now,fail=1 \
                       --tagstring '{}' \
-                      'nix build --no-update-lock-file --verbose .#{}'
+                      'nix build --no-update-lock-file --print-build-logs .#{}'
                 '';
               };
 
