@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 {
-  imports = [ ./gnome-text-editor.nix ];
+  imports = [ ./common.nix ];
 
   config =
     lib.mkIf

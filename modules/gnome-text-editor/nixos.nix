@@ -1,1 +1,3 @@
-import ./gnome-text-editor.nix
+{
+  imports = [ ./common.nix ];
+}
