@@ -20,11 +20,11 @@ in
       )
       {
         programs.zed-editor.userSettings = {
+          "buffer_font_family" = config.stylix.fonts.monospace.name;
+          "buffer_font_size" = config.stylix.fonts.sizes.terminal;
           "theme" = "Base16 ${config.lib.stylix.colors.scheme-name}";
           "ui_font_family" = config.stylix.fonts.sansSerif.name;
           "ui_font_size" = config.stylix.fonts.sizes.applications;
-          "buffer_font_family" = config.stylix.fonts.monospace.name;
-          "buffer_font_size" = config.stylix.fonts.sizes.terminal;
         };
 
         xdg.configFile."zed/themes/nix.json".source = theme;
