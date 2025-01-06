@@ -167,7 +167,7 @@
                       (($checks - $packages)[] | "checks.${system}.\(.)"),
                       ($packages[] | "packages.${system}.\(.)")
                     ' |
-                    parallel --halt now,fail=1 '
+                    parallel --bar --halt now,fail=1 '
                       nix build --no-update-lock-file --verbose .#{}
                     '
                 '';
