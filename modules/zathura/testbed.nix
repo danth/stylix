@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   package = pkgs.zathura;
@@ -11,12 +11,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.zathura = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.zathura = {
+      enable = true;
+      inherit package;
+    };
+  };
 }

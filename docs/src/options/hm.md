@@ -6,9 +6,9 @@ If you combined Home Manager with your NixOS configuration, write these
 options within a Home Manager section, either for all users:
 
 ```nix
-home-manager.sharedModules = [{
+home-manager.sharedModules = lib.singleton {
   stylix.targets.xyz.enable = false;
-}];
+};
 ```
 
 Or for a specific user:

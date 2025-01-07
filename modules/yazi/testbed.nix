@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   package = pkgs.yazi;
@@ -11,16 +11,14 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.yazi = {
-        enable = true;
-        inherit package;
-      };
+  home-manager.sharedModules = lib.singleton {
+    programs.yazi = {
+      enable = true;
+      inherit package;
+    };
 
-      home.packages = [
-        pkgs.nerd-fonts.fira-mono
-      ];
-    }
-  ];
+    home.packages = [
+      pkgs.nerd-fonts.fira-mono
+    ];
+  };
 }

@@ -11,12 +11,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.emacs = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.emacs = {
+      enable = true;
+      inherit package;
+    };
+  };
 }

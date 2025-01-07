@@ -28,9 +28,9 @@ Home Manager module within the NixOS module using the following format:
 
 ```nix
 {
-    home-manager.sharedModules = [{
+    home-manager.sharedModules = lib.singleton {
         # Write Home Manager options here
-    }];
+    };
 }
 ```
 
