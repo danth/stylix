@@ -2,7 +2,6 @@
 
 let
   package = pkgs.kitty;
-
 in
 {
   stylix.testbed.application = {

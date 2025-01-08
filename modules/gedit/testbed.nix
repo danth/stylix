@@ -2,7 +2,6 @@
 
 let
   package = pkgs.gedit;
-
 in
 {
   stylix.testbed.application = {

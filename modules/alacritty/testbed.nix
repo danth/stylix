@@ -2,7 +2,6 @@
 
 let
   package = pkgs.alacritty;
-
 in
 {
   stylix.testbed.application = {

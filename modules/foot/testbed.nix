@@ -2,7 +2,6 @@
 
 let
   package = pkgs.foot;
-
 in
 {
   stylix.testbed.application = {

@@ -3,7 +3,6 @@
 # We are using VSCodium because VSCode is an unfree package
 let
   package = pkgs.vscodium;
-
 in
 {
   stylix.testbed.application = {
