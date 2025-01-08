@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 # We are using VSCodium because VSCode is an unfree package
 let
@@ -11,12 +11,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.vscode = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.vscode = {
+      enable = true;
+      inherit package;
+    };
+  };
 }

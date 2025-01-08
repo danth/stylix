@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   package = pkgs.foot;
@@ -10,12 +10,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.foot = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.foot = {
+      enable = true;
+      inherit package;
+    };
+  };
 }
