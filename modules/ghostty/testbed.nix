@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   package = pkgs.ghostty;
 in
@@ -9,12 +9,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.ghostty = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.ghostty = {
+      enable = true;
+      inherit package;
+    };
+  };
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   package = pkgs.wezterm;
@@ -11,12 +11,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.wezterm = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.wezterm = {
+      enable = true;
+      inherit package;
+    };
+  };
 }
