@@ -2,7 +2,6 @@
 
 let
   package = pkgs.emacs;
-
 in
 {
   stylix.testbed.application = {

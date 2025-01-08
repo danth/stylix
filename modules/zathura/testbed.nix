@@ -2,7 +2,6 @@
 
 let
   package = pkgs.zathura;
-
 in
 {
   stylix.testbed.application = {
