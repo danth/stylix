@@ -1,9 +1,8 @@
 { config, lib, ... }:
 
 {
-  options.stylix.targets.cavalier = {
-    enable = config.lib.stylix.mkEnableTarget "Cavalier" true;
-  };
+  options.stylix.targets.cavalier.enable =
+    config.lib.stylix.mkEnableTarget "Cavalier" true;
 
   config =
     let
