@@ -2,7 +2,6 @@
 
 let
   package = pkgs.vesktop;
-
 in
 {
   stylix.testbed.application = {

@@ -2,7 +2,6 @@
 
 let
   package = pkgs.wezterm;
-
 in
 {
   stylix.testbed.application = {

@@ -2,7 +2,6 @@
 
 let
   package = pkgs.chromium;
-
 in
 {
   stylix.testbed.application = {
