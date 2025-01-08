@@ -11,11 +11,13 @@
     lib.mkIf (config.stylix.enable && cfg.enable) {
       programs.cavalier.settings.general = {
         ColorProfiles =
-          with config.lib.stylix.colors;
+          let
+            inherit (config.lib.stylix) colors;
+          in
           lib.singleton {
             Name = "Stylix";
-            FgColors = lib.singleton base05;
-            BgColors = lib.singleton base00;
+            FgColors = lib.singleton colors.base05;
+            BgColors = lib.singleton colors.base00;
           };
         ActiveProfile = 0;
       };
