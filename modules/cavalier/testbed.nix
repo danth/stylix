@@ -2,7 +2,6 @@
 
 let
   package = pkgs.cavalier;
-
 in
 {
   stylix.testbed.application = {
