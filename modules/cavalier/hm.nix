@@ -16,8 +16,8 @@
           in
           lib.singleton {
             Name = "Stylix";
-            FgColors = lib.singleton colors.base05;
-            BgColors = lib.singleton colors.base00;
+            FgColors = [ colors.base05 ];
+            BgColors = [ colors.base00 ];
           };
         ActiveProfile = 0;
       };
