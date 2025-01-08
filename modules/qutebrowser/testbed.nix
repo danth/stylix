@@ -2,7 +2,6 @@
 
 let
   package = pkgs.qutebrowser;
-
 in
 {
   stylix.testbed.application = {

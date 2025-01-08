@@ -2,7 +2,6 @@
 
 let
   package = pkgs.firefox;
-
 in
 {
   stylix.testbed.application = {
