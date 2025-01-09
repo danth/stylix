@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   package = pkgs.alacritty;
@@ -10,12 +10,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = [
-    {
-      programs.alacritty = {
-        enable = true;
-        inherit package;
-      };
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    programs.alacritty = {
+      enable = true;
+      inherit package;
+    };
+  };
 }
