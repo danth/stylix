@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   themeFile = config.lib.stylix.colors {
-    template = ../vesktop/template.mustache; # Uses the same template as vesktop
+    template = ../vesktop/template.mustache;
     extension = ".css";
   };
 in
