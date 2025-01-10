@@ -13,7 +13,8 @@ let
     size = config.stylix.fonts.sizes.desktop + 0.0;
   };
 
-in {
+in
+{
   options.stylix.targets.sway.enable =
     config.lib.stylix.mkEnableTarget "Sway" true;
 
@@ -22,40 +23,43 @@ in {
       wayland.windowManager.sway.config = {
         inherit fonts;
 
-        colors = let
-          background = base00;
-          indicator = base0B;
-        in {
-          inherit background;
-          urgent = {
-            inherit background indicator text;
-            border = urgent;
-            childBorder = urgent;
+        colors =
+          let
+            background = base00;
+            indicator = base0B;
+          in
+          {
+            inherit background;
+            urgent = {
+              inherit background indicator text;
+              border = urgent;
+              childBorder = urgent;
+            };
+            focused = {
+              inherit background indicator text;
+              border = focused;
+              childBorder = focused;
+            };
+            focusedInactive = {
+              inherit background indicator text;
+              border = unfocused;
+              childBorder = unfocused;
+            };
+            unfocused = {
+              inherit background indicator text;
+              border = unfocused;
+              childBorder = unfocused;
+            };
+            placeholder = {
+              inherit background indicator text;
+              border = unfocused;
+              childBorder = unfocused;
+            };
           };
-          focused = {
-            inherit background indicator text;
-            border = focused;
-            childBorder = focused;
-          };
-          focusedInactive = {
-            inherit background indicator text;
-            border = unfocused;
-            childBorder = unfocused;
-          };
-          unfocused = {
-            inherit background indicator text;
-            border = unfocused;
-            childBorder = unfocused;
-          };
-          placeholder = {
-            inherit background indicator text;
-            border = unfocused;
-            childBorder = unfocused;
-          };
-        };
 
         output."*".bg = "${config.stylix.image} ${config.stylix.imageScalingMode}";
-        seat."*".xcursor_theme = ''"${config.stylix.cursor.name}" ${toString config.stylix.cursor.size}'';
+        seat."*".xcursor_theme =
+          ''"${config.stylix.cursor.name}" ${toString config.stylix.cursor.size}'';
       };
     })
 
@@ -64,34 +68,36 @@ in {
       lib.stylix.sway.bar = {
         inherit fonts;
 
-        colors = let
-          background = base01;
-          border = background;
-        in {
-          inherit background;
-          statusline = text;
-          separator = base03;
-          focusedWorkspace = {
-            inherit text border;
-            background = focused;
+        colors =
+          let
+            background = base01;
+            border = background;
+          in
+          {
+            inherit background;
+            statusline = text;
+            separator = base03;
+            focusedWorkspace = {
+              inherit text border;
+              background = focused;
+            };
+            activeWorkspace = {
+              inherit text border;
+              background = unfocused;
+            };
+            inactiveWorkspace = {
+              inherit text border;
+              background = unfocused;
+            };
+            urgentWorkspace = {
+              inherit text border;
+              background = urgent;
+            };
+            bindingMode = {
+              inherit text border;
+              background = urgent;
+            };
           };
-          activeWorkspace = {
-            inherit text border;
-            background = unfocused;
-          };
-          inactiveWorkspace = {
-            inherit text border;
-            background = unfocused;
-          };
-          urgentWorkspace = {
-            inherit text border;
-            background = urgent;
-          };
-          bindingMode = {
-            inherit text border;
-            background = urgent;
-          };
-        };
       };
     }
   ];

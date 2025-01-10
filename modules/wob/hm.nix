@@ -1,8 +1,7 @@
 { config, lib, ... }:
 
 {
-  options.stylix.targets.wob.enable =
-    config.lib.stylix.mkEnableTarget "wob" true;
+  options.stylix.targets.wob.enable = config.lib.stylix.mkEnableTarget "wob" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.wob.enable) {
     services.wob.settings = {

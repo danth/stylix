@@ -6,7 +6,8 @@ let
     extension = "xml";
   };
 
-in {
+in
+{
   options.stylix.targets.gedit.enable =
     config.lib.stylix.mkEnableTarget "GEdit" true;
 

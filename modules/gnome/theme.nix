@@ -1,4 +1,10 @@
-{ stdenv, sass, glib, colors, templates }:
+{
+  stdenv,
+  sass,
+  glib,
+  colors,
+  templates,
+}:
 
 let
   colorsScss = colors {
@@ -6,7 +12,8 @@ let
     extension = "scss";
   };
 
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   name = "${colors.slug}-gnome-shell-theme";
   src = templates.gnome-shell;
   patches = [ ./shell_colors.patch ];
@@ -15,7 +22,10 @@ in stdenv.mkDerivation {
     cp ${colorsScss} data/theme/gnome-shell-sass/_colors.scss
   '';
 
-  nativeBuildInputs = [ sass glib.dev ];
+  nativeBuildInputs = [
+    sass
+    glib.dev
+  ];
   buildPhase = ''
     sass data/theme/gnome-shell-light.scss \
       >data/theme/gnome-shell-light.css

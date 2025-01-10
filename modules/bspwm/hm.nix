@@ -2,7 +2,8 @@
 
 let
   colors = config.lib.stylix.colors.withHashtag;
-in {
+in
+{
   options.stylix.targets.bspwm.enable =
     config.lib.stylix.mkEnableTarget "bspwm" true;
 

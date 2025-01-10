@@ -1,0 +1,91 @@
+@import "firefox-gnome-theme/userChrome.css";
+
+/* This is strongly inspired by ../gtk/gtk.mustache. */
+:root {
+  /* Palette */
+  --gnome-palette-blue-1: #{{base0D-hex}};
+  --gnome-palette-blue-2: #{{base0D-hex}};
+  --gnome-palette-blue-3: #{{base0D-hex}};
+  --gnome-palette-blue-4: #{{base0D-hex}};
+  --gnome-palette-blue-5: #{{base0D-hex}};
+  --gnome-palette-green-1: #{{base0B-hex}};
+  --gnome-palette-green-2: #{{base0B-hex}};
+  --gnome-palette-green-3: #{{base0B-hex}};
+  --gnome-palette-green-4: #{{base0B-hex}};
+  --gnome-palette-green-5: #{{base0B-hex}};
+  --gnome-palette-yellow-1: #{{base0A-hex}};
+  --gnome-palette-yellow-2: #{{base0A-hex}};
+  --gnome-palette-yellow-3: #{{base0A-hex}};
+  --gnome-palette-yellow-4: #{{base0A-hex}};
+  --gnome-palette-yellow-5: #{{base0A-hex}};
+  --gnome-palette-orange-1: #{{base09-hex}};
+  --gnome-palette-orange-2: #{{base09-hex}};
+  --gnome-palette-orange-3: #{{base09-hex}};
+  --gnome-palette-orange-4: #{{base09-hex}};
+  --gnome-palette-orange-5: #{{base09-hex}};
+  --gnome-palette-red-1: #{{base08-hex}};
+  --gnome-palette-red-2: #{{base08-hex}};
+  --gnome-palette-red-3: #{{base08-hex}};
+  --gnome-palette-red-4: #{{base08-hex}};
+  --gnome-palette-red-5: #{{base08-hex}};
+  --gnome-palette-purple-1: #{{base0E-hex}};
+  --gnome-palette-purple-2: #{{base0E-hex}};
+  --gnome-palette-purple-3: #{{base0E-hex}};
+  --gnome-palette-purple-4: #{{base0E-hex}};
+  --gnome-palette-purple-5: #{{base0E-hex}};
+  --gnome-palette-brown-1: #{{base0F-hex}};
+  --gnome-palette-brown-2: #{{base0F-hex}};
+  --gnome-palette-brown-3: #{{base0F-hex}};
+  --gnome-palette-brown-4: #{{base0F-hex}};
+  --gnome-palette-brown-5: #{{base0F-hex}};
+  --gnome-palette-light-1: #{{base01-hex}};
+  --gnome-palette-light-2: #{{base01-hex}};
+  --gnome-palette-light-3: #{{base01-hex}};
+  --gnome-palette-light-4: #{{base01-hex}};
+  --gnome-palette-light-5: #{{base01-hex}};
+  --gnome-palette-dark-1: #{{base01-hex}};
+  --gnome-palette-dark-2: #{{base01-hex}};
+  --gnome-palette-dark-3: #{{base01-hex}};
+  --gnome-palette-dark-4: #{{base01-hex}};
+  --gnome-palette-dark-5: #{{base01-hex}};
+
+  /* Colors */
+  --gnome-warning-bg: #{{base0E-hex}};
+
+  /* Window */
+  --gnome-window-background: #{{base00-hex}};
+  --gnome-window-color: #{{base05-hex}};
+  --gnome-view-background: #{{base00-hex}};
+  --gnome-sidebar-background: #{{base01-hex}};
+  --gnome-secondary-sidebar-background: #{{base01-hex}};
+
+  /* Card */
+  --gnome-card-background: #{{base01-hex}};
+  --gnome-card-shade-color: rgba(0, 0, 0, 0.07);
+
+  /* Menu */
+  --gnome-menu-background: #{{base01-hex}};
+
+  /* Headerbar */
+  --gnome-headerbar-background: #{{base01-hex}};
+  --gnome-headerbar-shade-color: rgba(0, 0, 0, 0.07);
+
+  /* Toolbar */
+  --gnome-toolbar-icon-fill: #{{base05-hex}};
+
+  /* Tabs */
+  --gnome-tabbar-tab-hover-background: color-mix(in srgb, #{{base01-hex}}, #{{base02-hex}} 75%);
+  --gnome-tabbar-tab-active-background: #{{base02-hex}};
+  --gnome-tabbar-tab-active-background-contrast: #{{base02-hex}};
+  --gnome-tabbar-tab-active-hover-background: color-mix(in srgb, #{{base02-hex}}, #{{base03-hex}} 25%);
+
+  /* Private Tabs */
+  --gnome-private-wordmark: #{{base04-hex}};
+  --gnome-private-in-content-page-background: #{{base00-hex}};
+  --gnome-private-text-primary-color: #{{base04-hex}};
+
+  &:-moz-window-inactive {
+    --gnome-tabbar-tab-hover-background: var(--gnome-tabbar-tab-hover-background);
+    --gnome-tabbar-tab-active-background: var(--gnome-tabbar-tab-active-background);
+  }
+}
