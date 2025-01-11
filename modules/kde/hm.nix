@@ -22,11 +22,14 @@ let
     isString
     hm
     last
+    listToAttrs
     mapAttrsToList
     mkIf
     mkOption
     optional
     partition
+    range
+    toHexString
     types
     ;
 
@@ -80,19 +83,41 @@ let
     IntensityAmount = 0;
   };
 
-  kdecolors = with colors; {
-    BackgroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-    BackgroundAlternate = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
-    DecorationFocus = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-    DecorationHover = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-    ForegroundNormal = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundActive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundInactive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundLink = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundVisited = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundNegative = "${base08-rgb-r},${base08-rgb-g},${base08-rgb-b}";
-    ForegroundNeutral = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-    ForegroundPositive = "${base0B-rgb-r},${base0B-rgb-g},${base0B-rgb-b}";
+  mkColorTriple =
+    name:
+    concatStringsSep "," (
+      map (color: colors."${name}-rgb-${color}") [
+        "r"
+        "g"
+        "b"
+      ]
+    );
+
+  mkColorMapping =
+    num:
+    let
+      hex = "base0${toHexString num}";
+    in
+    {
+      name = hex;
+      value = mkColorTriple hex;
+    };
+
+  colors' = listToAttrs (map mkColorMapping (range 0 15));
+
+  kdecolors = with colors'; {
+    BackgroundNormal = base00;
+    BackgroundAlternate = base01;
+    DecorationFocus = base0D;
+    DecorationHover = base0D;
+    ForegroundNormal = base05;
+    ForegroundActive = base05;
+    ForegroundInactive = base05;
+    ForegroundLink = base05;
+    ForegroundVisited = base05;
+    ForegroundNegative = base08;
+    ForegroundNeutral = base0D;
+    ForegroundPositive = base0B;
   };
 
   colorscheme = {
@@ -111,23 +136,23 @@ let
     "Colors:Complementary" = kdecolors;
     "Colors:Selection" =
       kdecolors
-      // (with colors; {
-        BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-        BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-        ForegroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundActive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundInactive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundLink = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-        ForegroundVisited = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+      // (with colors'; {
+        BackgroundNormal = base0D;
+        BackgroundAlternate = base0D;
+        ForegroundNormal = base00;
+        ForegroundActive = base00;
+        ForegroundInactive = base00;
+        ForegroundLink = base00;
+        ForegroundVisited = base00;
       });
 
-    WM = with colors; {
-      activeBlend = "${base0A-rgb-r},${base0A-rgb-g},${base0A-rgb-b}";
-      activeBackground = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      activeForeground = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-      inactiveBlend = "${base03-rgb-r},${base03-rgb-g},${base03-rgb-b}";
-      inactiveBackground = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      inactiveForeground = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
+    WM = with colors'; {
+      activeBlend = base0A;
+      activeBackground = base00;
+      activeForeground = base05;
+      inactiveBlend = base03;
+      inactiveBackground = base00;
+      inactiveForeground = base05;
     };
   };
 
