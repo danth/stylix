@@ -13,6 +13,7 @@ in
     ./cursor.nix
     ./fonts.nix
     ./icon.nix
+    inputs.nixcord.homeManagerModules.nixcord
     (import ./palette.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)
   ] ++ autoload;

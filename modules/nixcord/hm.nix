@@ -4,6 +4,7 @@ let
     template = ../vesktop/template.mustache;
     extension = ".css";
   };
+  themeFileName = "stylix.theme.css";
 in
 {
   options.stylix.targets.nixcord.enable =
@@ -13,6 +14,6 @@ in
     lib.mkIf (config.stylix.enable && config.stylix.targets.nixcord.enable)
       {
         xdg.configFile."Vencord/themes/stylix.theme.css".source = themeFile;
-        programs.nixcord.config.enabledThemes = [ "stylix.theme.css" ];
+        programs.nixcord.config.enabledThemes = [ themeFileName ];
       };
 }
