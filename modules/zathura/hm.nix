@@ -9,20 +9,20 @@
       {
         programs.zathura.options =
           let
-            highlightTransparency = "0.5";
+            highlightTransparency = 0.5;
             getColorCh =
               colorName: channel: config.lib.stylix.colors."${colorName}-rgb-${channel}";
             rgb =
               color:
               ''rgb(${getColorCh color "r"}, ${getColorCh color "g"}, ${getColorCh color "b"})'';
             rgba =
-              color:
-              ''rgba(${getColorCh color "r"}, ${getColorCh color "g"}, ${getColorCh color "b"}, ${highlightTransparency})'';
+              color: alpha:
+              ''rgba(${getColorCh color "r"}, ${getColorCh color "g"}, ${getColorCh color "b"}, ${builtins.toString alpha})'';
           in
           {
             # Taken from here:
             #   https://github.com/doenerkebap/base16-zathura
-            default-bg = rgb "base00";
+            default-bg = rgba "base00" config.stylix.opacity.applications;
             default-fg = rgb "base01";
             statusbar-fg = rgb "base04";
             statusbar-bg = rgb "base02";
@@ -34,8 +34,8 @@
             notification-error-fg = rgb "base08";
             notification-warning-bg = rgb "base00";
             notification-warning-fg = rgb "base08";
-            highlight-color = rgba "base0A";
-            highlight-active-color = rgba "base0D";
+            highlight-color = rgba "base0A" highlightTransparency;
+            highlight-active-color = rgba "base0D" highlightTransparency;
             completion-bg = rgb "base01";
             completion-fg = rgb "base0D";
             completion-highlight-fg = rgb "base07";
