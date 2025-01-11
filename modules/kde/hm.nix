@@ -4,40 +4,58 @@
   lib,
   ...
 }:
-with config.stylix.fonts;
-with config.lib.stylix.colors;
 let
   cfg = config.stylix.targets.kde;
 
-  formatValue =
-    value: if builtins.isBool value then if value then "true" else "false" else builtins.toString value;
+  inherit (config.lib.stylix)
+    colors
+    mkEnableTarget
+    ;
+  inherit (lib)
+    concatStrings
+    concatStringsSep
+    filter
+    flatten
+    getExe
+    isAttrs
+    isBool
+    isString
+    hm
+    last
+    mapAttrsToList
+    mkIf
+    optional
+    partition
+    ;
+
+  formatValue = value: if isBool value then if value then "true" else "false" else toString value;
 
   formatSection =
     path: data:
     let
-      header = lib.concatStrings (map (p: "[${p}]") path);
+      header = concatStrings (map (p: "[${p}]") path);
       formatChild = name: formatLines (path ++ [ name ]);
-      children = lib.mapAttrsToList formatChild data;
-      partitioned = lib.partition builtins.isString children;
+      children = mapAttrsToList formatChild data;
+      partitioned = partition isString children;
       directChildren = partitioned.right;
       indirectChildren = partitioned.wrong;
     in
-    lib.optional (directChildren != [ ]) header ++ directChildren ++ lib.flatten indirectChildren;
+    optional (directChildren != [ ]) header ++ directChildren ++ flatten indirectChildren;
 
   formatLines =
     path: data:
-    if builtins.isAttrs data then
+    if isAttrs data then
       if data ? _immutable then
-        if builtins.isAttrs data.value then
+        if isAttrs data.value then
           formatSection (path ++ [ "$i" ]) data.value
         else
-          "${lib.last path}[$i]=${formatValue data.value}"
+          "${last path}[$i]=${formatValue data.value}"
       else
         formatSection path data
     else
-      "${lib.last path}=${formatValue data}";
+      "${last path}=${formatValue data}";
 
-  formatConfig = data: lib.concatStringsSep "\n" (formatLines [ ] data);
+  formatConfig = data: concatStringsSep "\n" (formatLines [ ] data);
 
   # Marking a setting as immutable should prevent it being overwritten
   # through the system settings menu.
@@ -49,9 +67,7 @@ let
   # PascalCase is the standard naming for color scheme files. Schemes named
   # in kebab-case will load when selected manually, but don't work with a
   # look and feel package.
-  colorschemeSlug = lib.concatStrings (
-    builtins.filter builtins.isString (builtins.split "[^a-zA-Z]" scheme)
-  );
+  colorschemeSlug = concatStrings (filter isString (builtins.split "[^a-zA-Z]" colors.scheme));
 
   colorEffect = {
     ColorEffect = 0;
@@ -62,7 +78,7 @@ let
     IntensityAmount = 0;
   };
 
-  colors = {
+  kdecolors = with colors; {
     BackgroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
     BackgroundAlternate = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
     DecorationFocus = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
@@ -80,28 +96,30 @@ let
   colorscheme = {
     General = {
       ColorScheme = colorschemeSlug;
-      Name = scheme;
+      Name = colors.scheme;
     };
 
     "ColorEffects:Disabled" = colorEffect;
     "ColorEffects:Inactive" = colorEffect;
 
-    "Colors:Window" = colors;
-    "Colors:View" = colors;
-    "Colors:Button" = colors;
-    "Colors:Tooltip" = colors;
-    "Colors:Complementary" = colors;
-    "Colors:Selection" = colors // {
-      BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-      BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-      ForegroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundActive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundInactive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundLink = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundVisited = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-    };
+    "Colors:Window" = kdecolors;
+    "Colors:View" = kdecolors;
+    "Colors:Button" = kdecolors;
+    "Colors:Tooltip" = kdecolors;
+    "Colors:Complementary" = kdecolors;
+    "Colors:Selection" =
+      kdecolors
+      // (with colors; {
+        BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
+        BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
+        ForegroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+        ForegroundActive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+        ForegroundInactive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+        ForegroundLink = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+        ForegroundVisited = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
+      });
 
-    WM = {
+    WM = with colors; {
       activeBlend = "${base0A-rgb-r},${base0A-rgb-g},${base0A-rgb-b}";
       activeBackground = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
       activeForeground = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
@@ -153,6 +171,7 @@ let
         lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
         lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
       }
+      # bash
       ''
         write_text() {
           mkdir --parents "$(dirname "$2")"
@@ -204,7 +223,7 @@ let
   kdeglobals = {
     KDE.LookAndFeelPackage = makeImmutable "stylix";
 
-    General = rec {
+    General = with config.stylix.fonts; rec {
       font = makeImmutable "${sansSerif.name},${toString sizes.applications},-1,5,50,0,0,0,0,0";
       fixed = makeImmutable "${monospace.name},${toString sizes.terminal},-1,5,50,0,0,0,0,0";
       desktopFont = makeImmutable "${sansSerif.name},${toString sizes.desktop},-1,5,50,0,0,0,0,0";
@@ -243,46 +262,42 @@ let
   # might be installed, and look there. The ideal solution would require
   # changes to KDE to make it possible to update the wallpaper through
   # config files alone.
-  activator = pkgs.writeShellScriptBin "stylix-set-kde-wallpaper" ''
+  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" ''
     set -eu
-    global_path() {
+    get_exe() {
       for directory in /run/current-system/sw/bin /usr/bin /bin; do
         if [[ -f "$directory/$1" ]]; then
           printf '%s\n' "$directory/$1"
           return 0
         fi
       done
-
+      echo "Skipping `$1`: command not found"
       return 1
     }
 
-    if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+    if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
       "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-    else
-      echo "Skipping plasma-apply-wallpaperimage: command not found"
     fi
 
-    if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+    if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
       "$look_and_feel" --apply stylix
-    else
-      echo "Skipping plasma-apply-lookandfeel: command not found"
     fi
   '';
-
-  activateDocs = "https://stylix.danth.me/options/hm.html#stylixtargetskdeservice";
+  activator = getExe activator';
 in
 {
-  options.stylix.targets.kde.enable = config.lib.stylix.mkEnableTarget "KDE" true;
+  options.stylix.targets.kde = {
+    enable = mkEnableTarget "KDE" true;
+  };
 
-  config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+  config = mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home = {
       packages = [ themePackage ];
 
       # This activation entry will run the theme activator when the homeConfiguration is activated
-      # Note: This only works in an already running Plasma session.
-      activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        ${lib.getExe activator} || verboseEcho \
-          "KDE theme setting failed. See `${activateDocs}`"
+      activation.stylixLookAndFeel = hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${activator} || verboseEcho \
+          "Stylix KDE theme setting failed. Note that it only works in an already running Plasma session."
       '';
     };
 
@@ -294,7 +309,7 @@ in
       configFile."autostart/stylix-activator.desktop".text = ''
         [Desktop Entry]
         Type=Application
-        Exec=${lib.getExe activator}
+        Exec=${activator}
         Name=Stylix Activator
         X-KDE-AutostartScript=true
       '';
