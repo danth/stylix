@@ -24,8 +24,10 @@ let
     last
     mapAttrsToList
     mkIf
+    mkOption
     optional
     partition
+    types
     ;
 
   formatValue = value: if isBool value then if value then "true" else "false" else toString value;
@@ -148,7 +150,7 @@ let
   };
 
   lookAndFeelDefaults = {
-    kwinrc."org.kde.kdecoration2".library = "org.kde.breeze";
+    kwinrc."org.kde.kdecoration2".library = cfg.decorations;
     plasmarc.Theme.name = "default";
 
     kdeglobals = {
@@ -288,6 +290,15 @@ in
 {
   options.stylix.targets.kde = {
     enable = mkEnableTarget "KDE" true;
+    decorations = mkOption {
+      type = types.str;
+      default = "org.kde.breeze";
+      description =
+        let
+          url = "https://nix-community.github.io/plasma-manager/options.xhtml#opt-programs.plasma.workspace.windowDecorations.library";
+        in
+        "Custom border decorations. See [plasma-manager docs](${url}).";
+    };
   };
 
   config = mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
