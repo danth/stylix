@@ -4,19 +4,13 @@
   lib,
   ...
 }:
-
 with config.stylix.fonts;
 with config.lib.stylix.colors;
-
 let
   cfg = config.stylix.targets.kde;
 
   formatValue =
-    value:
-    if builtins.isBool value then
-      if value then "true" else "false"
-    else
-      builtins.toString value;
+    value: if builtins.isBool value then if value then "true" else "false" else builtins.toString value;
 
   formatSection =
     path: data:
@@ -28,9 +22,7 @@ let
       directChildren = partitioned.right;
       indirectChildren = partitioned.wrong;
     in
-    lib.optional (directChildren != [ ]) header
-    ++ directChildren
-    ++ lib.flatten indirectChildren;
+    lib.optional (directChildren != [ ]) header ++ directChildren ++ lib.flatten indirectChildren;
 
   formatLines =
     path: data:
@@ -282,33 +274,30 @@ in
 {
   options.stylix.targets.kde.enable = config.lib.stylix.mkEnableTarget "KDE" true;
 
-  config =
-    lib.mkIf
-      (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux)
-      {
-        home = {
-          packages = [ themePackage ];
+  config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+    home = {
+      packages = [ themePackage ];
 
-          # This activation entry will run the theme activator when the homeConfiguration is activated
-          # Note: This only works in an already running Plasma session.
-          activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            ${lib.getExe activator} || verboseEcho \
-              "KDE theme setting failed. See `${activateDocs}`"
-          '';
-        };
+      # This activation entry will run the theme activator when the homeConfiguration is activated
+      # Note: This only works in an already running Plasma session.
+      activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${lib.getExe activator} || verboseEcho \
+          "KDE theme setting failed. See `${activateDocs}`"
+      '';
+    };
 
-        xdg = {
-          systemDirs.config = [ "${configPackage}" ];
+    xdg = {
+      systemDirs.config = [ "${configPackage}" ];
 
-          # This desktop entry will run the theme activator when a new Plasma session is started
-          # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
-          configFile."autostart/stylix-activator.desktop".text = ''
-            [Desktop Entry]
-            Type=Application
-            Exec=${lib.getExe activator}
-            Name=Stylix Activator
-            X-KDE-AutostartScript=true
-          '';
-        };
-      };
+      # This desktop entry will run the theme activator when a new Plasma session is started
+      # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
+      configFile."autostart/stylix-activator.desktop".text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=${lib.getExe activator}
+        Name=Stylix Activator
+        X-KDE-AutostartScript=true
+      '';
+    };
+  };
 }
