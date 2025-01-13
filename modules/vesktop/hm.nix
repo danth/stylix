@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   themeFile = config.lib.stylix.colors {
-    template = ./template.mustache;
+    template = ../vencord/template.mustache;
     extension = ".css";
   };
 in

@@ -1,4 +1,4 @@
-# Commit Convention
+# Commit convention
 
 To keep things consistent, commit messages should follow a format
 [similar to Nixpkgs](https://github.com/NixOS/nixpkgs/blob/master/CONTRIBUTING.md#commit-conventions):

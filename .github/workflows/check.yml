@@ -52,7 +52,7 @@ jobs:
                 ($packages[] | format_output($arch; "packages"))
               ] |
               "derivations=\(.)"
-            ' >> $GITHUB_OUTPUT
+            ' >>$GITHUB_OUTPUT
 
     outputs:
       derivations: ${{ steps.get-derivations.outputs.derivations }}

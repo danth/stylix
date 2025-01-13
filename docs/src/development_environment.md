@@ -1,4 +1,4 @@
-# Development Environment
+# Development environment
 
 To enter the developer shell, run:
 
