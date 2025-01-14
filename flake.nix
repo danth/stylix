@@ -51,7 +51,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
-    nixcord.url = "github:kaylorben/nixcord";
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
