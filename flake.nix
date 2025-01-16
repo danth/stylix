@@ -30,7 +30,6 @@
     git-hooks = {
       inputs = {
         flake-compat.follows = "flake-compat";
-        nixpkgs-stable.follows = "git-hooks/nixpkgs";
         nixpkgs.follows = "nixpkgs";
       };
 
@@ -165,16 +164,23 @@
                 ];
 
                 text = ''
-                  nix flake show --json --no-update-lock-file |
+                  nix flake show --json --no-update-lock-file ${self} |
                     jq --raw-output '
                       ((.checks."${system}" // {}) | keys) as $checks |
                       ((.packages."${system}" // {}) | keys) as $packages |
                       (($checks - $packages)[] | "checks.${system}.\(.)"),
                       ($packages[] | "packages.${system}.\(.)")
                     ' |
-                    parallel --halt now,fail=1 '
-                      nix build --no-update-lock-file --verbose .#{}
-                    '
+                    parallel \
+                      --bar \
+                      --color \
+                      --color-failed \
+                      --halt now,fail=1 \
+                      --tagstring '{}' \
+                      '
+                        nix build --no-update-lock-file --print-build-logs \
+                          ${self}#{}
+                      '
                 '';
               };
 
