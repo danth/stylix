@@ -30,7 +30,6 @@
     git-hooks = {
       inputs = {
         flake-compat.follows = "flake-compat";
-        nixpkgs-stable.follows = "git-hooks/nixpkgs";
         nixpkgs.follows = "nixpkgs";
       };
 
