@@ -29,5 +29,10 @@ in
     terminal.colors = lib.getAttrs colorAttrs (
       fromKittyConf (builtins.readFile theme)
     );
+
+    android-integration.termux-reload-settings.enable = true;
+    build.activationAfter.reloadTermuxSettings = ''
+      $DRY_RUN_CMD termux-reload-settings
+    '';
   };
 }
