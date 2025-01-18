@@ -15,6 +15,7 @@ in
     ../target.nix
     ../opacity.nix
     ./fonts.nix
+    ./terminal.nix
     (import ./palette.nix { inherit palette-generator base16; })
     (import ../templates.nix inputs)
     (import ../home-manager-integration.nix homeManagerModule)
