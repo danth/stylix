@@ -19,7 +19,7 @@ let
     "background"
     "foreground"
     "cursor"
-  ] ++ (map (n: "color${toString n}") (lib.range 1 15));
+  ] ++ (map (n: "color${toString n}") (lib.range 0 15));
 in
 {
   options.stylix.targets.terminal.enable =
