@@ -174,6 +174,14 @@ let
             "polarity"
           ];
         }
+        {
+          path = [
+            "stylix"
+            "targets"
+            "qt"
+            "platform"
+          ];
+        }
       ];
 
 in
