@@ -1,4 +1,9 @@
-{ config, lib, options, ... }:
+{
+  config,
+  lib,
+  options,
+  ...
+}:
 let
   themeFile = config.lib.stylix.colors {
     template = ../vencord/template.mustache;
@@ -13,12 +18,10 @@ in
 
   config =
     lib.mkIf (config.stylix.enable && cfg.enable && (config.programs ? nixcord))
-    (
-      lib.optionalAttrs (builtins.hasAttr "nixcord" options.programs) (
-        {
+      (
+        lib.optionalAttrs (builtins.hasAttr "nixcord" options.programs) {
           xdg.configFile."Vencord/themes/stylix.theme.css".source = themeFile;
           programs.nixcord.config.enabledThemes = [ themeFileName ];
         }
-      )
-    );
+      );
 }
