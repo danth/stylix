@@ -160,6 +160,7 @@
 
                 runtimeInputs = with pkgs; [
                   nix
+                  jq
                   parallel
                 ];
 
