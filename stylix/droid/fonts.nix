@@ -1,5 +1,29 @@
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+  mkFont =
+    font:
+    pkgs.runCommand "stylix-font-${font.package.name}"
+      {
+        FONTCONFIG_FILE = pkgs.makeFontsConf { fontDirectories = [ font.package ]; };
+      }
+      ''
+        font=$(
+          ${lib.getExe' pkgs.fontconfig "fc-match"} \
+          ${lib.escapeShellArg font.name} \
+          --format %{file}
+        )
+        ln -s "$font" "$out"
+      '';
+  terminalFont = mkFont config.stylix.fonts.monospace;
+in
+{
   imports = [ ../fonts.nix ];
 
-  # TODO: set terminal.font to the path of the monospace font
+  config.terminal.font = lib.mkIf config.stylix.enable terminalFont;
 }
