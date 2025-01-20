@@ -10,6 +10,10 @@ let
       path = "librewolf";
       name = "LibreWolf";
     }
+    {
+      path = "floorp";
+      name = "Floorp";
+    }
   ];
   eachConfig = mkCfg: targets: lib.mkMerge (map mkCfg targets);
   eachTarget =
