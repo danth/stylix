@@ -1,5 +1,5 @@
 {
-  stdenv,
+  pkgs,
   config,
   lib,
   ...
@@ -15,13 +15,13 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf
-      (config.stylix.enable && config.stylix.targets.vesktop.enable && stdenv.hostPlatform.isLinux)
+      (config.stylix.enable && config.stylix.targets.vesktop.enable && pkgs.stdenv.hostPlatform.isLinux)
       {
         xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
       }
     )
     (lib.mkIf
-      (config.stylix.enable && config.stylix.targets.vesktop.enable && stdenv.hostPlatform.isDarwin)
+      (config.stylix.enable && config.stylix.targets.vesktop.enable && pkgs.stdenv.hostPlatform.isDarwin)
       {
         home.file."Library/Application Support/vesktop/themes/stylix.theme.css".source = themeFile;
       }
