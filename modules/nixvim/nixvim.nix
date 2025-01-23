@@ -30,16 +30,16 @@ in
         The stylix configuration, generated for nixvim.
         If nixvim is installed via nixos, darwin, or home-manager then this will be **automatically**
         assigned to `programs.nixvim`. If you're using a "standalone" build of nixvim, then that's
-        not possible. Instead, you should pass this config to the `nixvimExtend` function.
+        not possible. Instead, you should pass this config to the `extend` function.
         For example:
         ```nix
           { config, ... }: {
             environment.systemPackages = [
-              (inputs.<your-nixvim-input>.x86_64-linux.default.extend config.stylix.targets.nixvim.config)
+              (inputs.<your-nixvim-input>.<your-system>.default.extend config.stylix.targets.nixvim.config)
             ];
           }
         ```
-        See nixvim's docs on [extending a standalone configuration](https://nix-community.github.io/nixvim/modules/standalone.html#extending-an-existing-configuration).
+        See nixvim's docs on [extending a standalone configuration](https://nix-community.github.io/nixvim/platforms/standalone.html?highlight=extend#extending-an-existing-configuration).
       '';
     };
   };
