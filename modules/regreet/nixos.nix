@@ -29,7 +29,7 @@
                 config.services.greetd.settings.default_session.command
                 != "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} ${lib.escapeShellArgs cfg.cageArgs} -- ${lib.getExe cfg.package}"
             )
-            "Stylix is not guaranteed to style regreet correctly when setting a custom command in `services.greetd.settings.default_session.command `. Note that in most cases no variables under `services.greetd` need to be manually set to ensure that ReGreet is functional.";
+            "stylix: regreet: custom services.greetd.settings.default_session.command value may not work: ${config.services.greetd.settings.default_session.command}";
         programs.regreet = {
           settings.GTK.application_prefer_dark_theme = config.stylix.polarity == "dark";
           settings.background = {

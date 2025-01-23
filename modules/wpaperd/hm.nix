@@ -23,8 +23,7 @@
             if builtins.hasAttr imageScalingMode modeMap then
               { mode = modeMap.${imageScalingMode}; }
             else
-              lib.info
-                "[stylix] wpaperd does not support '${imageScalingMode}' image scaling mode"
+              lib.info "stylix: wpaperd: unsupported image scaling mode: ${imageScalingMode}"
                 { };
         in
         {
