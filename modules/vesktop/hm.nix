@@ -14,27 +14,18 @@ in
   options.stylix.targets.vesktop.enable =
     config.lib.stylix.mkEnableTarget "Vesktop" true;
 
-  config = lib.mkMerge [
-    (lib.mkIf
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.vesktop.enable)
       (
-        config.stylix.enable
-        && config.stylix.targets.vesktop.enable
-        && pkgs.stdenv.hostPlatform.isLinux
-      )
-      {
-        xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
-      }
-    )
-    (lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.vesktop.enable
-        && pkgs.stdenv.hostPlatform.isDarwin
-      )
-      {
-        home.file."Library/Application Support/vesktop/themes/stylix.theme.css".source =
-          themeFile;
-      }
-    )
-  ];
+        lib.mkMerge [
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+            xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
+          })
+
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".source =
+              themeFile;
+          })
+        ]
+      );
 }
