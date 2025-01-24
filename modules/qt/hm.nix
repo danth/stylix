@@ -9,9 +9,9 @@
     enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
     platform = lib.mkOption {
       description = ''
-        Platform for QT.
+        Selects the platform theme to use for Qt applications.
 
-        Defaults to the standard platform of the configured DE in NixOS when
+        Defaults to the standard platform theme used in the configured DE in NixOS when
         `stylix.homeManagerIntegration.followSystem = true`.
 
         Fallback to qtct.
@@ -23,9 +23,11 @@
 
   config = lib.mkIf config.stylix.targets.qt.enable (
     let
-      cfg = config.stylix;
       iconTheme =
-        if (cfg.polarity == "dark") then cfg.iconTheme.dark else cfg.iconTheme.light;
+        if (config.stylix.polarity == "dark") then
+          config.stylix.iconTheme.dark
+        else
+          config.stylix.iconTheme.light;
 
       recommendedStyle = {
         gnome = if config.stylix.polarity == "dark" then "adwaita-dark" else "adwaita";
@@ -52,28 +54,23 @@
         '';
     in
     {
-      warnings = lib.optional (cfg.targets.qt.platform != "qtct") ''
-        Stylix has not yet implemented qt styling for any platforms other than "qtct".
-        We are working on it.
-      '';
+      warnings =
+        lib.optional (config.stylix.targets.qt.platform != "qtct")
+          "stylix: qt: config.stylix.targets.qt.platform other than 'qtct' are currently unsupported: ${config.stylix.targets.qt.platform}. Support may be added in the future.";
 
       home.packages = lib.optional (config.qt.style.name == "kvantum") kvantumPackage;
 
       qt = {
         enable = true;
-        style.name = lib.mkIf (
-          recommendedStyle ? "${config.qt.platformTheme.name}"
-        ) recommendedStyle."${config.qt.platformTheme.name}";
-        platformTheme.name = cfg.targets.qt.platform;
+        style.name = recommendedStyle."${config.qt.platformTheme.name}" or null;
+        platformTheme.name = config.stylix.targets.qt.platform;
       };
 
       xdg.configFile = lib.mkMerge [
         (lib.mkIf (config.qt.style.name == "kvantum") {
           "Kvantum/kvantum.kvconfig".source =
             (pkgs.formats.ini { }).generate "kvantum.kvconfig"
-              {
-                General.theme = "Base16Kvantum";
-              };
+              { General.theme = "Base16Kvantum"; };
 
           "Kvantum/Base16Kvantum".source =
             "${kvantumPackage}/share/Kvantum/Base16Kvantum";

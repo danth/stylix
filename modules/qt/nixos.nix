@@ -19,9 +19,9 @@ in
     enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
     platform = lib.mkOption {
       description = ''
-        Platform for QT.
+        Selects the platform theme to use for Qt applications.
 
-        Defaults to the standard platform of the configured DE.
+        Defaults to the standard platform used in the configured DE.
 
         Fallback to qtct.
       '';
@@ -31,7 +31,6 @@ in
   };
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
-
     stylix.targets.qt.platform =
       if config.services.xserver.desktopManager.gnome.enable then
         lib.mkDefault "gnome"
@@ -40,18 +39,15 @@ in
       else if config.services.xserver.desktopManager.lxqt.enable then
         lib.mkDefault "lxqt"
       else
-        lib.mkDefault "qt5ct";
+        lib.mkDefault "qtct";
     qt = {
       enable = true;
-      style = lib.mkIf (
-        recommendedStyle ? "${config.qt.platformTheme}"
-      ) recommendedStyle."${config.qt.platformTheme}";
+      style = recommendedStyle."${config.qt.platformTheme}" or null;
       platformTheme =
         if config.stylix.targets.qt.platform == "qtct" then
           "qt5ct"
         else
           config.stylix.targets.qt.platform;
     };
-
   };
 }
