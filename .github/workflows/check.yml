@@ -17,7 +17,6 @@ jobs:
 
     steps:
       - uses: DeterminateSystems/nix-installer-action@v16
-      - uses: DeterminateSystems/magic-nix-cache-action@v8
 
       - id: get-derivations
         run: |
@@ -70,7 +69,6 @@ jobs:
 
     steps:
       - uses: DeterminateSystems/nix-installer-action@v16
-      - uses: DeterminateSystems/magic-nix-cache-action@v8
 
       - run: |
           nix build --no-update-lock-file --print-build-logs \
