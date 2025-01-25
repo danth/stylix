@@ -11,60 +11,39 @@ let
     colors
     mkEnableTarget
     ;
-  inherit (lib)
-    concatStrings
-    concatStringsSep
-    filter
-    flatten
-    getExe
-    isAttrs
-    isBool
-    isString
-    hm
-    last
-    listToAttrs
-    mapAttrsToList
-    mkIf
-    mkOption
-    optional
-    partition
-    range
-    toHexString
-    types
-    ;
 
   formatValue =
     value:
-    if isBool value then if value then "true" else "false" else toString value;
+    if lib.isBool value then if value then "true" else "false" else toString value;
 
   formatSection =
     path: data:
     let
-      header = concatStrings (map (p: "[${p}]") path);
+      header = lib.concatStrings (map (p: "[${p}]") path);
       formatChild = name: formatLines (path ++ [ name ]);
-      children = mapAttrsToList formatChild data;
-      partitioned = partition isString children;
+      children = lib.mapAttrsToList formatChild data;
+      partitioned = lib.partition lib.isString children;
       directChildren = partitioned.right;
       indirectChildren = partitioned.wrong;
     in
-    optional (directChildren != [ ]) header
+    lib.optional (directChildren != [ ]) header
     ++ directChildren
-    ++ flatten indirectChildren;
+    ++ lib.flatten indirectChildren;
 
   formatLines =
     path: data:
-    if isAttrs data then
+    if lib.isAttrs data then
       if data ? _immutable then
-        if isAttrs data.value then
+        if lib.isAttrs data.value then
           formatSection (path ++ [ "$i" ]) data.value
         else
-          "${last path}[$i]=${formatValue data.value}"
+          "${lib.last path}[$i]=${formatValue data.value}"
       else
         formatSection path data
     else
-      "${last path}=${formatValue data}";
+      "${lib.last path}=${formatValue data}";
 
-  formatConfig = data: concatStringsSep "\n" (formatLines [ ] data);
+  formatConfig = data: lib.concatStringsSep "\n" (formatLines [ ] data);
 
   # Marking a setting as immutable should prevent it being overwritten
   # through the system settings menu.
@@ -76,8 +55,8 @@ let
   # PascalCase is the standard naming for color scheme files. Schemes named
   # in kebab-case will load when selected manually, but don't work with a
   # look and feel package.
-  colorschemeSlug = concatStrings (
-    filter isString (builtins.split "[^a-zA-Z]" colors.scheme)
+  colorschemeSlug = lib.concatStrings (
+    lib.filter lib.isString (builtins.split "[^a-zA-Z]" colors.scheme)
   );
 
   colorEffect = {
@@ -91,7 +70,7 @@ let
 
   mkColorTriple =
     name:
-    concatStringsSep "," (
+    lib.concatStringsSep "," (
       map (color: colors."${name}-rgb-${color}") [
         "r"
         "g"
@@ -102,14 +81,14 @@ let
   mkColorMapping =
     num:
     let
-      hex = "base0${toHexString num}";
+      hex = "base0${lib.toHexString num}";
     in
     {
       name = hex;
       value = mkColorTriple hex;
     };
 
-  colors' = listToAttrs (map mkColorMapping (range 0 15));
+  colors' = lib.listToAttrs (map mkColorMapping (lib.range 0 15));
 
   kdecolors = with colors'; {
     BackgroundNormal = base00;
@@ -204,7 +183,6 @@ let
         lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
         lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
       }
-      # bash
       ''
         write_text() {
           mkdir --parents "$(dirname "$2")"
@@ -316,32 +294,35 @@ let
       "$look_and_feel" --apply stylix
     fi
   '';
-  activator = getExe activator';
+  activator = lib.getExe activator';
 in
 {
   options.stylix.targets.kde = {
     enable = mkEnableTarget "KDE" true;
-    decorations = mkOption {
-      type = types.str;
+
+    decorations = lib.mkOption {
+      type = lib.types.str;
       default = "org.kde.breeze";
-      description =
-        let
-          url = "https://nix-community.github.io/plasma-manager/options.xhtml#opt-programs.plasma.workspace.windowDecorations.library";
-        in
-        "Custom border decorations. See [plasma-manager docs](${url}).";
+      description = ''
+        The library for the window decorations theme. Decorations other than default
+        `org.kde.breeze` may not be compatible with stylix. To view all available
+        values, see the `library` key in the `org.kde.kdecoration2` section of `$HOME/.config/kwinrc`
+        after imperatively applying the window decoration via the System Settings app.
+      '';
     };
   };
 
   config =
-    mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux)
+    lib.mkIf
+      (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux)
       {
         home = {
           packages = [ themePackage ];
 
           # This activation entry will run the theme activator when the homeConfiguration is activated
-          activation.stylixLookAndFeel = hm.dag.entryAfter [ "writeBoundary" ] ''
+          activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             ${activator} || verboseEcho \
-              "Stylix KDE theme setting failed. Note that it only works in an already running Plasma session."
+              "Stylix KDE theme setting failed. This only works in a running Plasma session."
           '';
         };
 
