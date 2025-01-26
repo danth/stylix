@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   themeFile = config.lib.stylix.colors {
     template = ../vencord/template.mustache;
@@ -11,7 +16,16 @@ in
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.vesktop.enable)
-      {
-        xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
-      };
+      (
+        lib.mkMerge [
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+            xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
+          })
+
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".source =
+              themeFile;
+          })
+        ]
+      );
 }
