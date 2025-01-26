@@ -66,29 +66,35 @@
         platformTheme.name = config.stylix.targets.qt.platform;
       };
 
-      xdg.configFile = lib.mkMerge [
-        (lib.mkIf (config.qt.style.name == "kvantum") {
-          "Kvantum/kvantum.kvconfig".source =
-            (pkgs.formats.ini { }).generate "kvantum.kvconfig"
-              { General.theme = "Base16Kvantum"; };
+      xdg.configFile =
+        let
+          qtctConf =
+            ''
+              [Appearance]
+            ''
+            + lib.optionalString (config.qt.style ? name) ''
+              style=${config.qt.style.name}
+            ''
+            + lib.optionalString (iconTheme != null) ''
+              icon_theme=${iconTheme}
+            '';
 
-          "Kvantum/Base16Kvantum".source =
-            "${kvantumPackage}/share/Kvantum/Base16Kvantum";
-        })
+        in
+        lib.mkMerge [
+          (lib.mkIf (config.qt.style.name == "kvantum") {
+            "Kvantum/kvantum.kvconfig".source =
+              (pkgs.formats.ini { }).generate "kvantum.kvconfig"
+                { General.theme = "Base16Kvantum"; };
 
-        (lib.mkIf (config.qt.platformTheme.name == "qtct") {
-          "qt5ct/qt5ct.conf".text = ''
-            [Appearance]
-            style=${config.qt.style.name}
-            icon_theme=${iconTheme}
-          '';
-          "qt6ct/qt6ct.conf".text = ''
-            [Appearance]
-            style=${config.qt.style.name}
-            icon_theme=${iconTheme}
-          '';
-        })
-      ];
+            "Kvantum/Base16Kvantum".source =
+              "${kvantumPackage}/share/Kvantum/Base16Kvantum";
+          })
+
+          (lib.mkIf (config.qt.platformTheme.name == "qtct") {
+            "qt5ct/qt5ct.conf".text = qtctConf;
+            "qt5ct/qt6ct.conf".text = qtctConf;
+          })
+        ];
     }
   );
 }
