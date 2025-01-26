@@ -1,6 +1,5 @@
 {
   pkgs,
-  options,
   config,
   lib,
   ...
@@ -18,16 +17,26 @@ let
 
 in
 {
+  imports = [
+    (lib.mkRenamedOptionModuleWith {
+      from = [
+        "stylix"
+        "targets"
+        "swaylock"
+        "useImage"
+      ];
+      sinceRelease = 2505;
+      to = [
+        "stylix"
+        "targets"
+        "swaylock"
+        "wallpaper"
+      ];
+    })
+  ];
   options.stylix.targets.swaylock = {
     enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
-    useImage = lib.mkOption {
-      description = ''
-        Whether to use your wallpaper image for the Swaylock background.
-        If this is disabled, a plain color will be used instead.
-      '';
-      type = lib.types.bool;
-      default = true;
-    };
+    wallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock" true;
   };
 
   config =
@@ -64,7 +73,7 @@ in
             text-ver-color = text;
             text-wrong-color = text;
           }
-          // lib.optionalAttrs config.stylix.targets.swaylock.useImage {
+          // lib.optionalAttrs config.stylix.targets.swaylock.wallpaper {
             image = "${config.stylix.image}";
           };
       };

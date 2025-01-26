@@ -106,7 +106,9 @@ let
   makeTestbed =
     testbed: stylix:
     let
-      name = "testbed-${testbed.name}-${stylix.polarity}";
+      name =
+        "testbed-${testbed.name}-${stylix.polarity}"
+        + (if stylix.image == null then "-imageless" else "");
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
@@ -167,6 +169,12 @@ let
           url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
           hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
         };
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      }
+      {
+        enable = true;
+        image = null;
         base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
         polarity = "dark";
       }

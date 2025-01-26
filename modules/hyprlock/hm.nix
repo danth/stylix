@@ -2,13 +2,19 @@
 
 with config.lib.stylix;
 {
-  options.stylix.targets.hyprlock.enable = mkEnableTarget "Hyprlock" true;
+  options.stylix.targets.hyprlock = {
+    enable = mkEnableTarget "Hyprlock" true;
+    wallpaper = mkEnableWallpaper "Hyprlock" true;
+  };
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.hyprlock.enable)
       {
         programs.hyprlock.settings = {
-          background.path = "${config.stylix.image}";
+          background = {
+            path = lib.mkIf config.stylix.targets.hyprlock.wallpaper config.stylix.image;
+            color = "rgb(${base00})";
+          };
           input-field = with colors; {
             outer_color = "rgb(${base03})";
             inner_color = "rgb(${base00})";

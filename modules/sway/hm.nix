@@ -15,8 +15,10 @@ let
 
 in
 {
-  options.stylix.targets.sway.enable =
-    config.lib.stylix.mkEnableTarget "Sway" true;
+  options.stylix.targets.sway = {
+    enable = config.lib.stylix.mkEnableTarget "Sway" true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "Sway" true;
+  };
 
   config = lib.mkMerge [
     (lib.mkIf (config.stylix.enable && config.stylix.targets.sway.enable) {
@@ -57,7 +59,8 @@ in
             };
           };
 
-        output."*".bg = "${config.stylix.image} ${config.stylix.imageScalingMode}";
+        output."*".bg =
+          lib.mkIf config.stylix.targets.sway.wallpaper "${config.stylix.image} ${config.stylix.imageScalingMode}";
         seat."*".xcursor_theme =
           ''"${config.stylix.cursor.name}" ${toString config.stylix.cursor.size}'';
       };

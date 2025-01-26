@@ -174,13 +174,20 @@ let
 
         mkdir --parents "$wallpaper/contents/images"
 
-        magick \
-          "$wallpaperImage" \
-          -thumbnail 400x250 \
-          "$wallpaper/contents/screenshot.png"
+        ${
+          if (config.stylix.image != null) then
+            ''
+              magick \
+                "$wallpaperImage" \
+                -thumbnail 400x250 \
+                "$wallpaper/contents/screenshot.png"
 
-        dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
-        magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+              dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
+              magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+            ''
+          else
+            ""
+        }
 
         write_text \
           "$colorscheme" \
@@ -264,11 +271,18 @@ let
       return 1
     }
 
-    if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-      "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-    else
-      echo "Skipping plasma-apply-wallpaperimage: command not found"
-    fi
+    ${
+      if (config.stylix.image != null) then
+        ''
+          if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+            "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
+          else
+            echo "Skipping plasma-apply-wallpaperimage: command not found"
+          fi
+        ''
+      else
+        ""
+    }
 
     if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
       "$look_and_feel" --apply stylix

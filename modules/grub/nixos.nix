@@ -44,14 +44,26 @@ let
       "crop";
 in
 {
+  imports = [
+    (lib.mkRenamedOptionModuleWith {
+      from = [
+        "stylix"
+        "targets"
+        "grub"
+        "useImage"
+      ];
+      sinceRelease = 2505;
+      to = [
+        "stylix"
+        "targets"
+        "grub"
+        "wallpaper"
+      ];
+    })
+  ];
   options.stylix.targets.grub = {
     enable = config.lib.stylix.mkEnableTarget "GRUB" true;
-
-    useImage = lib.mkOption {
-      description = "Whether to use your wallpaper image as the GRUB background.";
-      type = lib.types.bool;
-      default = false;
-    };
+    wallpaper = config.lib.stylix.mkEnableWallpaper "GRUB" false;
   };
 
   config.boot.loader.grub =
@@ -123,7 +135,7 @@ in
 
               ${
                 if
-                  config.stylix.targets.grub.useImage
+                  config.stylix.targets.grub.wallpaper
                 # Make sure the background image is .png by asking to convert it
                 then
                   "${pkgs.imagemagick}/bin/convert ${config.stylix.image} png32:$out/background.png"
