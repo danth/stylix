@@ -30,26 +30,26 @@
             in
             {
               palette = [
-                "0=${withHashtag.base03}"
+                "0=${withHashtag.base00}"
                 "1=${withHashtag.base08}"
                 "2=${withHashtag.base0B}"
                 "3=${withHashtag.base0A}"
                 "4=${withHashtag.base0D}"
-                "5=${withHashtag.base0F}"
+                "5=${withHashtag.base0E}"
                 "6=${withHashtag.base0C}"
                 "7=${withHashtag.base05}"
-                "8=${withHashtag.base04}"
+                "8=${withHashtag.base03}"
                 "9=${withHashtag.base08}"
                 "10=${withHashtag.base0B}"
                 "11=${withHashtag.base0A}"
                 "12=${withHashtag.base0D}"
-                "13=${withHashtag.base0F}"
+                "13=${withHashtag.base0E}"
                 "14=${withHashtag.base0C}"
-                "15=${withHashtag.base05}"
+                "15=${withHashtag.base07}"
               ];
               background = colors.base00;
               foreground = colors.base05;
-              cursor-color = colors.base06;
+              cursor-color = colors.base05;
               selection-background = colors.base02;
               selection-foreground = colors.base05;
             };
