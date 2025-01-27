@@ -13,12 +13,14 @@ let
         FONTCONFIG_FILE = pkgs.makeFontsConf { fontDirectories = [ font.package ]; };
       }
       ''
-        font=$(
+        font="$(
           ${lib.getExe' pkgs.fontconfig "fc-match"} \
           ${lib.escapeShellArg font.name} \
           --format %{file}
-        )
-        ln -s "$font" "$out"
+        )"
+
+
+        cp "$font" "$out"
       '';
   terminalFont = mkFont config.stylix.fonts.monospace;
 in
