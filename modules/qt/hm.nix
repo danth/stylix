@@ -27,11 +27,13 @@
         else
           config.stylix.iconTheme.light;
 
-      recommendedStyle = {
+      recommendedStyles = {
         gnome = if config.stylix.polarity == "dark" then "adwaita-dark" else "adwaita";
         kde = "breeze";
         qtct = "kvantum";
       };
+
+      recommendedStyle = recommendedStyles."${config.qt.platformTheme.name}" or null;
 
       kvantumPackage =
         let
@@ -47,20 +49,24 @@
         pkgs.runCommandLocal "base16-kvantum" { } ''
           directory="$out/share/Kvantum/Base16Kvantum"
           mkdir --parents "$directory"
-          ln -s ${kvconfig} "$directory/Base16Kvantum.kvconfig"
-          ln -s ${svg} "$directory/Base16Kvantum.svg"
+          cp ${kvconfig} "$directory/Base16Kvantum.kvconfig"
+          cp ${svg} "$directory/Base16Kvantum.svg"
         '';
     in
     {
       warnings =
-        lib.optional (config.stylix.targets.qt.platform != "qtct")
-          "stylix: qt: config.stylix.targets.qt.platform other than 'qtct' are currently unsupported: ${config.stylix.targets.qt.platform}. Support may be added in the future.";
+        (lib.optional (config.stylix.targets.qt.platform != "qtct")
+          "stylix: qt: `config.stylix.targets.qt.platform` other than 'qtct' are currently unsupported: ${config.stylix.targets.qt.platform}. Support may be added in the future."
+        )
+        ++ (lib.optional (config.qt.style.name != recommendedStyle)
+          "stylix: qt: Changing `config.qt.style` is unsupported and may result in breakage! Use with caution!"
+        );
 
       home.packages = lib.optional (config.qt.style.name == "kvantum") kvantumPackage;
 
       qt = {
         enable = true;
-        style.name = recommendedStyle."${config.qt.platformTheme.name}" or null;
+        style.name = recommendedStyle;
         platformTheme.name = config.stylix.targets.qt.platform;
       };
 

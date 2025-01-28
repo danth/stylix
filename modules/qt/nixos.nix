@@ -29,11 +29,12 @@ in
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
     stylix.targets.qt.platform =
-      if config.services.xserver.desktopManager.gnome.enable then
+      with config.services.xserver.desktopManager;
+      if gnome.enable && !(plasma5.enable || lxqt.enable) then
         lib.mkDefault "gnome"
-      else if config.services.xserver.desktopManager.plasma5.enable then
+      else if plasma5.enable && !(gnome.enable || lxqt.enable) then
         lib.mkDefault "kde"
-      else if config.services.xserver.desktopManager.lxqt.enable then
+      else if lxqt.enable && !(gnome.enable || plasma5.enable) then
         lib.mkDefault "lxqt"
       else
         lib.mkDefault "qtct";
