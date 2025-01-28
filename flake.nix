@@ -24,11 +24,7 @@
     };
 
     base16.url = "github:SenchoPens/base16.nix";
-
-    flake-compat = {
-      flake = false;
-      url = "github:edolstra/flake-compat";
-    };
+    flake-compat.url = "github:edolstra/flake-compat";
 
     flake-utils = {
       inputs.systems.follows = "systems";
