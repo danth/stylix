@@ -39,7 +39,7 @@ in
   };
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
-    programs.waybar.style =
+    programs.waybar.style = lib.mkBefore (
       ''
         @define-color base00 ${base00}; @define-color base01 ${base01}; @define-color base02 ${base02}; @define-color base03 ${base03};
         @define-color base04 ${base04}; @define-color base05 ${base05}; @define-color base06 ${base06}; @define-color base07 ${base07};
@@ -84,6 +84,7 @@ in
           else
             colorlessModules "right"
         )
-      );
+      )
+    );
   };
 }
