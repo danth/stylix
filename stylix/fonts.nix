@@ -22,6 +22,22 @@ let
     };
   };
 
+  unitsDoc = ''
+    This is measured in [points](https://en.wikipedia.org/wiki/Point_(typography)).
+    In a computing context, there should be 72 points per inch.
+
+    [The CSS specification](https://drafts.csswg.org/css-values/#absolute-lengths)
+    says there should be 96 reference pixels per inch. These are not always
+    equal to one physical pixel, but it means CSS uses a fixed ratio of 3
+    points to every 4 pixels, which is sometimes useful.
+
+    Other programs might measure in physical pixels, which makes the previously
+    mentioned conversion invalid.
+
+    The measurements in inches are likely to be incorrect unless you've
+    [carefully configured your DPI](https://linuxreviews.org/HOWTO_set_DPI_in_Xorg).
+  '';
+
 in
 {
   options.stylix.fonts = {
@@ -64,8 +80,10 @@ in
     sizes = {
       desktop = lib.mkOption {
         description = ''
-          The font size (in pt) used in window titles/bars/widgets elements of
-          the desktop.
+          The font size used in window titles/bars/widgets elements of the
+          desktop.
+
+          ${unitsDoc}
         '';
         type = with lib.types; (either ints.unsigned float);
         default = 10;
@@ -73,7 +91,9 @@ in
 
       applications = lib.mkOption {
         description = ''
-          The font size (in pt) used by applications.
+          The font size used by applications.
+
+          ${unitsDoc}
         '';
         type = with lib.types; (either ints.unsigned float);
         default = 12;
@@ -81,7 +101,9 @@ in
 
       terminal = lib.mkOption {
         description = ''
-          The font size (in pt) for terminals/text editors.
+          The font size for terminals/text editors.
+
+          ${unitsDoc}
         '';
         type = with lib.types; (either ints.unsigned float);
         default = cfg.sizes.applications;
@@ -89,8 +111,10 @@ in
 
       popups = lib.mkOption {
         description = ''
-          The font size (in pt) for notifications/popups and in general overlay
+          The font size for notifications/popups and in general overlay
           elements of the desktop.
+
+          ${unitsDoc}
         '';
         type = with lib.types; (either ints.unsigned float);
         default = cfg.sizes.desktop;
