@@ -2,7 +2,7 @@
 with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
-  cfg = config.style.targets.waybar;
+  cfg = config.stylix.targets.waybar;
   colorlessModules = place: ''
     .modules-${place} #workspaces button {
         border-bottom: 3px solid transparent;
