@@ -304,10 +304,14 @@ in
       type = lib.types.str;
       default = "org.kde.breeze";
       description = ''
-        The library for the window decorations theme. Decorations other than default
-        `org.kde.breeze` may not be compatible with stylix. To view all available
-        values, see the `library` key in the `org.kde.kdecoration2` section of `$HOME/.config/kwinrc`
-        after imperatively applying the window decoration via the System Settings app.
+        The library for the window decorations theme.
+
+        Decorations other than default `org.kde.breeze` may not be compatible
+        with stylix.
+
+        To list all available decorations, see the `library` key in the
+        `org.kde.kdecoration2` section of `$HOME/.config/kwinrc` after
+        imperatively applying the window decoration via the System Settings app.
       '';
     };
   };
