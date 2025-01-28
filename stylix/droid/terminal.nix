@@ -22,10 +22,10 @@
       color9 = color1;
       color10 = color2;
       color11 = color3;
-      color12 = color4;
+      color12 = color2;
       color13 = color5;
       color14 = color6;
-      color15 = base07;
+      color15 = color4;
     };
   };
 }
