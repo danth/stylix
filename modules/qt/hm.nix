@@ -13,8 +13,6 @@
 
         Defaults to the standard platform theme used in the configured DE in NixOS when
         `stylix.homeManagerIntegration.followSystem = true`.
-
-        Fallback to qtct.
       '';
       type = lib.types.str;
       default = "qtct";

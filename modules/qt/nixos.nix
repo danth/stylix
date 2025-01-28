@@ -22,11 +22,8 @@ in
         Selects the platform theme to use for Qt applications.
 
         Defaults to the standard platform used in the configured DE.
-
-        Fallback to qtct.
       '';
       type = lib.types.str;
-      default = "qtct";
     };
   };
 
