@@ -6,8 +6,10 @@
 }:
 
 {
-  options.stylix.targets.regreet.enable =
-    config.lib.stylix.mkEnableTarget "ReGreet" true;
+  options.stylix.targets.regreet = {
+    enable = config.lib.stylix.mkEnableTarget "ReGreet" true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "ReGreet" true;
+  };
 
   config =
     lib.mkIf
@@ -32,7 +34,7 @@
             "stylix: regreet: custom services.greetd.settings.default_session.command value may not work: ${config.services.greetd.settings.default_session.command}";
         programs.regreet = {
           settings.GTK.application_prefer_dark_theme = config.stylix.polarity == "dark";
-          settings.background = {
+          settings.background = lib.mkIf config.stylix.targets.regreet.wallpaper {
             path = config.stylix.image;
             fit =
               let

@@ -6,8 +6,10 @@
 }:
 
 {
-  options.stylix.targets.feh.enable =
-    config.lib.stylix.mkEnableTarget "the desktop background using Feh" true;
+  options.stylix.targets.feh = {
+    enable = config.lib.stylix.mkEnableTarget "the desktop background using Feh" true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "Feh" true;
+  };
 
   config.services.xserver.displayManager.sessionCommands =
     lib.mkIf

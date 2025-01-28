@@ -31,17 +31,30 @@
     };
   };
 
-  config.lib.stylix.mkEnableTarget =
+  config.lib.stylix =
     let
       cfg = config.stylix;
     in
-    humanName: autoEnable:
-    lib.mkEnableOption "theming for ${humanName}"
-    // {
-      default = cfg.enable && cfg.autoEnable && autoEnable;
-      example = !autoEnable;
-    }
-    // lib.optionalAttrs autoEnable {
-      defaultText = lib.literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
+    {
+      mkEnableTarget =
+        humanName: autoEnable:
+        lib.mkEnableOption "theming for ${humanName}"
+        // {
+          default = cfg.enable && cfg.autoEnable && autoEnable;
+          example = !autoEnable;
+        }
+        // lib.optionalAttrs autoEnable {
+          defaultText = lib.literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
+        };
+      mkEnableWallpaper =
+        humanName: autoEnable:
+        lib.mkOption {
+          default = (config.stylix.image != null) && autoEnable;
+          example = config.stylix.image == null;
+          description = "Whether to set the wallpaper for ${humanName}";
+        }
+        // lib.optionalAttrs autoEnable {
+          defaultText = lib.literalMD "same as setting `stylix.image`";
+        };
     };
 }

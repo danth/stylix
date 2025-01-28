@@ -1,11 +1,18 @@
 { config, lib, ... }:
 
 {
-  options.stylix.targets.wpaperd.enable =
-    config.lib.stylix.mkEnableTarget "wpaperd" true;
+  options.stylix.targets.wpaperd = {
+    enable = config.lib.stylix.mkEnableTarget "wpaperd" true;
+    wallpaper = config.lib.stylix.mkEnableWallpaper "wpaperd" true;
+  };
 
   config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.wpaperd.enable)
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.targets.wpaperd.enable
+        && config.stylix.targets.wpaperd.wallpaper
+      )
       (
         let
           inherit (config.stylix) imageScalingMode;
