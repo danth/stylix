@@ -49,7 +49,7 @@ in
 
         * {
             font-family: "${sansSerif.name}";
-            font-size: ${builtins.toString sizes.desktop}pt;
+            font-size: ${builtins.toString sizes.desktop}px;
         }
       ''
       + lib.optionalString cfg.addCss (
