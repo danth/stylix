@@ -20,7 +20,20 @@ in
     lib.mkIf (config.stylix.enable && cfg.enable && (config.programs ? nixcord))
       (
         lib.optionalAttrs (builtins.hasAttr "nixcord" options.programs) {
-          xdg.configFile."Vencord/themes/stylix.theme.css".source = themeFile;
+          xdg.configFile =
+            let
+              inherit (config.programs) nixcord;
+            in
+            lib.mkMerge [
+              (lib.mkIf nixcord.discord.enable {
+                "Vencord/themes/stylix.theme.css".source = themeFile;
+              })
+
+              (lib.mkIf nixcord.vesktop.enable {
+                "vesktop/themes/stylix.theme.css".source = themeFile;
+              })
+            ];
+
           programs.nixcord.config.enabledThemes = [ themeFileName ];
         }
       );
