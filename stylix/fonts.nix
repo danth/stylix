@@ -75,15 +75,15 @@ in
               In a computing context, there should be 72 points per inch.
 
               [The CSS specification](https://drafts.csswg.org/css-values/#absolute-lengths)
-              says there should be 96 reference pixels per inch. These are not always
-              equal to one physical pixel, but it means CSS uses a fixed ratio of 3
-              points to every 4 pixels, which is sometimes useful.
+              says there should be 96 reference pixels per inch. This means CSS
+              uses a fixed ratio of 3 points to every 4 pixels, which is
+              sometimes useful. However, reference pixels might not correspond
+              to physical pixels, so this conversion may be invalid for other
+              applications.
 
-              Other programs might measure in physical pixels, which makes the
-              previously mentioned conversion invalid.
-
-              The measurements in inches are likely to be incorrect unless you've
-              [carefully configured your DPI](https://linuxreviews.org/HOWTO_set_DPI_in_Xorg).
+              The measurements given in inches are likely to be incorrect
+              unless you've
+              [manually set your DPI](https://linuxreviews.org/HOWTO_set_DPI_in_Xorg).
             '';
 
             type = with lib.types; either ints.unsigned float;
