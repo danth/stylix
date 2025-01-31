@@ -19,17 +19,16 @@ let
     default: withImage:
     let
       satisfies = check: (check default) && (check withImage);
-      hasImage = image != null;
-      addImage = fn: fn hasImage withImage;
     in
-    if !hasImage then
+    # TODO: when adding `wallpaper` option to this module, replace this with `image == null || !cfg.wallpaper`
+    if image == null then
       default
     else if satisfies lib.isString then
-      default + (addImage lib.optionalString)
+      default + withImage
     else if satisfies lib.isAttrs then
-      default // (addImage lib.optionalAttrs)
+      default // withImage
     else if satisfies lib.isList then
-      default ++ (addImage lib.optional)
+      default ++ withImage
     else
       throw "unreachable (image merge in stylix KDE module)";
 
