@@ -282,7 +282,7 @@ let
           return 0
         fi
       done
-      echo "Skipping `$1`: command not found"
+      echo "Skipping '$1': command not found"
       return 1
     }
 
