@@ -96,7 +96,7 @@
 
           (lib.mkIf (config.qt.platformTheme.name == "qtct") {
             "qt5ct/qt5ct.conf".text = qtctConf;
-            "qt5ct/qt6ct.conf".text = qtctConf;
+            "qt6ct/qt6ct.conf".text = qtctConf;
           })
         ];
     }
