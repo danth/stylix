@@ -19,7 +19,6 @@ let
           --format %{file}
         )"
 
-
         cp "$font" "$out"
       '';
   terminalFont = mkFont config.stylix.fonts.monospace;
