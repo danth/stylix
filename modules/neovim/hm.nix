@@ -28,6 +28,15 @@
         programs.neovim =
           let
             cfg = config.stylix.targets.neovim;
+            transparencyCfg = builtins.toString (
+              lib.optional cfg.transparentBackground.main ''
+                vim.cmd.highlight({ "Normal", "guibg=NONE", "ctermbg=NONE" })
+                vim.cmd.highlight({ "NonText", "guibg=NONE", "ctermbg=NONE" })
+              ''
+              ++ lib.optional cfg.transparentBackground.signColumn ''
+                vim.cmd.highlight({ "SignColumn", "guibg=NONE", "ctermbg=NONE" })
+              ''
+            );
           in
           {
             plugins = [
@@ -41,6 +50,8 @@
                     base08 = '${base08}', base09 = '${base09}', base0A = '${base0A}', base0B = '${base0B}',
                     base0C = '${base0C}', base0D = '${base0D}', base0E = '${base0E}', base0F = '${base0F}'
                   })
+
+                  ${transparencyCfg}
                 '';
               })
               (lib.mkIf (cfg.plugin == "mini.base16") {
@@ -55,18 +66,10 @@
                       base0C = '${base0C}', base0D = '${base0D}', base0E = '${base0E}', base0F = '${base0F}'
                     }
                   })
+
+                  ${transparencyCfg}
                 '';
               })
-            ];
-
-            extraLuaConfig = lib.mkMerge [
-              (lib.mkIf cfg.transparentBackground.main ''
-                vim.cmd.highlight({ "Normal", "guibg=NONE", "ctermbg=NONE" })
-                vim.cmd.highlight({ "NonText", "guibg=NONE", "ctermbg=NONE" })
-              '')
-              (lib.mkIf cfg.transparentBackground.signColumn ''
-                vim.cmd.highlight({ "SignColumn", "guibg=NONE", "ctermbg=NONE" })
-              '')
             ];
           };
       };
