@@ -11,6 +11,26 @@ let
     colors
     mkEnableTarget
     ;
+  inherit (config.stylix)
+    image
+    ;
+
+  mergeWithImage =
+    default: withImage:
+    let
+      satisfies = check: (check default) && (check withImage);
+    in
+    # TODO: when adding `wallpaper` option to this module, replace this with `image == null || !cfg.wallpaper`
+    if image == null then
+      default
+    else if satisfies lib.isString then
+      default + withImage
+    else if satisfies lib.isAttrs then
+      default // withImage
+    else if satisfies lib.isList then
+      default ++ withImage
+    else
+      throw "unreachable (image merge in stylix KDE module)";
 
   formatValue =
     value:
@@ -141,17 +161,18 @@ let
     };
   };
 
+  Id = "stylix";
+  Name = "Stylix";
+
   wallpaperMetadata = {
     KPlugin = {
-      Id = "stylix";
-      Name = "Stylix";
+      inherit Id Name;
     };
   };
 
   lookAndFeelMetadata = {
     KPlugin = {
-      Id = "stylix";
-      Name = "Stylix";
+      inherit Id Name;
       Description = "Generated from your Home Manager configuration";
       ServiceTypes = [ "Plasma/LookAndFeel" ];
       Website = "https://github.com/danth/stylix";
@@ -159,59 +180,69 @@ let
     KPackageStructure = "Plasma/LookAndFeel";
   };
 
-  lookAndFeelDefaults = {
-    kwinrc."org.kde.kdecoration2".library = cfg.decorations;
-    plasmarc.Theme.name = "default";
+  lookAndFeelDefaults =
+    mergeWithImage
+      {
+        kwinrc."org.kde.kdecoration2".library = cfg.decorations;
+        plasmarc.Theme.name = "default";
 
-    kdeglobals = {
-      KDE.widgetStyle = "Breeze";
-      General.ColorScheme = colorschemeSlug;
-    };
+        kdeglobals = {
+          KDE.widgetStyle = "Breeze";
+          General.ColorScheme = colorschemeSlug;
+        };
+      }
+      {
+        # This only takes effect on the first login.
+        Wallpaper.Image = Id;
+      };
 
-    # This only takes effect on the first login.
-    Wallpaper.Image = "stylix";
-  };
-
-  # Contains a wallpaper package, a colorscheme file, and a look and feel
+  # Contains an optional wallpaper package, a colorscheme file, and a look and feel
   # package which depends on both.
   themePackage =
     pkgs.runCommandLocal "stylix-kde-theme"
-      {
-        colorscheme = formatConfig colorscheme;
-        wallpaperMetadata = builtins.toJSON wallpaperMetadata;
-        wallpaperImage = config.stylix.image;
-        lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
-        lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
-      }
-      ''
-        write_text() {
-          mkdir --parents "$(dirname "$2")"
-          printf '%s\n' "$1" >"$2"
+      (mergeWithImage
+        {
+          colorscheme = formatConfig colorscheme;
+          lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
+          lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
         }
+        {
+          wallpaperMetadata = builtins.toJSON wallpaperMetadata;
+          wallpaperImage = image;
+        }
+      )
+      (
+        mergeWithImage
+          ''
+            write_text() {
+              mkdir --parents "$(dirname "$2")"
+              printf '%s\n' "$1" >"$2"
+            }
 
-        PATH="${pkgs.imagemagick}/bin:$PATH"
+            wallpaper="$out/share/wallpapers/${Id}"
+            look_and_feel="$out/share/plasma/look-and-feel/${Id}"
+            colorschemePath="$out/share/color-schemes/${colorschemeSlug}.colors"
 
-        wallpaper="$out/share/wallpapers/stylix"
-        look_and_feel="$out/share/plasma/look-and-feel/stylix"
+            write_text "$colorscheme" "$colorschemePath"
+            write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
+            write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
+          ''
+          ''
+            PATH="${pkgs.imagemagick}/bin:$PATH"
 
-        mkdir --parents "$wallpaper/contents/images"
+            mkdir --parents "$wallpaper/contents/images"
 
-        magick \
-          "$wallpaperImage" \
-          -thumbnail 400x250 \
-          "$wallpaper/contents/screenshot.png"
+            magick \
+              "$wallpaperImage" \
+              -thumbnail 400x250 \
+              "$wallpaper/contents/screenshot.png"
 
-        dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
-        magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+            dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
+            magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
 
-        write_text \
-          "$colorscheme" \
-          "$out/share/color-schemes/${colorschemeSlug}.colors"
-
-        write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
-        write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
-        write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
-      '';
+            write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
+          ''
+      );
 
   # The cursor theme can be configured through a look and feel package,
   # however its size cannot.
@@ -232,7 +263,7 @@ let
   };
 
   kdeglobals = {
-    KDE.LookAndFeelPackage = makeImmutable "stylix";
+    KDE.LookAndFeelPackage = makeImmutable Id;
 
     General = with config.stylix.fonts; rec {
       font = makeImmutable "${sansSerif.name},${toString sizes.applications},-1,5,50,0,0,0,0,0";
@@ -273,27 +304,31 @@ let
   # might be installed, and look there. The ideal solution would require
   # changes to KDE to make it possible to update the wallpaper through
   # config files alone.
-  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" ''
-    set -eu
-    get_exe() {
-      for directory in /run/current-system/sw/bin /usr/bin /bin; do
-        if [[ -f "$directory/$1" ]]; then
-          printf '%s\n' "$directory/$1"
-          return 0
+  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" (
+    mergeWithImage
+      ''
+        set -eu
+        get_exe() {
+          for directory in /run/current-system/sw/bin /usr/bin /bin; do
+            if [[ -f "$directory/$1" ]]; then
+              printf '%s\n' "$directory/$1"
+              return 0
+            fi
+          done
+          echo "Skipping '$1': command not found"
+          return 1
+        }
+
+        if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
+          "$look_and_feel" --apply "${Id}"
         fi
-      done
-      echo "Skipping '$1': command not found"
-      return 1
-    }
-
-    if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
-      "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-    fi
-
-    if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
-      "$look_and_feel" --apply stylix
-    fi
-  '';
+      ''
+      ''
+        if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
+          "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}"
+        fi
+      ''
+  );
   activator = lib.getExe activator';
 in
 {
