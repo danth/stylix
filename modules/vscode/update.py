@@ -6,7 +6,7 @@
 #
 # New settings are null by default. VSCode can handle this gracefully, but
 # normally a value should be chosen before committing the update.
-# 
+#
 # This only updates 'colors' and not 'tokenColors' for now.
 
 import json
