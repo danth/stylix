@@ -192,7 +192,7 @@ to customize this.
 > There is a special case involving the
 > [`stylix.base16Scheme`](options/nixos.md#stylixbase16scheme)
 > option:
-> 
+>
 > If the wallpaper in a Home Manager configuration is changed, then Home Manager
 > will stop inheriting the color scheme from NixOS. This allows Home Manager
 > configurations to use the automatic palette generator without being overridden.
