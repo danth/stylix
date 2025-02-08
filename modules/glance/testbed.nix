@@ -1,13 +1,12 @@
 { lib, pkgs, ... }:
-
 let
   host = "127.0.0.1";
-  port = 1234;
+
   package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
-    extraPolicies.OverrideFirstRunPage =
-      "http://" + host + ":" + (builtins.toString port);
+    extraPolicies.OverrideFirstRunPage = "http://${host}:${builtins.toString port}";
   };
 
+  port = 1234;
 in
 {
   stylix.testbed.application = {
@@ -21,67 +20,65 @@ in
       enable = true;
       inherit package;
     };
+
     services.glance = {
       enable = true;
+
       settings = {
-        server = {
-          inherit host port;
+        pages = lib.singleton {
+          columns = [
+            {
+              size = "small";
+
+              widgets = lib.singleton {
+                hide-location = false;
+                hour-format = "24h";
+                location = "Tokyo, Japan";
+                show-area-name = true;
+                type = "weather";
+                units = "metric";
+              };
+            }
+
+            {
+              size = "full";
+
+              widgets = [
+                {
+                  autofocus = true;
+                  search-engine = "https://github.com/NixOS/nixpkgs/pulls?q=is%3Apr+is%3Aopen+{QUERY}";
+                  type = "search";
+                }
+
+                {
+                  type = "group";
+
+                  widgets = lib.singleton {
+                    collapse-after = 15;
+
+                    feeds = lib.singleton {
+                      title = "LessWrong";
+                      url = "https://www.lesswrong.com/feed.xml?view=curated-rss";
+                    };
+
+                    style = "vertical-list";
+                    type = "rss";
+                  };
+                }
+              ];
+            }
+
+            {
+              size = "small";
+              widgets = [ { type = "calendar"; } ];
+            }
+          ];
+
+          name = "Home";
         };
-        pages = [
-          {
-            name = "Home";
-            columns = [
-              {
-                size = "small";
-                widgets = [
-                  {
-                    type = "weather";
-                    units = "metric";
-                    hour-format = "24h";
-                    hide-location = false;
-                    show-area-name = true;
-                    location = "Tokyo, Japan";
-                  }
-                ];
-              }
-              {
-                size = "full";
-                widgets = [
-                  {
-                    type = "search";
-                    autofocus = true;
-                    search-engine = "https://github.com/NixOS/nixpkgs/pulls?q=is%3Apr+is%3Aopen+{QUERY}";
-                  }
-                  {
-                    type = "group";
-                    widgets = [
 
-                      {
-                        type = "rss";
-                        style = "vertical-list";
-                        collapse-after = 15;
-                        feeds = [
-                          {
-                            url = "https://www.lesswrong.com/feed.xml?view=curated-rss";
-                            title = "LessWrong";
-                          }
-                        ];
-                      }
-                    ];
-                  }
-                ];
-              }
-              {
-                size = "small";
-                widgets = [
-                  { type = "calendar"; }
-                ];
-              }
-            ];
-          }
-        ];
+        server = { inherit host port; };
       };
-
     };
   };
 }
