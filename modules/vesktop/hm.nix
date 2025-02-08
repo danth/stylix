@@ -5,10 +5,20 @@
   ...
 }:
 let
-  themeFile = config.lib.stylix.colors {
-    template = ../vencord/template.mustache;
-    extension = ".css";
-  };
+  themeText =
+    builtins.readFile (
+      config.lib.stylix.colors {
+        template = ../vencord/template.mustache;
+        extension = ".css";
+      }
+    )
+    + ''
+      :root {
+          --font-primary: ${config.stylix.fonts.sansSerif.name};
+          --font-display: ${config.stylix.fonts.sansSerif.name};
+          --font-code: ${config.stylix.fonts.monospace.name};
+      }
+    '';
 in
 {
   options.stylix.targets.vesktop.enable =
@@ -19,12 +29,12 @@ in
       (
         lib.mkMerge [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-            xdg.configFile."vesktop/themes/stylix.theme.css".source = themeFile;
+            xdg.configFile."vesktop/themes/stylix.theme.css".text = themeText;
           })
 
           (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".source =
-              themeFile;
+            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".text =
+              themeText;
           })
         ]
       );
