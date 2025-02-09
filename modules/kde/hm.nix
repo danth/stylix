@@ -304,31 +304,44 @@ let
   # might be installed, and look there. The ideal solution would require
   # changes to KDE to make it possible to update the wallpaper through
   # config files alone.
-  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" (
-    mergeWithImage
-      ''
-        set -eu
-        get_exe() {
-          for directory in /run/current-system/sw/bin /usr/bin /bin; do
-            if [[ -f "$directory/$1" ]]; then
-              printf '%s\n' "$directory/$1"
-              return 0
-            fi
-          done
-          echo "Skipping '$1': command not found"
-          return 1
-        }
+  activator' = pkgs.writeShellApplication {
+    name = "stylix-set-kde-wallpaper";
+    text =
+      mergeWithImage
+        ''
+          global_path() {
+            for directory in /run/current-system/sw/bin /usr/bin /bin; do
+              if [[ -f "$directory/$1" ]]; then
+                printf '%s\n' "$directory/$1"
+                return 0
+              fi
+            done
 
-        if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
-          "$look_and_feel" --apply "${Id}"
-        fi
-      ''
-      ''
-        if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
-          "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}"
-        fi
-      ''
-  );
+            return 1
+          }
+
+          xvfb_prefix=
+          if [ -z "''${DISPLAY:-}" ]; then
+            echo "Stylix KDE activator: DISPLAY unset, using xvfb-run for virtual X11 session."
+            xvfb_prefix=${lib.getExe pkgs.xvfb-run}
+          fi
+
+          if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+            "$xvfb_prefix" "$look_and_feel" --apply "${Id}" || \
+              echo "Failed plasma-apply-lookandfeel, ignoring error."
+          else
+            echo "Skipping plasma-apply-lookandfeel: command not found"
+          fi
+        ''
+        ''
+          if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+            "$xvfb_prefix" "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" || \
+              echo "Failed plasma-apply-wallpaperimage, ignoring error."
+          else
+            echo "Skipping plasma-apply-wallpaperimage: command not found"
+          fi
+        '';
+  };
   activator = lib.getExe activator';
 in
 {
