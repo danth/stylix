@@ -1,6 +1,7 @@
 center_x = Window.GetWidth() / 2;
 center_y = Window.GetHeight() / 2;
 baseline_y = Window.GetHeight() * 0.9;
+message_y = Window.GetHeight() * 0.75;
 
 
 ### BACKGROUND ###
@@ -116,6 +117,22 @@ fun question_callback(prompt_text, entry) {
 
 Plymouth.SetDisplayQuestionFunction(question_callback);
 
+### MESSAGE ###
+
+message = null;
+
+fun message_callback(text) {
+    message.image = Image.Text(text, %BASE05%);
+    message.sprite = Sprite(message.image);
+    message.sprite.SetPosition(
+        center_x - message.image.GetWidth() / 2, 
+        message_y,
+        1
+    );
+}
+
+Plymouth.SetMessageFunction(message_callback);
+
 ### NORMAL ###
 
 fun normal_callback() {
@@ -124,6 +141,8 @@ fun normal_callback() {
 
     question = null;
     answer = null;
+
+    message = null;
 
     activate_spinner();
 }
@@ -138,6 +157,8 @@ fun quit_callback() {
 
   question = null;
   answer = null;
+
+  message = null; 
   
   deactivate_spinner();
 }
