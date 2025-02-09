@@ -50,12 +50,42 @@ fun password_callback (prompt_text, bullet_count) {
 
 Plymouth.SetDisplayPasswordFunction(password_callback);
 
+### QUESTION ###
+
+question = null;
+answer = null;
+
+fun question_callback(prompt_text, entry) {
+    question = null;
+    answer = null;
+
+    question.image = Image.Text(prompt_text, %BASE05%);
+    question.sprite = Sprite(question.image);
+    question.sprite.SetPosition(
+        center_x - (question.image.GetWidth() / 2),
+        baseline_y - question.image.GetHeight(),
+        1
+    );
+
+    answer.image = Image.Text(entry, %BASE05%);
+    answer.sprite = Sprite(answer.image);
+    answer.sprite.SetPosition(
+        center_x - (answer.image.GetWidth() / 2),
+        baseline_y + answer.image.GetHeight(),
+        1
+    );
+}
+
+Plymouth.SetDisplayQuestionFunction(question_callback);
 
 ### NORMAL ###
 
 fun normal_callback() {
     prompt = null;
     bullets = null;
+
+    question = null;
+    answer = null;
 }
 
 Plymouth.SetDisplayNormalFunction(normal_callback);
@@ -66,6 +96,9 @@ Plymouth.SetDisplayNormalFunction(normal_callback);
 fun quit_callback() {
   prompt = null;
   bullets = null;
+
+  question = null;
+  answer = null;
 }
 
 Plymouth.SetQuitFunction(quit_callback);
