@@ -19,7 +19,7 @@
     };
   };
 
-  config = lib.mkIf config.stylix.targets.qt.enable (
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) (
     let
       iconTheme =
         if (config.stylix.polarity == "dark") then
