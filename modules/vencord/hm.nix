@@ -1,19 +1,9 @@
 { config, lib, ... }:
 let
-  themeText =
-    builtins.readFile (
-      config.lib.stylix.colors {
-        template = ./template.mustache;
-        extension = ".css";
-      }
-    )
-    + ''
-      :root {
-          --font-primary: ${config.stylix.fonts.sansSerif.name};
-          --font-display: ${config.stylix.fonts.sansSerif.name};
-          --font-code: ${config.stylix.fonts.monospace.name};
-      }
-    '';
+  themeFile = config.lib.stylix.colors {
+    template = ./template.mustache;
+    extension = ".css";
+  };
 in
 {
   options.stylix.targets.vencord.enable =
@@ -22,6 +12,6 @@ in
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.vencord.enable)
       {
-        xdg.configFile."Vencord/themes/stylix.theme.css".text = themeText;
+        xdg.configFile."Vencord/themes/stylix.theme.css".source = themeFile;
       };
 }
