@@ -1,9 +1,11 @@
 { config, lib, ... }:
 let
-  themeFile = config.lib.stylix.colors {
-    template = ./template.mustache;
-    extension = ".css";
-  };
+  template =
+    let
+      inherit (config.lib.stylix) colors;
+      inherit (config.stylix) fonts;
+    in
+    import ./template.nix { inherit colors fonts; };
 in
 {
   options.stylix.targets.vencord.enable =
@@ -12,6 +14,6 @@ in
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.vencord.enable)
       {
-        xdg.configFile."Vencord/themes/stylix.theme.css".source = themeFile;
+        xdg.configFile."Vencord/themes/stylix.theme.css".text = template;
       };
 }
