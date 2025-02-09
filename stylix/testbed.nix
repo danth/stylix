@@ -132,12 +132,14 @@ let
   makeTestbed =
     testbed: stylix:
     let
-      name = builtins.concatStringsSep testbedFieldSeparator [
-        "testbed"
-        testbed.module
-        testbed.name
-        stylix.polarity
-      ];
+      name =
+        builtins.concatStringsSep testbedFieldSeparator [
+          "testbed"
+          testbed.module
+          testbed.name
+          stylix.polarity
+        ]
+        ++ lib.optional (stylix.image == null) "imageless";
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
@@ -203,11 +205,15 @@ let
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
         polarity = "dark";
       }
+      {
+        enable = true;
+        image = null;
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      }
     ];
 
 in
 # Testbeds are merged using lib.attrsets.unionOfDisjoint to throw an error if
 # testbed names collide.
-builtins.foldl' lib.attrsets.unionOfDisjoint { } (
-  lib.flatten (map makeTestbeds autoload)
-)
+builtins.foldl' lib.attrsets.unionOfDisjoint { } (lib.flatten (map makeTestbeds autoload))

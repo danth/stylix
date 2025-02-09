@@ -4,16 +4,20 @@
   lib,
   ...
 }:
-
+let
+  cfg = config.stylix.targets.feh;
+in
 {
-  options.stylix.targets.feh.enable =
-    config.lib.stylix.mkEnableTarget "the desktop background using Feh" true;
+  options.stylix.targets.feh = {
+    enable = config.lib.stylix.mkEnableTarget "the desktop background using Feh" true;
+    useWallpaper = config.lib.stylix.mkEnableWallpaper "Feh" true;
+  };
 
   config.services.xserver.displayManager.sessionCommands =
     lib.mkIf
       (
         config.stylix.enable
-        && config.stylix.targets.feh.enable
+        && cfg.enable
         && (with config.services.xserver.windowManager; xmonad.enable || i3.enable)
       )
       (
@@ -32,6 +36,6 @@
             else
               "--bg-max";
         in
-        "${pkgs.feh}/bin/feh --no-fehbg ${bg-arg} ${config.stylix.image}"
+        lib.optionalString cfg.useWallpaper "${pkgs.feh}/bin/feh --no-fehbg ${bg-arg} ${config.stylix.image}"
       );
 }
