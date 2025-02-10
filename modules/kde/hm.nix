@@ -189,7 +189,6 @@ let
         kdeglobals = {
           KDE.widgetStyle = "Breeze";
           General.ColorScheme = colorschemeSlug;
-          UiSettings.ColorScheme = colorschemeSlug;
         };
       }
       {
@@ -275,6 +274,8 @@ let
       toolBarFont = desktopFont;
       smallestReadableFont = desktopFont;
     };
+
+    UiSettings.ColorScheme = colorschemeSlug;
   };
 
   configPackage =
