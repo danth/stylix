@@ -106,8 +106,8 @@ a similar fashion to NixOS via [Flakes][nix-flakes].
 <small>Minimal `flake.nix` for a Nix-on-Droid configuration.</small>
 
 This will apply your configured color scheme and monospace font to the
-nix-on-droid terminal. If
-[Home Manager integration for Nix-on-Droid](https://github.com/nix-community/nix-on-droid#home-manager-integration)
+nix-on-droid terminal. If [Home Manager integration for
+Nix-on-Droid](https://github.com/nix-community/nix-on-droid#home-manager-integration)
 is used, Stylix will automatically set up the [Home Manager][nix-hm] modules for
 you.
 
