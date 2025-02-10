@@ -5,11 +5,12 @@
   ...
 }:
 let
-  themeFile = config.lib.stylix.colors {
-    template = ../vencord/template.mustache;
-    extension = ".css";
-  };
-  themeFileName = "stylix.theme.css";
+  template =
+    let
+      inherit (config.lib.stylix) colors;
+      inherit (config.stylix) fonts;
+    in
+    import ../vencord/template.nix { inherit colors fonts; };
   cfg = config.stylix.targets.nixcord;
 in
 {
@@ -26,15 +27,15 @@ in
             in
             lib.mkMerge [
               (lib.mkIf nixcord.discord.enable {
-                "Vencord/themes/stylix.theme.css".source = themeFile;
+                "Vencord/themes/stylix.theme.css".text = template;
               })
 
               (lib.mkIf nixcord.vesktop.enable {
-                "vesktop/themes/stylix.theme.css".source = themeFile;
+                "vesktop/themes/stylix.theme.css".text = template;
               })
             ];
 
-          programs.nixcord.config.enabledThemes = [ themeFileName ];
+          programs.nixcord.config.enabledThemes = [ "stylix.theme.css" ];
         }
       );
 }
