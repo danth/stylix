@@ -189,6 +189,7 @@ let
         kdeglobals = {
           KDE.widgetStyle = "Breeze";
           General.ColorScheme = colorschemeSlug;
+          UiSettings.ColorScheme = colorschemeSlug;
         };
       }
       {
