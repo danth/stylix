@@ -274,6 +274,8 @@ let
       toolBarFont = desktopFont;
       smallestReadableFont = desktopFont;
     };
+
+    UiSettings.ColorScheme = colorschemeSlug;
   };
 
   configPackage =
