@@ -122,7 +122,7 @@ in
             })
             {
               programs.nixvim = {
-                highlight =
+                highlightOverride =
                   let
                     transparent = {
                       bg = "none";
