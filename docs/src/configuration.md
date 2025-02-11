@@ -94,10 +94,11 @@ To set a wallpaper, provide a path or an arbitrary derivation:
   }
   ```
 
-If `stylix.base16Scheme` is undeclared, Stylix generates a color scheme based
-on the wallpaper using a [genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
-Note that more colorful images tend to yield better results. The algorithm's
-polarity can be schewed towards a dark or light theme with:
+If `stylix.base16Scheme` is undeclared, Stylix generates a color scheme based on
+the wallpaper using a [genetic
+algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm). Note that more
+colorful images tend to yield better results. The algorithm's polarity can be
+schewed towards a dark or light theme with:
 
 - ```nix
   {
