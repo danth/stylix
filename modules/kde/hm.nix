@@ -323,7 +323,7 @@ let
           }
 
           if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
-            "$xvfb_prefix" "$look_and_feel" --apply "${Id}" || \
+            "$look_and_feel" --apply "${Id}" ||
               echo "Failed plasma-apply-lookandfeel, ignoring error."
           else
             echo "Skipping plasma-apply-lookandfeel: command not found"
@@ -331,7 +331,7 @@ let
         ''
         ''
           if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-            "$xvfb_prefix" "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" || \
+            "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" ||
               echo "Failed plasma-apply-wallpaperimage, ignoring error."
           else
             echo "Skipping plasma-apply-wallpaperimage: command not found"
