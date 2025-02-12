@@ -304,8 +304,10 @@ let
   # might be installed, and look there. The ideal solution would require
   # changes to KDE to make it possible to update the wallpaper through
   # config files alone.
-  activator' = pkgs.writeShellApplication {
-    name = "stylix-set-kde-wallpaper";
+  #
+  # This contains just the activator which must be run in a graphical session
+  activatorRequiringGraphicalSession = pkgs.writeShellApplication {
+    name = "stylix-kde-apply-plasma-theme-unwrapped";
     text =
       mergeWithImage
         ''
@@ -319,12 +321,6 @@ let
 
             return 1
           }
-
-          xvfb_prefix=
-          if [ -z "''${DISPLAY:-}" ]; then
-            echo "Stylix KDE activator: DISPLAY unset, using xvfb-run for virtual X11 session."
-            xvfb_prefix=${lib.getExe pkgs.xvfb-run}
-          fi
 
           if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
             "$xvfb_prefix" "$look_and_feel" --apply "${Id}" || \
@@ -342,7 +338,19 @@ let
           fi
         '';
   };
-  activator = lib.getExe activator';
+  activatorMaybeWithXvfb = pkgs.writeShellApplication {
+    name = "stylix-kde-apply-plasma-theme";
+    text = ''
+      if [ -z "''${DISPLAY:-}" ]; then
+        echo "Stylix KDE activator: DISPLAY unset, using xvfb-run for virtual X11 session."
+        "${lib.getExe pkgs.xvfb-run}" "${lib.getExe activatorRequiringGraphicalSession}"
+      else
+        echo "Stylix KDE activator: DISPLAY is set, applying without xvfb-run."
+        "${lib.getExe activatorRequiringGraphicalSession}"
+      fi
+    '';
+  };
+  activator = lib.getExe activatorMaybeWithXvfb;
 in
 {
   options.stylix.targets.kde = {
