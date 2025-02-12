@@ -372,11 +372,11 @@ in
 
           # This desktop entry will run the theme activator when a new Plasma session is started
           # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
-          configFile."autostart/stylix-activator.desktop".text = ''
+          configFile."autostart/stylix-activate-kde.desktop".text = ''
             [Desktop Entry]
             Type=Application
             Exec=${activator}
-            Name=Stylix Activator
+            Name=Stylix: activate KDE theme
             X-KDE-AutostartScript=true
           '';
         };
