@@ -90,23 +90,48 @@ let
       };
     };
 
-  autoload = builtins.concatLists (
-    lib.mapAttrsToList (
-      name: _:
-      let
-        testbed = {
-          inherit name;
-          module = "${inputs.self}/modules/${name}/testbed.nix";
-        };
-      in
-      lib.optional (builtins.pathExists testbed.module) testbed
-    ) (builtins.readDir "${inputs.self}/modules")
-  );
+  autoload =
+    let
+      directory = "testbeds";
+      modules = "${inputs.self}/modules";
+    in
+    lib.flatten (
+      lib.mapAttrsToList (
+        module: _:
+        let
+          testbeds = "${modules}/${module}/${directory}";
+        in
+        lib.mapAttrsToList (
+          testbed: type:
+          if type != "regular" then
+            builtins.throw "${testbed} must be regular: ${type}"
+
+          else if !lib.hasSuffix ".nix" testbed then
+            builtins.throw "testbed must be a Nix file: ${testbeds}/${testbed}"
+
+          else if testbed == ".nix" then
+            builtins.throw "testbed must have a name: ${testbed}"
+
+          # To prevent ambiguity with the final derivation's hyphen field
+          # separator, testbed names should not contain hyphens.
+          else if lib.hasInfix "-" testbed then
+            builtins.throw "testbed name must not contain hyphens (-): ${testbed}"
+
+          else
+            {
+              inherit module;
+
+              name = lib.removeSuffix ".nix" testbed;
+              path = "${testbeds}/${testbed}";
+            }
+        ) (lib.optionalAttrs (builtins.pathExists testbeds) (builtins.readDir testbeds))
+      ) (builtins.readDir modules)
+    );
 
   makeTestbed =
     testbed: stylix:
     let
-      name = "testbed-${testbed.name}-${stylix.polarity}";
+      name = "testbed-${testbed.module}-${testbed.name}-${stylix.polarity}";
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
@@ -116,7 +141,7 @@ let
           applicationModule
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
-          testbed.module
+          testbed.path
 
           {
             inherit stylix;
