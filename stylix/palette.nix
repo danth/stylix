@@ -161,7 +161,7 @@ in
 
     assertions = [
       {
-        assertion = cfg.image != null || cfg.base16Scheme != null;
+        assertion = !(cfg.image == null && cfg.base16Scheme == null);
         message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
       }
     ];
