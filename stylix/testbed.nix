@@ -138,7 +138,7 @@ let
         testbed.name
         stylix.polarity
         "image${lib.optionalString (stylix.image == null) "less"}"
-        "scheme${lib.optionalString (stylix.base16Scheme or false == null) "less"}"
+        "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
       ];
 
       system = lib.nixosSystem {
