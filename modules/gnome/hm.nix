@@ -10,6 +10,27 @@ let
   fontSize = toString config.stylix.fonts.sizes.applications;
   documentFontSize = toString (config.stylix.fonts.sizes.applications - 1);
 
+  activator = pkgs.writeShellApplication {
+    name = "stylix-activate-gnome";
+    text = ''
+      get_exe() {
+        for directory in /run/current-system/sw/bin /usr/bin /bin; do
+          if [[ -f "$directory/$1" ]]; then
+            printf '%s\n' "$directory/$1"
+            return 0
+          fi
+        done
+        echo "Skipping '$1': command not found"
+        return 1
+      }
+
+      if gnome_extensions="$(get_exe gnome-extensions)"; then
+        "$gnome_extensions" disable user-theme@gnome-shell-extensions.gcampax.github.com
+        "$gnome_extensions" enable user-theme@gnome-shell-extensions.gcampax.github.com
+      fi
+    '';
+  };
+
 in
 {
   options.stylix.targets.gnome.enable =
@@ -55,19 +76,26 @@ in
       "org/gnome/shell/extensions/user-theme".name = "Stylix";
     };
 
-    xdg.dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
-      source =
-        let
-          theme = pkgs.callPackage ./theme.nix {
-            inherit (config.lib.stylix) colors templates;
-          };
-        in
-        "${theme}/share/gnome-shell/gnome-shell.css";
-      onChange = ''
-        if [[ -x "$(command -v gnome-extensions)" ]]; then
-          gnome-extensions disable user-theme@gnome-shell-extensions.gcampax.github.com
-          gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
-        fi
+    xdg = {
+      dataFile."themes/Stylix/gnome-shell/gnome-shell.css" = {
+        source =
+          let
+            theme = pkgs.callPackage ./theme.nix {
+              inherit (config.lib.stylix) colors templates;
+            };
+          in
+          "${theme}/share/gnome-shell/gnome-shell.css";
+        onChange = ''
+          ${lib.getExe activator} || verboseEcho \
+            'Activating the User Themes extension for GNOME Shell failed. This only works when GNOME Shell is running.'
+        '';
+      };
+
+      configFile."autostart/stylix-activate-gnome.desktop".text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=${lib.getExe activator}
+        Name=Stylix: activate GNOME theme
       '';
     };
   };
