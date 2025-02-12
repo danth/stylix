@@ -25,8 +25,17 @@ let
       }
 
       if gnome_extensions="$(get_exe gnome-extensions)"; then
-        "$gnome_extensions" disable user-theme@gnome-shell-extensions.gcampax.github.com
-        "$gnome_extensions" enable user-theme@gnome-shell-extensions.gcampax.github.com
+        extension='user-theme@gnome-shell-extensions.gcampax.github.com'
+
+        case "$1" in
+          reload)
+            "$gnome_extensions" disable "$extension"
+            "$gnome_extensions" enable "$extension"
+            ;;
+          enable)
+            "$gnome_extensions" enable "$extension"
+            ;;
+        esac
       fi
     '';
   };
@@ -85,17 +94,18 @@ in
             };
           in
           "${theme}/share/gnome-shell/gnome-shell.css";
-        onChange = ''
-          ${lib.getExe activator} || verboseEcho \
-            'Activating the User Themes extension for GNOME Shell failed. This only works when GNOME Shell is running.'
-        '';
+
+        # Reload the extension so the new theme is applied immediately.
+        # (The extension doesn't watch the file for changes.)
+        onChange = "${lib.getExe activator} reload";
       };
 
+      # Enable the extension after logging in.
       configFile."autostart/stylix-activate-gnome.desktop".text = ''
         [Desktop Entry]
         Type=Application
-        Exec=${lib.getExe activator}
-        Name=Stylix: activate GNOME theme
+        Exec=${lib.getExe activator} enable
+        Name=Stylix: enable User Themes extension for GNOME Shell
       '';
     };
   };
