@@ -55,8 +55,6 @@ pkgs.stdenvNoCC.mkDerivation {
 
   patchPhase = ''
     cp ${../README.md} src/README.md
-    cp ${../gnome.png} src/gnome.png
-    cp ${../kde.png} src/kde.png
 
     # mdBook doesn't support this Markdown extension yet
     substituteInPlace **/*.md \

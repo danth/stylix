@@ -75,7 +75,7 @@ Once the virtual machine starts, a window should open, similar to the screenshot
 below. The contents of the virtual machine will vary depending on the target you
 selected earlier.
 
-![GDM login screen with a dark background color and showing a guest user](testbed-gnome-dark.png)
+![GDM login screen with a dark background color and showing a guest user](https://github.com/user-attachments/assets/e17d406b-4b67-4aaf-9a3c-be170882a625)
 
 If the testbed includes a login screen, the guest user should log in
 automatically when selected. Depending on the software used, you may still be

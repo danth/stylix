@@ -48,7 +48,7 @@ or ask on [GitHub Discussions](https://github.com/danth/stylix/discussions).
 
 ### GNOME 46
 
-![GNOME 46](./gnome.png)
+![GNOME 46](https://github.com/user-attachments/assets/e1c6d39a-f7ef-423b-ad52-282fb398d26b)
 
 Photos by [Clay Banks](https://unsplash.com/photos/three-bicycles-parked-in-front-of-building-hwLAI5lRhdM)
 and [Derrick Cooper](https://unsplash.com/photos/brown-road-in-forest-during-daytime-L505cPnmIds).
@@ -59,7 +59,7 @@ Try a live demo of this theme by running
 
 ### KDE Plasma 5
 
-![KDE Plasma 5](./kde.png)
+![KDE Plasma 5](https://github.com/user-attachments/assets/76a31d45-446f-45a4-84d3-4438575ab03b)
 
 Photos by [Aniket Deole](https://unsplash.com/photos/mountain-surrounded-by-trees-under-cloudy-sky-T-tOgjWZ0fQ)
 and [Tom Gainor](https://unsplash.com/photos/landscape-photography-of-body-of-water-overlooking-mountain-range-ZqLeQDjY6fY).
