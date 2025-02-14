@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}:
+}@args:
 
 let
   cfg = config.stylix.targets.plymouth;
+
+  themeScript = import ./theme-script.nix args;
 
   theme = pkgs.runCommand "stylix-plymouth" { } ''
     themeDir="$out/share/plymouth/themes/stylix"
@@ -22,18 +24,7 @@ let
       ${cfg.logo} \
       $themeDir/logo.png
 
-    ${
-      if cfg.logoAnimated then
-        "cp ${./theme.script} $themeDir/stylix.script"
-      else
-        "cp ${./theme_still.script} $themeDir/stylix.script"
-    }
-
-    ${with config.lib.stylix.colors; ''
-      substituteInPlace $themeDir/stylix.script \
-        --replace-fail "%BASE00%" "${base00-dec-r}, ${base00-dec-g}, ${base00-dec-b}" \
-        --replace-fail "%BASE05%" "${base05-dec-r}, ${base05-dec-g}, ${base05-dec-b}"
-    ''}
+    cp ${themeScript} $themeDir/stylix.script
 
     echo "
     [Plymouth Theme]
@@ -45,7 +36,6 @@ let
     ScriptFile=$themeDir/stylix.script
     " > $themeDir/stylix.plymouth
   '';
-
 in
 {
   options.stylix.targets.plymouth = {
