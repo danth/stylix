@@ -137,7 +137,7 @@ let
         testbed.module
         testbed.name
         stylix.polarity
-        "image${lib.optionalString (stylix.image == null) "less"}"
+        "image${lib.optionalString (stylix.image or null == null) "less"}"
         "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
       ];
 
@@ -214,7 +214,6 @@ let
       }
       {
         enable = true;
-        image = null;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
         polarity = "dark";
       }
