@@ -208,7 +208,7 @@ let
       }
       {
         enable = true;
-        image = images.light;
+        image = images.dark;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
         polarity = "dark";
       }
