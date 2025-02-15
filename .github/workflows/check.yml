@@ -79,8 +79,8 @@ jobs:
           extra-conf: |-
             allow-import-from-derivation = ${{
               startsWith(matrix.check.key, 'testbed-') &&
-              contains(matrix.check.key, '-schemeless') ?
-              'true' :
+              contains(matrix.check.key, '-schemeless') &&
+              'true' ||
               'false'
             }}
 
