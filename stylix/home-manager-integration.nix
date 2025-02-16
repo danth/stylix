@@ -7,6 +7,10 @@ homeManagerModule:
 }:
 
 let
+  disableOverlaysModule = {
+    config.stylix.overlays.enable = false;
+  };
+
   copyModules =
     builtins.map
       (
@@ -215,10 +219,15 @@ in
   };
 
   config = lib.optionalAttrs (options ? home-manager) (
-    lib.mkIf config.stylix.homeManagerIntegration.autoImport {
-      home-manager.sharedModules =
-        [ homeManagerModule ]
-        ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
-    }
+    lib.mkMerge [
+      (lib.mkIf config.stylix.homeManagerIntegration.autoImport {
+        home-manager.sharedModules =
+          [ homeManagerModule ]
+          ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
+      })
+      (lib.mkIf config.home-manager.useGlobalPkgs {
+        home-manager.sharedModules = [ disableOverlaysModule ];
+      })
+    ]
   );
 }
