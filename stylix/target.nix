@@ -34,7 +34,8 @@
       description = ''
         Whether to enable overlays. 
 
-        When this is `false`, no overlays are set. This may be required if the configuration doesn't manage its own nixpkgs instance.
+        When this is `false`, no overlays are set. This may be required if the
+        configuration doesn't manage its own nixpkgs instance.
       '';
       type = lib.types.bool;
       default = true;
