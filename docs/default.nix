@@ -106,7 +106,7 @@ pkgs.stdenvNoCC.mkDerivation {
       optionsFile="$2"
       outputFile="$3"
 
-      echo "## $platformName options" >>"$outputFile"
+      echo -e "\n## $platformName options" >>"$outputFile"
 
       if [ -s "$optionsFile" ]; then
         sed -e "$REDUCE_HEADINGS" -e "$REMOVE_DECLARED_BY" <"$optionsFile" >>"$outputFile"
@@ -120,10 +120,16 @@ pkgs.stdenvNoCC.mkDerivation {
       homeManagerOptionsFile="$2"
       nixosOptionsFile="$3"
 
+      readmeFile="${inputs.self}/modules/$moduleName/README.md"
       page="options/modules/$moduleName.md"
       outputFile="src/$page"
 
-      if [ ! -f "$file" ]; then
+      if [ -f "$outputFile" ]; then
+        echo "Please move docs/src/options/modules/$moduleName.md to modules/$moduleName/README.md" >&2
+        exit 1
+      elif [ -f "$readmeFile" ]; then
+        cp --no-preserve=mode,ownership "$readmeFile" "$outputFile"
+      else
         echo "# $moduleName" >>"$outputFile"
         echo ${lib.escapeShellArg ''
           > [!NOTE]
