@@ -17,11 +17,10 @@ otherwise.
 
 ## Creation
 
-New testbeds are defined by creating a file called `testbed.nix` within the
-folder for the corresponding target. This file will automatically be loaded
-as a NixOS module, with options such as `stylix.image` already defined.
-The module should include any options necessary to install the target and
-any supporting software - for example, a window manager.
+Testbeds are defined at `/modules/«module»/testbeds/«testbed».nix` and are are
+automatically loaded as a NixOS module with options such as `stylix.image`
+already defined. The testbed should include any options necessary to install the
+target and any supporting software - for example, a window manager.
 
 If the target can only be used through Home Manager, you can write a
 Home Manager module within the NixOS module using the following format:
@@ -53,19 +52,19 @@ github:danth/stylix
     └───x86_64-linux
         ├───docs: package 'stylix-book'
         ├───palette-generator: package 'palette-generator'
-        ├───testbed-gnome-dark: package 'testbed-gnome-dark'
-        ├───testbed-gnome-light: package 'testbed-gnome-light'
-        ├───testbed-kde-dark: package 'testbed-kde-dark'
-        └───testbed-kde-light: package 'testbed-kde-light'
+        ├───testbed-gnome-default-dark: package 'testbed-gnome-default-dark'
+        ├───testbed-gnome-default-light: package 'testbed-gnome-default-light'
+        ├───testbed-kde-default-dark: package 'testbed-kde-default-dark'
+        └───testbed-kde-default-light: package 'testbed-kde-default-light'
 ```
 
 (This has been edited down to only the relevant parts.)
 
 To start a testbed, each of which is named in the format
-`testbed-«target»-«polarity»`, run the following command:
+`testbed-«module»-«testbed»-«polarity»`, run the following command:
 
 ```console
-user@host:~$ nix run .#testbed-«target»-«polarity»
+user@host:~$ nix run .#testbed-«module»-«testbed»-«polarity»
 ```
 
 Any package with a name not fitting the given format is not a testbed,
@@ -75,7 +74,7 @@ Once the virtual machine starts, a window should open, similar to the screenshot
 below. The contents of the virtual machine will vary depending on the target you
 selected earlier.
 
-![GDM login screen with a dark background color and showing a guest user](testbed-gnome-dark.png)
+![GDM login screen with a dark background color and showing a guest user](testbed-gnome-default-dark.png)
 
 If the testbed includes a login screen, the guest user should log in
 automatically when selected. Depending on the software used, you may still be
