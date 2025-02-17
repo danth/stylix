@@ -212,7 +212,7 @@ provides options for other browsers which are based on Firefox.
 
 For each target, there is an option like `stylix.targets.«target».enable` which
 you can use to turn its styling on or off. By default, it's turned on
-automatically whenever the target is installed. You can set
+automatically whenever the target is installed. You can globally set
 `stylix.autoEnable = false` to opt out of this behaviour, in which case you'll
 need to manually enable each target you want to be themed.
 
