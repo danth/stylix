@@ -162,10 +162,20 @@ in
         # cleaned up as usual, so the overhead on system size is less than a
         # kilobyte.
         source = cfg.generated.json;
+
         # Only do this when `base16Scheme` is still the option default, which
         # is when the generated palette is used. Depending on the file in other
         # cases would force the palette generator to run when we never read the
         # output.
+        #
+        # Controlling this by comparing against the default value with == would
+        # also force the palette generator to run, as we would have to evaluate
+        # the default value to check for equality. To work around this, we
+        # check only the priority of the resolved value. The priority of option
+        # defaults is 1500 [1], and any value less than this means the user has
+        # changed the option.
+        #
+        # [1]: https://github.com/NixOS/nixpkgs/blob/5f30488d37f91fd41f0d40437621a8563a70b285/lib/modules.nix#L1063
         enable = options.stylix.base16Scheme.highestPrio >= 1500;
       };
 
