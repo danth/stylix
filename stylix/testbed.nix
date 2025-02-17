@@ -169,7 +169,9 @@ let
         '';
       };
     in
-    lib.nameValuePair name script;
+    {
+      ${name} = script;
+    };
 
   # This generates a copy of each testbed for each of the following themes.
   makeTestbeds =
@@ -198,4 +200,8 @@ let
     ];
 
 in
-lib.listToAttrs (lib.flatten (map makeTestbeds autoload))
+# Testbeds are merged using lib.attrsets.unionOfDisjoint to throw an error if
+# testbed names collide.
+builtins.foldl' lib.attrsets.unionOfDisjoint { } (
+  lib.flatten (map makeTestbeds autoload)
+)
