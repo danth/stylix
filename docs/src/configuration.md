@@ -182,37 +182,39 @@ theme for each user.
 
 You may prefer to disable inheritance entirely, and set up the Home Manager
 version of Stylix yourself if required. Refer to the options
-[`stylix.homeManagerIntegration.autoImport`](options/nixos.md#stylixhomemanagerintegrationautoimport)
+[`stylix.homeManagerIntegration.autoImport`](options/global/nixos.md#stylixhomemanagerintegrationautoimport)
 and
-[`stylix.homeManagerIntegration.followSystem`](options/nixos.md#stylixhomemanagerintegrationfollowsystem)
+[`stylix.homeManagerIntegration.followSystem`](options/global/nixos.md#stylixhomemanagerintegrationfollowsystem)
 to customize this.
 
 > [!NOTE]
 >
 > There is a special case involving the
-> [`stylix.base16Scheme`](options/nixos.md#stylixbase16scheme)
+> [`stylix.base16Scheme`](options/global/nixos.md#stylixbase16scheme)
 > option:
 >
 > If the wallpaper in a Home Manager configuration is changed, then Home Manager
 > will stop inheriting the color scheme from NixOS. This allows Home Manager
 > configurations to use the automatic palette generator without being overridden.
 >
-> Similarly, [`stylix.override`](options/nixos.md#stylixoverride) is not inherited
+> Similarly, [`stylix.override`](options/global/nixos.md#stylixoverride) is not inherited
 > if the color scheme is different.
 
 ## Turning targets on and off
 
-In Stylix terms, a target is anything which can have colors, fonts or a
-wallpaper applied to it. Each module in this repository should correspond to a
-target of the same name.
+A target is anything which can have colors, fonts or a wallpaper applied to it.
 
-Each target has an option like `stylix.targets.«target».enable` to turn its
-styling on or off. Normally, it's turned on automatically when the target is
-installed. You can set `stylix.autoEnable = false` to opt out of this
-behaviour, in which case you'll need to manually enable each target you want to
-be styled.
+You can discover the available targets and their options by browsing through
+the module reference at the end of this book. Most targets will be found under
+a module of the same name, but occasionally a module will serve multiple similar
+targets. For example, the [Firefox module](options/modules/firefox.md) also
+provides options for other browsers which are based on Firefox.
+
+For each target, there is an option like `stylix.targets.«target».enable` which
+you can use to turn its styling on or off. By default, it's turned on
+automatically whenever the target is installed. You can set
+`stylix.autoEnable = false` to opt out of this behaviour, in which case you'll
+need to manually enable each target you want to be themed.
 
 Targets are different between Home Manager and NixOS, and sometimes available
 in both cases. If both are available, it is always correct to enable both.
-The reference pages have a list of targets for [NixOS](options/nixos.md) and
-[Home Manager](options/hm.md) respectively.
