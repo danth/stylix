@@ -106,12 +106,16 @@ pkgs.stdenvNoCC.mkDerivation {
       optionsFile="$2"
       outputFile="$3"
 
-      echo -e "\n## $platformName options" >>"$outputFile"
+      printf '\n## %s options\n' "$platformName" >>"$outputFile"
 
-      if [ -s "$optionsFile" ]; then
-        sed -e "$REDUCE_HEADINGS" -e "$REMOVE_DECLARED_BY" <"$optionsFile" >>"$outputFile"
+      if [[ -s "$optionsFile" ]]; then
+        sed \
+          --expression "$REDUCE_HEADINGS" \
+          --expression "$REMOVE_DECLARED_BY" \
+          <"$optionsFile" \
+          >>"$outputFile"
       else
-        echo '*None provided.*' >>"$outputFile"
+        printf '*%s*\n' "None provided." >>"$outputFile"
       fi
     }
 
@@ -124,36 +128,42 @@ pkgs.stdenvNoCC.mkDerivation {
       page="options/modules/$moduleName.md"
       outputFile="src/$page"
 
-      if [ -f "$outputFile" ]; then
-        echo "Please move docs/src/options/modules/$moduleName.md to modules/$moduleName/README.md" >&2
+      if [[ -f $outputFile ]]; then
+        printf \
+          '%s should not be used. Move it to %s\n' \
+          "docs/src/options/modules/$moduleName.md" \
+          "modules/$moduleName/README.md" \
+          >&2
         exit 1
-      elif [ -f "$readmeFile" ]; then
+
+      elif [[ -f $readmeFile ]]; then
         cp --no-preserve=mode,ownership "$readmeFile" "$outputFile"
+
       else
-        echo "# $moduleName" >>"$outputFile"
-        echo ${lib.escapeShellArg ''
-          > [!NOTE]
-          >
-          > This module doesn't include any additional documentation.
-          > You can browse the options it provides below.
-        ''} >>"$outputFile"
+        printf \
+          '%s\n' \
+          "# $moduleName" \
+          '> [!NOTE]' \
+          "> This module doesn't include any additional documentation." \
+          '> You can browse the options it provides below.' \
+          >>"$outputFile"
       fi
 
       writeOptions 'Home Manager' "$homeManagerOptionsFile" "$outputFile"
       writeOptions 'NixOS' "$nixosOptionsFile" "$outputFile"
 
-      echo "  - [$moduleName]($page)" >>src/SUMMARY.md
+      printf '  - [%s](%s)\n' "$moduleName" "$page" >>src/SUMMARY.md
     }
 
     cp ${../README.md} src/README.md
     cp ${../gnome.png} src/gnome.png
     cp ${../kde.png} src/kde.png
 
-    mkdir -p src/options/global
+    mkdir --parents src/options/global
     writeOptions 'Home Manager' ${(makeGlobalOptionsDoc homeManagerConfiguration)} src/options/global/home_manager.md
     writeOptions 'NixOS' ${(makeGlobalOptionsDoc nixosConfiguration)} src/options/global/nixos.md
 
-    mkdir -p src/options/modules
+    mkdir --parents src/options/modules
     ${modulePageScript}
   '';
 
