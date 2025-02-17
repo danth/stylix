@@ -87,6 +87,10 @@ in
 pkgs.stdenvNoCC.mkDerivation {
   name = "stylix-book";
   src = ./.;
+  buildInputs = with pkgs; [
+    mdbook
+    mdbook-alerts
+  ];
 
   patchPhase = ''
     # The generated documentation has headings at level 2, but we want level 3
@@ -145,17 +149,7 @@ pkgs.stdenvNoCC.mkDerivation {
 
     mkdir -p src/options/modules
     ${modulePageScript}
-
-    # mdBook doesn't support this Markdown extension yet
-    substituteInPlace **/*.md \
-      --replace-quiet '> [!NOTE]' '> **Note**' \
-      --replace-quiet '> [!TIP]' '> **Tip**' \
-      --replace-quiet '> [!IMPORTANT]' '> **Important**' \
-      --replace-quiet '> [!WARNING]' '> **Warning**' \
-      --replace-quiet '> [!CAUTION]' '> **Caution**'
   '';
 
-  buildPhase = ''
-    ${pkgs.mdbook}/bin/mdbook build --dest-dir $out
-  '';
+  buildPhase = "mdbook build --dest-dir $out";
 }

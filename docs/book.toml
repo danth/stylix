@@ -2,6 +2,8 @@
 title = "Stylix"
 language = "en"
 
+[preprocessor.alerts]
+
 [output.html]
 site-url = "/stylix/"
 git-repository-url = "https://github.com/danth/stylix"
