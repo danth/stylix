@@ -1,4 +1,3 @@
-{ palette-generator, base16 }:
 {
   pkgs,
   lib,
@@ -79,7 +78,7 @@ in
         # the output of the palette generator will not be protected from
         # garbage collection.
         default = pkgs.runCommand "palette.json" { } ''
-          ${palette-generator}/bin/palette-generator \
+          ${cfg.paletteGenerator}/bin/palette-generator \
             "${cfg.polarity}" \
             ${lib.escapeShellArg "${cfg.image}"} \
             "$out"
@@ -139,12 +138,25 @@ in
       type = lib.types.attrs;
       default = { };
     };
+
+    paletteGenerator = lib.mkOption {
+      description = "The palette generator executable.";
+      type = lib.types.package;
+      internal = true;
+      readOnly = true;
+    };
+
+    base16 = lib.mkOption {
+      description = "The base16.nix library.";
+      internal = true;
+      readOnly = true;
+    };
   };
 
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
-    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
+    lib.stylix.colors = (cfg.base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
 
     stylix.generated.fileTree = {
       # The raw output of the palette generator.
