@@ -12,3 +12,8 @@ no-section-label = true
 
 [output.html.fold]
 enable = true
+
+[output.html.redirect]
+# Must use relative paths with . or .. for offline browsing to work correctly
+"/options/hm.html" = "./platforms/home_manager.html"
+"/options/nixos.html" = "./platforms/nixos.html"
