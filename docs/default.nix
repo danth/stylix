@@ -45,7 +45,7 @@ let
     }).optionsCommonMark;
 
   # The documentation for options which aren't linked to a specific module
-  makeGlobalOptionsDoc =
+  makePlatformsOptionsDoc =
     configuration:
     makeOptionsDoc {
       inherit configuration;
@@ -159,9 +159,9 @@ pkgs.stdenvNoCC.mkDerivation {
     cp ${../gnome.png} src/gnome.png
     cp ${../kde.png} src/kde.png
 
-    mkdir --parents src/options/global
-    writeOptions 'Home Manager' ${(makeGlobalOptionsDoc homeManagerConfiguration)} src/options/global/home_manager.md
-    writeOptions 'NixOS' ${(makeGlobalOptionsDoc nixosConfiguration)} src/options/global/nixos.md
+    mkdir --parents src/options/platforms
+    writeOptions 'Home Manager' ${(makePlatformsOptionsDoc homeManagerConfiguration)} src/options/platforms/home_manager.md
+    writeOptions 'NixOS' ${(makePlatformsOptionsDoc nixosConfiguration)} src/options/platforms/nixos.md
 
     mkdir --parents src/options/modules
     ${modulePageScript}

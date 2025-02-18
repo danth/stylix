@@ -14,11 +14,15 @@
 - [Testbeds](testbeds.md)
 - [Style guide](styling.md)
 
-# Platforms
+# Reference
 
-- [Home Manager](options/global/home_manager.md)
-- [NixOS](options/global/nixos.md)
+<!--
+  The auto-generated list of modules is appended to this file, so this must
+  be the last section, and modules must be the last page, with no comments
+  following it. There must be a trailing newline.
+-->
 
-# Modules
-
-<!-- The auto-generated list of modules will be added below. -->
+- [Platforms]() <!-- TODO: migrate general platforms content to this page. -->
+  - [Home Manager](options/platforms/home_manager.md)
+  - [NixOS](options/platforms/nixos.md)
+- [Modules]() <!-- TODO: migrate general modules content to this page. -->
