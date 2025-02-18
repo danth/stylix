@@ -3,7 +3,6 @@ title = "Stylix"
 language = "en"
 
 [output.html]
-site-url = "/stylix/"
 git-repository-url = "https://github.com/danth/stylix"
 edit-url-template = "https://github.com/danth/stylix/edit/master/docs/{path}"
 
