@@ -36,6 +36,13 @@ in
         config.stylix.enable
         && config.stylix.targets.swaylock.enable
         && pkgs.stdenv.hostPlatform.isLinux
+
+        # Avoid inadvertently installing the Swaylock package by preventing the
+        # Home Manager module from enabling itself when 'settings != {}' and the
+        # state version is older than 23.05 [1].
+        #
+        # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
+        && config.programs.swaylock.enable
       )
       {
         programs.swaylock.settings =
