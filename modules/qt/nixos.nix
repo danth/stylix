@@ -27,25 +27,39 @@ in
     };
   };
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
-    stylix.targets.qt.platform =
-      with config.services.xserver.desktopManager;
-      if gnome.enable && !(plasma5.enable || lxqt.enable) then
-        lib.mkDefault "gnome"
-      else if plasma5.enable && !(gnome.enable || lxqt.enable) then
-        lib.mkDefault "kde"
-      else if lxqt.enable && !(gnome.enable || plasma5.enable) then
-        lib.mkDefault "lxqt"
-      else
-        lib.mkDefault "qtct";
-    qt = {
-      enable = true;
-      style = recommendedStyle."${config.qt.platformTheme}" or null;
-      platformTheme =
-        if config.stylix.targets.qt.platform == "qtct" then
-          "qt5ct"
-        else
-          config.stylix.targets.qt.platform;
-    };
-  };
+  config =
+    let
+      broken = config.services.desktopManager.plasma6.enable;
+      warning = {
+        warnings = [
+          "stylix: qt: Plasma6 is currently unsupported: https://github.com/nix-community/home-manager/issues/5098"
+        ];
+      };
+      default = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
+
+        stylix.targets.qt.platform =
+          with config.services.xserver.desktopManager;
+          if gnome.enable && !(plasma5.enable || lxqt.enable) then
+            "gnome"
+          else if plasma5.enable && !(gnome.enable || lxqt.enable) then
+            "kde"
+          else if lxqt.enable && !(gnome.enable || plasma5.enable) then
+            "lxqt"
+          else
+            "qtct";
+        qt = {
+          enable = true;
+          style = recommendedStyle."${config.qt.platformTheme}" or null;
+          platformTheme =
+            if config.stylix.targets.qt.platform == "qtct" then
+              "qt5ct"
+            else
+              config.stylix.targets.qt.platform;
+        };
+      };
+    in
+    lib.mkMerge [
+      (lib.mkIf broken warning)
+      (lib.mkIf (!broken) default)
+    ];
 }
