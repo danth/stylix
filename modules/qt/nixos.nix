@@ -32,7 +32,7 @@ in
       broken = config.services.desktopManager.plasma6.enable;
       warning = {
         warnings = [
-          "stylix: qt: Styling of Plasma6 is not yet supported upstream. See https://github.com/nix-community/home-manager/issues/5098"
+          "stylix: qt: Plasma6 is currently unsupported: https://github.com/nix-community/home-manager/issues/5098"
         ];
       };
       default = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
