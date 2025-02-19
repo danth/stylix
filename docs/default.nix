@@ -37,9 +37,26 @@ let
     (pkgs.nixosOptionsDoc {
       inherit (configuration) options;
       transformOptions =
+        let
+          declarationPrefix = toString inputs.self;
+        in
         option:
         option
         // {
+          declarations = map (
+            declaration:
+            let
+              declarationString = toString declaration;
+              declarationWithoutprefix = lib.removePrefix "${declarationPrefix}/" declarationString;
+            in
+            lib.throwIfNot (lib.hasPrefix declarationPrefix declarationString)
+              "declaration not in ${declarationPrefix}: ${declarationString}"
+              {
+                name = "<${declarationWithoutprefix}>";
+                url = "https://github.com/danth/stylix/blob/master/${declarationWithoutprefix}";
+              }
+          ) option.declarations;
+
           visible = option.visible && lib.any pathFilter option.declarations;
         };
     }).optionsCommonMark;
@@ -97,10 +114,6 @@ pkgs.stdenvNoCC.mkDerivation {
     # so they can be nested under the sections for each module system.
     REDUCE_HEADINGS='s/^## /### /'
 
-    # The "declared by" links point to a file which only exists when the docs
-    # are built locally. This removes the links.
-    REMOVE_DECLARED_BY='/*Declared by:*/,/^$/d'
-
     function writeOptions() {
       platformName="$1"
       optionsFile="$2"
@@ -111,7 +124,6 @@ pkgs.stdenvNoCC.mkDerivation {
       if [[ -s "$optionsFile" ]]; then
         sed \
           --expression "$REDUCE_HEADINGS" \
-          --expression "$REMOVE_DECLARED_BY" \
           <"$optionsFile" \
           >>"$outputFile"
       else
