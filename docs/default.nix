@@ -38,6 +38,7 @@ let
       inherit (configuration) options;
       transformOptions =
         let
+          commit = inputs.self.rev or "master";
           declarationPrefix = toString inputs.self;
         in
         option:
@@ -53,7 +54,7 @@ let
               "declaration not in ${declarationPrefix}: ${declarationString}"
               {
                 name = "<${declarationWithoutprefix}>";
-                url = "https://github.com/danth/stylix/blob/master/${declarationWithoutprefix}";
+                url = "https://github.com/danth/stylix/blob/${commit}/${declarationWithoutprefix}";
               }
           ) option.declarations;
 
