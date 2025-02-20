@@ -4,8 +4,9 @@ let
 in
 {
   options.stylix.targets.wpaperd = {
-    enable = config.lib.stylix.mkEnableTarget "wpaperd" true;
-    useWallpaper = config.lib.stylix.mkEnableWallpaper "wpaperd" true;
+    enable = config.lib.stylix.mkEnableTarget "wpaperd" (
+      config.stylix.image != null
+    );
   };
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) (
@@ -29,11 +30,9 @@ in
             { };
     in
     {
-      programs.wpaperd.settings.any =
-        lib.mkIf cfg.useWallpaper {
-          path = "${config.stylix.image}";
-        }
-        // modeAttrs;
+      programs.wpaperd.settings.any = {
+        path = "${config.stylix.image}";
+      } // modeAttrs;
     }
   );
 }

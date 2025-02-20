@@ -4,12 +4,13 @@ let
 in
 {
   options.stylix.targets.hyprpaper = {
-    enable = config.lib.stylix.mkEnableTarget "Hyprpaper" true;
-    useWallpaper = config.lib.stylix.mkEnableWallpaper "Hyprpaper" true;
+    enable = config.lib.stylix.mkEnableTarget "Hyprpaper" (
+      config.stylix.image != null
+    );
   };
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
-    services.hyprpaper.settings = lib.mkIf cfg.useWallpaper {
+    services.hyprpaper.settings = {
       preload = [ "${config.stylix.image}" ];
       wallpaper = [ ",${config.stylix.image}" ];
     };

@@ -9,8 +9,9 @@ let
 in
 {
   options.stylix.targets.feh = {
-    enable = config.lib.stylix.mkEnableTarget "the desktop background using Feh" true;
-    useWallpaper = config.lib.stylix.mkEnableWallpaper "Feh" true;
+    enable = config.lib.stylix.mkEnableTarget "the desktop background using Feh" (
+      config.stylix.image != null
+    );
   };
 
   config.xsession.initExtra =
@@ -43,6 +44,6 @@ in
             else
               "--bg-max";
         in
-        lib.optionalString cfg.useWallpaper "${pkgs.feh}/bin/feh --no-fehbg ${bg-arg} ${config.stylix.image}"
+        "${pkgs.feh}/bin/feh --no-fehbg ${bg-arg} ${config.stylix.image}"
       );
 }
