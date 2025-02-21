@@ -20,12 +20,10 @@ builtins.toFile "stylix-plymouth-theme" ''
   baseline_y = Window.GetHeight() * 0.9;
   message_y = Window.GetHeight() * 0.75;
 
-
   ### BACKGROUND ###
 
   Window.SetBackgroundTopColor(${backgroundColor});
   Window.SetBackgroundBottomColor(${backgroundColor});
-
 
   ### LOGO ###
 
@@ -111,7 +109,7 @@ builtins.toFile "stylix-plymouth-theme" ''
 
   fun question_callback(prompt_text, entry) {
       ${lib.optionalString cfg.logoAnimated "deactivate_spinner();"}
-    
+
       question = null;
       answer = null;
 
@@ -142,7 +140,7 @@ builtins.toFile "stylix-plymouth-theme" ''
       message.image = Image.Text(text, ${foregroundColor});
       message.sprite = Sprite(message.image);
       message.sprite.SetPosition(
-          center_x - message.image.GetWidth() / 2, 
+          center_x - message.image.GetWidth() / 2,
           message_y,
           1
       );
