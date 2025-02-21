@@ -49,7 +49,7 @@
       mkEnableWallpaper =
         humanName: autoEnable:
         lib.mkOption {
-          default = (config.stylix.image != null) && autoEnable;
+          default = config.stylix.image != null && autoEnable;
           example = config.stylix.image == null;
           description = "Whether to set the wallpaper for ${humanName}.";
           type = lib.types.bool;
