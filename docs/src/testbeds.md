@@ -52,19 +52,19 @@ github:danth/stylix
     └───x86_64-linux
         ├───docs: package 'stylix-book'
         ├───palette-generator: package 'palette-generator'
-        ├───testbed-gnome-default-dark: package 'testbed-gnome-default-dark'
-        ├───testbed-gnome-default-light: package 'testbed-gnome-default-light'
-        ├───testbed-kde-default-dark: package 'testbed-kde-default-dark'
-        └───testbed-kde-default-light: package 'testbed-kde-default-light'
+        ├───testbed:gnome:default:dark: package 'testbed:gnome:default:dark'
+        ├───testbed:gnome:default:light: package 'testbed:gnome:default:light'
+        ├───testbed:kde:default:dark: package 'testbed:kde:default:dark'
+        └───testbed:kde:default:light: package 'testbed:kde:default:light'
 ```
 
 (This has been edited down to only the relevant parts.)
 
 To start a testbed, each of which is named in the format
-`testbed-«module»-«testbed»-«polarity»`, run the following command:
+`testbed:«module»:«testbed»:«polarity»`, run the following command:
 
 ```console
-user@host:~$ nix run .#testbed-«module»-«testbed»-«polarity»
+user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»
 ```
 
 Any package with a name not fitting the given format is not a testbed,
@@ -74,7 +74,7 @@ Once the virtual machine starts, a window should open, similar to the screenshot
 below. The contents of the virtual machine will vary depending on the target you
 selected earlier.
 
-![GDM login screen with a dark background color and showing a guest user](testbed-gnome-default-dark.png)
+![GDM login screen with a dark background color and showing a guest user](testbed_gnome_default_dark.png)
 
 If the testbed includes a login screen, the guest user should log in
 automatically when selected. Depending on the software used, you may still be

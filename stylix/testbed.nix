@@ -6,6 +6,7 @@
 }:
 
 let
+  testbedFieldSeparator = ":";
   username = "guest";
 
   commonModule =
@@ -114,8 +115,8 @@ let
 
           # To prevent ambiguity with the final derivation's hyphen field
           # separator, testbed names should not contain hyphens.
-          else if lib.hasInfix "-" testbed then
-            builtins.throw "testbed name must not contain hyphens (-): ${testbed}"
+          else if lib.hasInfix testbedFieldSeparator testbed then
+            builtins.throw "testbed name must not contain the '${testbedFieldSeparator}' testbed field separator: ${testbed}"
 
           else
             {
@@ -131,7 +132,12 @@ let
   makeTestbed =
     testbed: stylix:
     let
-      name = "testbed-${testbed.module}-${testbed.name}-${stylix.polarity}";
+      name = builtins.concatStringsSep testbedFieldSeparator [
+        "testbed"
+        testbed.module
+        testbed.name
+        stylix.polarity
+      ];
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
