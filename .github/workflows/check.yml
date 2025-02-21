@@ -20,6 +20,8 @@ jobs:
 
       - id: get-derivations
         run: |
+          set -o pipefail
+
           nix flake show --json \
             github:${{
               github.repository
@@ -51,7 +53,11 @@ jobs:
                 ($packages[] | format_output($arch; "packages"))
               ] |
               "derivations=\(.)"
-            ' >>$GITHUB_OUTPUT
+            ' \
+            >>"$GITHUB_OUTPUT" || {
+              rm "$GITHUB_OUTPUT"
+              false
+            }
 
     outputs:
       derivations: ${{ steps.get-derivations.outputs.derivations }}
