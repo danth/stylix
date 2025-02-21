@@ -3,7 +3,9 @@
 {
   options.stylix.targets.hyprland = {
     enable = config.lib.stylix.mkEnableTarget "Hyprland" true;
-    hyprpaper.enable = config.lib.stylix.mkEnableTarget "Hyprpaper" true;
+    hyprpaper.enable = config.lib.stylix.mkEnableTarget "Hyprpaper" (
+      config.stylix.image != null
+    );
   };
 
   config =
