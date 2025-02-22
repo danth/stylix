@@ -33,7 +33,7 @@ in
         # which will then download the pack regardless of its exclusion below.
         environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
 
-        nixpkgs.overlays = [
+        nixpkgs.overlays = lib.mkIf config.stylix.overlays.enable [
           (_: super: {
             gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
               # Themes are usually applied via an extension, but extensions are
