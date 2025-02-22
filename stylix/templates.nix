@@ -10,6 +10,7 @@ inputs: {
       tinted-tmux
       tinted-zed
       firefox-gnome-theme
+      nur
       ;
   };
 }

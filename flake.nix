@@ -105,6 +105,11 @@
       flake = false;
       url = "github:rafaelmardojai/firefox-gnome-theme";
     };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
