@@ -91,7 +91,7 @@ in
             "svg.context-properties.content.enabled" = true;
           };
 
-          userChrome = builtins.readFile (
+          userChrome = import (
             config.lib.stylix.colors {
               template = ./userChrome.mustache;
               extension = "css";
