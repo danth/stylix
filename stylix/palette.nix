@@ -182,10 +182,10 @@ in {
             pkgs.writeText "palette.json" (builtins.toJSON {
               base00 = adjustLightness colors.background cfg.primaryScale.dark;
               base01 = adjustLightness colors.surface_container cfg.primaryScale.dark;
-              base02 = adjustLightness colors.surface_container_high cfg.primaryScale.dark;
+              base02 = adjustLightness colors.surface_container_highest cfg.primaryScale.dark;
               base03 = adjustLightness colors.outline cfg.primaryScale.dark;
               base04 = adjustLightness colors.on_surface_variant cfg.primaryScale.dark;
-              base05 = adjustLightness colors.surface_container_highest cfg.primaryScale.dark;
+              base05 = adjustLightness colors.on_surface cfg.primaryScale.dark;
               base06 = adjustLightness colors.on_secondary_fixed cfg.primaryScale.dark;
               base07 = adjustLightness colors.on_primary_container cfg.primaryScale.dark;
               base08 = adjustLightness colors.error cfg.primaryScale.dark;
