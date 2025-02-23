@@ -207,14 +207,14 @@ in {
               base05 = adjustLightness colors.on_surface cfg.primaryScale.dark;
               base06 = adjustLightness colors.secondary_fixed cfg.primaryScale.dark;
               base07 = adjustLightness colors.on_primary_container cfg.primaryScale.dark;
-              base08 = adjustLightness colors.error_container cfg.primaryScale.dark;
+              base08 = adjustLightness colors.error cfg.primaryScale.dark;
               base09 = adjustLightness colors.tertiary cfg.primaryScale.dark;
               base0A = adjustLightness colors.secondary cfg.primaryScale.dark;
               base0B = adjustLightness colors.primary cfg.primaryScale.dark;
               base0C = adjustLightness colors.primary_fixed cfg.primaryScale.dark;
               base0D = adjustLightness colors.primary_container cfg.primaryScale.dark;
               base0E = adjustLightness colors.tertiary_fixed cfg.primaryScale.dark;
-              base0F = adjustLightness colors.error cfg.primaryScale.dark;
+              base0F = adjustLightness colors.on_error_container cfg.primaryScale.dark;
             });
       };
 
