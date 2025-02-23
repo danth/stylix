@@ -9,6 +9,28 @@
   ...
 }: let
   cfg = config.stylix;
+  adjustLightness = rgbColorString: primaryScale: let
+    stripped = builtins.replaceStrings ["rgb(" ")"] ["" ""] rgbColorString;
+    values = builtins.split "," stripped;
+    v1 = builtins.fromJSON (builtins.elemAt values 0);
+    v2 = builtins.fromJSON (builtins.elemAt values 2);
+    v3 = builtins.fromJSON (builtins.elemAt values 4);
+    preLightness = (v1 + v2 + v3) / 3.0;
+    adj = preLightness / 255.0 * (1.0 - primaryScale) + primaryScale;
+    v1adj = lib.max (lib.min (v1 * adj) 255.0) 0.0;
+    v2adj = lib.max (lib.min (v2 * adj) 255.0) 0.0;
+    v3adj = lib.max (lib.min (v3 * adj) 255.0) 0.0;
+    round = x: let
+      floored = builtins.floor x;
+      diff = x - floored;
+    in
+      if diff >= 0.5
+      then floored + 1
+      else floored;
+  in
+    builtins.toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v1adj)))
+    + builtins.toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v2adj)))
+    + builtins.toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v3adj)));
 in {
   options.stylix = {
     scheme = lib.mkOption {
@@ -44,13 +66,41 @@ in {
       '';
     };
 
+    primaryScale = {
+      dark = lib.mkOption {
+        type = lib.types.float;
+        default = 0.0;
+        description = ''
+          Use this option to change the generated dark color scheme's contrast.
+
+          Value from -1 to 1. -1 represents minimum contrast,
+          0 represents standard (i.e. the design as spec'd),
+          and 1 represents maximum contrast.
+
+          By default, 0 will be used.
+        '';
+      };
+      light = lib.mkOption {
+        type = lib.types.float;
+        default = 0.0;
+        description = ''
+          Use this option to change the generated light color scheme's contrast.
+
+          Value from -1 to 1. -1 represents minimum contrast,
+          0 represents standard (i.e. the design as spec'd),
+          and 1 represents maximum contrast.
+
+          By default, 0 will be used.
+        '';
+      };
+    };
+
     polarity = lib.mkOption {
       type = lib.types.enum [
-        "either"
         "light"
         "dark"
       ];
-      default = "either";
+      default = "dark";
       description = ''
         Use this option to force a light or dark theme.
 
@@ -112,7 +162,7 @@ in {
         default = let
           raw = pkgs.runCommand "raw-palette.json" {} ''
             ${pkgs.matugen}/bin/matugen \
-              --json hex \
+              --json rgb \
               --type ${cfg.scheme} \
               --contrast ${lib.strings.floatToString cfg.contrast} \
               --dry-run \
@@ -130,41 +180,41 @@ in {
           if cfg.polarity == "light"
           then
             pkgs.writeText "palette.json" (builtins.toJSON {
-              base00 = builtins.substring 1 6 colors.surface_container_lowest;
-              base01 = builtins.substring 1 6 colors.surface_container;
-              base02 = builtins.substring 1 6 colors.surface_container_highest;
-              base03 = builtins.substring 1 6 colors.outline;
-              base04 = builtins.substring 1 6 colors.on_surface_variant;
-              base05 = builtins.substring 1 6 colors.on_surface;
-              base06 = builtins.substring 1 6 colors.surface_bright;
-              base07 = builtins.substring 1 6 colors.on_primary_container;
-              base08 = builtins.substring 1 6 colors.error;
-              base09 = builtins.substring 1 6 colors.primary;
-              base0A = builtins.substring 1 6 colors.secondary;
-              base0B = builtins.substring 1 6 colors.tertiary;
-              base0C = builtins.substring 1 6 colors.on_tertiary_fixed_variant;
-              base0D = builtins.substring 1 6 colors.primary;
-              base0E = builtins.substring 1 6 colors.on_tertiary_container;
-              base0F = builtins.substring 1 6 colors.error_container;
+              base00 = adjustLightness colors.surface_container_lowest cfg.primaryScale.light;
+              base01 = adjustLightness colors.surface_container cfg.primaryScale.light;
+              base02 = adjustLightness colors.surface_container_highest cfg.primaryScale.light;
+              base03 = adjustLightness colors.outline cfg.primaryScale.light;
+              base04 = adjustLightness colors.on_surface_variant cfg.primaryScale.light;
+              base05 = adjustLightness colors.on_surface cfg.primaryScale.light;
+              base06 = adjustLightness colors.surface_bright cfg.primaryScale.light;
+              base07 = adjustLightness colors.on_primary_container cfg.primaryScale.light;
+              base08 = adjustLightness colors.error cfg.primaryScale.light;
+              base09 = adjustLightness colors.primary cfg.primaryScale.light;
+              base0A = adjustLightness colors.secondary cfg.primaryScale.light;
+              base0B = adjustLightness colors.tertiary cfg.primaryScale.light;
+              base0C = adjustLightness colors.on_tertiary_fixed_variant cfg.primaryScale.light;
+              base0D = adjustLightness colors.primary cfg.primaryScale.light;
+              base0E = adjustLightness colors.on_tertiary_container cfg.primaryScale.light;
+              base0F = adjustLightness colors.error_container cfg.primaryScale.light;
             })
           else
             pkgs.writeText "palette.json" (builtins.toJSON {
-              base00 = builtins.substring 1 6 colors.background;
-              base01 = builtins.substring 1 6 colors.surface_container;
-              base02 = builtins.substring 1 6 colors.surface_container_highest;
-              base03 = builtins.substring 1 6 colors.outline;
-              base04 = builtins.substring 1 6 colors.on_surface_variant;
-              base05 = builtins.substring 1 6 colors.on_surface;
-              base06 = builtins.substring 1 6 colors.on_primary_fixed;
-              base07 = builtins.substring 1 6 colors.on_primary_container;
-              base08 = builtins.substring 1 6 colors.error;
-              base09 = builtins.substring 1 6 colors.tertiary;
-              base0A = builtins.substring 1 6 colors.secondary;
-              base0B = builtins.substring 1 6 colors.primary;
-              base0C = builtins.substring 1 6 colors.primary;
-              base0D = builtins.substring 1 6 colors.primary_container;
-              base0E = builtins.substring 1 6 colors.tertiary;
-              base0F = builtins.substring 1 6 colors.error;
+              base00 = adjustLightness colors.background cfg.primaryScale.dark;
+              base01 = adjustLightness colors.surface_container cfg.primaryScale.dark;
+              base02 = adjustLightness colors.surface_container_highest cfg.primaryScale.dark;
+              base03 = adjustLightness colors.outline cfg.primaryScale.dark;
+              base04 = adjustLightness colors.on_surface_variant cfg.primaryScale.dark;
+              base05 = adjustLightness colors.on_surface cfg.primaryScale.dark;
+              base06 = adjustLightness colors.on_primary_fixed cfg.primaryScale.dark;
+              base07 = adjustLightness colors.on_primary_container cfg.primaryScale.dark;
+              base08 = adjustLightness colors.error cfg.primaryScale.dark;
+              base09 = adjustLightness colors.tertiary cfg.primaryScale.dark;
+              base0A = adjustLightness colors.secondary cfg.primaryScale.dark;
+              base0B = adjustLightness colors.primary cfg.primaryScale.dark;
+              base0C = adjustLightness colors.primary cfg.primaryScale.dark;
+              base0D = adjustLightness colors.primary_container cfg.primaryScale.dark;
+              base0E = adjustLightness colors.tertiary cfg.primaryScale.dark;
+              base0F = adjustLightness colors.error cfg.primaryScale.dark;
             });
       };
 
