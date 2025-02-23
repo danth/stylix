@@ -212,7 +212,7 @@ in {
               base0A = adjustLightness colors.secondary cfg.primaryScale.dark;
               base0B = adjustLightness colors.primary cfg.primaryScale.dark;
               base0C = adjustLightness colors.primary_fixed cfg.primaryScale.dark;
-              base0D = adjustLightness colors.primary_container cfg.primaryScale.dark;
+              base0D = adjustLightness colors.surface_tint cfg.primaryScale.dark;
               base0E = adjustLightness colors.tertiary_fixed cfg.primaryScale.dark;
               base0F = adjustLightness colors.on_error_container cfg.primaryScale.dark;
             });
