@@ -42,6 +42,6 @@
       example = !autoEnable;
     }
     // lib.optionalAttrs autoEnable {
-      defaultText = lib.literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
+      defaultText = lib.literalMD "same as `stylix.autoEnable`";
     };
 }

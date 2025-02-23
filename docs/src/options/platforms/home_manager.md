@@ -1,4 +1,4 @@
-# Home Manager options
+# Home Manager
 
 The following options can only be set in a Home Manager configuration.
 
@@ -19,6 +19,6 @@ home-manager.users.«name» = {
 };
 ```
 
-[Read more about per-user themes.](../configuration.md#multi-user-configurations)
+[Read more about per-user themes.](../../configuration.md#multi-user-configurations)
 
 <!-- Auto-generated documentation will be added below. -->

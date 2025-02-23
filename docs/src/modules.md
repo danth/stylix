@@ -71,11 +71,6 @@ one of the following applies:
 - There is no reliable way to detect whether the target is installed, *and*
   enabling it unconditionally would cause problems.
 
-## Testbeds
-
-Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
-mandatory.
-
 ## How to apply colors
 
 Refer to the [style guide](./styling.md) to see how colors are named,
@@ -117,3 +112,29 @@ slow and should be avoided.
 
 For everything else, like fonts and wallpapers, you can just take option values
 directly from `config`. See the reference pages for a list of options.
+
+## Documentation
+
+Documentation for options is automatically generated. To improve the quality
+of this documentation, ensure that any custom options created using `mkOption`
+are given an appropriate `type` and a detailed `description`. This may use
+Markdown syntax for formatting and links.
+
+For modules needing more general documentation, create
+`modules/«module»/README.md`:
+
+```markdown
+# Module Name
+
+Consider describing which applications are themed by this module (if it's not
+obvious from the module name), how the applications need to be installed for the
+module to work correctly, which theming items are supported (colors, fonts,
+wallpaper, ...), and any caveats the user should be aware of.
+```
+
+This will be inserted before the automatically generated list of options.
+
+## Testbeds
+
+Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
+mandatory.

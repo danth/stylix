@@ -2,7 +2,17 @@
 title = "Stylix"
 language = "en"
 
+[preprocessor.alerts]
+
 [output.html]
 git-repository-url = "https://github.com/danth/stylix"
 edit-url-template = "https://github.com/danth/stylix/edit/master/docs/{path}"
+no-section-label = true
 
+[output.html.fold]
+enable = true
+
+[output.html.redirect]
+# Must use relative paths with . or .. for offline browsing to work correctly
+"/options/hm.html" = "./platforms/home_manager.html"
+"/options/nixos.html" = "./platforms/nixos.html"

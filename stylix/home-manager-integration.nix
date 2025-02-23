@@ -1,4 +1,3 @@
-homeManagerModule:
 {
   lib,
   config,
@@ -212,12 +211,20 @@ in
       default = true;
       example = false;
     };
+
+    module = lib.mkOption {
+      description = ''
+        The Home Manager module to be imported.
+      '';
+      internal = true;
+      readOnly = true;
+    };
   };
 
   config = lib.optionalAttrs (options ? home-manager) (
     lib.mkIf config.stylix.homeManagerIntegration.autoImport {
       home-manager.sharedModules =
-        [ homeManagerModule ]
+        [ config.stylix.homeManagerIntegration.module ]
         ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
     }
   );

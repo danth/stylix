@@ -10,8 +10,6 @@ let
 
 in
 {
-  imports = [ ../cursor.nix ];
-
   config = lib.mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.pointerCursor = {
       inherit (cfg) name package size;
