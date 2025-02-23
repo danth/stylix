@@ -16,7 +16,7 @@
     v2 = builtins.fromJSON (builtins.elemAt values 2);
     v3 = builtins.fromJSON (builtins.elemAt values 4);
     preLightness = (v1 + v2 + v3) / 3.0;
-    adj = preLightness / 255.0 * (1.0 - primaryScale) + primaryScale;
+    adj = (preLightness / 255.0 * (1.0 - primaryScale) + primaryScale) / preLightness * 255.0;
     v1adj = lib.max (lib.min (v1 * adj) 255.0) 0.0;
     v2adj = lib.max (lib.min (v2 * adj) 255.0) 0.0;
     v3adj = lib.max (lib.min (v3 * adj) 255.0) 0.0;
