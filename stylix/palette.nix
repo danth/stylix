@@ -190,7 +190,7 @@ in {
               base07 = adjustLightness colors.on_primary_container cfg.primaryScale.dark;
               base08 = adjustLightness colors.error cfg.primaryScale.dark;
               base09 = adjustLightness colors.on_tertiary cfg.primaryScale.dark;
-              base0A = adjustLightness colors.on_secondary cfg.primaryScale.dark;
+              base0A = adjustLightness colors.on_secondary_container cfg.primaryScale.dark;
               base0B = adjustLightness colors.on_secondary_fixed_variant cfg.primaryScale.dark;
               base0C = adjustLightness colors.on_primary_fixed cfg.primaryScale.dark;
               base0D = adjustLightness colors.surface_tint cfg.primaryScale.dark;
