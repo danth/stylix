@@ -46,7 +46,7 @@ in
         #
         # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
         (lib.versionAtLeast config.home.stateVersion "23.05");
-    enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
+
     useWallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock" true;
   };
 
