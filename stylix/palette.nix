@@ -194,48 +194,48 @@ in {
 
           jsonData = builtins.fromJSON (builtins.readFile raw);
           colors =
-            if cfg.polarity == "light"
+            if cfg.themeGeneration.polarity == "light"
             then jsonData.colors.light
             else jsonData.colors.dark;
         in
           if cfg.polarity == "light"
           then
             (builtins.toJSON {
-              base00 = adjustLightness colors.background cfg.primaryScale.dark;
-              base01 = adjustLightness colors.surface_container cfg.primaryScale.dark;
-              base02 = adjustLightness colors.surface_container_highest cfg.primaryScale.dark;
-              base03 = adjustLightness colors.outline cfg.primaryScale.dark;
-              base04 = adjustLightness colors.on_surface_variant cfg.primaryScale.dark;
-              base05 = adjustLightness colors.on_surface cfg.primaryScale.dark;
-              base06 = adjustLightness colors.on_secondary_fixed cfg.primaryScale.dark;
-              base07 = adjustLightness colors.on_primary_container cfg.primaryScale.dark;
-              base08 = adjustLightness colors.error cfg.primaryScale.dark;
-              base09 = adjustLightness colors.on_tertiary cfg.primaryScale.dark;
-              base0A = adjustLightness colors.on_secondary_container cfg.primaryScale.dark;
-              base0B = adjustLightness colors.on_secondary_fixed_variant cfg.primaryScale.dark;
-              base0C = adjustLightness colors.on_primary_fixed cfg.primaryScale.dark;
-              base0D = adjustLightness colors.surface_tint cfg.primaryScale.dark;
-              base0E = adjustLightness colors.on_tertiary_fixed cfg.primaryScale.dark;
-              base0F = adjustLightness colors.on_error_container cfg.primaryScale.dark;
+              base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.dark;
+              base01 = adjustLightness colors.surface_container cfg.themeGeneration.primaryScale.dark;
+              base02 = adjustLightness colors.surface_container_highest cfg.themeGeneration.primaryScale.dark;
+              base03 = adjustLightness colors.outline cfg.themeGeneration.primaryScale.dark;
+              base04 = adjustLightness colors.on_surface_variant cfg.themeGeneration.primaryScale.dark;
+              base05 = adjustLightness colors.on_surface cfg.themeGeneration.primaryScale.dark;
+              base06 = adjustLightness colors.on_secondary_fixed cfg.themeGeneration.primaryScale.dark;
+              base07 = adjustLightness colors.on_primary_container cfg.themeGeneration.primaryScale.dark;
+              base08 = adjustLightness colors.error cfg.themeGeneration.primaryScale.dark;
+              base09 = adjustLightness colors.on_tertiary cfg.themeGeneration.primaryScale.dark;
+              base0A = adjustLightness colors.on_secondary_container cfg.themeGeneration.primaryScale.dark;
+              base0B = adjustLightness colors.on_secondary_fixed_variant cfg.themeGeneration.primaryScale.dark;
+              base0C = adjustLightness colors.on_primary_fixed cfg.themeGeneration.primaryScale.dark;
+              base0D = adjustLightness colors.surface_tint cfg.themeGeneration.primaryScale.dark;
+              base0E = adjustLightness colors.on_tertiary_fixed cfg.themeGeneration.primaryScale.dark;
+              base0F = adjustLightness colors.on_error_container cfg.themeGeneration.primaryScale.dark;
             })
           else
             (builtins.toJSON {
-              base00 = adjustLightness colors.background cfg.primaryScale.dark;
-              base01 = adjustLightness colors.surface_container cfg.primaryScale.dark;
-              base02 = adjustLightness colors.surface_container_highest cfg.primaryScale.dark;
-              base03 = adjustLightness colors.outline cfg.primaryScale.dark;
-              base04 = adjustLightness colors.on_surface_variant cfg.primaryScale.dark;
-              base05 = adjustLightness colors.on_surface cfg.primaryScale.dark;
-              base06 = adjustLightness colors.secondary_fixed cfg.primaryScale.dark;
-              base07 = adjustLightness colors.on_primary_container cfg.primaryScale.dark;
-              base08 = adjustLightness colors.error cfg.primaryScale.dark;
-              base09 = adjustLightness colors.tertiary cfg.primaryScale.dark;
-              base0A = adjustLightness colors.secondary cfg.primaryScale.dark;
-              base0B = adjustLightness colors.primary cfg.primaryScale.dark;
-              base0C = adjustLightness colors.primary_fixed cfg.primaryScale.dark;
-              base0D = adjustLightness colors.surface_tint cfg.primaryScale.dark;
-              base0E = adjustLightness colors.tertiary_fixed cfg.primaryScale.dark;
-              base0F = adjustLightness colors.on_error_container cfg.primaryScale.dark;
+              base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.dark;
+              base01 = adjustLightness colors.surface_container cfg.themeGeneration.primaryScale.dark;
+              base02 = adjustLightness colors.surface_container_highest cfg.themeGeneration.primaryScale.dark;
+              base03 = adjustLightness colors.outline cfg.themeGeneration.primaryScale.dark;
+              base04 = adjustLightness colors.on_surface_variant cfg.themeGeneration.primaryScale.dark;
+              base05 = adjustLightness colors.on_surface cfg.themeGeneration.primaryScale.dark;
+              base06 = adjustLightness colors.secondary_fixed cfg.themeGeneration.primaryScale.dark;
+              base07 = adjustLightness colors.on_primary_container cfg.themeGeneration.primaryScale.dark;
+              base08 = adjustLightness colors.error cfg.themeGeneration.primaryScale.dark;
+              base09 = adjustLightness colors.tertiary cfg.themeGeneration.primaryScale.dark;
+              base0A = adjustLightness colors.secondary cfg.themeGeneration.primaryScale.dark;
+              base0B = adjustLightness colors.primary cfg.themeGeneration.primaryScale.dark;
+              base0C = adjustLightness colors.primary_fixed cfg.themeGeneration.primaryScale.dark;
+              base0D = adjustLightness colors.surface_tint cfg.themeGeneration.primaryScale.dark;
+              base0E = adjustLightness colors.tertiary_fixed cfg.themeGeneration.primaryScale.dark;
+              base0F = adjustLightness colors.on_error_container cfg.themeGeneration.primaryScale.dark;
             });
       };
 
