@@ -190,9 +190,7 @@ in {
         readOnly = true;
         internal = true;
         default = let
-          raw = lib.importJSON cfg.generated.json;
-
-          jsonData = builtins.fromJSON (builtins.readFile raw);
+          jsonData = lib.importJSON cfg.generated.json;
           colors =
             if cfg.themeGeneration.polarity == "light"
             then jsonData.colors.light
