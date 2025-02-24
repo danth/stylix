@@ -306,32 +306,53 @@ let
   # might be installed, and look there. The ideal solution would require
   # changes to KDE to make it possible to update the wallpaper through
   # config files alone.
-  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" (
-    mergeWithImage
-      ''
-        set -eu
-        get_exe() {
-          for directory in /run/current-system/sw/bin /usr/bin /bin; do
-            if [[ -f "$directory/$1" ]]; then
-              printf '%s\n' "$directory/$1"
-              return 0
-            fi
-          done
-          echo "Skipping '$1': command not found"
-          return 1
-        }
+  #
+  # This contains just the activator which must be run in a graphical session
+  activatorRequiringGraphicalSession = pkgs.writeShellApplication {
+    name = "stylix-kde-apply-plasma-theme-unwrapped";
+    text =
+      mergeWithImage
+        ''
+          global_path() {
+            for directory in /run/current-system/sw/bin /usr/bin /bin; do
+              if [[ -f "$directory/$1" ]]; then
+                printf '%s\n' "$directory/$1"
+                return 0
+              fi
+            done
 
-        if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
-          "$look_and_feel" --apply "${Id}"
-        fi
-      ''
-      ''
-        if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
-          "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}"
-        fi
-      ''
-  );
-  activator = lib.getExe activator';
+            return 1
+          }
+
+          if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
+            "$look_and_feel" --apply "${Id}" ||
+              echo "Failed plasma-apply-lookandfeel, ignoring error."
+          else
+            echo "Skipping plasma-apply-lookandfeel: command not found"
+          fi
+        ''
+        ''
+          if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
+            "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" ||
+              echo "Failed plasma-apply-wallpaperimage, ignoring error."
+          else
+            echo "Skipping plasma-apply-wallpaperimage: command not found"
+          fi
+        '';
+  };
+  activatorMaybeWithXvfb = pkgs.writeShellApplication {
+    name = "stylix-kde-apply-plasma-theme";
+    text = ''
+      if [ -z "''${DISPLAY:-}" ]; then
+        echo "Stylix KDE activator: DISPLAY unset, using xvfb-run for virtual X11 session."
+        "${lib.getExe pkgs.xvfb-run}" "${lib.getExe activatorRequiringGraphicalSession}"
+      else
+        echo "Stylix KDE activator: DISPLAY is set, applying without xvfb-run."
+        "${lib.getExe activatorRequiringGraphicalSession}"
+      fi
+    '';
+  };
+  activator = lib.getExe activatorMaybeWithXvfb;
 in
 {
   options.stylix.targets.kde = {
