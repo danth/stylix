@@ -34,7 +34,6 @@
 in {
   imports = [
     (lib.mkRemovedOptionModule [
-        "options"
         "stylix"
         "polarity"
       ] ''        The options.stylix.polarity option has been removed as a new palette generation backend is now used.
