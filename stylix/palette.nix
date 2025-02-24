@@ -29,13 +29,14 @@ in
     };
 
     image = lib.mkOption {
-      type = with lib.types; coercedTo package toString path;
+      type = with lib.types; nullOr (coercedTo package toString path);
       description = ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
+      default = null;
     };
 
     imageScalingMode = lib.mkOption {
@@ -157,6 +158,13 @@ in
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
     lib.stylix.colors = (cfg.base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
+
+    assertions = [
+      {
+        assertion = !(cfg.image == null && cfg.base16Scheme == null);
+        message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
+      }
+    ];
 
     stylix.generated.fileTree = {
       # The raw output of the palette generator.
