@@ -9,6 +9,7 @@ let
   inherit (config.stylix.fonts) sansSerif serif monospace;
   fontSize = toString config.stylix.fonts.sizes.applications;
   documentFontSize = toString (config.stylix.fonts.sizes.applications - 1);
+  cfg = config.stylix.targets.gnome;
 
   activator = pkgs.writeShellApplication {
     name = "stylix-activate-gnome";
@@ -42,10 +43,12 @@ let
 
 in
 {
-  options.stylix.targets.gnome.enable =
-    config.lib.stylix.mkEnableTarget "GNOME" true;
+  options.stylix.targets.gnome = {
+    enable = config.lib.stylix.mkEnableTarget "GNOME" true;
+    useWallpaper = config.lib.stylix.mkEnableWallpaper "GNOME" true;
+  };
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.gnome.enable) {
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
     dconf.settings = {
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
@@ -64,8 +67,8 @@ in
           # Seemingly no tile support... :(
           else
             "zoom";
-        picture-uri = "file://${config.stylix.image}";
-        picture-uri-dark = "file://${config.stylix.image}";
+        picture-uri = lib.mkIf cfg.useWallpaper "file://${config.stylix.image}";
+        picture-uri-dark = lib.mkIf cfg.useWallpaper "file://${config.stylix.image}";
       };
 
       "org/gnome/desktop/interface" = {

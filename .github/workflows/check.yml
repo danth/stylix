@@ -77,7 +77,12 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v16
         with:
           extra-conf: |-
-            allow-import-from-derivation = false
+            allow-import-from-derivation = ${{
+              startsWith(matrix.check.key, 'testbed:') &&
+              contains(matrix.check.key, ':schemeless') &&
+              'true' ||
+              'false'
+            }}
 
       - run: |
           nix build --no-update-lock-file --print-build-logs \
