@@ -34,7 +34,7 @@ in
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable)
       {
-        programs.vscode = {
+        programs.vscode.profiles.default = {
           extensions = [ themeExtension ];
           userSettings = {
             "workbench.colorTheme" = "Stylix";
