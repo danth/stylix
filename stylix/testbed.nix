@@ -113,11 +113,6 @@ let
           else if testbed == ".nix" then
             builtins.throw "testbed must have a name: ${testbed}"
 
-          # To prevent ambiguity with the final derivation's hyphen field
-          # separator, testbed names should not contain hyphens.
-          else if lib.hasInfix testbedFieldSeparator testbed then
-            builtins.throw "testbed name must not contain the '${testbedFieldSeparator}' testbed field separator: ${testbed}"
-
           else
             {
               inherit module;
@@ -132,14 +127,23 @@ let
   makeTestbed =
     testbed: stylix:
     let
-      name = builtins.concatStringsSep testbedFieldSeparator [
-        "testbed"
-        testbed.module
-        testbed.name
-        stylix.polarity
-        "image${lib.optionalString (stylix.image or null == null) "less"}"
-        "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
-      ];
+      name = builtins.concatStringsSep testbedFieldSeparator (
+        map
+          (
+            field:
+            lib.throwIf (lib.hasInfix testbedFieldSeparator field)
+              "testbed field must not contain the '${testbedFieldSeparator}' testbed field separator: ${field}"
+              field
+          )
+          [
+            "testbed"
+            testbed.module
+            testbed.name
+            stylix.polarity
+            "image${lib.optionalString (stylix.image or null == null) "less"}"
+            "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
+          ]
+      );
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
