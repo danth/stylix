@@ -175,8 +175,8 @@ in {
         default = pkgs.runCommand "raw-palette.json" {} ''
           ${pkgs.matugen}/bin/matugen \
             --json rgb \
-            --type ${cfg.scheme} \
-            --contrast ${lib.strings.floatToString cfg.contrast} \
+            --type ${cfg.themeGeneration.scheme} \
+            --contrast ${lib.strings.floatToString cfg.themeGeneration.contrast} \
             --dry-run \
             image \
             "${cfg.image}" \
