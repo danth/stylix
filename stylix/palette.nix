@@ -198,7 +198,7 @@ in {
             then jsonData.colors.light
             else jsonData.colors.dark;
         in
-          if cfg.polarity == "light"
+          if cfg.themeGeneration.polarity == "light"
           then
             (builtins.toJSON {
               base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.dark;
