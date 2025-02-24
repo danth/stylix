@@ -1,9 +1,11 @@
-# Firefox and derivatives
+# Firefox and its derivatives
 
-This module supports [Firefox](https://www.mozilla.org/firefox/), and its
-derivatives [Floorp](https://floorp.app/) and
-[LibreWolf](https://librewolf.net/), using the same underlying implementation.
-Each browser has its own set of options.
+This module supports [Firefox](https://www.mozilla.org/firefox/), in addition
+to [Floorp](https://floorp.app/) and [LibreWolf](https://librewolf.net/),
+which are Firefox derivatives.
+
+The same implementation is shared between all of these browsers, but they don't
+share option values.
 
 > [!IMPORTANT]
 >
