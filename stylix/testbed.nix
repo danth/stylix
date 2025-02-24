@@ -185,7 +185,7 @@ let
           hash = "sha256-S0MumuBGJulUekoGI2oZfUa/50Jw0ZzkqDDu1nRkFUA=";
         };
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-latte.yaml";
-        polarity = "light";
+        themeGeneration.polarity = "light";
       }
       {
         enable = true;
@@ -195,7 +195,7 @@ let
           hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
         };
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
+        themeGeneration.polarity = "dark";
       }
     ];
 

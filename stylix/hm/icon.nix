@@ -2,7 +2,7 @@
 
 let
   cfg = config.stylix.iconTheme;
-  inherit (config.stylix) polarity;
+  inherit (config.stylix.themeGeneration) polarity;
 in
 {
   imports = [ ../icon.nix ];

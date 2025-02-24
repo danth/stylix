@@ -51,7 +51,7 @@ You can force a light or dark scheme using the polarity option:
 
 ```nix
 {
-  stylix.polarity = "dark";
+  stylix.themeGeneration.polarity = "dark";
 }
 ```
 
