@@ -1,6 +1,5 @@
 {
   pkgs,
-  options,
   config,
   lib,
   ...
@@ -9,6 +8,8 @@
 with config.lib.stylix.colors;
 
 let
+  cfg = config.stylix.targets.swaylock;
+
   inside = base01-hex;
   outside = base01-hex;
   ring = base05-hex;
@@ -18,6 +19,23 @@ let
 
 in
 {
+  imports = [
+    (lib.mkRenamedOptionModuleWith {
+      from = [
+        "stylix"
+        "targets"
+        "swaylock"
+        "useImage"
+      ];
+      sinceRelease = 2505;
+      to = [
+        "stylix"
+        "targets"
+        "swaylock"
+        "useWallpaper"
+      ];
+    })
+  ];
   options.stylix.targets.swaylock = {
     enable =
       config.lib.stylix.mkEnableTarget "Swaylock"
@@ -28,15 +46,8 @@ in
         #
         # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
         (lib.versionAtLeast config.home.stateVersion "23.05");
-
-    useImage = lib.mkOption {
-      description = ''
-        Whether to use your wallpaper image for the Swaylock background.
-        If this is disabled, a plain color will be used instead.
-      '';
-      type = lib.types.bool;
-      default = true;
-    };
+    enable = config.lib.stylix.mkEnableTarget "Swaylock" true;
+    useWallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock" true;
   };
 
   config =
@@ -79,7 +90,7 @@ in
             text-ver-color = text;
             text-wrong-color = text;
           }
-          // lib.optionalAttrs config.stylix.targets.swaylock.useImage {
+          // lib.optionalAttrs cfg.useWallpaper {
             image = "${config.stylix.image}";
           };
       };

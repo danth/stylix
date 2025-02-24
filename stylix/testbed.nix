@@ -137,6 +137,8 @@ let
         testbed.module
         testbed.name
         stylix.polarity
+        "image${lib.optionalString (stylix.image or null == null) "less"}"
+        "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
       ];
 
       system = lib.nixosSystem {
@@ -181,26 +183,43 @@ let
 
   # This generates a copy of each testbed for each of the following themes.
   makeTestbeds =
-    testbed:
-    map (makeTestbed testbed) [
-      {
-        enable = true;
-        image = pkgs.fetchurl {
+    let
+      images = {
+        dark = pkgs.fetchurl {
+          name = "mountains.jpg";
+          url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
+          hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
+        };
+
+        light = pkgs.fetchurl {
           name = "three-bicycles.jpg";
           url = "https://unsplash.com/photos/hwLAI5lRhdM/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzYxNDcwfA&force=true";
           hash = "sha256-S0MumuBGJulUekoGI2oZfUa/50Jw0ZzkqDDu1nRkFUA=";
         };
+      };
+    in
+    testbed:
+    map (makeTestbed testbed) [
+      {
+        enable = true;
+        image = images.light;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-latte.yaml";
         polarity = "light";
       }
       {
         enable = true;
-        image = pkgs.fetchurl {
-          name = "mountains.jpg";
-          url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
-          hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
-        };
+        image = images.dark;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      }
+      {
+        enable = true;
+        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      }
+      {
+        enable = true;
+        image = images.dark;
         polarity = "dark";
       }
     ];

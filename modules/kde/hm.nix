@@ -10,6 +10,7 @@ let
   inherit (config.lib.stylix)
     colors
     mkEnableTarget
+    mkEnableWallpaper
     ;
   inherit (config.stylix)
     image
@@ -20,8 +21,7 @@ let
     let
       satisfies = check: (check default) && (check withImage);
     in
-    # TODO: when adding `wallpaper` option to this module, replace this with `image == null || !cfg.wallpaper`
-    if image == null then
+    if image == null || !cfg.useWallpaper then
       default
     else if satisfies lib.isString then
       default + withImage
@@ -336,7 +336,7 @@ in
 {
   options.stylix.targets.kde = {
     enable = mkEnableTarget "KDE" true;
-
+    useWallpaper = mkEnableWallpaper "KDE" true;
     decorations = lib.mkOption {
       type = lib.types.str;
       default = "org.kde.breeze";
