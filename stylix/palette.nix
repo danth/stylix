@@ -36,7 +36,7 @@ in {
     (lib.mkRemovedOptionModule [
       "stylix"
       "polarity"
-    ] "The options.stylix.polarity option has been removed as a new palette generation backend is now used.\nNew options for this palette generation backend are available at options.stylix.themeGeneration.\nThe new options.stylix.themeGeneration.polarity sets the generated theme polarity (\"dark\", \"light\" options) and the \"either\" option doesn't exist anymore.\nYou have to explicitly choose what polarity you want.\nThe new options, options.stylix.themeGeneration.scheme, options.stylix.themeGeneration.contrast, options.stylix.themeGeneration.primaryScale.light, and options.stylix.themeGeneration.primaryScale.dark, let you tweak the generated color scheme further if need be.")
+    ] "The stylix.polarity option has been removed as a new palette generation backend is now used.\nNew options for this palette generation backend are available at stylix.themeGeneration.\nThe new stylix.themeGeneration.polarity sets the generated theme polarity (\"dark\", \"light\" options) and the \"either\" option doesn't exist anymore.\nYou have to explicitly choose what polarity you want.\nThe new options, stylix.themeGeneration.scheme, stylix.themeGeneration.contrast, stylix.themeGeneration.primaryScale.light, and stylix.themeGeneration.primaryScale.dark, let you tweak the generated color scheme further if need be.")
   ];
 
   options.stylix = {
