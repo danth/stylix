@@ -18,6 +18,11 @@ jobs:
     steps:
       - uses: DeterminateSystems/nix-installer-action@v16
 
+      - uses: cachix/cachix-action@v15
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
       - id: get-derivations
         run: |
           set -o pipefail
@@ -83,6 +88,11 @@ jobs:
               'true' ||
               'false'
             }}
+
+      - uses: cachix/cachix-action@v15
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - run: |
           nix build --no-update-lock-file --print-build-logs \
