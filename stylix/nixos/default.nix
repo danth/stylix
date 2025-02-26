@@ -16,33 +16,32 @@ let
 in
 {
   imports =
-    (
-      map
-        (
-          module:
-          import module {
-            inherit
-              lib
-              config
-              pkgs
-              inputs
-              options
-              ;
-          }
-        )
-        [
-          "${inputs.self}/stylix/cursor.nix"
-          "${inputs.self}/stylix/fonts.nix"
-          "${inputs.self}/stylix/home-manager-integration.nix"
-          "${inputs.self}/stylix/nixos/cursor.nix"
-          "${inputs.self}/stylix/nixos/fonts.nix"
-          "${inputs.self}/stylix/nixos/palette.nix"
-          "${inputs.self}/stylix/opacity.nix"
-          "${inputs.self}/stylix/palette.nix"
-          "${inputs.self}/stylix/pixel.nix"
-          "${inputs.self}/stylix/target.nix"
-        ]
-      ++ autoload
-    )
-    ++ [ (import ../templates.nix inputs) ];
+
+    map
+      (
+        module:
+        import module {
+          inherit
+            lib
+            config
+            pkgs
+            inputs
+            options
+            ;
+        }
+      )
+      [
+        "${inputs.self}/stylix/cursor.nix"
+        "${inputs.self}/stylix/fonts.nix"
+        "${inputs.self}/stylix/home-manager-integration.nix"
+        "${inputs.self}/stylix/nixos/cursor.nix"
+        "${inputs.self}/stylix/nixos/fonts.nix"
+        "${inputs.self}/stylix/nixos/palette.nix"
+        "${inputs.self}/stylix/opacity.nix"
+        "${inputs.self}/stylix/palette.nix"
+        "${inputs.self}/stylix/pixel.nix"
+        "${inputs.self}/stylix/target.nix"
+      ]
+    ++ autoload;
+
 }

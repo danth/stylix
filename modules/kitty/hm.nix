@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  inputs,
+  ...
+}:
 
 let
   cfg = config.stylix.targets.kitty;
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.tinted-kitty;
+    templateRepo = inputs.tinted-kitty;
     target = if cfg.variant256Colors then "default-256" else "default";
   };
 in

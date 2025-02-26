@@ -2,12 +2,13 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }:
 
 let
   themeFile = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-vim;
+    templateRepo = inputs.base16-vim;
     target = "base16";
   };
 

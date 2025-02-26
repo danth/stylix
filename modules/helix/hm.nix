@@ -2,12 +2,13 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }:
 
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-helix;
+    templateRepo = inputs.base16-helix;
   };
 
   # Removing the background exposes transparency from the terminal. The
