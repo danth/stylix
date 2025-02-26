@@ -1,5 +1,5 @@
 inputs:
-{ lib, ... }:
+{ lib, config, ... }:
 
 # Imported modules which define new options must use an absolute path based
 # on ${inputs.self}, otherwise those options will not appear in the generated
@@ -21,4 +21,26 @@ in
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
   ] ++ autoload;
+  config.warnings =
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.enableReleaseChecks
+        && (config.stylix.release != config.system.nixos.release)
+      )
+      [
+        ''
+          You are using different Stylix and nixpkgs versions. This is
+          likely to cause errors and unexpected behavior. It is highly
+          recommended that you use a version of Stylix that matches your chosen
+          version of nixpkgs.
+
+          If you are willing to accept the risks that come with using
+          mismatched versions, you may disable this error by adding
+
+              stylix.enableReleaseChecks = false;
+
+          to your configuration.
+        ''
+      ];
 }

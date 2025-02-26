@@ -29,6 +29,19 @@
       default = true;
       example = false;
     };
+
+    enableReleaseChecks = lib.mkOption {
+      description = ''
+        Whether to check that the Stylix release matches the releases of
+        nixpkgs, home-manager, and nix-darwin. Checks are only performed if the
+        component in question is used.
+
+        If this option is enabled and a mismatch is detected, a warning will be
+        printed when the user configuration is being built.
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
   };
 
   config.lib.stylix =
