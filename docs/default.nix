@@ -32,74 +32,232 @@ let
 
   # TODO: Include Nix Darwin options
 
-  makeOptionsDoc =
-    { configuration, pathFilter }:
-    (pkgs.nixosOptionsDoc {
-      inherit (configuration) options;
-      transformOptions =
+  # transformDeclaration =
+  #   declaration:
+  #   let
+  #     declarationString = toString declaration;
+  #     declarationWithoutprefix = lib.removePrefix "${declarationPrefix}/" declarationString;
+  #   in
+  #   lib.throwIfNot (lib.hasPrefix declarationPrefix declarationString)
+  #     "declaration not in ${declarationPrefix}: ${declarationString}"
+  #     {
+  #       name = "<${declarationWithoutprefix}>";
+  #       url = "https://github.com/danth/stylix/blob/${commit}/${declarationWithoutprefix}";
+  #     };
+
+  insert =
+    {
+      index,
+      page,
+      emptyPage,
+      platform,
+      option,
+    }:
+    index
+    // {
+      ${page} =
         let
-          commit = inputs.self.rev or "master";
-          declarationPrefix = toString inputs.self;
+          oldPage = index.${page} or emptyPage;
         in
-        option:
-        option
+        oldPage
         // {
-          declarations = map (
-            declaration:
-            let
-              declarationString = toString declaration;
-              declarationWithoutprefix = lib.removePrefix "${declarationPrefix}/" declarationString;
-            in
-            lib.throwIfNot (lib.hasPrefix declarationPrefix declarationString)
-              "declaration not in ${declarationPrefix}: ${declarationString}"
-              {
-                name = "<${declarationWithoutprefix}>";
-                url = "https://github.com/danth/stylix/blob/${commit}/${declarationWithoutprefix}";
-              }
-          ) option.declarations;
-
-          visible = option.visible && lib.any pathFilter option.declarations;
+          optionsByPlatform = oldPage.optionsByPlatform // {
+            ${platform} = oldPage.optionsByPlatform.${platform} ++ [ option ];
+          };
         };
-    }).optionsCommonMark;
-
-  # The documentation for options which aren't linked to a specific module
-  makePlatformsOptionsDoc =
-    configuration:
-    makeOptionsDoc {
-      inherit configuration;
-      pathFilter =
-        path:
-        lib.hasPrefix "${inputs.self}/" path
-        && !lib.hasPrefix "${inputs.self}/modules/" path;
     };
 
-  # Returns an attribute set of module names and their corresponding option
-  # documentation.
-  makeModuleOptionsDoc =
-    configuration:
-    lib.mapAttrs (
-      module: _:
-      makeOptionsDoc {
-        inherit configuration;
-        pathFilter = lib.hasPrefix "${inputs.self}/modules/${module}/";
+  insertDeclaration =
+    {
+      index,
+      declaration,
+      platform,
+      option,
+    }:
+    if lib.hasPrefix "${inputs.self}/" declaration then
+      let
+        path = lib.removePrefix "${inputs.self}/" declaration;
+        pathComponents = lib.splitString "/" path;
+      in
+      if builtins.elemAt pathComponents 0 == "modules" then
+        let
+          module = builtins.unsafeDiscardStringContext (builtins.elemAt pathComponents 1);
+        in
+        insert {
+          inherit index platform option;
+          page = "src/options/modules/${module}.md";
+          emptyPage = {
+            referenceSection = "Modules";
+            readme = "${inputs.self}/modules/${module}/README.md";
+            defaultReadme = ''
+              # ${module}
+              > [!NOTE]
+              > This module doesn't include any additional documentation.
+              > You can browse the options it provides below.
+            '';
+            optionsByPlatform = {
+              # Module pages contain a section for all platforms, initialised
+              # to an empty list so that *None provided.* is shown rather than
+              # omitting the section.
+              home_manager = [ ];
+              nixos = [ ];
+            };
+          };
+        }
+      else
+        insert {
+          inherit index platform option;
+          page = "src/options/platforms/${platform}.md";
+          emptyPage = {
+            referenceSection = "Platforms";
+            readme = "${inputs.self}/docs/src/options/platforms/${platform}.md";
+            defaultReadme = ''
+              # ${platform}
+              > Documentation is not available for this platform. Its main
+              > options are listed below, and you may find more specific
+              > options in the documentation for each module.
+            '';
+            optionsByPlatform = {
+              # Platform pages only contain a section for that platform
+              ${platform} = [ ];
+            };
+          };
+        }
+    else
+      index;
+
+  insertOption =
+    {
+      index,
+      platform,
+      option,
+    }:
+    builtins.foldl' (
+      foldIndex: declaration:
+      insertDeclaration {
+        index = foldIndex;
+        inherit declaration platform option;
       }
-    ) (builtins.readDir "${inputs.self}/modules");
+    ) index option.declarations;
 
-  nixosModuleOptionsDoc = makeModuleOptionsDoc nixosConfiguration;
-  homeManagerModuleOptionsDoc = makeModuleOptionsDoc homeManagerConfiguration;
+  insertPlatform =
+    {
+      index,
+      platform,
+      configuration,
+    }:
+    builtins.foldl' (
+      foldIndex: option:
+      insertOption {
+        index = foldIndex;
+        inherit platform option;
+      }
+    ) index (lib.optionAttrSetToDocList configuration.options);
 
-  modulePageScript = lib.pipe "${inputs.self}/modules" [
-    builtins.readDir
-    (lib.mapAttrsToList (
-      module: _: ''
-        writeModulePage \
-          ${module} \
-          ${homeManagerModuleOptionsDoc.${module}} \
-          ${nixosModuleOptionsDoc.${module}}
-      ''
-    ))
-    lib.concatStrings
-  ];
+  index =
+    builtins.foldl'
+      (
+        foldIndex:
+        { platform, configuration }:
+        insertPlatform {
+          index = foldIndex;
+          inherit platform configuration;
+        }
+      )
+      { }
+      [
+        {
+          platform = "home_manager";
+          configuration = homeManagerConfiguration;
+        }
+        {
+          platform = "nixos";
+          configuration = nixosConfiguration;
+        }
+      ];
+
+  renderOption =
+    option:
+    lib.optionalString (option.visible && !option.internal) ''
+      ### ${option.name}
+      ${option.description}
+    '';
+
+  renderPlatform =
+    name: options:
+    let
+      sortedOptions = builtins.sort (a: b: a.name < b.name) options;
+      renderedOptions =
+        if sortedOptions == [ ] then
+          "*None provided.*"
+        else
+          lib.concatMapStrings renderOption sortedOptions;
+    in
+    ''
+      ## ${name} options
+      ${renderedOptions}
+    '';
+
+  renderPage =
+    _path: page:
+    let
+      readme =
+        # This doesn't count as IFD because ${inputs.self} is a flake input
+        if builtins.pathExists page.readme then
+          builtins.readFile page.readme
+        else
+          page.defaultReadme;
+      options = lib.concatStrings (
+        lib.mapAttrsToList renderPlatform page.optionsByPlatform
+      );
+    in
+    lib.concatLines [
+      readme
+      options
+    ];
+
+  renderedPages = lib.mapAttrs renderPage index;
+
+  insertPageSummary =
+    summary: path: page:
+    let
+      text = renderedPages.${path};
+      lines = lib.splitString "\n" text;
+      firstLine = builtins.elemAt lines 0;
+      title = lib.removePrefix "# " firstLine;
+      relativePath = lib.removePrefix "src/" path;
+      entry =
+        if title == firstLine then
+          builtins.throw "${path} must begin with a title"
+        else
+          "  - [${title}](${relativePath})";
+    in
+    summary
+    // {
+      ${page.referenceSection} = (summary.${page.referenceSection} or [ ]) ++ [
+        entry
+      ];
+    };
+
+  summary = lib.foldlAttrs insertPageSummary { } index;
+
+  renderSummarySection =
+    referenceSection: entries:
+    let
+      parentEntry = "- [${referenceSection}]()";
+    in
+    [ parentEntry ] ++ entries;
+
+  renderedSummary = lib.concatLines (
+    lib.flatten (lib.mapAttrsToList renderSummarySection summary)
+  );
+
+  writePage = path: text: ''
+    mkdir --parents ${lib.escapeShellArg (builtins.dirOf path)}
+    echo ${lib.escapeShellArg text} >${lib.escapeShellArg path}
+  '';
+
+  writePages = lib.concatStrings (lib.mapAttrsToList writePage renderedPages);
 
 in
 pkgs.stdenvNoCC.mkDerivation {
@@ -111,73 +269,11 @@ pkgs.stdenvNoCC.mkDerivation {
   ];
 
   patchPhase = ''
-    # The generated documentation has headings at level 2, but we want level 3
-    # so they can be nested under the sections for each module system.
-    REDUCE_HEADINGS='s/^## /### /'
-
-    function writeOptions() {
-      platformName="$1"
-      optionsFile="$2"
-      outputFile="$3"
-
-      printf '\n## %s options\n' "$platformName" >>"$outputFile"
-
-      if [[ -s "$optionsFile" ]]; then
-        sed \
-          --expression "$REDUCE_HEADINGS" \
-          <"$optionsFile" \
-          >>"$outputFile"
-      else
-        printf '*%s*\n' "None provided." >>"$outputFile"
-      fi
-    }
-
-    function writeModulePage() {
-      moduleName="$1"
-      homeManagerOptionsFile="$2"
-      nixosOptionsFile="$3"
-
-      readmeFile="${inputs.self}/modules/$moduleName/README.md"
-      page="options/modules/$moduleName.md"
-      outputFile="src/$page"
-
-      if [[ -f $outputFile ]]; then
-        printf \
-          '%s should not be used. Move it to %s\n' \
-          "docs/src/options/modules/$moduleName.md" \
-          "modules/$moduleName/README.md" \
-          >&2
-        exit 1
-
-      elif [[ -f $readmeFile ]]; then
-        cp --no-preserve=mode,ownership "$readmeFile" "$outputFile"
-
-      else
-        printf \
-          '%s\n' \
-          "# $moduleName" \
-          '> [!NOTE]' \
-          "> This module doesn't include any additional documentation." \
-          '> You can browse the options it provides below.' \
-          >>"$outputFile"
-      fi
-
-      writeOptions 'Home Manager' "$homeManagerOptionsFile" "$outputFile"
-      writeOptions 'NixOS' "$nixosOptionsFile" "$outputFile"
-
-      printf '  - [%s](%s)\n' "$moduleName" "$page" >>src/SUMMARY.md
-    }
-
+    ${writePages}
+    echo -n ${lib.escapeShellArg renderedSummary} >>src/SUMMARY.md
     cp ${../README.md} src/README.md
     cp ${../gnome.png} src/gnome.png
     cp ${../kde.png} src/kde.png
-
-    mkdir --parents src/options/platforms
-    writeOptions 'Home Manager' ${(makePlatformsOptionsDoc homeManagerConfiguration)} src/options/platforms/home_manager.md
-    writeOptions 'NixOS' ${(makePlatformsOptionsDoc nixosConfiguration)} src/options/platforms/nixos.md
-
-    mkdir --parents src/options/modules
-    ${modulePageScript}
   '';
 
   buildPhase = "mdbook build --dest-dir $out";
