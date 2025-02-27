@@ -1,8 +1,13 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  inputs,
+  ...
+}:
 
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.tinted-tmux;
+    templateRepo = inputs.tinted-tmux;
     target = "base16";
   };
 

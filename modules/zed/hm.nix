@@ -1,11 +1,12 @@
 {
   config,
   lib,
+  inputs,
   ...
 }:
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.tinted-zed;
+    templateRepo = inputs.tinted-zed;
   };
 in
 {

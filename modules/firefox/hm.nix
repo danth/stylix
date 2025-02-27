@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -45,7 +46,7 @@ let
       g = colors."${color}-rgb-g";
       b = colors."${color}-rgb-b";
     };
-  nur = config.lib.stylix.templates.nur.legacyPackages.${pkgs.system};
+  nur = inputs.nur.legacyPackages.${pkgs.system};
 in
 {
   options.stylix.targets = lib.listToAttrs (
@@ -160,7 +161,7 @@ in
     lib.mkIf cfg.firefoxGnomeTheme.enable (
       eachConfig (profileName: {
         "${programCfg.configPath}/${profileName}/chrome/firefox-gnome-theme".source =
-          config.lib.stylix.templates.firefox-gnome-theme;
+          inputs.firefox-gnome-theme;
       }) cfg.profileNames
     )
   );

@@ -1,8 +1,8 @@
-config:
+{ config, inputs }:
 
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-fish;
+    templateRepo = inputs.base16-fish;
   };
 in
 ''

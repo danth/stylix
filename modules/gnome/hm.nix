@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }:
 
@@ -93,7 +94,8 @@ in
         source =
           let
             theme = pkgs.callPackage ./theme.nix {
-              inherit (config.lib.stylix) colors templates;
+              inherit (config.lib.stylix) colors;
+              inherit inputs;
             };
           in
           "${theme}/share/gnome-shell/gnome-shell.css";
