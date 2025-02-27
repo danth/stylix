@@ -1,0 +1,43 @@
+---
+description: Request a feature.
+labels: [feature]
+name: Feature request
+title: "<SCOPE>: <SUMMARY>"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: Has this been requested before?
+      description: >-
+        Search [existing issues](https://github.com/danth/stylix/issues) to
+        ensure that this feature hasn't been requested before.
+
+    options:
+      - label: I have searched for existing feature requests
+        required: true
+
+  - type: dropdown
+
+    attributes:
+      label: Feature Type
+      description: What kind of feature is this?
+
+      options:
+        - New target
+        - Altered target
+        - New option
+        - Altered option
+        - Other
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      label: Description
+      description: Describe the feature.
+
+    validations:
+      required: true
