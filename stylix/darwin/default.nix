@@ -1,5 +1,5 @@
 inputs:
-{ lib, ... }:
+{ lib, config, ... }:
 
 # Imported modules which define new options must use an absolute path based
 # on ${inputs.self}, otherwise those options will not appear in the generated
@@ -20,4 +20,10 @@ in
     "${inputs.self}/stylix/target.nix"
     (import ../templates.nix inputs)
   ] ++ autoload;
+  config.assertions = lib.mkIf config.stylix.enable [
+    {
+      assertion = config.system.darwin.release == config.stylix.release;
+      message = "Stylix and darwin versions must match";
+    }
+  ];
 }
