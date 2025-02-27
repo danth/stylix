@@ -6,6 +6,7 @@
 }:
 
 let
+  inherit (config.lib.stylix.templates) firefox-gnome-theme;
   targets = [
     {
       path = "firefox";
@@ -91,15 +92,20 @@ in
             "svg.context-properties.content.enabled" = true;
           };
 
-          userChrome = builtins.readFile (
-            config.lib.stylix.colors {
-              template = ./userChrome.mustache;
-              extension = "css";
-            }
-          );
+          userChrome =
+            let
+              template = config.lib.stylix.colors {
+                template = ./userChrome.mustache;
+                extension = "css";
+              };
+            in
+            ''
+              @import "${firefox-gnome-theme}/userChrome.css";
+              @import "${template}";
+            '';
 
           userContent = ''
-            import "firefox-gnome-theme/userContent.css";
+            @import "${firefox-gnome-theme}/userContent.css";
           '';
         })
         (lib.mkIf cfg.colorTheme.enable {
@@ -153,15 +159,5 @@ in
         })
       ];
     }) cfg.profileNames
-  );
-
-  config.home.file = eachTarget (
-    { cfg, programCfg, ... }:
-    lib.mkIf cfg.firefoxGnomeTheme.enable (
-      eachConfig (profileName: {
-        "${programCfg.configPath}/${profileName}/chrome/firefox-gnome-theme".source =
-          config.lib.stylix.templates.firefox-gnome-theme;
-      }) cfg.profileNames
-    )
   );
 }
