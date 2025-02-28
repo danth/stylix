@@ -1,4 +1,6 @@
 {
+  description = "NixOS theming framework";
+
   inputs = {
     base16-fish = {
       flake = false;
