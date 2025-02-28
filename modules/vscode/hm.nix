@@ -26,15 +26,23 @@ let
         ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
       '';
 
+  cfg = config.stylix.targets.vscode;
+
 in
 {
-  options.stylix.targets.vscode.enable =
-    config.lib.stylix.mkEnableTarget "VSCode" true;
+  options.stylix.targets.vscode = {
+    enable = config.lib.stylix.mkEnableTarget "VSCode" true;
+    profileNames = lib.mkOption {
+      description = "The VSCode profile names to apply styling on.";
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+    };
+  };
 
-  config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable)
-      {
-        programs.vscode.profiles.default = {
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
+    programs.vscode.profiles = lib.mkMerge (
+      map (profileName: {
+        ${profileName} = {
           extensions = [ themeExtension ];
           userSettings = {
             "workbench.colorTheme" = "Stylix";
@@ -62,5 +70,26 @@ in
             "screencastMode.fontSize" = sizes.terminal * 4.0 / 3.0 * 56.0 / 14.0;
           };
         };
-      };
+      }) cfg.profileNames
+    );
+    warnings =
+      lib.mkIf
+        (
+          config.programs.vscode.enable
+          && config.stylix.targets.vscode.profileNames == [ ]
+        )
+        [
+          ''
+            VSCode is currently enabled in both home-manager and Stylix, but Stylix
+            has no profile names to theme. These can be set with
+
+                config.stylix.targets.vscode.profileNames = [ "nameOfProfile" ];
+
+            Alternatively, this warning can be disabled by disabling the VSCode
+            Stylix module
+
+                config.stylix.targets.vscode.enable = false; 
+          ''
+        ];
+  };
 }
