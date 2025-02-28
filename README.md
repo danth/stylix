@@ -1,7 +1,7 @@
 # Stylix
 
-Stylix is a NixOS module which applies the same colour scheme, font and
-wallpaper to a range of applications and desktop environments.
+Stylix is a NixOS theming framework, applying a unified color scheme, font, and
+wallpaper across applications.
 
 ## What's this?
 
