@@ -2,6 +2,7 @@
 
 let
   package = pkgs.firefox;
+  profileName = "stylix";
 in
 {
   stylix.testbed.application = {
@@ -14,11 +15,11 @@ in
     programs.firefox = {
       enable = true;
       inherit package;
-      profiles.stylix.isDefault = true;
+      profiles.${profileName}.isDefault = true;
     };
 
     stylix.targets.firefox = {
-      profileNames = [ "stylix" ];
+      profileNames = [ profileName ];
       firefoxGnomeTheme.enable = true;
     };
   };
