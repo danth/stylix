@@ -11,9 +11,9 @@
             rgb-to-hsl =
               color:
               let
-                r = ((lib.toInt config.lib.stylix.colors."${color}-rgb-r") * 100) / 255;
-                g = ((lib.toInt config.lib.stylix.colors."${color}-rgb-g") * 100) / 255;
-                b = ((lib.toInt config.lib.stylix.colors."${color}-rgb-b") * 100) / 255;
+                r = ((lib.toInt config.lib.stylix.colors."${color}-rgb-r") * 100.0) / 255;
+                g = ((lib.toInt config.lib.stylix.colors."${color}-rgb-g") * 100.0) / 255;
+                b = ((lib.toInt config.lib.stylix.colors."${color}-rgb-b") * 100.0) / 255;
                 max = lib.max r (lib.max g b);
                 min = lib.min r (lib.min g b);
                 delta = max - min;
@@ -21,7 +21,7 @@
                   if delta == 0 then
                     0
                   else if max == r then
-                    60 * (lib.mod ((g - b) / delta) 6)
+                    60 * (((g - b) / delta) + (if g < b then 6 else 0))
                   else if max == g then
                     60 * (((b - r) / delta) + 2)
                   else if max == b then
@@ -30,9 +30,12 @@
                     0;
                 l = (max + min) / 2;
                 s =
-                  if delta == 0 then 0 else delta / (100 - lib.max (2 * l - 100) (100 - (2 * l)));
+                  if delta == 0 then
+                    0
+                  else
+                    100 * delta / (100 - lib.max (2 * l - 100) (100 - (2 * l)));
               in
-              "${builtins.toString h} ${builtins.toString s} ${builtins.toString l}";
+              "${builtins.toString (builtins.floor h)} ${builtins.toString (builtins.floor s)} ${builtins.toString (builtins.floor l)}";
           in
           {
             light = config.stylix.polarity == "light";
