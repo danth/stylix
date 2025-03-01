@@ -5,7 +5,7 @@
 }:
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.tinted-zed;
+    templateRepo = config.stylix.inputs.tinted-zed;
   };
 in
 {

@@ -2,7 +2,7 @@ config:
 
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.base16-fish;
+    templateRepo = config.stylix.inputs.base16-fish;
   };
 in
 ''
