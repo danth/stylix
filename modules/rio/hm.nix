@@ -16,7 +16,8 @@ in
       fonts = with config.stylix.fonts; {
         family = monospace.name;
         emoji.family = emoji.name;
-        size = sizes.terminal;
+        # converting font size to px
+        size = sizes.terminal * 4.0 / 3.0;
       };
       window.opacity = with config.stylix.opacity; terminal;
       colors = with colors; {
