@@ -219,6 +219,7 @@
             (import ./stylix/nixos inputs)
             {
               stylix = {
+                inherit inputs;
                 paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
@@ -234,6 +235,7 @@
             (import ./stylix/hm inputs)
             {
               stylix = {
+                inherit inputs;
                 paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
               };
@@ -248,6 +250,7 @@
             (import ./stylix/darwin inputs)
             {
               stylix = {
+                inherit inputs;
                 paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
