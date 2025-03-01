@@ -15,6 +15,7 @@ in
     programs.rio.settings = {
       fonts = with config.stylix.fonts; {
         family = monospace.name;
+        emoji.family = emoji.name;
         size = sizes.terminal;
       };
       window.opacity = with config.stylix.opacity; terminal;
