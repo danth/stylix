@@ -51,7 +51,7 @@ in
           font = {
             inherit (config.stylix.fonts.sansSerif) name package;
           };
-          cursorTheme = {
+          cursorTheme = lib.mkIf (config.stylix.cursor != null) {
             inherit (config.stylix.cursor) name package;
           };
           theme = {
