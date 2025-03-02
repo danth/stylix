@@ -2,11 +2,14 @@
   pkgs,
   config,
   lib,
+  osConfig ? null,
   ...
 }:
 {
   options.stylix.targets.qt = {
-    enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
+    # only autoenables on NixOS systems. see https://github.com/danth/stylix/issues/933
+    enable = config.lib.stylix.mkEnableTarget "QT" (osConfig != null);
+
     platform = lib.mkOption {
       description = ''
         Selects the platform theme to use for Qt applications.
@@ -88,7 +91,9 @@
           (lib.mkIf (config.qt.style.name == "kvantum") {
             "Kvantum/kvantum.kvconfig".source =
               (pkgs.formats.ini { }).generate "kvantum.kvconfig"
-                { General.theme = "Base16Kvantum"; };
+                {
+                  General.theme = "Base16Kvantum";
+                };
 
             "Kvantum/Base16Kvantum".source =
               "${kvantumPackage}/share/Kvantum/Base16Kvantum";
