@@ -54,8 +54,7 @@ Photos by [Clay Banks](https://unsplash.com/photos/three-bicycles-parked-in-fron
 and [Derrick Cooper](https://unsplash.com/photos/brown-road-in-forest-during-daytime-L505cPnmIds).
 
 Try a live demo of this theme by running
-`nix run github:danth/stylix#testbed:gnome:default:light` or
-`nix run github:danth/stylix#testbed:gnome:default:dark`.
+`nix run github:danth/stylix#testbed:gnome:default:dark:image:scheme`.
 
 ### KDE Plasma 5
 

@@ -18,6 +18,9 @@ in
       profiles.${profileName}.isDefault = true;
     };
 
-    stylix.targets.firefox.profileNames = [ profileName ];
+    stylix.targets.firefox = {
+      profileNames = [ profileName ];
+      firefoxGnomeTheme.enable = true;
+    };
   };
 }
