@@ -95,7 +95,7 @@ in
           userChrome =
             let
               template = config.lib.stylix.colors {
-                template = ./userChrome.mustache;
+                template = ./userChrome.css.mustache;
                 extension = "css";
               };
             in

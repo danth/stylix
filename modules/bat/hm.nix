@@ -8,7 +8,7 @@
       # This theme is reused for yazi. Changes to the template
       # will need to be applied to modules/yazi/hm.nix
       themes."base16-stylix".src = config.lib.stylix.colors {
-        template = ./base16-stylix.mustache;
+        template = ./base16-stylix.tmTheme.mustache;
         extension = ".tmTheme";
       };
 
