@@ -47,6 +47,7 @@ let
       b = colors."${color}-rgb-b";
     };
   nur = config.lib.stylix.templates.nur.legacyPackages.${pkgs.system};
+  inherit (nur.repos.rycee) firefox-addons;
 in
 {
   options.stylix.targets = lib.listToAttrs (
@@ -63,6 +64,10 @@ in
 
         colorTheme.enable = config.lib.stylix.mkEnableTarget ''
           [Firefox Color](https://color.firefox.com/) theme
+        '' false;
+
+        darkReader.enable = config.lib.stylix.mkEnableTarget ''
+          [Dark Reader](https://darkreader.org/) theming
         '' false;
 
         firefoxGnomeTheme.enable = config.lib.stylix.mkEnableTarget ''
@@ -110,7 +115,7 @@ in
         })
         (lib.mkIf cfg.colorTheme.enable {
           extensions = {
-            packages = [ nur.repos.rycee.firefox-addons.firefox-color ];
+            packages = [ firefox-addons.firefox-color ];
             settings."FirefoxColor@mozilla.com".settings = {
               firstRunDone = true;
               theme = {
@@ -155,6 +160,20 @@ in
                 };
               };
             };
+          };
+        })
+        (lib.mkIf cfg.darkReader.enable {
+          extensions = {
+            packages = [ firefox-addons.darkreader ];
+            settings."addon@darkreader.org".settings.theme =
+              with config.lib.stylix.colors.withHashtag; {
+                fontFamily = config.stylix.fonts.sansSerif.name;
+                lightSchemeBackgroundColor = base00;
+                darkSchemeBackgroundColor = base00;
+                lightSchemeTextColor = base05;
+                darkSchemeTextColor = base05;
+                selectionColor = base0D;
+              };
           };
         })
       ];
