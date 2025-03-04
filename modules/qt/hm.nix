@@ -8,7 +8,9 @@
 {
   options.stylix.targets.qt = {
     # only autoenables on NixOS systems. see https://github.com/danth/stylix/issues/933
-    enable = config.lib.stylix.mkEnableTarget "QT" (osConfig != null);
+    enable = config.lib.stylix.mkEnableTarget "QT" (
+      pkgs.stdenv.hostPlatform.isLinux && osConfig != null
+    );
 
     platform = lib.mkOption {
       description = ''
