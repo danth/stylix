@@ -1,5 +1,5 @@
 # Dummy values to avoid errors when generating the documentation.
-
+{ pkgs, ... }:
 {
   stylix = {
     image = "/a/b/c";
@@ -21,6 +21,12 @@
       base0D = "ffffff";
       base0E = "ffffff";
       base0F = "ffffff";
+    };
+
+    cursor = {
+      name = "Vanilla-DMZ";
+      package = pkgs.vanilla-dmz;
+      size = 32;
     };
   };
 }
