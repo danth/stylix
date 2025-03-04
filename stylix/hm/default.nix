@@ -21,6 +21,5 @@ in
     "${inputs.self}/stylix/palette.nix"
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
-    (import ../templates.nix inputs)
   ] ++ autoload;
 }

@@ -7,7 +7,8 @@
 
 let
   theme = pkgs.callPackage ./theme.nix {
-    inherit (config.lib.stylix) colors templates;
+    inherit (config.lib.stylix) colors;
+    inherit (config.stylix) inputs;
   };
 
 in

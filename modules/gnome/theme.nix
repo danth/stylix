@@ -3,7 +3,7 @@
   sass,
   glib,
   colors,
-  templates,
+  inputs,
 }:
 
 let
@@ -15,7 +15,7 @@ let
 in
 stdenv.mkDerivation {
   name = "${colors.slug}-gnome-shell-theme";
-  src = templates.gnome-shell;
+  src = inputs.gnome-shell;
   patches = [ ./shell_colors.patch ];
   postPatch = ''
     rm data/theme/gnome-shell-sass/{_colors.scss,_default-colors.scss,_palette.scss}

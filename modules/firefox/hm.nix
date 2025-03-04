@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (config.lib.stylix.templates) firefox-gnome-theme;
+  inherit (config.stylix.inputs) firefox-gnome-theme;
   targets = [
     {
       path = "firefox";
@@ -46,7 +46,7 @@ let
       g = colors."${color}-rgb-g";
       b = colors."${color}-rgb-b";
     };
-  nur = config.lib.stylix.templates.nur.legacyPackages.${pkgs.system};
+  nur = config.stylix.inputs.nur.legacyPackages.${pkgs.system};
 in
 {
   options.stylix.targets = lib.listToAttrs (
