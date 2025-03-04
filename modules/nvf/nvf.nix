@@ -18,7 +18,7 @@ in
       default = "base16";
       description = "Plugin used for the colorscheme";
     };
-    transparentBackground = lib.mkEnableOption "Background transparency for the main Neovim window";
+    transparentBackground = lib.mkEnableOption "background transparency for the main Neovim window";
   };
 
   config =
