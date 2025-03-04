@@ -54,8 +54,10 @@ in
 
         # Cursor settings are usually applied via Home Manager,
         # but the login screen uses a separate database.
-        environment.systemPackages = [ config.stylix.cursor.package ];
-        programs.dconf.profiles.gdm.databases = [
+        environment.systemPackages = lib.mkIf (config.stylix.cursor != { }) [
+          config.stylix.cursor.package
+        ];
+        programs.dconf.profiles.gdm.databases = lib.mkIf (config.stylix.cursor != { }) [
           {
             lockAll = true;
             settings."org/gnome/desktop/interface" = {
