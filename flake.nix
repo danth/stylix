@@ -198,8 +198,6 @@
                       '
                 '';
               };
-
-              palette-generator = pkgs.callPackage ./palette-generator { };
             };
 
             # Testbeds are virtual machines based on NixOS, therefore they are
@@ -219,7 +217,6 @@
             (import ./stylix/nixos inputs)
             {
               stylix = {
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -234,7 +231,6 @@
             (import ./stylix/hm inputs)
             {
               stylix = {
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
               };
             }
@@ -248,7 +244,6 @@
             (import ./stylix/darwin inputs)
             {
               stylix = {
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };

@@ -251,12 +251,12 @@ in
 
             webpage =
               let
-                isDark = config.stylix.polarity == "dark";
+                isDark = config.stylix.themeGeneration.polarity == "dark";
               in
               {
                 darkmode.enabled = lib.mkIf isDark (lib.mkDefault true);
 
-                preferred_color_scheme = lib.mkIf isDark (lib.mkDefault config.stylix.polarity);
+                preferred_color_scheme = lib.mkIf isDark (lib.mkDefault config.stylix.themeGeneration.polarity);
               };
           };
 

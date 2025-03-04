@@ -4,28 +4,115 @@
   config,
   options,
   ...
-}:
-
-let
+}: let
   cfg = config.stylix;
+  adjustLightness = rgbColorString: primaryScale: let
+    stripped = builtins.replaceStrings ["rgb(" ")"] ["" ""] rgbColorString;
+    values = builtins.split "," stripped;
+    v1 = builtins.fromJSON (builtins.elemAt values 0);
+    v2 = builtins.fromJSON (builtins.elemAt values 2);
+    v3 = builtins.fromJSON (builtins.elemAt values 4);
+    preLightness = (v1 + v2 + v3) / 3.0;
+    adj = (preLightness / 255.0 * (1.0 - primaryScale) + primaryScale) / preLightness * 255.0;
+    v1adj = lib.max (lib.min (v1 * adj) 255.0) 0.0;
+    v2adj = lib.max (lib.min (v2 * adj) 255.0) 0.0;
+    v3adj = lib.max (lib.min (v3 * adj) 255.0) 0.0;
+    round = x: let
+      floored = builtins.floor x;
+      diff = x - floored;
+    in
+      if diff >= 0.5
+      then floored + 1
+      else floored;
+  in
+    builtins.toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v1adj)))
+    + builtins.toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v2adj)))
+    + builtins.toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v3adj)));
+in {
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "stylix"
+      "polarity"
+    ] "The stylix.polarity option has been removed as a new palette generation backend is now used.\nNew options for this palette generation backend are available at stylix.themeGeneration.\nThe new stylix.themeGeneration.polarity sets the generated theme polarity (\"dark\", \"light\" options) and the \"either\" option doesn't exist anymore.\nYou have to explicitly choose what polarity you want.\nThe new options, stylix.themeGeneration.scheme, stylix.themeGeneration.contrast, stylix.themeGeneration.primaryScale.light, and stylix.themeGeneration.primaryScale.dark, let you tweak the generated color scheme further if need be.")
+  ];
 
-in
-{
   options.stylix = {
-    polarity = lib.mkOption {
-      type = lib.types.enum [
-        "either"
-        "light"
-        "dark"
-      ];
-      default = "either";
-      description = ''
-        Use this option to force a light or dark theme.
+    themeGeneration = {
+      scheme = lib.mkOption {
+        type = lib.types.enum [
+          "scheme-content"
+          "scheme-expressive"
+          "scheme-fidelity"
+          "scheme-fruit-salad"
+          "scheme-monochrome"
+          "scheme-neutral"
+          "scheme-rainbow"
+          "scheme-tonal-spot"
+        ];
+        default = "scheme-tonal-spot";
+        description = ''
+          Use this option to select a color scheme type.
 
-        By default we will select whichever is ranked better by the genetic
-        algorithm. This aims to get good contrast between the foreground and
-        background, as well as some variety in the highlight colours.
-      '';
+          By default we will select matugen's default color scheme type.
+        '';
+      };
+      contrast = lib.mkOption {
+        type = lib.types.float;
+        default = 0.0;
+        description = ''
+          Use this option to change the generated color scheme's contrast.
+
+          Value from -1 to 1. -1 represents minimum contrast,
+          0 represents standard (i.e. the design as spec'd),
+          and 1 represents maximum contrast.
+
+          By default, 0 will be used.
+        '';
+      };
+
+      primaryScale = {
+        dark = lib.mkOption {
+          type = lib.types.float;
+          default = 0.0;
+          description = ''
+            Use this option to change the generated dark color scheme's contrast.
+
+            Value from -1 to 1. -1 represents minimum contrast,
+            0 represents standard (i.e. the design as spec'd),
+            and 1 represents maximum contrast.
+
+            By default, 0 will be used.
+          '';
+        };
+        light = lib.mkOption {
+          type = lib.types.float;
+          default = 0.0;
+          description = ''
+            Use this option to change the generated light color scheme's contrast.
+
+            Value from -1 to 1. -1 represents minimum contrast,
+            0 represents standard (i.e. the design as spec'd),
+            and 1 represents maximum contrast.
+
+            By default, 0 will be used.
+          '';
+        };
+      };
+
+      polarity = lib.mkOption {
+        type = lib.types.enum [
+          "light"
+          "dark"
+        ];
+        default = "dark";
+        description = ''
+          Use this option to force a light or dark theme.
+
+          By default we will select whichever is ranked better by the genetic
+          algorithm. This aims to get good contrast between the foreground and
+          background, as well as some variety in the highlight colours.
+        '';
+      };
     };
 
     image = lib.mkOption {
@@ -78,11 +165,15 @@ in
         # and not anything indirect such as filling a template, otherwise
         # the output of the palette generator will not be protected from
         # garbage collection.
-        default = pkgs.runCommand "palette.json" { } ''
-          ${cfg.paletteGenerator}/bin/palette-generator \
-            "${cfg.polarity}" \
-            ${lib.escapeShellArg "${cfg.image}"} \
-            "$out"
+        default = pkgs.runCommand "raw-palette.json" {} ''
+          ${pkgs.matugen}/bin/matugen \
+            --json rgb \
+            --type ${cfg.themeGeneration.scheme} \
+            --contrast ${lib.strings.floatToString cfg.themeGeneration.contrast} \
+            --dry-run \
+            image \
+            "${cfg.image}" \
+            > "$out"
         '';
       };
 
@@ -91,11 +182,50 @@ in
         description = "The palette generated by the palette generator.";
         readOnly = true;
         internal = true;
-        default = (lib.importJSON cfg.generated.json) // {
-          author = "Stylix";
-          scheme = "Stylix";
-          slug = "stylix";
-        };
+        default = let
+          jsonData = lib.importJSON cfg.generated.json;
+          colors =
+            if cfg.themeGeneration.polarity == "light"
+            then jsonData.colors.light
+            else jsonData.colors.dark;
+        in
+          if cfg.themeGeneration.polarity == "light"
+          then {
+            base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.dark;
+            base01 = adjustLightness colors.surface_container cfg.themeGeneration.primaryScale.dark;
+            base02 = adjustLightness colors.surface_container_highest cfg.themeGeneration.primaryScale.dark;
+            base03 = adjustLightness colors.outline cfg.themeGeneration.primaryScale.dark;
+            base04 = adjustLightness colors.on_surface_variant cfg.themeGeneration.primaryScale.dark;
+            base05 = adjustLightness colors.on_surface cfg.themeGeneration.primaryScale.dark;
+            base06 = adjustLightness colors.on_secondary_fixed cfg.themeGeneration.primaryScale.dark;
+            base07 = adjustLightness colors.on_primary_container cfg.themeGeneration.primaryScale.dark;
+            base08 = adjustLightness colors.error cfg.themeGeneration.primaryScale.dark;
+            base09 = adjustLightness colors.on_tertiary cfg.themeGeneration.primaryScale.dark;
+            base0A = adjustLightness colors.on_secondary_container cfg.themeGeneration.primaryScale.dark;
+            base0B = adjustLightness colors.on_secondary_fixed_variant cfg.themeGeneration.primaryScale.dark;
+            base0C = adjustLightness colors.on_primary_fixed cfg.themeGeneration.primaryScale.dark;
+            base0D = adjustLightness colors.surface_tint cfg.themeGeneration.primaryScale.dark;
+            base0E = adjustLightness colors.on_tertiary_fixed cfg.themeGeneration.primaryScale.dark;
+            base0F = adjustLightness colors.on_error_container cfg.themeGeneration.primaryScale.dark;
+          }
+          else {
+            base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.dark;
+            base01 = adjustLightness colors.surface_container cfg.themeGeneration.primaryScale.dark;
+            base02 = adjustLightness colors.surface_container_highest cfg.themeGeneration.primaryScale.dark;
+            base03 = adjustLightness colors.outline cfg.themeGeneration.primaryScale.dark;
+            base04 = adjustLightness colors.on_surface_variant cfg.themeGeneration.primaryScale.dark;
+            base05 = adjustLightness colors.on_surface cfg.themeGeneration.primaryScale.dark;
+            base06 = adjustLightness colors.secondary_fixed cfg.themeGeneration.primaryScale.dark;
+            base07 = adjustLightness colors.on_primary_container cfg.themeGeneration.primaryScale.dark;
+            base08 = adjustLightness colors.error cfg.themeGeneration.primaryScale.dark;
+            base09 = adjustLightness colors.tertiary cfg.themeGeneration.primaryScale.dark;
+            base0A = adjustLightness colors.secondary cfg.themeGeneration.primaryScale.dark;
+            base0B = adjustLightness colors.primary cfg.themeGeneration.primaryScale.dark;
+            base0C = adjustLightness colors.primary_fixed cfg.themeGeneration.primaryScale.dark;
+            base0D = adjustLightness colors.surface_tint cfg.themeGeneration.primaryScale.dark;
+            base0E = adjustLightness colors.tertiary_fixed cfg.themeGeneration.primaryScale.dark;
+            base0F = adjustLightness colors.on_error_container cfg.themeGeneration.primaryScale.dark;
+          };
       };
 
       fileTree = lib.mkOption {
