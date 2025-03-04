@@ -26,15 +26,23 @@ let
         ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
       '';
 
+  cfg = config.stylix.targets.vscode;
+
 in
 {
-  options.stylix.targets.vscode.enable =
-    config.lib.stylix.mkEnableTarget "VSCode" true;
+  options.stylix.targets.vscode = {
+    enable = config.lib.stylix.mkEnableTarget "VSCode" true;
+    profileNames = lib.mkOption {
+      description = "The VSCode profile names to apply styling on.";
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+    };
+  };
 
-  config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable)
-      {
-        programs.vscode.profiles.default = {
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
+    programs.vscode.profiles = lib.mkMerge (
+      map (profileName: {
+        ${profileName} = {
           extensions = [ themeExtension ];
           userSettings = {
             "workbench.colorTheme" = "Stylix";
@@ -62,5 +70,14 @@ in
             "screencastMode.fontSize" = sizes.terminal * 4.0 / 3.0 * 56.0 / 14.0;
           };
         };
-      };
+      }) cfg.profileNames
+    );
+    warnings =
+      lib.optional
+        (
+          config.programs.vscode.enable
+          && config.stylix.targets.vscode.profileNames == [ ]
+        )
+        ''stylix: vscode: `config.stylix.targets.vscode.profileNames` is not set. Declare profile names with 'config.stylix.targets.vscode.profileNames = [ "<PROFILE_NAME>" ];'.'';
+  };
 }
