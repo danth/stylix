@@ -73,23 +73,11 @@ in
       }) cfg.profileNames
     );
     warnings =
-      lib.mkIf
+      lib.optional
         (
           config.programs.vscode.enable
           && config.stylix.targets.vscode.profileNames == [ ]
         )
-        [
-          ''
-            VSCode is currently enabled in both home-manager and Stylix, but Stylix
-            has no profile names to theme. These can be set with
-
-                config.stylix.targets.vscode.profileNames = [ "nameOfProfile" ];
-
-            Alternatively, this warning can be disabled by disabling the VSCode
-            Stylix module
-
-                config.stylix.targets.vscode.enable = false; 
-          ''
-        ];
+        ''stylix: vscode: `config.stylix.targets.vscode.profileNames` is not set. Declare profile names with 'config.stylix.targets.vscode.profileNames = [ "<PROFILE_NAME>" ];'.'';
   };
 }
