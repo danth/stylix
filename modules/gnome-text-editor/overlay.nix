@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   style = config.lib.stylix.colors {
-    template = ../gedit/template.xml.mustache;
+    template = ../gtksourceview/template.xml.mustache;
     extension = "xml";
   };
 in

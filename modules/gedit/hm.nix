@@ -2,7 +2,7 @@
 
 let
   style = config.lib.stylix.colors {
-    template = ./template.xml.mustache;
+    template = ../gtksourceview/template.xml.mustache;
     extension = "xml";
   };
 
