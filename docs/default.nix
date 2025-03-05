@@ -32,6 +32,17 @@ let
 
   # TODO: Include Nix Darwin options
 
+  platforms = {
+    home_manager = {
+      name = "Home Manager";
+      configuration = homeManagerConfiguration;
+    };
+    nixos = {
+      name = "NixOS";
+      configuration = nixosConfiguration;
+    };
+  };
+
   # transformDeclaration =
   #   declaration:
   #   let
@@ -95,13 +106,9 @@ let
               > This module doesn't include any additional documentation.
               > You can browse the options it provides below.
             '';
-            optionsByPlatform = {
-              # Module pages contain a section for all platforms, initialised
-              # to an empty list so that *None provided.* is shown rather than
-              # omitting the section.
-              home_manager = [ ];
-              nixos = [ ];
-            };
+            # Modules pages initialise all platforms to an empty list, so that
+            # *None provided.* indicates where the module isn't available.
+            optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
           };
         }
       else
@@ -112,13 +119,14 @@ let
             referenceSection = "Platforms";
             readme = "${inputs.self}/docs/src/options/platforms/${platform}.md";
             defaultReadme = ''
-              # ${platform}
+              # ${platform.name}
               > Documentation is not available for this platform. Its main
               > options are listed below, and you may find more specific
               > options in the documentation for each module.
             '';
+            # Platform pages only initialise that platform, since showing other
+            # platforms here would be nonsensical.
             optionsByPlatform = {
-              # Platform pages only contain a section for that platform
               ${platform} = [ ];
             };
           };
@@ -141,40 +149,19 @@ let
     ) index option.declarations;
 
   insertPlatform =
-    {
-      index,
-      platform,
-      configuration,
-    }:
-    builtins.foldl' (
-      foldIndex: option:
-      insertOption {
-        index = foldIndex;
-        inherit platform option;
-      }
-    ) index (lib.optionAttrSetToDocList configuration.options);
-
-  index =
+    index: platform:
     builtins.foldl'
       (
-        foldIndex:
-        { platform, configuration }:
-        insertPlatform {
+        foldIndex: option:
+        insertOption {
           index = foldIndex;
-          inherit platform configuration;
+          inherit platform option;
         }
       )
-      { }
-      [
-        {
-          platform = "home_manager";
-          configuration = homeManagerConfiguration;
-        }
-        {
-          platform = "nixos";
-          configuration = nixosConfiguration;
-        }
-      ];
+      index
+      (lib.optionAttrSetToDocList platforms.${platform}.configuration.options);
+
+  index = builtins.foldl' insertPlatform { } (builtins.attrNames platforms);
 
   renderOption =
     option:
@@ -184,7 +171,7 @@ let
     '';
 
   renderPlatform =
-    name: options:
+    platform: options:
     let
       sortedOptions = builtins.sort (a: b: a.name < b.name) options;
       renderedOptions =
@@ -194,7 +181,7 @@ let
           lib.concatMapStrings renderOption sortedOptions;
     in
     ''
-      ## ${name} options
+      ## ${platforms.${platform}.name} options
       ${renderedOptions}
     '';
 
