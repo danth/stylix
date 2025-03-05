@@ -36,7 +36,9 @@
                   else
                     100 * delta / (100 - lib.max (2 * l - 100) (100 - (2 * l)));
               in
-              "${builtins.toString (builtins.floor h)} ${builtins.toString (builtins.floor s)} ${builtins.toString (builtins.floor l)}";
+              "${builtins.toString (builtins.floor (h + 0.5))} ${
+                builtins.toString (builtins.floor (s + 0.5))
+              } ${builtins.toString (builtins.floor (l + 0.5))}";
           in
           {
             light = config.stylix.polarity == "light";
