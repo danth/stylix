@@ -17,11 +17,12 @@
                 max = lib.max r (lib.max g b);
                 min = lib.min r (lib.min g b);
                 delta = max - min;
+                fmod = base: int: base - (int * builtins.floor (base / int));
                 h =
                   if delta == 0 then
                     0
                   else if max == r then
-                    60 * (((g - b) / delta) + (if g < b then 6 else 0))
+                    60 * (fmod ((g - b) / delta) 6)
                   else if max == g then
                     60 * (((b - r) / delta) + 2)
                   else if max == b then
