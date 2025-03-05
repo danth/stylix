@@ -15,7 +15,7 @@ in
       (
         config.stylix.enable
         && pkgs.stdenv.hostPlatform.isLinux
-        && config.stylix.cursor != { }
+        && config.stylix.cursor != null
       )
       {
         home.pointerCursor = {

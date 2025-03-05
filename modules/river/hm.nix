@@ -10,7 +10,7 @@
       border-color-unfocused = "0x${config.lib.stylix.colors.base03}";
       border-color-urgent = "0x${config.lib.stylix.colors.base08}";
       xcursor-theme = lib.mkIf (
-        config.stylix.cursor != { }
+        config.stylix.cursor != null
       ) config.stylix.cursor.name;
     };
   };
