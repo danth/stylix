@@ -154,7 +154,7 @@ in
     };
 
     inputs = lib.mkOption {
-      description = "Inputs to the Stylix flake.";
+      description = "Inputs of the Stylix flake.";
       internal = true;
       readOnly = true;
     };
