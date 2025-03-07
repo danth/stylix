@@ -78,6 +78,13 @@ in
   config.programs = eachTarget (
     { target, cfg, ... }:
     eachConfig (profileName: {
+      warnings =
+        lib.optional
+          (
+            config.programs.${target}.enable
+            && config.stylix.targets.${target}.profileNames == [ ]
+          )
+          ''stylix: ${target}: `config.stylix.targets.${target}.profileNames` is not set. Declare profile names with 'config.stylix.targets.${target}.profileNames = [ "<PROFILE_NAME>" ];'.'';
       ${target.path}.profiles.${profileName} = lib.mkMerge [
         {
           settings = {
