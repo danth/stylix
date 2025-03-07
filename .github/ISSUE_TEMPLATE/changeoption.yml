@@ -24,9 +24,8 @@ body:
     attributes:
       label: Description
       description: >-
-        Describe the change. Consider including how this will affect existing
-        and future configurations and why this behavior will be better than
-        the current behavior.
+        Describe the change and its potential breaking changes, and demonstrate
+        the use case it improves.
 
     validations:
       required: true
