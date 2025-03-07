@@ -1,8 +1,8 @@
 ---
-description: Change an existing target.
-labels: [change-target]
-name: Change target
-title: "<TARGET>: <DESCRIPTION>"
+description: Change an existing option.
+labels: [change-option]
+name: Change option
+title: "<SCOPE>: <DESCRIPTION>"
 
 body:
   - type: checkboxes
