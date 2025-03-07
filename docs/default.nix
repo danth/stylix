@@ -43,6 +43,30 @@ let
     };
   };
 
+  # We construct an index of all Stylix options, using the format:
+  #
+  # {
+  #   "src/options/modules/«module».md" = {
+  #     referenceSection = "Modules";
+  #     readme = "modules/«module»/README.md";
+  #     defaultReadme = "note about the path above not existing";
+  #     optionsByPlatform = {
+  #       home_manager = [ ... ];
+  #       nixos = [ ... ];
+  #     };
+  #   };
+  #
+  #   "src/options/platforms/«platform».md" = {
+  #     referenceSection = "Platforms";
+  #     readme = "docs/src/options/platforms/«platform».md";
+  #     defaultReadme = "note about the path above not existing";
+  #     optionsByPlatform.«platform» = [ ... ];
+  #   };
+  # }
+  #
+  # Options are inserted one at a time into the appropriate page, creating
+  # new page entries if they don't exist.
+
   insert =
     {
       index,
@@ -72,11 +96,15 @@ let
       platform,
       option,
     }:
+    # Only include options which are declared by a module within Stylix.
     if lib.hasPrefix "${inputs.self}/" declaration then
       let
         path = lib.removePrefix "${inputs.self}/" declaration;
         pathComponents = lib.splitString "/" path;
       in
+      # Options declared in the modules directory go to the Modules section,
+      # otherwise they're assumed to be shared between modules, and go to the
+      # Platforms section.
       if builtins.elemAt pathComponents 0 == "modules" then
         let
           module = builtins.unsafeDiscardStringContext (builtins.elemAt pathComponents 1);
@@ -93,8 +121,9 @@ let
               > This module doesn't include any additional documentation.
               > You can browse the options it provides below.
             '';
-            # Modules pages initialise all platforms to an empty list, so that
-            # *None provided.* indicates where the module isn't available.
+            # Module pages initialise all platforms to an empty list, so that
+            # *None provided.* indicates platforms where the module isn't
+            # available.
             optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
           };
         }
@@ -150,13 +179,55 @@ let
 
   index = builtins.foldl' insertPlatform { } (builtins.attrNames platforms);
 
+  # Renders a value, which should have been created with either lib.literalMD
+  # or lib.literalExpression.
+  renderValue =
+    value:
+    if lib.isType "literalMD" value then
+      value.text
+    else if lib.isType "literalExpression" value then
+      ''
+        ```nix
+        ${value.text}
+        ```
+      ''
+    else
+      builtins.throw "no implementation for rendering this kind of value";
+
+  # Prefix to remove from file paths when listing where an option is declared.
+  # Example: /nix/store/«hash»-source
+  declarationPrefix = "${inputs.self}";
+
+  # Permalink to view a source file on GitHub. If the commit isn't known,
+  # then fall back to the latest commit.
+  #
+  # TODO: Can this use other metadata from the flake to determine the
+  # repository URL?
+  declarationCommit = inputs.self.rev or "master";
+  declarationPermalink = "https://github.com/danth/stylix/blob/${declarationCommit}";
+
+  # Renders a single option declaration. Example output:
+  #
+  # - [modules/module1/nixos.nix](https://github.com/danth/stylix/blob/«commit»/modules/module1/nixos.nix)
+  renderDeclaration =
+    declaration:
+    let
+      declarationString = toString declaration;
+      filePath = lib.removePrefix "${declarationPrefix}/" declarationString;
+    in
+    if lib.hasPrefix declarationPrefix declarationString then
+      "- [${filePath}](${declarationPermalink}/${filePath})"
+    else
+      builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
+
   # You can embed HTML inside a Markdown document, but to render further
   # Markdown within that HTML, it must be surrounded by blank lines.
   # This function helps with that.
   #
-  # In other functions, we use concatStrings to build embedded HTML, rather
-  # than multiline strings, because Markdown is sensitive to indentation and
-  # may render indented HTML as a code block.
+  # In the following functions, we use concatStrings to build embedded HTML,
+  # rather than ${} and multiline strings, because Markdown is sensitive to
+  # indentation and may render indented HTML as a code block. The easiest way
+  # around this is to generate all the HTML on a single line.
   markdownInHTML = markdown: "\n\n" + markdown + "\n\n";
 
   renderDetailsRow =
@@ -172,38 +243,16 @@ let
       "</tr>"
     ];
 
-  renderValue =
-    value:
-    if lib.isType "literalMD" value then
-      value.text
-    else if lib.isType "literalExpression" value then
-      ''
-        ```nix
-        ${value.text}
-        ```
-      ''
-    else
-      builtins.throw "no implementation for rendering this kind of value";
-
-  # Prefix to remove from file paths when listing where an option is declared.
-  declarationPrefix = "${inputs.self}";
-
-  # Permalink to view the declaration on GitHub. If the commit isn't known,
-  # then fall back to the latest commit.
-  declarationCommit = inputs.self.rev or "master";
-  declarationPermalink = "https://github.com/danth/stylix/blob/${declarationCommit}";
-
-  renderDeclaration =
-    declaration:
-    let
-      declarationString = toString declaration;
-      filePath = lib.removePrefix "${declarationPrefix}/" declarationString;
-    in
-    if lib.hasPrefix declarationPrefix declarationString then
-      "- [${filePath}](${declarationPermalink}/${filePath})"
-    else
-      builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
-
+  # Render a single option. Example output (actually HTML, but drawn here using
+  # pseudo-Markdown for clarity):
+  #
+  # ### stylix.option.one
+  #
+  # | Summary | This is the option's description, if present.                 |
+  # | Type    | string                                                        |
+  # | Default | This is the default value, if provided. Usually a code block. |
+  # | Example | This is an example value, if provided. Usually a code block.  |
+  # | Source  | - [modules/module1/nixos.nix](https://github.com/...)         |
   renderOption =
     option:
     lib.optionalString (option.visible && !option.internal) ''
@@ -240,6 +289,13 @@ let
       )}
     '';
 
+  # Render the list of options for a single platform. Example output:
+  #
+  # ## NixOS options
+  # ### stylix.option.one
+  # «option details»
+  # ### stylix.option.two
+  # «option details»
   renderPlatform =
     platform: options:
     let
@@ -255,6 +311,20 @@ let
       ${renderedOptions}
     '';
 
+  # Renders the list of options for all platforms on a page, preceded by
+  # either the relevant README, or the default README if it doesn't exist.
+  # Example output:
+  #
+  # # Module 1
+  #
+  # This is the content of `modules/module1/README.md`, including the title
+  # above.
+  #
+  # ## Home Manager options
+  # *None provided.*
+  #
+  # ## NixOS options
+  # «list of options»
   renderPage =
     _path: page:
     let
@@ -275,9 +345,44 @@ let
 
   renderedPages = lib.mapAttrs renderPage index;
 
+  # SUMMARY.md is generated by a similar method to the main index, using
+  # the following format:
+  #
+  # {
+  #   Modules = [
+  #     "  - [Module 1](src/options/modules/module1.md)"
+  #     "  - [Module 2](src/options/modules/module2.md)"
+  #   ];
+  #   Platforms = [
+  #     "  - [Home Manager](src/options/platforms/home_manager.md)"
+  #     "  - [NixOS](src/options/platforms/nixos.md)"
+  #   ];
+  # }
+  #
+  # Which renders to the following:
+  #
+  # - [Modules]()
+  #   - [Module 1](src/options/modules/module1.md)
+  #   - [Module 2](src/options/modules/module2.md)
+  # - [Platforms]()
+  #   - [Home Manager](src/options/platforms/home_manager.md)
+  #   - [NixOS](src/options/platforms/nixos.md)
+  #
+  # (In mdbook, an empty link denotes a draft page, which is used as a parent
+  #  so the section can be collapsed in the sidebar.)
+
   insertPageSummary =
     summary: path: page:
     let
+      # Extract the title from the first line of the page, and use it in the
+      # summary. This ensures that page titles match the sidebar, and ensures
+      # that each page begins with a title.
+      #
+      # TODO: There's potential to use the title from platform pages as the
+      # subheading for that platform on other pages, rather than defining a
+      # name in the `platforms` attribute set earlier in this file.
+      # (This is likely wasted effort unless we have a reason to add a large
+      #  number of platforms.)
       text = renderedPages.${path};
       lines = lib.splitString "\n" text;
       firstLine = builtins.elemAt lines 0;
@@ -301,6 +406,8 @@ let
   renderSummarySection =
     referenceSection: entries:
     let
+      # In mdbook, an empty link denotes a draft page, which is used as a
+      # parent so the section can be collapsed in the sidebar.
       parentEntry = "- [${referenceSection}]()";
     in
     [ parentEntry ] ++ entries;
@@ -309,6 +416,17 @@ let
     lib.flatten (lib.mapAttrsToList renderSummarySection summary)
   );
 
+  # This function generates a Bash script that installs each page to the
+  # correct location, over the top of an original copy of docs/src.
+  #
+  # Each page must be written in a separate derivation, because passing all
+  # the text into a single derivation exceeds the maximum size of command
+  # line arguments.
+  #
+  # TODO: It should be possible to use symlinkJoin here, which would make the
+  # code more robust at the expense of another intermediate derivation.
+  # However, that derivation would be useful during development for inspecting
+  # the Markdown before it's rendered to HTML.
   writePages = lib.concatLines (
     lib.mapAttrsToList (
       path: text:
@@ -319,8 +437,22 @@ let
     ) renderedPages
   );
 
-  # Some adjustments for a more uniform and compact layout while using a
-  # separate table for each option.
+  # Every option has a separate table containing its details. This CSS makes
+  # the following changes for better consistency and compactness:
+  #
+  # - Fix the width of tables and their columns, so the layout is consistent
+  #   when scanning through the options. By default, tables are centered and
+  #   sized to their individual content.
+  # - Remove the alternating background colour from rows, which is distracting
+  #   when there is a small number of rows with a potentially large amount
+  #   of text per row.
+  # - Allow text within a cell to scroll horizontally, which is useful for
+  #   wide code blocks, especially on mobile devices.
+  # - Remove bullet points from lists; this is intended for the list of
+  #   declarations, as it often contains only one item. Again, this is aimed
+  #   at mobile devices where horizontal space is limited.
+  #   TODO: Constrain this rule to only apply to the declarations list, as it
+  #   may interfere with option descriptions that contain lists.
   extraCSS = ''
     .option-details {
       width: 100%;
