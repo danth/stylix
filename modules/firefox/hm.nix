@@ -75,17 +75,10 @@ in
 
   # This and the below assignment aren't merged because of
   # https://discourse.nixos.org/t/infinite-recursion-in-module-with-mkmerge/10989
-  config = eachTarget (
+  config.programs = eachTarget (
     { target, cfg, ... }:
     eachConfig (profileName: {
-      warnings =
-        lib.optional
-          (
-            config.programs.${target.path}.enable
-            && config.stylix.targets.${target.path}.profileNames == [ ]
-          )
-          ''stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` is not set. Declare profile names with 'config.stylix.targets.${target.path}.profileNames = [ "<PROFILE_NAME>" ];'.'';
-      programs.${target.path}.profiles.${profileName} = lib.mkMerge [
+      ${target.path}.profiles.${profileName} = lib.mkMerge [
         {
           settings = {
             "font.name.monospace.x-western" = config.stylix.fonts.monospace.name;
@@ -166,5 +159,17 @@ in
         })
       ];
     }) cfg.profileNames
+  );
+  config.warnings = eachTarget (
+    { target, ... }:
+    eachConfig (_: {
+      warnings =
+        lib.optional
+          (
+            config.programs.${target.path}.enable
+            && config.stylix.targets.${target.path}.profileNames == [ ]
+          )
+          ''stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` is not set. Declare profile names with 'config.stylix.targets.${target.path}.profileNames = [ "<PROFILE_NAME>" ];'.'';
+    })
   );
 }
