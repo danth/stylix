@@ -164,7 +164,7 @@ in
       );
     }
     // (eachTarget (
-      { target, ... }:
+      { target, cfg, ... }:
       eachConfig (_: {
         warnings =
           lib.optional
@@ -173,6 +173,6 @@ in
               && config.stylix.targets.${target.path}.profileNames == [ ]
             )
             ''stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` is not set. Declare profile names with 'config.stylix.targets.${target.path}.profileNames = [ "<PROFILE_NAME>" ];'.'';
-      })
+      }) cfg.profileNames
     ));
 }
