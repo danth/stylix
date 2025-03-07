@@ -4,7 +4,7 @@ with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 let
   dunstOpacity = lib.toHexString (
-    ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
+    ((builtins.floor (config.stylix.opacity.popups * 100 + 0.5)) * 255) / 100
   );
 in
 {
