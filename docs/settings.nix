@@ -1,26 +1,27 @@
 # Dummy values to avoid errors when generating the documentation.
 
+{ lib, ... }:
 {
   stylix = {
-    image = "/a/b/c";
+    image = null;
 
-    base16Scheme = {
-      base00 = "ffffff";
-      base01 = "ffffff";
-      base02 = "ffffff";
-      base03 = "ffffff";
-      base04 = "ffffff";
-      base05 = "ffffff";
-      base06 = "ffffff";
-      base07 = "ffffff";
-      base08 = "ffffff";
-      base09 = "ffffff";
-      base0A = "ffffff";
-      base0B = "ffffff";
-      base0C = "ffffff";
-      base0D = "ffffff";
-      base0E = "ffffff";
-      base0F = "ffffff";
-    };
+    base16Scheme = lib.genAttrs [
+      "base00"
+      "base01"
+      "base02"
+      "base03"
+      "base04"
+      "base05"
+      "base06"
+      "base07"
+      "base08"
+      "base09"
+      "base0A"
+      "base0B"
+      "base0C"
+      "base0D"
+      "base0E"
+      "base0F"
+    ] (_: "ffffff");
   };
 }
