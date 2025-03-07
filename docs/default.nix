@@ -43,19 +43,6 @@ let
     };
   };
 
-  # transformDeclaration =
-  #   declaration:
-  #   let
-  #     declarationString = toString declaration;
-  #     declarationWithoutprefix = lib.removePrefix "${declarationPrefix}/" declarationString;
-  #   in
-  #   lib.throwIfNot (lib.hasPrefix declarationPrefix declarationString)
-  #     "declaration not in ${declarationPrefix}: ${declarationString}"
-  #     {
-  #       name = "<${declarationWithoutprefix}>";
-  #       url = "https://github.com/danth/stylix/blob/${commit}/${declarationWithoutprefix}";
-  #     };
-
   insert =
     {
       index,
@@ -163,11 +150,94 @@ let
 
   index = builtins.foldl' insertPlatform { } (builtins.attrNames platforms);
 
+  # You can embed HTML inside a Markdown document, but to render further
+  # Markdown within that HTML, it must be surrounded by blank lines.
+  # This function helps with that.
+  #
+  # In other functions, we use concatStrings to build embedded HTML, rather
+  # than multiline strings, because Markdown is sensitive to indentation and
+  # may render indented HTML as a code block.
+  markdownInHTML = markdown: "\n\n" + markdown + "\n\n";
+
+  renderDetailsRow =
+    name: value:
+    lib.concatStrings [
+      "<tr>"
+      "<td>"
+      (markdownInHTML name)
+      "</td>"
+      "<td>"
+      (markdownInHTML value)
+      "</td>"
+      "</tr>"
+    ];
+
+  renderValue =
+    value:
+    if lib.isType "literalMD" value then
+      value.text
+    else if lib.isType "literalExpression" value then
+      ''
+        ```nix
+        ${value.text}
+        ```
+      ''
+    else
+      builtins.throw "no implementation for rendering this kind of value";
+
+  # Prefix to remove from file paths when listing where an option is declared.
+  declarationPrefix = "${inputs.self}";
+
+  # Permalink to view the declaration on GitHub. If the commit isn't known,
+  # then fall back to the latest commit.
+  declarationCommit = inputs.self.rev or "master";
+  declarationPermalink = "https://github.com/danth/stylix/blob/${declarationCommit}";
+
+  renderDeclaration =
+    declaration:
+    let
+      declarationString = toString declaration;
+      filePath = lib.removePrefix "${declarationPrefix}/" declarationString;
+    in
+    if lib.hasPrefix declarationPrefix declarationString then
+      "- [${filePath}](${declarationPermalink}/${filePath})"
+    else
+      builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
+
   renderOption =
     option:
     lib.optionalString (option.visible && !option.internal) ''
       ### ${option.name}
-      ${option.description}
+
+      ${lib.concatStrings (
+        [
+          "<table class=\"option-details\">"
+          "<colgroup>"
+          "<col span=\"1\">"
+          "<col span=\"1\">"
+          "</colgroup>"
+          "<tbody>"
+        ]
+        ++ (lib.optional (option ? description) (
+          renderDetailsRow "Summary" option.description
+        ))
+        ++ (lib.optional (option ? type) (renderDetailsRow "Type" option.type))
+        ++ (lib.optional (option ? default) (
+          renderDetailsRow "Default" (renderValue option.default)
+        ))
+        ++ (lib.optional (option ? example) (
+          renderDetailsRow "Example" (renderValue option.example)
+        ))
+        ++ (lib.optional (option ? declarations) (
+          renderDetailsRow "Source" (
+            lib.concatLines (map renderDeclaration option.declarations)
+          )
+        ))
+        ++ [
+          "</tbody>"
+          "</table>"
+        ]
+      )}
     '';
 
   renderPlatform =
@@ -178,7 +248,7 @@ let
         if sortedOptions == [ ] then
           "*None provided.*"
         else
-          lib.concatMapStrings renderOption sortedOptions;
+          lib.concatLines (map renderOption sortedOptions);
     in
     ''
       ## ${platforms.${platform}.name} options
@@ -239,12 +309,38 @@ let
     lib.flatten (lib.mapAttrsToList renderSummarySection summary)
   );
 
-  writePage = path: text: ''
-    mkdir --parents ${lib.escapeShellArg (builtins.dirOf path)}
-    echo ${lib.escapeShellArg text} >${lib.escapeShellArg path}
-  '';
+  writePages = lib.concatLines (
+    lib.mapAttrsToList (
+      path: text:
+      let
+        file = pkgs.writeText path text;
+      in
+      "install -D ${file} ${path}"
+    ) renderedPages
+  );
 
-  writePages = lib.concatStrings (lib.mapAttrsToList writePage renderedPages);
+  # Some adjustments for a more uniform and compact layout while using a
+  # separate table for each option.
+  extraCSS = ''
+    .option-details {
+      width: 100%;
+      table-layout: fixed;
+    }
+    .option-details col:first-child {
+      width: 7.5em;
+    }
+    .option-details col:last-child {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .option-details tr {
+      background: inherit !important;
+    }
+    .option-details ol, .option-details ul {
+      list-style: none;
+      padding: unset;
+    }
+  '';
 
 in
 pkgs.stdenvNoCC.mkDerivation {
@@ -264,4 +360,8 @@ pkgs.stdenvNoCC.mkDerivation {
   '';
 
   buildPhase = "mdbook build --dest-dir $out";
+
+  fixupPhase = ''
+    echo ${lib.escapeShellArg extraCSS} >>$out/css/general.css
+  '';
 }
