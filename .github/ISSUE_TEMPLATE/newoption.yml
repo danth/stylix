@@ -24,9 +24,8 @@ body:
     attributes:
       label: Description
       description: >-
-        Describe the option, and explain its use case. Consider including
-        pseudocode demonstrating how it could be integrated with the existing
-        architecture.
+        Describe the option and explain its use case. Consider including
+        pseudocode demonstrating its integration with the existing architecture.
 
     validations:
       required: true
