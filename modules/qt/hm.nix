@@ -22,13 +22,13 @@
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) (
     let
       iconTheme =
-        if (config.stylix.polarity == "dark") then
+        if (config.stylix.themeGeneration.polarity == "dark") then
           config.stylix.iconTheme.dark
         else
           config.stylix.iconTheme.light;
 
       recommendedStyles = {
-        gnome = if config.stylix.polarity == "dark" then "adwaita-dark" else "adwaita";
+        gnome = if config.stylix.themeGeneration.polarity == "dark" then "adwaita-dark" else "adwaita";
         kde = "breeze";
         qtct = "kvantum";
       };
@@ -86,14 +86,11 @@
         in
         lib.mkMerge [
           (lib.mkIf (config.qt.style.name == "kvantum") {
-            "Kvantum/kvantum.kvconfig".source =
-              (pkgs.formats.ini { }).generate "kvantum.kvconfig"
-                {
-                  General.theme = "Base16Kvantum";
-                };
+            "Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini { }).generate "kvantum.kvconfig" {
+              General.theme = "Base16Kvantum";
+            };
 
-            "Kvantum/Base16Kvantum".source =
-              "${kvantumPackage}/share/Kvantum/Base16Kvantum";
+            "Kvantum/Base16Kvantum".source = "${kvantumPackage}/share/Kvantum/Base16Kvantum";
           })
 
           (lib.mkIf (config.qt.platformTheme.name == "qtct") {

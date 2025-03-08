@@ -170,7 +170,38 @@ let
         {
           path = [
             "stylix"
+            "themeGeneration"
             "polarity"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "contrast"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "primaryScale"
+            "dark"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "primaryScale"
+            "light"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "scheme"
           ];
         }
         {

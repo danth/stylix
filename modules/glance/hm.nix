@@ -35,7 +35,7 @@
               "${builtins.toString h} ${builtins.toString s} ${builtins.toString l}";
           in
           {
-            light = config.stylix.polarity == "light";
+            light = config.stylix.themeGeneration.polarity == "light";
             contrast-multiplier = 1.0;
             background-color = rgb-to-hsl "base00";
             primary-color = rgb-to-hsl "base05";
