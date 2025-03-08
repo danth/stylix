@@ -159,13 +159,6 @@ in
       internal = true;
       readOnly = true;
     };
-
-    release = lib.mkOption {
-      description = "The version of NixOS that Stylix is built to support";
-      default = "25.05";
-      internal = true;
-      readOnly = true;
-    };
   };
 
   config = {
