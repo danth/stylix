@@ -30,5 +30,8 @@ in
           unstagedChangesColor = [ colors.base08 ];
           defaultFgColor = [ colors.base05 ];
         };
+        programs.lazygit.settings.gui.authorColors = {
+          "*" = colors.base07;
+        };
       };
 }
