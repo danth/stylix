@@ -34,7 +34,7 @@ in
           version of nix-darwin.
 
           If you are willing to accept the risks that come with using
-          mismatched versions, you may disable this error by adding
+          mismatched versions, you may disable this warning by adding
 
               stylix.enableReleaseChecks = false;
 

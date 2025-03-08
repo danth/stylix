@@ -30,13 +30,13 @@ in
       )
       [
         ''
-          You are using different Stylix and nixpkgs versions. This is
+          You are using different Stylix and NixOS versions. This is
           likely to cause errors and unexpected behavior. It is highly
           recommended that you use a version of Stylix that matches your chosen
           version of nixpkgs.
 
           If you are willing to accept the risks that come with using
-          mismatched versions, you may disable this error by adding
+          mismatched versions, you may disable this warning by adding
 
               stylix.enableReleaseChecks = false;
 
