@@ -9,6 +9,9 @@ let
   theme = pkgs.callPackage ./theme.nix {
     inherit (config.lib.stylix) colors templates;
   };
+  cursorCfg = config.stylix.cursor;
+  iconCfg = config.stylix.iconTheme;
+  inherit (config.stylix) polarity;
 
 in
 {
@@ -52,15 +55,35 @@ in
           })
         ];
 
-        # Cursor settings are usually applied via Home Manager,
+        # Cursor and icon settings are usually applied via Home Manager,
         # but the login screen uses a separate database.
-        environment.systemPackages = [ config.stylix.cursor.package ];
+        services.displayManager.environment.XDG_DATA_DIRS =
+          (lib.makeSearchPath "share" [
+            iconCfg.package
+          ])
+          + ":";
+        environment.systemPackages = [
+          cursorCfg.package
+        ];
         programs.dconf.profiles.gdm.databases = [
           {
             lockAll = true;
             settings."org/gnome/desktop/interface" = {
-              cursor-theme = config.stylix.cursor.name;
-              cursor-size = lib.gvariant.mkInt32 config.stylix.cursor.size;
+              cursor-theme = cursorCfg.name;
+              cursor-size = lib.gvariant.mkInt32 cursorCfg.size;
+
+              icon-theme = builtins.head (
+                lib.filter (x: null != x) [
+                  (
+                    {
+                      inherit (iconCfg) dark light;
+                    }
+                    ."${polarity}" or null
+                  )
+                  iconCfg.dark
+                  iconCfg.light
+                ]
+              );
             };
           }
         ];
