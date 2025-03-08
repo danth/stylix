@@ -11,6 +11,7 @@ let
   };
   cursorCfg = config.stylix.cursor;
   iconCfg = config.stylix.iconTheme;
+  fontCfg = config.stylix.fonts;
   inherit (config.stylix) polarity;
 
 in
@@ -58,13 +59,16 @@ in
         # Cursor and icon settings are usually applied via Home Manager,
         # but the login screen uses a separate database.
         services.displayManager.environment.XDG_DATA_DIRS =
-          (lib.makeSearchPath "share" [
-            iconCfg.package
-          ])
+          (lib.makeSearchPath "share" (
+            [
+              iconCfg.package
+            ]
+            ++ fontCfg.packages
+          ))
           + ":";
         environment.systemPackages = [
           cursorCfg.package
-        ];
+        ] ++ fontCfg.packages;
         programs.dconf.profiles.gdm.databases = [
           {
             lockAll = true;
@@ -84,6 +88,8 @@ in
                   iconCfg.light
                 ]
               );
+
+              font-name = fontCfg.sansSerif.name;
             };
           }
         ];
