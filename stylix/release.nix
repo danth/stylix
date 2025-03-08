@@ -10,7 +10,7 @@
     enableReleaseChecks = lib.mkOption {
       description = ''
         Whether to check that the Stylix release matches the releases of
-        nixpkgs, home-manager, and nix-darwin. Checks are only performed if the
+        NixOS, Home Manager, and nix-darwin. Checks are only performed if the
         component in question is used.
 
         If this option is enabled and a mismatch is detected, a warning will be
