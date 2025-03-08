@@ -21,6 +21,7 @@ in
     "${inputs.self}/stylix/palette.nix"
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
+    "${inputs.self}/stylix/release.nix"
     (import ../templates.nix inputs)
   ] ++ autoload;
   config.warnings =
