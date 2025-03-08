@@ -14,8 +14,8 @@ in
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
     programs.hyprlock.settings = {
       background = {
-        path = lib.mkIf cfg.useWallpaper config.stylix.image;
         color = "rgb(${colors.base00})";
+        path = lib.mkIf cfg.useWallpaper "${config.stylix.image}";
       };
       input-field = with colors; {
         outer_color = "rgb(${base03})";

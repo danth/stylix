@@ -1,0 +1,20 @@
+# http://editorconfig.org
+root = true
+
+[*]
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+[*.{diff,patch}]
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+
+[*.{md,nix,hx,json,css,html,xml,svg,tmTheme}{,.mustache}]
+indent_size = 2
+
+[*.{bash,py,sh}{,.mustache}]
+indent_size = 4

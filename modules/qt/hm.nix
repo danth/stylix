@@ -42,7 +42,7 @@
             extension = ".kvconfig";
           };
           svg = config.lib.stylix.colors {
-            template = ./kvantum-svg.mustache;
+            template = ./kvantum.svg.mustache;
             extension = "svg";
           };
         in
@@ -88,7 +88,9 @@
           (lib.mkIf (config.qt.style.name == "kvantum") {
             "Kvantum/kvantum.kvconfig".source =
               (pkgs.formats.ini { }).generate "kvantum.kvconfig"
-                { General.theme = "Base16Kvantum"; };
+                {
+                  General.theme = "Base16Kvantum";
+                };
 
             "Kvantum/Base16Kvantum".source =
               "${kvantumPackage}/share/Kvantum/Base16Kvantum";

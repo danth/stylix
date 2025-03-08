@@ -23,7 +23,7 @@
           # Reusing bat themes, since it's suggested in the stying guide
           # https://yazi-rs.github.io/docs/configuration/theme#manager
           syntect_theme = config.lib.stylix.colors {
-            template = ../bat/base16-stylix.mustache;
+            template = ../bat/base16-stylix.tmTheme.mustache;
             extension = ".tmTheme";
           };
 
