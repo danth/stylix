@@ -14,8 +14,8 @@ in
     lib.mkIf
       (
         config.stylix.enable
-        && pkgs.stdenv.hostPlatform.isLinux
         && config.stylix.cursor != null
+        && pkgs.stdenv.hostPlatform.isLinux
       )
       {
         home.pointerCursor = {
