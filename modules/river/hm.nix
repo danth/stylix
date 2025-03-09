@@ -9,7 +9,9 @@
       border-color-focused = "0x${config.lib.stylix.colors.base0D}";
       border-color-unfocused = "0x${config.lib.stylix.colors.base03}";
       border-color-urgent = "0x${config.lib.stylix.colors.base08}";
-      xcursor-theme = config.stylix.cursor.name;
+      xcursor-theme = lib.mkIf (
+        config.stylix.cursor != null
+      ) config.stylix.cursor.name;
     };
   };
 }

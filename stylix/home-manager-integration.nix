@@ -36,21 +36,6 @@ let
           path = [
             "stylix"
             "cursor"
-            "name"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "package"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "size"
           ];
         }
         {
