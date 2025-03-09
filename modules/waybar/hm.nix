@@ -14,6 +14,17 @@ in
 {
   options.stylix.targets.waybar = {
     enable = config.lib.stylix.mkEnableTarget "Waybar" true;
+    font = lib.mkOption {
+      type = lib.types.enum [
+        "serif"
+        "sansSerif"
+        "monospace"
+        "emoji"
+      ];
+      default = "monospace";
+      example = "sansSerif";
+      description = "The font for waybar to use";
+    };
     addCss = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -47,7 +58,7 @@ in
         @define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
 
         * {
-            font-family: "${config.stylix.fonts.sansSerif.name}";
+            font-family: "${config.stylix.fonts.${cfg.font}.name}";
             font-size: ${builtins.toString config.stylix.fonts.sizes.desktop}pt;
         }
       ''
