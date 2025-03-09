@@ -114,12 +114,13 @@ in
       '';
       type =
         with lib.types;
-        oneOf [
+        nullOr (oneOf [
           path
           lines
           attrs
-        ];
-      default = cfg.generated.palette;
+        ]);
+      # defaults to null when cfg.image is also null, in order to trigger the assertion below correctly
+      default = if cfg.image == null then null else cfg.generated.palette;
       defaultText = lib.literalMD ''
         The colors used in the theming.
 
@@ -165,7 +166,7 @@ in
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
     lib.stylix.colors = (cfg.base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
 
-    assertions = [
+    assertions = lib.mkIf cfg.enable [
       {
         assertion = !(cfg.image == null && cfg.base16Scheme == null);
         message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
