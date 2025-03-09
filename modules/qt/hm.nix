@@ -2,11 +2,21 @@
   pkgs,
   config,
   lib,
+  osConfig ? null,
   ...
 }:
 {
   options.stylix.targets.qt = {
-    enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
+    # TODO: Remove the osConfig workaround [1] ("qt: puts NixOS systemd on
+    # non-NixOS distro path") once [2] ("bug: setting qt.style.name = kvantum
+    # makes host systemd unusable") is resolved.
+    #
+    # [1]: https://github.com/danth/stylix/issues/933
+    # [2]: https://github.com/nix-community/home-manager/issues/6565
+    enable = config.lib.stylix.mkEnableTarget "QT" (
+      pkgs.stdenv.hostPlatform.isLinux && osConfig != null
+    );
+
     platform = lib.mkOption {
       description = ''
         Selects the platform theme to use for Qt applications.
