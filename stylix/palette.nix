@@ -152,6 +152,12 @@ in
       internal = true;
       readOnly = true;
     };
+
+    inputs = lib.mkOption {
+      description = "Inputs of the Stylix flake.";
+      internal = true;
+      readOnly = true;
+    };
   };
 
   config = {
