@@ -1,9 +1,4 @@
 inputs:
-{
-  palette-generator,
-  base16,
-  homeManagerModule,
-}:
 { lib, ... }:
 
 let
@@ -11,14 +6,13 @@ let
 in
 {
   imports = [
-    ../pixel.nix
-    ../target.nix
-    ../opacity.nix
-    ./fonts.nix
-    ./terminal.nix
-    (import ./palette.nix { inherit palette-generator base16 lib; })
+    "${inputs.self}/stylix/fonts.nix"
+    "${inputs.self}/stylix/home-manager-integration.nix"
+    "${inputs.self}/stylix/opacity.nix"
+    "${inputs.self}/stylix/palette.nix"
+    "${inputs.self}/stylix/pixel.nix"
+    "${inputs.self}/stylix/target.nix"
     (import ../templates.nix inputs)
-    (import ../home-manager-integration.nix homeManagerModule)
   ] ++ autoload;
 
   # See https://github.com/nix-community/nix-on-droid/issues/436
