@@ -1,0 +1,72 @@
+---
+description: Report a bug.
+labels: [bug]
+name: Bug
+title: "<SCOPE>: <SUMMARY>"
+
+body:
+  - type: textarea
+
+    attributes:
+      description: >-
+        Describe the issue in detail. Consider including a minimal reproducible
+        example, logs, or screenshots.
+
+      label: Description
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      description: >-
+        Copy-paste the `flake.lock` file. If flakes are not used, provide the
+        locked input versions.
+
+      label: flake.lock
+
+      placeholder: |-
+        {
+          "nodes": {
+          },
+          "root": "root",
+          "version": 7
+        }
+
+      render: json
+
+    validations:
+      required: true
+
+  - type: dropdown
+
+    attributes:
+      description: How is Stylix installed?
+      label: Installation Method
+
+      options:
+        - NixOS
+        - Home Manager
+        - nix-darwin
+        - Other
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      description: "`nix-info --markdown` output."
+      label: System Information
+
+      placeholder: |-
+         - system:
+         - host os:
+         - multi-user?:
+         - sandbox:
+         - version:
+         - nixpkgs:
+
+    validations:
+      required: true

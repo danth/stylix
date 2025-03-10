@@ -1,0 +1,32 @@
+---
+description: Change an existing target.
+labels: [change-target]
+name: Change target
+title: "<TARGET>: <DESCRIPTION>"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: Has this change been requested before?
+      description: >-
+        Search [existing issues](https://github.com/danth/stylix/issues) to
+        ensure that this change hasn't been requested before.
+
+    options:
+      - label: >-
+          I have searched for and not found existing issues requesting this
+          change.
+        required: true
+
+  - type: textarea
+
+    attributes:
+      label: Description
+      description: >-
+        Describe the change. Consider including links to preexisting NixOS,
+        home-manager, and/or nix-darwin options which could be leveraged to
+        make this change.
+
+    validations:
+      required: true

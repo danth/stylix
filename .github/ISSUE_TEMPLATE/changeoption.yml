@@ -1,0 +1,31 @@
+---
+description: Change an existing option.
+labels: [change-option]
+name: Change option
+title: "<SCOPE>: <DESCRIPTION>"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: Has this change been requested before?
+      description: >-
+        Search [existing issues](https://github.com/danth/stylix/issues) to
+        ensure that this change hasn't been requested before.
+
+    options:
+      - label: >-
+          I have searched for and not found existing issues requesting this
+          change.
+        required: true
+
+  - type: textarea
+
+    attributes:
+      label: Description
+      description: >-
+        Describe the change and its potential breaking changes, and demonstrate
+        the use case it improves.
+
+    validations:
+      required: true
