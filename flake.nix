@@ -260,5 +260,20 @@
             }
           ];
         };
+
+      nixOnDroidModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/droid inputs)
+            {
+              stylix = {
+                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
+          ];
+        };
     };
 }
