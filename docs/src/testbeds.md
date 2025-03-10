@@ -51,7 +51,6 @@ github:danth/stylix
 └───packages
     └───x86_64-linux
         ├───docs: package 'stylix-book'
-        ├───palette-generator: package 'palette-generator'
         ├───testbed:gnome:default:dark: package 'testbed:gnome:default:dark'
         ├───testbed:gnome:default:light: package 'testbed:gnome:default:light'
         ├───testbed:kde:default:dark: package 'testbed:kde:default:dark'
