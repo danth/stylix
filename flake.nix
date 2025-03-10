@@ -1,4 +1,6 @@
 {
+  description = "Theming framework for NixOS, Home Manager, and nix-darwin";
+
   inputs = {
     base16-fish = {
       flake = false;
