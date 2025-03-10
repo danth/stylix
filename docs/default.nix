@@ -43,26 +43,26 @@ let
     };
   };
 
-  # We construct an index of all Stylix options, using the format:
+  # We construct an index of all Stylix options, using the following format:
   #
-  # {
-  #   "src/options/modules/«module».md" = {
-  #     referenceSection = "Modules";
-  #     readme = "modules/«module»/README.md";
-  #     defaultReadme = "note about the path above not existing";
-  #     optionsByPlatform = {
-  #       home_manager = [ ... ];
-  #       nixos = [ ... ];
-  #     };
-  #   };
+  #     {
+  #       "src/options/modules/«module».md" = {
+  #         referenceSection = "Modules";
+  #         readme = "modules/«module»/README.md";
+  #         defaultReadme = "note about the path above not existing";
+  #         optionsByPlatform = {
+  #           home_manager = [ ... ];
+  #           nixos = [ ... ];
+  #         };
+  #       };
   #
-  #   "src/options/platforms/«platform».md" = {
-  #     referenceSection = "Platforms";
-  #     readme = "docs/src/options/platforms/«platform».md";
-  #     defaultReadme = "note about the path above not existing";
-  #     optionsByPlatform.«platform» = [ ... ];
-  #   };
-  # }
+  #       "src/options/platforms/«platform».md" = {
+  #         referenceSection = "Platforms";
+  #         readme = "docs/src/options/platforms/«platform».md";
+  #         defaultReadme = "note about the path above not existing";
+  #         optionsByPlatform.«platform» = [ ... ];
+  #       };
+  #     }
   #
   # Options are inserted one at a time into the appropriate page, creating
   # new page entries if they don't exist.
@@ -118,11 +118,11 @@ let
             defaultReadme = ''
               # ${module}
               > [!NOTE]
-              > This module doesn't include any additional documentation.
-              > You can browse the options it provides below.
+              > This module doesn't include any additional documentation. You
+              > can browse the options it provides below.
             '';
             # Module pages initialise all platforms to an empty list, so that
-            # *None provided.* indicates platforms where the module isn't
+            # '*None provided.*' indicates platforms where the module isn't
             # available.
             optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
           };
@@ -137,14 +137,12 @@ let
             defaultReadme = ''
               # ${platform.name}
               > Documentation is not available for this platform. Its main
-              > options are listed below, and you may find more specific
-              > options in the documentation for each module.
+              > options are listed below, and you may find more specific options
+              > in the documentation for each module.
             '';
             # Platform pages only initialise that platform, since showing other
             # platforms here would be nonsensical.
-            optionsByPlatform = {
-              ${platform} = [ ];
-            };
+            optionsByPlatform.${platform} = [ ];
           };
         }
     else
@@ -192,17 +190,13 @@ let
         ```
       ''
     else
-      builtins.throw "no implementation for rendering this kind of value";
+      builtins.throw "unexpected value type: ${builtins.typeOf value}";
 
   # Prefix to remove from file paths when listing where an option is declared.
-  # Example: /nix/store/«hash»-source
   declarationPrefix = "${inputs.self}";
 
   # Permalink to view a source file on GitHub. If the commit isn't known,
   # then fall back to the latest commit.
-  #
-  # TODO: Can this use other metadata from the flake to determine the
-  # repository URL?
   declarationCommit = inputs.self.rev or "master";
   declarationPermalink = "https://github.com/danth/stylix/blob/${declarationCommit}";
 
@@ -291,17 +285,17 @@ let
 
   # Render the list of options for a single platform. Example output:
   #
-  # ## NixOS options
-  # ### stylix.option.one
-  # «option details»
-  # ### stylix.option.two
-  # «option details»
+  #     ## NixOS options
+  #     ### stylix.option.one
+  #     «option details»
+  #     ### stylix.option.two
+  #     «option details»
   renderPlatform =
     platform: options:
     let
       sortedOptions = builtins.sort (a: b: a.name < b.name) options;
       renderedOptions =
-        if sortedOptions == [ ] then
+        if options == [ ] then
           "*None provided.*"
         else
           lib.concatLines (map renderOption sortedOptions);
@@ -311,20 +305,21 @@ let
       ${renderedOptions}
     '';
 
-  # Renders the list of options for all platforms on a page, preceded by
-  # either the relevant README, or the default README if it doesn't exist.
+  # Renders the list of options for all platforms on a page, preceded by either
+  # the relevant README, or the default README if it doesn't exist.
+  #
   # Example output:
   #
-  # # Module 1
+  #     # Module 1
   #
-  # This is the content of `modules/module1/README.md`, including the title
-  # above.
+  #     This is the content of `modules/module1/README.md`, including the title
+  #     above.
   #
-  # ## Home Manager options
-  # *None provided.*
+  #     ## Home Manager options
+  #     *None provided.*
   #
-  # ## NixOS options
-  # «list of options»
+  #     ## NixOS options
+  #     «list of options»
   renderPage =
     _path: page:
     let
@@ -348,28 +343,28 @@ let
   # SUMMARY.md is generated by a similar method to the main index, using
   # the following format:
   #
-  # {
-  #   Modules = [
-  #     "  - [Module 1](src/options/modules/module1.md)"
-  #     "  - [Module 2](src/options/modules/module2.md)"
-  #   ];
-  #   Platforms = [
-  #     "  - [Home Manager](src/options/platforms/home_manager.md)"
-  #     "  - [NixOS](src/options/platforms/nixos.md)"
-  #   ];
-  # }
+  #     {
+  #       Modules = [
+  #         "  - [Module 1](src/options/modules/module1.md)"
+  #         "  - [Module 2](src/options/modules/module2.md)"
+  #       ];
+  #       Platforms = [
+  #         "  - [Home Manager](src/options/platforms/home_manager.md)"
+  #         "  - [NixOS](src/options/platforms/nixos.md)"
+  #       ];
+  #     }
   #
   # Which renders to the following:
   #
-  # - [Modules]()
-  #   - [Module 1](src/options/modules/module1.md)
-  #   - [Module 2](src/options/modules/module2.md)
-  # - [Platforms]()
-  #   - [Home Manager](src/options/platforms/home_manager.md)
-  #   - [NixOS](src/options/platforms/nixos.md)
+  #     - [Modules]()
+  #       - [Module 1](src/options/modules/module1.md)
+  #       - [Module 2](src/options/modules/module2.md)
+  #     - [Platforms]()
+  #       - [Home Manager](src/options/platforms/home_manager.md)
+  #       - [NixOS](src/options/platforms/nixos.md)
   #
-  # (In mdbook, an empty link denotes a draft page, which is used as a parent
-  #  so the section can be collapsed in the sidebar.)
+  # In mdbook, an empty link denotes a draft page, which is used as a parent to
+  # collapse the section in the sidebar.
 
   insertPageSummary =
     summary: path: page:
@@ -390,7 +385,7 @@ let
       relativePath = lib.removePrefix "src/" path;
       entry =
         if title == firstLine then
-          builtins.throw "${path} must begin with a title"
+          builtins.throw "page must start with a title: ${path}"
         else
           "  - [${title}](${relativePath})";
     in
