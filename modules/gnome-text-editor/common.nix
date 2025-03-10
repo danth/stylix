@@ -2,18 +2,21 @@
 
 let
   style = config.lib.stylix.colors {
-    template = ../gedit/template.xml.mustache;
+    template = ../gtksourceview/template.xml.mustache;
     extension = "xml";
   };
 in
 {
   options.stylix.targets.gnome-text-editor.enable =
-    config.lib.stylix.mkEnableTarget "GNOME Text Editor" true;
+    config.lib.stylix.mkEnableTarget "GNOME Text Editor" false;
 
   config =
     lib.mkIf
       (config.stylix.enable && config.stylix.targets.gnome-text-editor.enable)
       {
+        warnings = [
+          "stylix: The `gnome-text-editor` target is deprecated. Use the `gtksourceview` target instead."
+        ];
         nixpkgs.overlays = [
           (_: prev: {
             gnome-text-editor = prev.gnome-text-editor.overrideAttrs (oldAttrs: {
