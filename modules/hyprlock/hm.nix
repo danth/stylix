@@ -1,23 +1,20 @@
 { config, lib, ... }:
-
-with config.lib.stylix;
-
 let
   cfg = config.stylix.targets.hyprlock;
 in
 {
-  options.stylix.targets.hyprlock = {
+  options.stylix.targets.hyprlock = with config.lib.stylix; {
     enable = mkEnableTarget "Hyprlock" true;
     useWallpaper = mkEnableWallpaper "Hyprlock" true;
   };
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
-    programs.hyprlock.settings = {
+    programs.hyprlock.settings = with config.lib.stylix.colors; {
       background = {
-        color = "rgb(${colors.base00})";
+        color = "rgb(${base00})";
         path = lib.mkIf cfg.useWallpaper "${config.stylix.image}";
       };
-      input-field = with colors; {
+      input-field = {
         outer_color = "rgb(${base03})";
         inner_color = "rgb(${base00})";
         font_color = "rgb(${base05})";

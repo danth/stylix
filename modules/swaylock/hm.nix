@@ -4,19 +4,8 @@
   lib,
   ...
 }:
-
-with config.lib.stylix.colors;
-
 let
   cfg = config.stylix.targets.swaylock;
-
-  inside = base01-hex;
-  outside = base01-hex;
-  ring = base05-hex;
-  text = base05-hex;
-  positive = base0B-hex;
-  negative = base08-hex;
-
 in
 {
   imports = [
@@ -65,6 +54,15 @@ in
       )
       {
         programs.swaylock.settings =
+          with config.lib.stylix.colors;
+          let
+            inside = base01-hex;
+            outside = base01-hex;
+            ring = base05-hex;
+            text = base05-hex;
+            positive = base0B-hex;
+            negative = base08-hex;
+          in
           {
             color = outside;
             scaling = config.stylix.imageScalingMode;
