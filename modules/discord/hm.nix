@@ -6,12 +6,10 @@
   ...
 }:
 let
-  template =
-    let
-      inherit (config.lib.stylix) colors;
-      inherit (config.stylix) fonts;
-    in
-    import ./template.nix { inherit colors fonts; };
+  template = import ./template.nix {
+    inherit (config.lib.stylix) colors;
+    inherit (config.stylix) fonts;
+  };
 in
 {
   options.stylix.targets =
