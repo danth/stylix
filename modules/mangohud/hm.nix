@@ -1,8 +1,6 @@
 { config, lib, ... }:
-
 let
   inherit (config.stylix) fonts opacity;
-  inherit (config.lib.stylix) colors;
 in
 {
   options.stylix.targets.mangohud.enable =
@@ -11,7 +9,7 @@ in
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.mangohud.enable)
       {
-        programs.mangohud.settings = with colors; {
+        programs.mangohud.settings = with config.lib.stylix.colors; {
           font_size = fonts.sizes.applications;
           font_size_text = fonts.sizes.applications;
           background_alpha = opacity.popups;

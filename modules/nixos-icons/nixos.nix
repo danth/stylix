@@ -4,9 +4,6 @@
   lib,
   ...
 }:
-
-with config.lib.stylix.colors;
-
 {
   options.stylix.targets.nixos-icons.enable =
     config.lib.stylix.mkEnableTarget "the NixOS logo" true;
@@ -18,7 +15,7 @@ with config.lib.stylix.colors;
           nixos-icons = super.nixos-icons.overrideAttrs (oldAttrs: {
             src = pkgs.applyPatches {
               inherit (oldAttrs) src;
-              prePatch = ''
+              prePatch = with config.lib.stylix.colors; ''
                 substituteInPlace logo/nix-snowflake-white.svg --replace-fail '#ffffff' '#${base05}'
 
                 # Insert attribution comment after the XML prolog

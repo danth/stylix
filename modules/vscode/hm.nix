@@ -5,8 +5,6 @@
   ...
 }:
 
-with config.stylix.fonts;
-
 let
   themeFile = config.lib.stylix.colors {
     template = ./template.mustache;
@@ -44,7 +42,7 @@ in
       map (profileName: {
         ${profileName} = {
           extensions = [ themeExtension ];
-          userSettings = {
+          userSettings = with config.stylix.fonts; {
             "workbench.colorTheme" = "Stylix";
             "editor.fontFamily" = monospace.name;
             "editor.inlayHints.fontFamily" = monospace.name;
