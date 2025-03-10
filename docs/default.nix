@@ -482,9 +482,15 @@ pkgs.stdenvNoCC.mkDerivation {
     mdbook-alerts
   ];
 
+  inherit extraCSS renderedSummary;
+  passAsFile = [
+    "extraCSS"
+    "renderedSummary"
+  ];
+
   patchPhase = ''
     ${writePages}
-    echo -n ${lib.escapeShellArg renderedSummary} >>src/SUMMARY.md
+    cat $renderedSummaryPath >>src/SUMMARY.md
     cp ${../README.md} src/README.md
     cp ${../gnome.png} src/gnome.png
     cp ${../kde.png} src/kde.png
@@ -493,6 +499,6 @@ pkgs.stdenvNoCC.mkDerivation {
   buildPhase = "mdbook build --dest-dir $out";
 
   fixupPhase = ''
-    echo ${lib.escapeShellArg extraCSS} >>$out/css/general.css
+    cat $extraCSSPath >>$out/css/general.css
   '';
 }
