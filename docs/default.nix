@@ -107,6 +107,10 @@ let
       # Platforms section.
       if builtins.elemAt pathComponents 0 == "modules" then
         let
+          # This is used in the page path, which eventually becomes an attribute
+          # name in the index, and attribute names aren't allowed to have
+          # context. The context comes from ${inputs.self}, which is removed
+          # from the string using `removePrefix` above, so this use is safe.
           module = builtins.unsafeDiscardStringContext (builtins.elemAt pathComponents 1);
         in
         insert {
