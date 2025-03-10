@@ -7,7 +7,7 @@
 
 let
   themeFile = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.input.base16-vim;
+    templateRepo = config.stylix.inputs.base16-vim;
     target = "base16";
   };
 
