@@ -15,7 +15,9 @@
         border-color-unfocused = "0x${colors.base03}";
         border-color-urgent = "0x${colors.base08}";
         background-color = "0x${colors.base00}";
-        xcursor-theme = "${cursor.name} ${toString cursor.size}";
+        xcursor-theme = lib.mkIf (
+          config.stylix.cursor != null
+        ) "${cursor.name} ${toString cursor.size}";
       };
   };
 }
