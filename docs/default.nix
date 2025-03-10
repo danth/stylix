@@ -385,13 +385,15 @@ let
       text = renderedPages.${path};
       lines = lib.splitString "\n" text;
       firstLine = builtins.elemAt lines 0;
-      title = lib.removePrefix "# " firstLine;
+      titlePrefix = "# ";
+      hasTitle = lib.hasPrefix titlePrefix firstLine;
+      title = lib.removePrefix titlePrefix firstLine;
       relativePath = lib.removePrefix "src/" path;
       entry =
-        if title == firstLine then
-          builtins.throw "page must start with a title: ${path}"
+        if hasTitle then
+          "  - [${title}](${relativePath})"
         else
-          "  - [${title}](${relativePath})";
+          builtins.throw "page must start with a title: ${path}";
     in
     summary
     // {
