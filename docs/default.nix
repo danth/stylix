@@ -244,17 +244,20 @@ let
   # Render a single option. Example output (actually HTML, but drawn here using
   # pseudo-Markdown for clarity):
   #
-  # ### stylix.option.one
+  #     ### stylix.option.one
   #
-  # | Summary | This is the option's description, if present.                 |
-  # | Type    | string                                                        |
-  # | Default | This is the default value, if provided. Usually a code block. |
-  # | Example | This is an example value, if provided. Usually a code block.  |
-  # | Source  | - [modules/module1/nixos.nix](https://github.com/...)         |
+  #     The option's description, if present.
+  #
+  #     | Type    | string                                                |
+  #     | Default | The default value, if provided. Usually a code block. |
+  #     | Example | An example value, if provided. Usually a code block.  |
+  #     | Source  | - [modules/module1/nixos.nix](https://github.com/...) |
   renderOption =
     option:
     lib.optionalString (option.visible && !option.internal) ''
       ### ${option.name}
+
+      ${option.description or ""}
 
       ${lib.concatStrings (
         [
@@ -265,9 +268,6 @@ let
           "</colgroup>"
           "<tbody>"
         ]
-        ++ (lib.optional (option ? description) (
-          renderDetailsRow "Summary" option.description
-        ))
         ++ (lib.optional (option ? type) (renderDetailsRow "Type" option.type))
         ++ (lib.optional (option ? default) (
           renderDetailsRow "Default" (renderValue option.default)
