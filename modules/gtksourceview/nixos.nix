@@ -6,10 +6,10 @@ let
     extension = "xml";
   };
 
-  attrsOverride = oldAttrs: {
+  attrsOverride = version: oldAttrs: {
     postFixup = ''
       ${oldAttrs.postFixup or ""}
-      styles_dir="$out/share/gtksourceview-3.0/styles"
+      styles_dir="$out/share/gtksourceview-${version}/styles"
       mkdir --parents "$styles_dir"
       cp ${style} "$styles_dir/stylix.xml"
     '';
@@ -25,9 +25,12 @@ in
       {
         nixpkgs.overlays = [
           (_: prev: {
-            gtksourceview = prev.gtksourceview.overrideAttrs attrsOverride;
-            gtksourceview4 = prev.gtksourceview4.overrideAttrs attrsOverride;
-            gtksourceview5 = prev.gtksourceview5.overrideAttrs attrsOverride;
+            gnome2.gtksourceview = prev.gnome2.gtksourceview.overrideAttrs (
+              attrsOverride "2.0"
+            );
+            gtksourceview = prev.gtksourceview.overrideAttrs (attrsOverride "3.0");
+            gtksourceview4 = prev.gtksourceview4.overrideAttrs (attrsOverride "4");
+            gtksourceview5 = prev.gtksourceview5.overrideAttrs (attrsOverride "5");
           })
         ];
       };
