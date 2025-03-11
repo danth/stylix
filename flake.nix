@@ -1,5 +1,5 @@
 {
-  description = "Theming framework for NixOS, Home Manager, and nix-darwin";
+  description = "Theming framework for NixOS, Home Manager, nix-darwin and Nix-on-Droid";
 
   inputs = {
     base16-fish = {

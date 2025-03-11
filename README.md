@@ -3,8 +3,11 @@
 ## About
 
 Stylix is a theming framework for [NixOS](https://nixos.org), [Home
-Manager](https://nix-community.github.io/home-manager#ch-introduction), and
-[nix-darwin](https://github.com/LnL7/nix-darwin#readme) that applies color
+Manager](https://nix-community.github.io/home-manager#ch-introduction),
+[nix-darwin](https://github.com/LnL7/nix-darwin#readme), and
+[Nix-on-Droid](https://github.com/nix-community/nix-on-droid) that applies
+color
+
 schemes, wallpapers, and fonts to a wide range of applications.
 
 Unlike color scheme utilities such as
@@ -58,4 +61,5 @@ nix run github:danth/stylix#testbed:gnome:default:dark:image:scheme
 </figure>
 
 Since KDE theming is still a work in progress, some manual steps may be required
+
 to properly apply its theme.
