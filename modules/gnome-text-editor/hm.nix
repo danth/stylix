@@ -10,7 +10,7 @@ let
 in
 {
   options.stylix.targets.gnome-text-editor.enable =
-    config.lib.stylix.mkEnableTarget "GNOME Text Editor" false;
+    config.lib.stylix.mkEnableTarget "GNOME Text Editor" true;
 
   config =
     lib.mkIf
