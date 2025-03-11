@@ -9,7 +9,7 @@ let
 in
 {
   options.stylix.targets.gtksourceview.enable =
-    config.lib.stylix.mkEnableTarget "GTKSourceView, which is used by GNOME Text Editor among others" true;
+    config.lib.stylix.mkEnableTarget "GTKSourceView" true;
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.gtksourceview.enable)
