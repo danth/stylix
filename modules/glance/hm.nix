@@ -35,10 +35,13 @@
                     0
                   else
                     100 * delta / (100 - lib.max (2 * l - 100) (100 - (2 * l)));
+                roundToString = value: toString (builtins.floor (value + 0.5));
               in
-              "${builtins.toString (builtins.floor (h + 0.5))} ${
-                builtins.toString (builtins.floor (s + 0.5))
-              } ${builtins.toString (builtins.floor (l + 0.5))}";
+              lib.concatMapStringsSep " " roundToString [
+                h
+                s
+                l
+              ];
           in
           {
             light = config.stylix.polarity == "light";
