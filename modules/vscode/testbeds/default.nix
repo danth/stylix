@@ -16,5 +16,7 @@ in
       enable = true;
       inherit package;
     };
+
+    stylix.targets.vscode.profileNames = [ "default" ];
   };
 }
