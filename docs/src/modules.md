@@ -25,6 +25,7 @@ The following platforms are supported:
 - NixOS (`nixos`)
 - Home Manager (`hm`)
 - Nix-Darwin (`darwin`)
+- Nix-on-Droid (`droid`)
 
 Correctly named modules will be imported automatically.
 
