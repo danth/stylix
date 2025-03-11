@@ -14,8 +14,6 @@ in
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.gtksourceview.enable)
       {
-        xdg.dataFile = {
-          "gtksourceview/styles/stylix.xml".source = style;
-        };
+        xdg.dataFile."gtksourceview-3.0/styles/stylix.xml".source = style;
       };
 }
