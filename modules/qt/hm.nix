@@ -27,6 +27,14 @@
       type = lib.types.str;
       default = "qtct";
     };
+
+    usePortal = lib.mkOption {
+      description = ''
+        Whether to use XDG Desktop Portal for dialogs. Only affects "qtct" platform.
+      '';
+      type = lib.types.bool;
+      default = false;
+    };
   };
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) (
@@ -86,11 +94,19 @@
             ''
               [Appearance]
             ''
-            + lib.optionalString (config.qt.style ? name) ''
+            + lib.optionalString (config.qt.style.name != null) ''
               style=${config.qt.style.name}
             ''
             + lib.optionalString (iconTheme != null) ''
               icon_theme=${iconTheme}
+            ''
+            + lib.optionalString config.stylix.targets.qt.usePortal ''
+              standard_dialogs=xdgdesktopportal
+            ''
+            + ''
+              [Fonts]
+              fixed="${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications}"
+              general="${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications}"
             '';
 
         in
