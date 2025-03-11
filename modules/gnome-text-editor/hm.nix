@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   ...
 }:
@@ -16,7 +15,7 @@ in
         dconf.settings."org/gnome/TextEditor".style-scheme = "stylix";
 
         warnings =
-          optional (!options.stylix.targets.gtksourceview.enable)
+          optional (!config.stylix.targets.gtksourceview.enable)
             "stylix: gnome-text-editor: This module will probably not work because the `gtksourceview' target is not enabled.";
       };
 }
