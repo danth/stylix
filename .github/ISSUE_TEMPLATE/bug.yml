@@ -9,18 +9,16 @@ body:
 
     attributes:
       label: "I assert that this issue is relevant for Stylix"
-      description: |
-        This bug tracker is for actionable issues that are not the result of
-        user error. If you need help using your system and are unsure if this
-        is a bug with Stylix, please consider reading the
-        [Stylix Book](https://stylix.danth.me/) or asking for help in a
-        [Discussion](https://github.com/danth/stylix/discussions) or the
-        [Stylix Matrix Space](https://matrix.to/#/#stylix:danth.me) before
-        opening an issue.
+      description: >-
+        If you need help or are unsure whether this is a Stylix bug, please
+        consider reading the [Documentation](https://stylix.danth.me) or asking
+        for help in a [GitHub Discussion](
+        https://github.com/danth/stylix/discussions) or the [Stylix Matrix
+        Space](https://matrix.to/#/#stylix:danth.me) before opening an issue.
       options:
         - label: "I assert that this is a bug and not a support request."
           required: true
-        - label: |
+        - label: >-
             "I assert that this is not a [duplicate of an existing issue]
             (https://github.com/danth/stylix/labels/bug)."
           required: true
