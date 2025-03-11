@@ -59,5 +59,4 @@ nix run github:danth/stylix#testbed:gnome:default:dark:image:scheme
 </figure>
 
 Since KDE theming is still a work in progress, some manual steps may be required
-
 to properly apply its theme.
