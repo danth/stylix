@@ -114,6 +114,24 @@ slow and should be avoided.
 For everything else, like fonts and wallpapers, you can just take option values
 directly from `config`. See the reference pages for a list of options.
 
+## Maintainership
+
+Every new module *must* have a maintainer defined in `modules/«module»/meta.nix`.
+This is a statement that you are responsible for updating and fixing issues with
+the module. If you are not in nixpkgs maintainers you will need to add yourself
+to `stylix/maintainers.nix` with the format [documentated here](https://github.com/NixOS/nixpkgs/blob/master/maintainers/maintainer-list.nix#L1).
+Once you are in either nixpkgs maintainers or `stylix/maintainers.nix` you can
+add yourself as a maintainer in `modules/«module»/meta.nix` like this:
+
+```nix
+{ lib, ... }:
+{
+  maintainers = [ lib.maintainers.danth ];
+  # or with multiple maintainer
+  maintainers = with lib.maintainers; [ danth naho ];
+}
+```
+
 ## Documentation
 
 Documentation for options is automatically generated. To improve the quality
