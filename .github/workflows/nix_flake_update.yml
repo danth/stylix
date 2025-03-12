@@ -1,0 +1,26 @@
+---
+name: Nix Flake Update
+
+on:  # yamllint disable-line rule:truthy
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 0 1 * *"
+
+jobs:
+  nix-flake-update:
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - uses: DeterminateSystems/update-flake-lock@v24
+        with:
+          pr-labels: dependencies
+          pr-title: "stylix: update all flake inputs"
