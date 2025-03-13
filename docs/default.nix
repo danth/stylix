@@ -99,7 +99,12 @@ let
     # Only include options which are declared by a module within Stylix.
     if lib.hasPrefix "${inputs.self}/" declaration then
       let
-        path = lib.removePrefix "${inputs.self}/" declaration;
+        # Part of this string may become an attribute name in the index, and
+        # attribute names aren't allowed to have string context. The context
+        # comes from `${inputs.self}`, which is removed by `removePrefix`.
+        # Therefore, this use of `unsafeDiscardStringContext` is safe.
+        pathWithContext = lib.removePrefix "${inputs.self}/" declaration;
+        path = builtins.unsafeDiscardStringContext pathWithContext;
         pathComponents = lib.splitString "/" path;
       in
       # Options declared in the modules directory go to the Modules section,
@@ -107,11 +112,7 @@ let
       # Platforms section.
       if builtins.elemAt pathComponents 0 == "modules" then
         let
-          # This is used in the page path, which eventually becomes an attribute
-          # name in the index, and attribute names aren't allowed to have
-          # context. The context comes from ${inputs.self}, which is removed
-          # from the string using `removePrefix` above, so this use is safe.
-          module = builtins.unsafeDiscardStringContext (builtins.elemAt pathComponents 1);
+          module = builtins.elemAt pathComponents 1;
         in
         insert {
           inherit index platform option;
