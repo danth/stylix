@@ -498,9 +498,13 @@ pkgs.stdenvNoCC.mkDerivation {
     cp ${../kde.png} src/kde.png
   '';
 
-  buildPhase = "mdbook build --dest-dir $out";
+  buildPhase = ''
+    runHook preBuild
+    mdbook build --dest-dir $out
+    runHook postBuild
+  '';
 
-  fixupPhase = ''
+  postBuild = ''
     cat $extraCSSPath >>$out/css/general.css
   '';
 }
