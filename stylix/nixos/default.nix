@@ -16,6 +16,7 @@ in
     "${inputs.self}/stylix/nixos/cursor.nix"
     "${inputs.self}/stylix/nixos/fonts.nix"
     "${inputs.self}/stylix/nixos/palette.nix"
+    "${inputs.self}/stylix/icon.nix"
     "${inputs.self}/stylix/opacity.nix"
     "${inputs.self}/stylix/palette.nix"
     "${inputs.self}/stylix/pixel.nix"
