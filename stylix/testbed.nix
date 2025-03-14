@@ -142,6 +142,7 @@ let
             stylix.polarity
             "image${lib.optionalString (stylix.image or null == null) "less"}"
             "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
+            "cursor${lib.optionalString (stylix.cursor or null == null) "less"}"
           ]
       );
 
@@ -225,6 +226,17 @@ let
         enable = true;
         image = images.dark;
         polarity = "dark";
+      }
+      {
+        enable = true;
+        image = images.dark;
+        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+        cursor = {
+          name = "Vanilla-DMZ";
+          package = pkgs.vanilla-dmz;
+          size = 32;
+        };
       }
     ];
 
