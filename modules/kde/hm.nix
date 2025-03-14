@@ -280,18 +280,26 @@ let
 
   configPackage =
     pkgs.runCommandLocal "stylix-kde-config"
-      {
-        kcminputrc = formatConfig kcminputrc;
-        kded5rc = formatConfig kded5rc;
-        kdeglobals = formatConfig kdeglobals;
-      }
-      ''
-        mkdir "$out"
+      (
+        {
+          kded5rc = formatConfig kded5rc;
+          kdeglobals = formatConfig kdeglobals;
+        }
+        // (lib.optionalAttrs (config.stylix.cursor != null) {
+          kcminputrc = formatConfig kcminputrc;
+        })
+      )
+      (
+        ''
+          mkdir "$out"
 
-        printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
-        printf '%s\n' "$kded5rc" >"$out/kded5rc"
-        printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
-      '';
+          printf '%s\n' "$kded5rc" >"$out/kded5rc"
+          printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
+        ''
+        + (lib.optionalString (
+          config.stylix.cursor != null
+        ) ''printf '%s\n' "$kcminputrc" >"$out/kcminputrc"'')
+      );
 
   # plasma-apply-wallpaperimage is necessary to change the wallpaper
   # after the first login.
