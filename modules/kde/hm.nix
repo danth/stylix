@@ -246,7 +246,7 @@ let
 
   # The cursor theme can be configured through a look and feel package,
   # however its size cannot.
-  kcminputrc = lib.mkIf (config.stylix.cursor != null) {
+  kcminputrc = {
     Mouse = {
       cursorSize = makeImmutable (toString config.stylix.cursor.size);
       cursorTheme = makeImmutable config.stylix.cursor.name;
