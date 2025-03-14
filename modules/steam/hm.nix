@@ -13,7 +13,7 @@ let
     extension = "css";
   };
 
-  adwaitaTheme = pkgs.stdenv.mkDerivation (_self: {
+  adwaitaTheme = pkgs.stdenv.mkDerivation {
     name = "Adwaita-for-Steam";
 
     src = config.stylix.inputs.adwaita-for-steam;
