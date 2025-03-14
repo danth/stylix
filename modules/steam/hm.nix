@@ -25,7 +25,7 @@ let
       mkdir --parents $out/steamui/css
       touch $out/steamui/css/library.css
       cp ${adwaitaCustomCss} ./custom/custom.css
-      python3 install.py --custom-css --target $out
+      python install.py --custom-css --target $out
     '';
   });
 in
