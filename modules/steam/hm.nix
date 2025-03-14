@@ -15,7 +15,6 @@ let
 
   adwaitaTheme = pkgs.stdenv.mkDerivation (_self: {
     name = "Adwaita-for-Steam";
-    version = "3.1";
 
     src = config.stylix.inputs.adwaita-for-steam;
 
