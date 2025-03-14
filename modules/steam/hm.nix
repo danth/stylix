@@ -19,7 +19,7 @@ let
 
     src = config.stylix.inputs.adwaita-for-steam;
 
-    buildInputs = with pkgs; [ python3 ];
+    buildInputs = [pkgs.python3];
 
     buildPhase = ''
       mkdir --parents $out/steamui/css
