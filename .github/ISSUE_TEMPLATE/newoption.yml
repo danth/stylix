@@ -1,0 +1,31 @@
+---
+description: Add a new option.
+labels: [new-option]
+name: New option
+title: "<SCOPE>: init <OPTION> option"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: Has this been option requested before?
+      description: >-
+        Search [existing issues](https://github.com/danth/stylix/issues) to
+        ensure that this feature hasn't been requested before.
+
+    options:
+      - label: >-
+          I have searched for and not found existing issues requesting this
+          option.
+        required: true
+
+  - type: textarea
+
+    attributes:
+      label: Description
+      description: >-
+        Describe the option and explain its use case. Consider including
+        pseudocode demonstrating its integration with the existing architecture.
+
+    validations:
+      required: true
