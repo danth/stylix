@@ -3,14 +3,14 @@
   lib,
   ...
 }:
-with config.stylix.fonts;
-with config.lib.stylix.colors.withHashtag;
 {
   options.stylix.targets.tofi.enable =
     config.lib.stylix.mkEnableTarget "Tofi" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.tofi.enable) {
     programs.tofi.settings =
+      with config.stylix.fonts;
+      with config.lib.stylix.colors.withHashtag;
       let
         opacity = lib.toHexString (
           ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100

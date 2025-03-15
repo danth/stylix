@@ -5,8 +5,6 @@
   ...
 }@args:
 
-with config.stylix.fonts;
-
 let
   extension =
     pkgs.runCommandLocal "stylix-vscode"

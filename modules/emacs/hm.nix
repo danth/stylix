@@ -4,15 +4,12 @@
   lib,
   ...
 }:
-
-with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
-
 let
+  inherit (config.stylix) fonts;
   emacsOpacity = builtins.toString (
     builtins.ceil (config.stylix.opacity.applications * 100)
   );
-  emacsSize = builtins.toString (sizes.terminal * 1.0);
+  emacsSize = builtins.toString (fonts.sizes.terminal * 1.0);
 in
 {
   options.stylix.targets.emacs.enable =
@@ -21,49 +18,52 @@ in
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.emacs.enable) {
     programs.emacs = {
       extraPackages = epkgs: [
-        (epkgs.trivialBuild {
-          pname = "base16-stylix-theme";
-          version = "0.1.0";
-          src = pkgs.writeText "base16-stylix-theme.el" ''
-            (require 'base16-theme)
+        (epkgs.trivialBuild (
+          with config.lib.stylix.colors.withHashtag;
+          {
+            pname = "base16-stylix-theme";
+            version = "0.1.0";
+            src = pkgs.writeText "base16-stylix-theme.el" ''
+              (require 'base16-theme)
 
-            (defvar base16-stylix-theme-colors
-              '(:base00 "${base00}"
-                :base01 "${base01}"
-                :base02 "${base02}"
-                :base03 "${base03}"
-                :base04 "${base04}"
-                :base05 "${base05}"
-                :base06 "${base06}"
-                :base07 "${base07}"
-                :base08 "${base08}"
-                :base09 "${base09}"
-                :base0A "${base0A}"
-                :base0B "${base0B}"
-                :base0C "${base0C}"
-                :base0D "${base0D}"
-                :base0E "${base0E}"
-                :base0F "${base0F}")
-              "All colors for Base16 stylix are defined here.")
+              (defvar base16-stylix-theme-colors
+                '(:base00 "${base00}"
+                  :base01 "${base01}"
+                  :base02 "${base02}"
+                  :base03 "${base03}"
+                  :base04 "${base04}"
+                  :base05 "${base05}"
+                  :base06 "${base06}"
+                  :base07 "${base07}"
+                  :base08 "${base08}"
+                  :base09 "${base09}"
+                  :base0A "${base0A}"
+                  :base0B "${base0B}"
+                  :base0C "${base0C}"
+                  :base0D "${base0D}"
+                  :base0E "${base0E}"
+                  :base0F "${base0F}")
+                "All colors for Base16 stylix are defined here.")
 
-            ;; Define the theme
-            (deftheme base16-stylix)
+              ;; Define the theme
+              (deftheme base16-stylix)
 
-            ;; Add all the faces to the theme
-            (base16-theme-define 'base16-stylix base16-stylix-theme-colors)
+              ;; Add all the faces to the theme
+              (base16-theme-define 'base16-stylix base16-stylix-theme-colors)
 
-            ;; Mark the theme as provided
-            (provide-theme 'base16-stylix)
+              ;; Mark the theme as provided
+              (provide-theme 'base16-stylix)
 
-            ;; Add path to theme to theme-path
-            (add-to-list 'custom-theme-load-path
-                (file-name-directory
-                    (file-truename load-file-name)))
+              ;; Add path to theme to theme-path
+              (add-to-list 'custom-theme-load-path
+                  (file-name-directory
+                      (file-truename load-file-name)))
 
-            (provide 'base16-stylix-theme)
-          '';
-          packageRequires = [ epkgs.base16-theme ];
-        })
+              (provide 'base16-stylix-theme)
+            '';
+            packageRequires = [ epkgs.base16-theme ];
+          }
+        ))
       ];
 
       extraConfig = ''
@@ -72,7 +72,7 @@ in
         (setq base16-theme-256-color-source 'colors)
         (load-theme 'base16-stylix t)
         ;; Set font
-        (set-face-attribute 'default nil :font (font-spec :family "${monospace.name}" :size ${emacsSize}))
+        (set-face-attribute 'default nil :font (font-spec :family "${fonts.monospace.name}" :size ${emacsSize}))
         ;; -----------------------------
         ;; set opacity
         (add-to-list 'default-frame-alist '(alpha-background . ${emacsOpacity}))
