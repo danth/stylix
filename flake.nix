@@ -132,7 +132,6 @@
           git-hooks = inputs.git-hooks.lib.${system}.run {
             hooks = {
               deadnix.enable = true;
-              hlint.enable = true;
 
               nixfmt-rfc-style = {
                 enable = true;
@@ -140,7 +139,6 @@
               };
 
               statix.enable = true;
-              stylish-haskell.enable = true;
               typos.enable = true;
               yamllint.enable = true;
             };
@@ -200,8 +198,6 @@
                       '
                 '';
               };
-
-              palette-generator = pkgs.callPackage ./palette-generator { };
             };
 
             # Testbeds are virtual machines based on NixOS, therefore they are
@@ -215,14 +211,13 @@
     )
     // {
       nixosModules.stylix =
-        { pkgs, ... }@args:
+        args:
         {
           imports = [
             (import ./stylix/nixos inputs)
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -231,14 +226,13 @@
         };
 
       homeManagerModules.stylix =
-        { pkgs, ... }@args:
+        args:
         {
           imports = [
             (import ./stylix/hm inputs)
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
               };
             }
@@ -246,14 +240,13 @@
         };
 
       darwinModules.stylix =
-        { pkgs, ... }@args:
+        args:
         {
           imports = [
             (import ./stylix/darwin inputs)
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };

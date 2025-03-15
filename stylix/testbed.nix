@@ -139,7 +139,7 @@ let
             "testbed"
             testbed.module
             testbed.name
-            stylix.polarity
+            stylix.themeGeneration.polarity
             "image${lib.optionalString (stylix.image or null == null) "less"}"
             "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
             "cursor${lib.optionalString (stylix.cursor or null == null) "less"}"
@@ -209,23 +209,23 @@ let
         enable = true;
         image = images.light;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-latte.yaml";
-        polarity = "light";
+        themeGeneration.polarity = "light";
       }
       {
         enable = true;
         image = images.dark;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
+        themeGeneration.polarity = "dark";
       }
       {
         enable = true;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
+        themeGeneration.polarity = "dark";
       }
       {
         enable = true;
         image = images.dark;
-        polarity = "dark";
+        themeGeneration.polarity = "dark";
       }
       {
         enable = true;
