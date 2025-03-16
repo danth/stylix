@@ -132,6 +132,7 @@
           git-hooks = inputs.git-hooks.lib.${system}.run {
             hooks = {
               deadnix.enable = true;
+              editorconfig-checker.enable = true;
               hlint.enable = true;
 
               nixfmt-rfc-style = {
