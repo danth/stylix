@@ -2,6 +2,7 @@
   lib,
   config,
   options,
+  pkgs,
   ...
 }:
 
@@ -37,6 +38,7 @@ let
             "stylix"
             "cursor"
           ];
+          condition = _homeConfig: !pkgs.stdenv.hostPlatform.isDarwin;
         }
         {
           path = [
