@@ -12,7 +12,8 @@ with config.lib.stylix.colors.withHashtag;
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.rstudio.enable)
       {
-        services.rstudio.style =
+        xdg.configFile."rstudio/theme/stylix.rtheme".text =
+          with config.lib.stylix.colors.withHashtag;
           ''
               :root {
               --base00: ${base00}
