@@ -3,7 +3,7 @@
   lib,
   inputs,
   ...
-}:
+}@args:
 
 let
   nixosConfiguration = lib.nixosSystem {
@@ -42,6 +42,8 @@ let
       configuration = nixosConfiguration;
     };
   };
+
+  metadata = import ../stylix/meta.nix args;
 
   # We construct an index of all Stylix options, using the following format:
   #
@@ -119,13 +121,83 @@ let
           page = "src/options/modules/${module}.md";
           emptyPage = {
             referenceSection = "Modules";
-            readme = "${inputs.self}/modules/${module}/README.md";
-            defaultReadme = ''
-              # ${module}
-              > [!NOTE]
-              > This module doesn't include any additional documentation. You
-              > can browse the options it provides below.
-            '';
+
+            readme =
+              let
+                path = "${inputs.self}/modules/${module}/README.md";
+
+                # This doesn't count as IFD because ${inputs.self} is a flake input
+                mainText =
+                  if builtins.pathExists path then
+                    builtins.readFile path
+                  else
+                    ''
+                      # ${module}
+                      > [!NOTE]
+                      > This module doesn't include any additional documentation.
+                      > You can browse the options it provides below.
+                    '';
+
+                inherit (metadata.${module}) maintainers;
+
+                # Render a maintainer's name and a link to the best contact
+                # information we have for them.
+                #
+                # The reasoning behind the order of preference is as follows:
+                #
+                # - GitHub:
+                #   - May link to multiple contact methods
+                #   - More likely to have up-to-date information than the
+                #     maintainers list
+                #   - Protects the email address from crawlers
+                # - Email:
+                #   - Very commonly used
+                # - Matrix:
+                #   - Only other contact method in the schema
+                #     (as of March 2025)
+                # - Name:
+                #   - If no other information is available, then just show
+                #     the maintainer's name without a link
+                renderMaintainer =
+                  maintainer:
+                  if maintainer ? github then
+                    "[${maintainer.name}](https://github.com/${maintainer.github})"
+                  else if maintainer ? email then
+                    "[${maintainer.name}](mailto:${maintainer.email})"
+                  else if maintainer ? matrix then
+                    "[${maintainer.name}](https://matrix.to/#/${maintainer.matrix})"
+                  else
+                    maintainer.name;
+
+                joinItems =
+                  items:
+                  if builtins.length items == 0 then
+                    ""
+                  else if builtins.length items == 1 then
+                    builtins.head items
+                  else if builtins.length items == 2 then
+                    "${builtins.head items} and ${builtins.elemAt items 1}"
+                  else
+                    "${builtins.head items}, ${joinItems (builtins.tail items)}";
+
+                renderedMaintainers = joinItems (map renderMaintainer maintainers);
+
+                maintainersText =
+                  if maintainers == [ ] then
+                    ''
+                      > [!WARNING]
+                      > This module has no assigned maintainer. It may not be
+                      > up-to-date for the latest version of the software being
+                      > themed.
+                    ''
+                  else
+                    "This module is maintained by ${renderedMaintainers}.";
+              in
+              lib.concatLines [
+                mainText
+                maintainersText
+              ];
+
             # Module pages initialise all platforms to an empty list, so that
             # '*None provided.*' indicates platforms where the module isn't
             # available.
@@ -138,13 +210,24 @@ let
           page = "src/options/platforms/${platform}.md";
           emptyPage = {
             referenceSection = "Platforms";
-            readme = "${inputs.self}/docs/src/options/platforms/${platform}.md";
-            defaultReadme = ''
-              # ${platform.name}
-              > Documentation is not available for this platform. Its main
-              > options are listed below, and you may find more specific options
-              > in the documentation for each module.
-            '';
+            readme =
+              let
+                path = "${inputs.self}/docs/src/options/platforms/${platform}.md";
+
+                # This doesn't count as IFD because ${inputs.self} is a flake input
+                mainText =
+                  if builtins.pathExists path then
+                    builtins.readFile path
+                  else
+                    ''
+                      # ${platform.name}
+                      > Documentation is not available for this platform. Its
+                      > main options are listed below, and you may find more
+                      > specific options in the documentation for each module.
+                    '';
+              in
+              mainText;
+
             # Platform pages only initialise that platform, since showing other
             # platforms here would be nonsensical.
             optionsByPlatform.${platform} = [ ];
@@ -328,18 +411,12 @@ let
   renderPage =
     _path: page:
     let
-      readme =
-        # This doesn't count as IFD because ${inputs.self} is a flake input
-        if builtins.pathExists page.readme then
-          builtins.readFile page.readme
-        else
-          page.defaultReadme;
       options = lib.concatStrings (
         lib.mapAttrsToList renderPlatform page.optionsByPlatform
       );
     in
     lib.concatLines [
-      readme
+      page.readme
       options
     ];
 
