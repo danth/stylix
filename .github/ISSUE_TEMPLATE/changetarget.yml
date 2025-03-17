@@ -8,15 +8,12 @@ body:
   - type: checkboxes
 
     attributes:
-      label: Has this change been requested before?
-      description: >-
-        Search [existing issues](https://github.com/danth/stylix/issues) to
-        ensure that this change hasn't been requested before.
+      label: I assert that this feature request is relevant for Stylix
 
     options:
       - label: >-
-          I have searched for and not found existing issues requesting this
-          change.
+          I assert that this is not a duplicate of an [existing feature
+          request](https://github.com/danth/stylix/labels/change-target).
         required: true
 
   - type: textarea

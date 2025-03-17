@@ -21,7 +21,7 @@ body:
             request.
           required: true
         - label: >-
-            I assert that this is not a [duplicate of an existing
+            I assert that this is not a duplicate of an [existing
             issue](https://github.com/danth/stylix/labels/bug).
           required: true
 
