@@ -78,6 +78,39 @@ While this won't have an effect on the looks of MacOS, since we don't have the
 controls to theme it like we do NixOS, it will automatically set up the [Home
 Manager][nix-hm] modules for you.
 
+## Nix-on-Droid
+
+You can install Stylix into your
+[Nix-on-Droid](https://github.com/nix-community/nix-on-droid) configuration in
+a similar fashion to NixOS via [Flakes][nix-flakes].
+
+```nix
+{
+  inputs = {
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    stylix.url = "github:danth/stylix";
+  };
+
+  outputs = { nix-on-droid, nixpkgs, stylix, ... }: {
+    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+      pkgs = nixpkgs.legacyPackages."aarch64-linux";
+      modules = [ stylix.nixOnDroidModules.stylix ./nix-on-droid.nix ];
+    };
+  };
+}
+```
+<small>Minimal `flake.nix` for a Nix-on-Droid configuration.</small>
+
+This will apply your configured color scheme and monospace font to the
+nix-on-droid terminal. If [Home Manager integration for
+Nix-on-Droid](https://github.com/nix-community/nix-on-droid#home-manager-integration)
+is used, Stylix will automatically set up the [Home Manager][nix-hm] modules for
+you.
+
 ## Home Manager
 
 If you would prefer to use the standalone version of Home Manager, you can

@@ -13,22 +13,24 @@
           in
           {
             theme = with colors; {
-              background = base00;
+              background =
+                if (config.stylix.opacity.terminal != 1.0) then "#00000000" else base00;
               primary = base05;
-              secondary = base03;
+              secondary = base04;
               title = base06;
-              playing = base05;
-              playing_selected = base06;
-              playing_bg = base02;
+              playing = base0B;
+              playing_selected = base0B;
+              playing_bg =
+                if (config.stylix.opacity.terminal != 1.0) then "#00000000" else base00;
               highlight = base05;
               highlight_bg = base02;
-              error = base07;
-              error_bg = base0F;
+              error = base05;
+              error_bg = base08;
               statusbar = base00;
               statusbar_progress = base04;
               statusbar_bg = base04;
-              cmdline = base05;
-              cmdline_bg = base00;
+              cmdline = base02;
+              cmdline_bg = base05;
               search_match = base05;
             };
           };

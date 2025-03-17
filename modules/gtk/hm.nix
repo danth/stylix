@@ -10,7 +10,7 @@ let
   cfg = config.stylix.targets.gtk;
 
   baseCss = config.lib.stylix.colors {
-    template = ./gtk.mustache;
+    template = ./gtk.css.mustache;
     extension = "css";
   };
 

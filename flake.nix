@@ -1,4 +1,6 @@
 {
+  description = "Theming framework for NixOS, Home Manager, nix-darwin, and Nix-on-Droid";
+
   inputs = {
     base16-fish = {
       flake = false;
@@ -219,6 +221,7 @@
             (import ./stylix/nixos inputs)
             {
               stylix = {
+                inherit inputs;
                 paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
@@ -234,6 +237,7 @@
             (import ./stylix/hm inputs)
             {
               stylix = {
+                inherit inputs;
                 paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
               };
@@ -246,6 +250,22 @@
         {
           imports = [
             (import ./stylix/darwin inputs)
+            {
+              stylix = {
+                inherit inputs;
+                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
+          ];
+        };
+
+      nixOnDroidModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/droid inputs)
             {
               stylix = {
                 paletteGenerator = self.packages.${pkgs.system}.palette-generator;

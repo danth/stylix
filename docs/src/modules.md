@@ -25,6 +25,7 @@ The following platforms are supported:
 - NixOS (`nixos`)
 - Home Manager (`hm`)
 - Nix-Darwin (`darwin`)
+- Nix-on-Droid (`droid`)
 
 Correctly named modules will be imported automatically.
 
@@ -112,6 +113,34 @@ slow and should be avoided.
 
 For everything else, like fonts and wallpapers, you can just take option values
 directly from `config`. See the reference pages for a list of options.
+
+## Maintainers
+
+New modules must have at least one maintainer defined in
+`/modules/«module»/meta.nix`.
+
+If you are not already listed in the Nixpkgs `/maintainers/maintainer-list.nix`
+maintainer list, add yourself to `/stylix/maintainers.nix`.
+
+Add yourself as a maintainer in one of the following ways, depending on the
+number of maintainers:
+
+- ```nix
+  { lib, ... }:
+  {
+    maintainers = [ lib.maintainers.danth ];
+  }
+  ```
+
+- ```nix
+  { lib, ... }:
+  {
+    maintainers = with lib.maintainers; [ danth naho ];
+  }
+  ```
+
+The main responsibility of module maintainers is to update and fix their
+modules.
 
 ## Documentation
 
