@@ -50,8 +50,13 @@ let
   #     {
   #       "src/options/modules/«module».md" = {
   #         referenceSection = "Modules";
-  #         readme = "modules/«module»/README.md";
-  #         defaultReadme = "note about the path above not existing";
+  #         readme = ''
+  #           Content of modules/«module»/README.md, or a default title
+  #           followed by a note about that file not existing.
+  #
+  #           Summary of module maintainers, or a warning that the module
+  #           is unmaintained.
+  #         '';
   #         optionsByPlatform = {
   #           home_manager = [ ... ];
   #           nixos = [ ... ];
@@ -60,8 +65,10 @@ let
   #
   #       "src/options/platforms/«platform».md" = {
   #         referenceSection = "Platforms";
-  #         readme = "docs/src/options/platforms/«platform».md";
-  #         defaultReadme = "note about the path above not existing";
+  #         readme = ''
+  #           Content of docs/src/options/platforms/«platform».md, or a default
+  #           title followed by a note about that file not existing.
+  #         '';
   #         optionsByPlatform.«platform» = [ ... ];
   #       };
   #     }
