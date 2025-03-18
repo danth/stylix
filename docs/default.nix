@@ -191,9 +191,7 @@ let
                   if maintainers == [ ] then
                     ''
                       > [!WARNING]
-                      > This module has no assigned maintainer. It may not be
-                      > up-to-date for the latest version of the software being
-                      > themed.
+                      > This module has no [dedicated maintainers](../../modules.md#maintainers).
                     ''
                   else
                     "This module is maintained by ${renderedMaintainers}.";
