@@ -12,7 +12,7 @@ with config.lib.stylix.colors.withHashtag;
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.rstudio.enable)
       {
-        xdg.configFile."rstudio/themes/stylix.rtheme".text =
+        xdg.configFile."rstudio/themes/stylix.rstheme".text =
           with config.lib.stylix.colors.withHashtag;
           ''
               :root {
@@ -34,6 +34,6 @@ with config.lib.stylix.colors.withHashtag;
               --base0F: ${base0F}
             }
           ''
-          + (builtins.readFile ./base.rtheme);
+          + (builtins.readFile ./base.rstheme);
       };
 }
