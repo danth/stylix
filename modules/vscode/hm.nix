@@ -40,7 +40,7 @@ in
     profileNames = lib.mkOption {
       description = "The VSCode profile names to apply styling on.";
       type = lib.types.listOf lib.types.str;
-      default = [ ];
+      default = [ "default" ];
     };
   };
 
@@ -49,6 +49,6 @@ in
 
     warnings =
       lib.optional (config.programs.vscode.enable && cfg.profileNames == [ ])
-        ''stylix: vscode: `config.stylix.targets.vscode.profileNames` is not set. Declare profile names with 'config.stylix.targets.vscode.profileNames = [ "<PROFILE_NAME>" ];'.'';
+        ''stylix: vscode: `config.stylix.targets.vscode.profileNames` is empty. No theming will be applied. Add a profile or disable this warning by setting `stylix.targets.vscode.enable = false`.'';
   };
 }
