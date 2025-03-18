@@ -43,7 +43,7 @@ let
     };
   };
 
-  metadata = import ../stylix/meta.nix args;
+  metadata = import "${inputs.self}/stylix/meta.nix" args;
 
   # We construct an index of all Stylix options, using the following format:
   #
