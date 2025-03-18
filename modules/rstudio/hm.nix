@@ -17,9 +17,9 @@
             extension = ".rstheme.generated";
           };
           onChange = ''
-            rm -f ${config.xdg.configHome}/rstudio/themes/stylix.theme
-            cp ${config.xdg.configHome}/rstudio/themes/stylix.rstheme.generated ${config.xdg.configHome}/rstudio/themes/stylix.theme
-            chmod u+w ${config.xdg.configHome}/rstudio/themes/stylix.theme
+            rm -f ${config.xdg.configHome}/rstudio/themes/stylix.rstheme
+            cp ${config.xdg.configHome}/rstudio/themes/stylix.rstheme.generated ${config.xdg.configHome}/rstudio/themes/stylix.rstheme
+            chmod u+w ${config.xdg.configHome}/rstudio/themes/stylix.rstheme
           '';
         };
       };
