@@ -1,4 +1,4 @@
- RStudio
+# RStudio
 
 This module is auto disabled. The theme is generated and an onChange automatically puts the file in the rstudio theme section with the correct permissions
 
