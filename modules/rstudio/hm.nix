@@ -6,13 +6,13 @@
 with config.lib.stylix.colors.withHashtag;
 {
   options.stylix.targets.rstudio = {
-    enable = config.lib.stylix.mkEnableTarget "RStudio" true;
+    enable = config.lib.stylix.mkEnableTarget "RStudio" false;
   };
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.rstudio.enable)
       {
-        xdg.configFile."rstudio/theme/stylix.rtheme".text =
+        xdg.configFile."rstudio/themes/stylix.rtheme".text =
           with config.lib.stylix.colors.withHashtag;
           ''
               :root {
