@@ -178,14 +178,12 @@ let
 
                 joinItems =
                   items:
-                  if builtins.length items == 0 then
-                    ""
-                  else if builtins.length items == 1 then
-                    builtins.head items
-                  else if builtins.length items == 2 then
-                    "${builtins.head items} and ${builtins.elemAt items 1}"
+                  if builtins.length items <= 2 then
+                    builtins.concatStringsSep " and " items
                   else
-                    "${builtins.head items}, ${joinItems (builtins.tail items)}";
+                    builtins.concatStringsSep ", " (
+                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
+                    );
 
                 renderedMaintainers = joinItems (map renderMaintainer maintainers);
 
