@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
-  maintainers = [ mrbroggle ];
+  maintainers = [ lib.maintainers.mrbroggle ];
 }
