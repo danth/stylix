@@ -11,7 +11,7 @@ let
       {
         vscodeExtUniqueId = "stylix.stylix";
         vscodeExtPublisher = "stylix";
-        version = "0.0.0";
+        version = "0.1.0";
         theme = builtins.toJSON (import ./templates/theme.nix args);
         passAsFile = [ "theme" ];
       }
