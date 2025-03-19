@@ -3,7 +3,6 @@
     /**
     * @name Stylix
     * @author Stylix
-    * @version 0.1.0
     * @description Theme configured via NixOS or Home Manager.
     **/
 
