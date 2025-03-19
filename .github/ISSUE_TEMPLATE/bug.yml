@@ -5,7 +5,7 @@ name: Bug
 title: "<SCOPE>: <SUMMARY>"
 
 body:
-  - type: "checkboxes"
+  - type: checkboxes
 
     attributes:
       label: I assert that this issue is relevant for Stylix
