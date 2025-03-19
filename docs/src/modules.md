@@ -135,7 +135,10 @@ number of maintainers:
 - ```nix
   { lib, ... }:
   {
-    maintainers = with lib.maintainers; [ danth naho ];
+    maintainers = with lib.maintainers; [
+      danth
+      naho
+    ];
   }
   ```
 
