@@ -6,21 +6,15 @@
 {
   options.stylix.targets.rstudio.enable =
     config.lib.stylix.mkEnableTarget "RStudio" false;
-  };
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.rstudio.enable)
       {
-        xdg.configFile."rstudio/themes/stylix.rstheme.generated" = {
+        xdg.configFile."rstudio/themes/stylix.rstheme" = {
           source = config.lib.stylix.colors {
             template = ./base.rstheme.mustache;
-            extension = ".rstheme.generated";
+            extension = ".rstheme";
           };
-          onChange = ''
-            rm -f ${config.xdg.configHome}/rstudio/themes/stylix.rstheme
-            cp ${config.xdg.configHome}/rstudio/themes/stylix.rstheme.generated ${config.xdg.configHome}/rstudio/themes/stylix.rstheme
-            chmod u+w ${config.xdg.configHome}/rstudio/themes/stylix.rstheme
-          '';
         };
       };
 }
