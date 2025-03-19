@@ -74,6 +74,7 @@ body:
         - NixOS
         - Home Manager
         - nix-darwin
+        - Nix-on-Droid
         - Other
 
     validations:
