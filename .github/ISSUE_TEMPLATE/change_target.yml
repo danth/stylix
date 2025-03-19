@@ -22,9 +22,8 @@ body:
     attributes:
       label: Description
       description: >-
-        Describe the change. Consider including links to preexisting NixOS,
-        home-manager, and/or nix-darwin options which could be leveraged to
-        make this change.
+        Describe the change. Consider including links to potentially useful
+        NixOS, Home Manager, nix-darwin, or Nix-on-Droid options.
 
     validations:
       required: true
