@@ -39,6 +39,8 @@ body:
 
       label: Description
 
+      placeholder: Type your description here...
+
     validations:
       required: true
 
