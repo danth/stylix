@@ -331,16 +331,19 @@ let
           }
 
           if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
-            QT_QPA_PLATFORM=minimal "$look_and_feel" --apply "${Id}" ||
+            "$look_and_feel" --apply "${Id}" ||
               echo "Failed plasma-apply-lookandfeel, ignoring error."
           fi
         ''
         ''
           if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
-            QT_QPA_PLATFORM=minimal "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" ||
+            "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" ||
               echo "Failed plasma-apply-wallpaperimage, ignoring error."
           fi
         '';
+    runtimeEnv = {
+      "QT_QPA_PLATFORM" = "minimal";
+    };
   };
   activator = lib.getExe activatorPackage;
 in
