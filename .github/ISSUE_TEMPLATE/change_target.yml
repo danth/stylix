@@ -1,5 +1,5 @@
 ---
-description: Request a change to an existing target.
+description: Request a change to an existing target
 labels: [change-target]
 name: Change target
 title: "<TARGET>: <DESCRIPTION>"

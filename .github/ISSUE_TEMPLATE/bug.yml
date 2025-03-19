@@ -1,5 +1,5 @@
 ---
-description: Report a bug.
+description: Report a bug
 labels: [bug]
 name: Bug
 title: "<SCOPE>: <SUMMARY>"
