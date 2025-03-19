@@ -9,20 +9,25 @@ body:
 
     attributes:
       label: I assert that this issue is relevant for Stylix
+
       description: >-
         If you need help or are unsure whether this is a Stylix bug, please
         consider reading the [Documentation](https://stylix.danth.me) or asking
         for help in a [GitHub Discussion](
         https://github.com/danth/stylix/discussions) or the [Stylix Matrix
         Space](https://matrix.to/#/#stylix:danth.me) before opening an issue.
+
       options:
         - label: >-
             I assert that this is a bug and not a user error or support
             request.
+
           required: true
+
         - label: >-
             I assert that this is not a duplicate of an [existing
             issue](https://github.com/danth/stylix/labels/bug).
+
           required: true
 
   - type: textarea

@@ -9,16 +9,19 @@ body:
 
     attributes:
       label: I assert that this feature request is relevant for Stylix
+
       options:
         - label: >-
             I assert that this is not a duplicate of an [existing feature
             request](https://github.com/danth/stylix/labels/new-option).
+
           required: true
 
   - type: textarea
 
     attributes:
       label: Description
+
       description: >-
         Describe the option and explain its use case. Consider including
         pseudocode demonstrating its integration with the existing architecture.
