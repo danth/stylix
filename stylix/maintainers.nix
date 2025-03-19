@@ -5,4 +5,15 @@
 # are expected to follow the same format as described in [1].
 #
 # [1]: https://github.com/NixOS/nixpkgs/blob/1da63e6cc622a0cb6fd5b86d49923e4eb1e33b70/maintainers/maintainer-list.nix
-{ }
+{
+  make-42 = {
+    email = "ontake@ontake.dev";
+    name = "Louis Dalibard";
+    matrix = "@ontake:matrix.ontake.dev";
+    github = "make-42";
+    githubId = 17462236;
+    keys = [
+      { fingerprint = "36BC 916D DD4E B1EE EE82  4BBF DC95 900F 6DA7 9992"; }
+    ];
+  };
+}
