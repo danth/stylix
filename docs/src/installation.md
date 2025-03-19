@@ -13,12 +13,17 @@ screens, and display managers.
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { nixpkgs, stylix, ... }: {
-    nixosConfigurations."«hostname»" = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [ stylix.nixosModules.stylix ./configuration.nix ];
+  outputs =
+    { nixpkgs, stylix, ... }:
+    {
+      nixosConfigurations."«hostname»" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          stylix.nixosModules.stylix
+          ./configuration.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a NixOS configuration.</small>
@@ -64,12 +69,21 @@ to NixOS via [Flakes][nix-flakes].
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { darwin, nixpkgs, stylix, ... }: {
-    darwinConfigurations."«hostname»" = darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [ stylix.darwinModules.stylix ./configuration.nix ];
+  outputs =
+    {
+      darwin,
+      stylix,
+      ...
+    }:
+    {
+      darwinConfigurations."«hostname»" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          stylix.darwinModules.stylix
+          ./configuration.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a nix-darwin configuration.</small>
@@ -95,12 +109,22 @@ a similar fashion to NixOS via [Flakes][nix-flakes].
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { nix-on-droid, nixpkgs, stylix, ... }: {
-    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
-      pkgs = nixpkgs.legacyPackages."aarch64-linux";
-      modules = [ stylix.nixOnDroidModules.stylix ./nix-on-droid.nix ];
+  outputs =
+    {
+      nix-on-droid,
+      nixpkgs,
+      stylix,
+      ...
+    }:
+    {
+      nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+        pkgs = nixpkgs.legacyPackages."aarch64-linux";
+        modules = [
+          stylix.nixOnDroidModules.stylix
+          ./nix-on-droid.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a Nix-on-Droid configuration.</small>
@@ -127,12 +151,22 @@ is managed by someone else.
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { nixpkgs, home-manager, stylix, ... }: {
-    homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ stylix.homeManagerModules.stylix ./home.nix ];
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      stylix,
+      ...
+    }:
+    {
+      homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          stylix.homeManagerModules.stylix
+          ./home.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a Home Manager configuration.</small>
@@ -164,20 +198,20 @@ module as the `homeManagerModules.stylix` attribute.
 ```nix
 let
   stylix = pkgs.fetchFromGitHub {
-      owner = "danth";
-      repo = "stylix";
-      rev = "...";
-      sha256 = "...";
+    owner = "danth";
+    repo = "stylix";
+    rev = "...";
+    sha256 = "...";
   };
-in {
-    imports = [ (import stylix).homeManagerModules.stylix ];
+in
+{
+  imports = [ (import stylix).homeManagerModules.stylix ];
 
-    stylix = {
-      enable = true;
-      image = ./wallpaper.jpg;
-    };
+  stylix = {
+    enable = true;
+    image = ./wallpaper.jpg;
+  };
 }
-
 ```
 <small>Example usage of the Home Manager module without flakes.</small>
 
