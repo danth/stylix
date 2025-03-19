@@ -4,8 +4,8 @@
   ...
 }:
 {
-  options.stylix.targets.rstudio = {
-    enable = config.lib.stylix.mkEnableTarget "RStudio" false;
+  options.stylix.targets.rstudio.enable =
+    config.lib.stylix.mkEnableTarget "RStudio" false;
   };
 
   config =
