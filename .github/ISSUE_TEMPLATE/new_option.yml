@@ -1,5 +1,5 @@
 ---
-description: Add a new option.
+description: Request the addition of a new option.
 labels: [new-option]
 name: New option
 title: "<SCOPE>: init <OPTION> option"

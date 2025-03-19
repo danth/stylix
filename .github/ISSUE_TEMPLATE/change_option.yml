@@ -1,5 +1,5 @@
 ---
-description: Change an existing option.
+description: Request a change to an existing option.
 labels: [change-option]
 name: Change option
 title: "<SCOPE>: <DESCRIPTION>"
