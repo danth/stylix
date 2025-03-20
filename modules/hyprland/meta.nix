@@ -1,4 +1,7 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
+  maintainers = with lib.maintainers; [
+    naho
+    skoove
+  ];
 }
