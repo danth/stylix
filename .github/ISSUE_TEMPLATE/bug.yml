@@ -98,3 +98,16 @@ body:
 
     validations:
       required: true
+
+  - type: textarea
+
+    attributes:
+      label: Notify maintainers
+
+      description: >-
+        If the offending target is clear, notify the maintainers of the module
+        that the target is under. You can find who maintains a module by
+        referencing the [Stylix book](https://danth.stylix.me/) and navigating
+        to the specific module on the sidebar under "Modules >".
+
+      placeholder: "@ the maintainers here..."

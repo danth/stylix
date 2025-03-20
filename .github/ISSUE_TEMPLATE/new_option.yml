@@ -30,3 +30,16 @@ body:
 
     validations:
       required: true
+
+  - type: textarea
+
+    attributes:
+      label: Notify maintainers
+
+      description: >-
+        If this option would be specific to a module, notify the maintainers
+        of that module. You can find who maintains a module by referencing the
+        [Stylix book](https://danth.stylix.me/) and navigating to the specific
+        module on the sidebar under "Modules >".
+
+      placeholder: "@ the maintainers here..."
