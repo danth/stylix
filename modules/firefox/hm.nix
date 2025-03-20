@@ -61,14 +61,9 @@ in
           default = [ ];
         };
 
-        colorTheme.enable = config.lib.stylix.mkEnableTarget ''
-          [Firefox Color](https://color.firefox.com/) theme
-        '' false;
+        colorTheme.enable = lib.mkEnableOption "[Firefox Color](https://color.firefox.com/) on ${target.name}";
 
-        firefoxGnomeTheme.enable = config.lib.stylix.mkEnableTarget ''
-          [Firefox GNOME
-          theme](https://github.com/rafaelmardojai/firefox-gnome-theme)
-        '' false;
+        firefoxGnomeTheme.enable = lib.mkEnableOption "[Firefox GNOME theme](https://github.com/rafaelmardojai/firefox-gnome-theme) on ${target.name}";
       }
     ) targets
   );

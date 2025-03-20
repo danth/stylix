@@ -10,7 +10,7 @@
         osd-font-size = config.stylix.fonts.sizes.applications;
         sub-font-size = config.stylix.fonts.sizes.applications;
 
-        background-color = base00;
+        background-color = "#000000";
         osd-back-color = base01;
         osd-border-color = base01;
         osd-color = base05;

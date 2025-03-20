@@ -1,75 +1,76 @@
-{ config, lib, ... }:
-
-with config.lib.stylix.colors.withHashtag;
-
+{
+  config,
+  lib,
+  ...
+}:
 {
   options.stylix.targets.k9s.enable = config.lib.stylix.mkEnableTarget "k9s" true;
 
-  config = lib.mkIf config.stylix.targets.k9s.enable {
+  config = lib.mkIf (config.stylix.enable && config.stylix.targets.k9s.enable) {
     programs.k9s.skins.skin = {
-      k9s = {
+      k9s = with config.lib.stylix.colors.withHashtag; {
         body = {
-          fgColor = base05-hex;
+          fgColor = base05;
           bgColor = "default";
-          logoColor = base0C-hex;
+          logoColor = base0C;
         };
 
         prompt = {
-          fgColor = base05-hex;
-          bgColor = base00-hex;
-          suggestColor = base0A-hex;
+          fgColor = base05;
+          bgColor = "default";
+          suggestColor = base02;
         };
 
         info = {
-          fgColor = base0B-hex;
-          sectionColor = base05-hex;
+          fgColor = base0B;
+          sectionColor = base05;
         };
 
         dialog = {
-          fgColor = base05-hex;
-          bgColor = "default";
-          buttonFgColor = base05-hex;
-          buttonBgColor = base0C-hex;
-          buttonFocusFgColor = base0E-hex;
-          buttonFocusBgColor = base0B-hex;
-          labelFgColor = base0A-hex;
-          fieldFgColor = base05-hex;
+          fgColor = base05;
+          bgColor = base01;
+          buttonFgColor = base05;
+          buttonBgColor = base02;
+          buttonFocusFgColor = base11;
+          buttonFocusBgColor = base0B;
+          labelFgColor = base0A;
+          fieldFgColor = base05;
         };
 
         frame = {
           border = {
-            fgColor = base02-hex;
-            focusColor = base01-hex;
+            fgColor = base02;
+            focusColor = base01;
           };
 
           menu = {
-            fgColor = base05-hex;
-            keyColor = base0B-hex;
-            numKeyColor = base0B-hex;
+            fgColor = base05;
+            keyColor = base0B;
+            numKeyColor = base0B;
           };
 
           crumbs = {
-            fgColor = base05-hex;
-            bgColor = base01-hex;
-            activeColor = base01-hex;
+            fgColor = base05;
+            bgColor = base01;
+            activeColor = base02;
           };
 
           status = {
-            newColor = base08-hex;
-            modifyColor = base0C-hex;
-            addColor = base09-hex;
-            errorColor = base0D-hex;
-            highlightcolor = base0A-hex;
-            killColor = base03-hex;
-            completedColor = base03-hex;
+            newColor = base0C;
+            modifyColor = base09;
+            addColor = base0B;
+            errorColor = base08;
+            highlightcolor = base0A;
+            killColor = base03;
+            completedColor = base03;
           };
 
           title = {
-            fgColor = base05-hex;
-            bgColor = base01-hex;
-            highlightColor = base0A-hex;
-            counterColor = base0C-hex;
-            filterColor = base0B-hex;
+            fgColor = base05;
+            bgColor = base01;
+            highlightColor = base0A;
+            counterColor = base0C;
+            filterColor = base0B;
           };
         };
 
@@ -77,52 +78,54 @@ with config.lib.stylix.colors.withHashtag;
           charts = {
             bgColor = "default";
             defaultDialColors = [
-              base0C-hex
-              base0D-hex
+              base0C
+              base0D
             ];
             defaultChartColors = [
-              base0C-hex
-              base0D-hex
+              base0C
+              base0D
             ];
           };
 
           table = {
-            fgColor = base05-hex;
+            fgColor = base05;
             bgColor = "default";
             header = {
-              fgColor = base05-hex;
+              fgColor = base05;
               bgColor = "default";
-              sorterColor = base08-hex;
+              sorterColor = base08;
             };
           };
 
           xray = {
-            fgColor = base05-hex;
+            fgColor = base05;
             bgColor = "default";
-            cursorColor = base01-hex;
-            graphicColor = base0C-hex;
+            cursorColor = base01;
+            graphicColor = base0C;
             showIcons = false;
           };
 
           yaml = {
-            keyColor = base0B-hex;
-            colonColor = base0C-hex;
-            valueColor = base05-hex;
+            keyColor = base08;
+            colonColor = base05;
+            valueColor = base0B;
           };
 
           logs = {
-            fgColor = base05-hex;
+            fgColor = base05;
             bgColor = "default";
             indicator = {
-              fgColor = base05-hex;
-              bgColor = base0C-hex;
+              fgColor = base05;
+              bgColor = "default";
+              toggleOnColor = base0B;
+              toggleOffColor = base04;
             };
           };
 
           help = {
-            fgColor = base05-hex;
-            bgColor = base00-hex;
-            indicator.fgColor = base0D-hex;
+            fgColor = base05;
+            bgColor = "default";
+            indicator.fgColor = base0D;
           };
         };
       };
