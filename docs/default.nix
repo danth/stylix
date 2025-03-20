@@ -3,7 +3,7 @@
   lib,
   inputs,
   ...
-}:
+}@args:
 
 let
   nixosConfiguration = lib.nixosSystem {
@@ -43,13 +43,20 @@ let
     };
   };
 
+  metadata = import "${inputs.self}/stylix/meta.nix" args;
+
   # We construct an index of all Stylix options, using the following format:
   #
   #     {
   #       "src/options/modules/«module».md" = {
   #         referenceSection = "Modules";
-  #         readme = "modules/«module»/README.md";
-  #         defaultReadme = "note about the path above not existing";
+  #         readme = ''
+  #           Content of modules/«module»/README.md, or a default title
+  #           followed by a note about that file not existing.
+  #
+  #           Summary of module maintainers, or a warning that the module
+  #           is unmaintained.
+  #         '';
   #         optionsByPlatform = {
   #           home_manager = [ ... ];
   #           nixos = [ ... ];
@@ -58,8 +65,10 @@ let
   #
   #       "src/options/platforms/«platform».md" = {
   #         referenceSection = "Platforms";
-  #         readme = "docs/src/options/platforms/«platform».md";
-  #         defaultReadme = "note about the path above not existing";
+  #         readme = ''
+  #           Content of docs/src/options/platforms/«platform».md, or a default
+  #           title followed by a note about that file not existing.
+  #         '';
   #         optionsByPlatform.«platform» = [ ... ];
   #       };
   #     }
@@ -119,13 +128,79 @@ let
           page = "src/options/modules/${module}.md";
           emptyPage = {
             referenceSection = "Modules";
-            readme = "${inputs.self}/modules/${module}/README.md";
-            defaultReadme = ''
-              # ${module}
-              > [!NOTE]
-              > This module doesn't include any additional documentation. You
-              > can browse the options it provides below.
-            '';
+
+            readme =
+              let
+                path = "${inputs.self}/modules/${module}/README.md";
+
+                # This doesn't count as IFD because ${inputs.self} is a flake input
+                mainText =
+                  if builtins.pathExists path then
+                    builtins.readFile path
+                  else
+                    ''
+                      # ${module}
+                      > [!NOTE]
+                      > This module doesn't include any additional documentation.
+                      > You can browse the options it provides below.
+                    '';
+
+                inherit (metadata.${module}) maintainers;
+
+                # Render a maintainer's name and a link to the best contact
+                # information we have for them.
+                #
+                # The reasoning behind the order of preference is as follows:
+                #
+                # - GitHub:
+                #   - May link to multiple contact methods
+                #   - More likely to have up-to-date information than the
+                #     maintainers list
+                #   - Protects the email address from crawlers
+                # - Email:
+                #   - Very commonly used
+                # - Matrix:
+                #   - Only other contact method in the schema
+                #     (as of March 2025)
+                # - Name:
+                #   - If no other information is available, then just show
+                #     the maintainer's name without a link
+                renderMaintainer =
+                  maintainer:
+                  if maintainer ? github then
+                    "[${maintainer.name}](https://github.com/${maintainer.github})"
+                  else if maintainer ? email then
+                    "[${maintainer.name}](mailto:${maintainer.email})"
+                  else if maintainer ? matrix then
+                    "[${maintainer.name}](https://matrix.to/#/${maintainer.matrix})"
+                  else
+                    maintainer.name;
+
+                joinItems =
+                  items:
+                  if builtins.length items <= 2 then
+                    builtins.concatStringsSep " and " items
+                  else
+                    builtins.concatStringsSep ", " (
+                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
+                    );
+
+                renderedMaintainers = joinItems (map renderMaintainer maintainers);
+
+                maintainersText =
+                  if maintainers == [ ] then
+                    ''
+                      > [!WARNING]
+                      > This module has no [dedicated maintainers](../../modules.md#maintainers).
+                    ''
+                  else
+                    "This module is maintained by ${renderedMaintainers}.";
+              in
+              lib.concatLines [
+                mainText
+                maintainersText
+              ];
+
             # Module pages initialise all platforms to an empty list, so that
             # '*None provided.*' indicates platforms where the module isn't
             # available.
@@ -138,13 +213,24 @@ let
           page = "src/options/platforms/${platform}.md";
           emptyPage = {
             referenceSection = "Platforms";
-            readme = "${inputs.self}/docs/src/options/platforms/${platform}.md";
-            defaultReadme = ''
-              # ${platform.name}
-              > Documentation is not available for this platform. Its main
-              > options are listed below, and you may find more specific options
-              > in the documentation for each module.
-            '';
+            readme =
+              let
+                path = "${inputs.self}/docs/src/options/platforms/${platform}.md";
+
+                # This doesn't count as IFD because ${inputs.self} is a flake input
+                mainText =
+                  if builtins.pathExists path then
+                    builtins.readFile path
+                  else
+                    ''
+                      # ${platform.name}
+                      > Documentation is not available for this platform. Its
+                      > main options are listed below, and you may find more
+                      > specific options in the documentation for each module.
+                    '';
+              in
+              mainText;
+
             # Platform pages only initialise that platform, since showing other
             # platforms here would be nonsensical.
             optionsByPlatform.${platform} = [ ];
@@ -328,18 +414,12 @@ let
   renderPage =
     _path: page:
     let
-      readme =
-        # This doesn't count as IFD because ${inputs.self} is a flake input
-        if builtins.pathExists page.readme then
-          builtins.readFile page.readme
-        else
-          page.defaultReadme;
       options = lib.concatStrings (
         lib.mapAttrsToList renderPlatform page.optionsByPlatform
       );
     in
     lib.concatLines [
-      readme
+      page.readme
       options
     ];
 

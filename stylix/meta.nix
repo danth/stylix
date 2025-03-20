@@ -5,12 +5,6 @@
   ...
 }:
 builtins.mapAttrs
-  (lib.concatMapAttrs (
-    path: kind:
-    lib.optionalAttrs (kind == "directory") {
-      ${path} = "${inputs.self}/modules/${path}/meta.nix";
-    }
-  ) (builtins.readDir "${inputs.self}/modules"))
   (
     _: value:
     if (builtins.typeOf value == "lambda") then
@@ -24,4 +18,12 @@ builtins.mapAttrs
       })
     else
       value
+  )
+  (
+    lib.concatMapAttrs (
+      path: kind:
+      lib.optionalAttrs (kind == "directory") {
+        ${path} = import "${inputs.self}/modules/${path}/meta.nix";
+      }
+    ) (builtins.readDir "${inputs.self}/modules")
   )
