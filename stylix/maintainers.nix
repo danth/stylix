@@ -6,6 +6,12 @@
 #
 # [1]: https://github.com/NixOS/nixpkgs/blob/1da63e6cc622a0cb6fd5b86d49923e4eb1e33b70/maintainers/maintainer-list.nix
 {
+  butzist = {
+    email = "adam@szalkowski.de";
+    name = "Adam M. Szalkowski";
+    github = "butzist";
+    githubId = 2405792;
+  };
   make-42 = {
     email = "ontake@ontake.dev";
     name = "Louis Dalibard";
