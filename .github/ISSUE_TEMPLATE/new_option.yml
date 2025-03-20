@@ -13,7 +13,7 @@ body:
       options:
         - label: >-
             I assert that this is not a duplicate of an [existing feature
-            request](https://github.com/danth/stylix/labels/new-option).
+            request](https://github.com/danth/stylix/issues).
 
           required: true
 

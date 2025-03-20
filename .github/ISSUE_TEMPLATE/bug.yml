@@ -26,7 +26,7 @@ body:
 
         - label: >-
             I assert that this is not a duplicate of an [existing
-            issue](https://github.com/danth/stylix/labels/bug).
+            issue](https://github.com/danth/stylix/issues).
 
           required: true
 
