@@ -2,7 +2,7 @@
 description: Request the addition of a new target
 labels: [new-target]
 name: New target
-title: "<TARGET>: init"
+title: "<TARGET>: add target"
 
 body:
   - type: checkboxes

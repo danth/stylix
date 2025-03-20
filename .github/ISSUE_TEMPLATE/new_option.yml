@@ -2,7 +2,7 @@
 description: Request the addition of a new option
 labels: [new-option]
 name: New option
-title: "<SCOPE>: init <OPTION> option"
+title: "<SCOPE>: add <OPTION> option"
 
 body:
   - type: checkboxes
