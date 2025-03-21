@@ -198,6 +198,7 @@ let
               in
               lib.concatLines [
                 mainText
+                "## Module information"
                 maintainersText
               ];
 
