@@ -2,19 +2,13 @@
 
 ## Enable
 
-To enable the Stylix module, declare:
+Stylix must be enabled before it will apply any changes to your system:
 
 ```nix
 {
   stylix.enable = true;
 }
 ```
-
-> [!NOTE]
->
-> The global enable option was recently added, so you may come across old
-> examples which don't include it. No other settings will take effect unless
-> `stylix.enable` is set to `true`.
 
 ## Color scheme
 
