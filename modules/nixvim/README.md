@@ -7,5 +7,5 @@ Nixvim module is properly
 and
 [imported](https://github.com/nix-community/nixvim?tab=readme-ov-file#usage)
 into your user configuration. When configuring `stylix.targets.nixvim` options,
-ensure that you are configuring them in the same scope (NixOS, Home-Manager,
+ensure that you are configuring them in the same scope (NixOS, Home Manager,
 Darwin) as you imported the Nixvim module.
