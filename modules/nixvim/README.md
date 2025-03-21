@@ -9,3 +9,6 @@ and
 into your user configuration. When configuring `stylix.targets.nixvim` options,
 ensure that you are configuring them in the same scope (NixOS, Home Manager,
 Darwin) as you imported the Nixvim module.
+
+We also have [Vim](vim.md) and [Neovim](neovim.md) modules, which use the
+standard Home Manager options rather than Nixvim.
