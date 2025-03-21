@@ -157,7 +157,38 @@ let
         {
           path = [
             "stylix"
+            "themeGeneration"
             "polarity"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "contrast"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "primaryScale"
+            "dark"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "primaryScale"
+            "light"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "scheme"
           ];
         }
         {
@@ -211,7 +242,9 @@ in
   config = lib.optionalAttrs (options ? home-manager) (
     lib.mkIf config.stylix.homeManagerIntegration.autoImport {
       home-manager.sharedModules =
-        [ config.stylix.homeManagerIntegration.module ]
+        [
+          config.stylix.homeManagerIntegration.module
+        ]
         ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
     }
   );

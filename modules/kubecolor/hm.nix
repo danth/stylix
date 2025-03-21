@@ -5,8 +5,7 @@
 
   config = lib.mkIf config.stylix.targets.kubecolor.enable {
     programs.kubecolor.settings = {
-      preset =
-        if config.stylix.polarity == "either" then "" else "${config.stylix.polarity}";
+      preset = config.stylix.themeGeneration.polarity;
       theme = with config.lib.stylix.colors.withHashtag; {
         base = {
           info = "fg=${base05-hex}";
