@@ -9,7 +9,12 @@
     config.lib.stylix.mkEnableTarget "the NixOS logo" true;
 
   config.nixpkgs.overlays =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.nixos-icons.enable)
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.targets.nixos-icons.enable
+        && config.stylix.overlays.enable
+      )
       [
         (_: super: {
           nixos-icons = super.nixos-icons.overrideAttrs (oldAttrs: {
