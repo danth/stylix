@@ -12,6 +12,7 @@ in
     "${inputs.self}/stylix/palette.nix"
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
+    (import "${inputs.self}/stylix/overlays.nix" inputs)
   ] ++ autoload;
 
   # See https://github.com/nix-community/nix-on-droid/issues/436

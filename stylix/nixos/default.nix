@@ -1,5 +1,9 @@
 inputs:
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  ...
+}:
 
 # Imported modules which define new options must use an absolute path based
 # on ${inputs.self}, otherwise those options will not appear in the generated
@@ -21,6 +25,7 @@ in
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
     "${inputs.self}/stylix/release.nix"
+    (import "${inputs.self}/stylix/overlays.nix" inputs)
   ] ++ autoload;
   config.warnings =
     lib.mkIf
