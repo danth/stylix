@@ -189,10 +189,7 @@ let
 
                 maintainersText =
                   if maintainers == [ ] then
-                    ''
-                      > [!WARNING]
-                      > This module has no [dedicated maintainers](../../modules.md#maintainers).
-                    ''
+                    "This module has no [dedicated maintainers](../../modules.md#maintainers)."
                   else
                     "This module is maintained by ${renderedMaintainers}.";
               in
@@ -225,6 +222,7 @@ let
                   else
                     ''
                       # ${platform.name}
+                      > [!NOTE]
                       > Documentation is not available for this platform. Its
                       > main options are listed below, and you may find more
                       > specific options in the documentation for each module.
