@@ -5,7 +5,7 @@
 }:
 {
   options.stylix.targets.rstudio.enable =
-    config.lib.stylix.mkEnableTarget "RStudio" false;
+    config.lib.stylix.mkEnableTarget "RStudio" true;
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.rstudio.enable)
