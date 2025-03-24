@@ -50,19 +50,19 @@ body:
     attributes:
       description: >-
         Copy-paste the `flake.lock` file. If flakes are not used, provide the
-        locked input versions.
+        locked input versions. Do not remove any pre-filled text in the field.
 
       label: flake.lock
 
-      placeholder: |-
-        {
-          "nodes": {
-          },
-          "root": "root",
-          "version": 7
-        }
+      value: |-
+        <details>
+        <summary>flake.lock</summary>
+        <!-- paste flake.lock below, inside backticks --!>
+        ```json
 
-      render: json
+        ```
+        <!-- paste flake.lock above, inside backticks --!>
+        </details>
 
     validations:
       required: true
