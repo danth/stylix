@@ -26,7 +26,7 @@ body:
         Describe the feature. Consider including links to existing themes, like
         a [tinted-theming repository](https://github.com/tinted-theming).
 
-      placeholder: Type your description here...
+      placeholder: Type your description here…
 
     validations:
       required: true

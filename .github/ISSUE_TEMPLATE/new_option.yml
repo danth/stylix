@@ -26,7 +26,7 @@ body:
         Describe the option and explain its use case. Consider including
         pseudocode demonstrating its integration with the existing architecture.
 
-      placeholder: Type your description here...
+      placeholder: Type your description here…
 
     validations:
       required: true

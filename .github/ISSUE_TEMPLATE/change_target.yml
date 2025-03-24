@@ -26,7 +26,7 @@ body:
         Describe the change. Consider including links to potentially useful
         NixOS, Home Manager, nix-darwin, or Nix-on-Droid options.
 
-      placeholder: Type your description here...
+      placeholder: Type your description here…
 
     validations:
       required: true
