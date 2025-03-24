@@ -217,6 +217,8 @@
       }
     )
     // {
+      templates = import ./examples;
+
       nixosModules.stylix =
         { pkgs, ... }@args:
         {
