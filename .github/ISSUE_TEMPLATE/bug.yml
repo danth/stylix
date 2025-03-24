@@ -13,9 +13,10 @@ body:
       description: >-
         If you need help or are unsure whether this is a Stylix bug, please
         consider reading the [Documentation](https://stylix.danth.me) or asking
-        for help in a [GitHub Discussion](
-        https://github.com/danth/stylix/discussions) or the [Stylix Matrix
-        Room](https://matrix.to/#/#stylix:danth.me) before opening an issue.
+        for help in a [GitHub
+        Discussion](https://github.com/danth/stylix/discussions) or the [Stylix
+        Matrix Room](https://matrix.to/#/#stylix:danth.me) before opening an
+        issue.
 
       options:
         - label: >-
@@ -105,9 +106,8 @@ body:
       label: Notify maintainers
 
       description: >-
-        If the offending target is clear, notify the maintainers of the module
-        that the target is under. You can find who maintains a module by
-        referencing the [Stylix book](https://stylix.danth.me/) and navigating
-        to the specific module on the sidebar under "Modules >".
+        If the bug is module-specific, consider pinging their maintainers. Each
+        module lists their maintainers in the
+        [documentation](https://stylix.danth.me).
 
       placeholder: "@ the maintainers here..."
