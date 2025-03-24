@@ -1,0 +1,43 @@
+---
+description: Request a change to an existing target
+labels: [change-target]
+name: Change target
+title: "<TARGET>: <DESCRIPTION>"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: I assert that this feature request is relevant for Stylix
+
+      options:
+        - label: >-
+            I assert that this is not a duplicate of an [existing feature
+            request](https://github.com/danth/stylix/issues).
+
+          required: true
+
+  - type: textarea
+
+    attributes:
+      label: Description
+
+      description: >-
+        Describe the change. Consider including links to potentially useful
+        NixOS, Home Manager, nix-darwin, or Nix-on-Droid options.
+
+      placeholder: Type your description here…
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      label: Notify maintainers
+
+      description: >-
+        Consider pinging the module maintainers. Each module lists its
+        maintainers in the [documentation](https://stylix.danth.me).
+
+      placeholder: "@danth, @trueNAHO"
