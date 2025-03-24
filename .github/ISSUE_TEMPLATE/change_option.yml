@@ -37,9 +37,7 @@ body:
       label: Notify maintainers
 
       description: >-
-        Notify the maintainers of the module that the target is under. You can
-        find who maintains a module by referencing the
-        [Stylix book](https://stylix.danth.me/) and navigating to the specific
-        module on the sidebar under "Modules >".
+        Consider pinging the module maintainers. Each module lists its
+        maintainers in the [documentation](https://stylix.danth.me).
 
       placeholder: "@danth, @trueNAHO"
