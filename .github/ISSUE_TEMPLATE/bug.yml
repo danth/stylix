@@ -40,7 +40,7 @@ body:
 
       label: Description
 
-      placeholder: Type your description here...
+      placeholder: Enter your description here...
 
     validations:
       required: true
