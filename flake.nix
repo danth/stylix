@@ -218,6 +218,11 @@
           let
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
+
+              get-maintainers = import ./stylix/get-maintainers.nix {
+                inherit pkgs inputs lib;
+              };
+
               palette-generator = pkgs.callPackage ./palette-generator { };
             };
 

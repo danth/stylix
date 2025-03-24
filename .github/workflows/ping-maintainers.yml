@@ -1,0 +1,71 @@
+---
+name: Ping Maintainers
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    types: [opened, ready_for_review, synchronize, reopened, edited]
+    paths:
+      - 'modules/'
+
+jobs:
+  ping-maintainers:
+    runs-on: ubuntu-24.04
+    if: github.repository_owner == 'danth'
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        continue-on-error: true
+
+      - run: nix build .#get-maintainers
+
+      - id: changed-files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'json'
+
+      - id: get-maintainers
+        # yamllint disable rule:line-length
+        env:
+          GH_REPO: ${{ github.repository }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          MAX_MAINTAINERS=5
+
+          existing_reviewers="$(
+            curl \
+              --silent \
+              "https://api.github.com/repos/$GH_REPO/pulls/$PR_NUMBER/requested_reviewers" |
+              jq --raw-output [.users[].login]
+          )"
+
+          to_ping=()
+
+          jq --raw-output '.[]' <<<"$CHANGED_FILES" | while read -r file; do
+            jq --arg file "$file" --raw-output '.[$file][]' result/gh_ids.json |
+              while read -r gh_id;
+            do
+              # Do not request the original author or already requested reviewers.
+              if [[ "$gh_id" == "$PR_AUTHOR" || "$existing_reviewers" =~ $gh_id ]]; then
+                  continue
+              fi
+
+              to_ping+=("$gh_id")
+            done
+          done
+
+          if ((${#to_ping[@]} > 0 && ${#to_ping[@]} <= MAX_MAINTAINERS)); then
+            printf '%s\n' "::set-output name=to-ping::$(printf '%s,' "${to_ping[@]}")"
+          fi
+        # yamllint enable rule:line-length
+
+      - uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reviewers: ${{ steps.get-maintainers.outputs.to-ping }}
