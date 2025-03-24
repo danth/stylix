@@ -1,0 +1,53 @@
+---
+name: Ping Maintainers
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    types: [opened, ready_for_review, synchronize, reopened, edited]
+    paths:
+      - 'modules/'
+
+jobs:
+  ping-maintainers:
+    runs-on: ubuntu-24.04
+    if: github.repository_owner == 'danth'
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        continue-on-error: true
+
+      - run: nix build .#get-maintainers
+
+      - id: changed-files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'json'
+
+      - id: get-maintainers
+        # yamllint disable rule:line-length
+        run: |
+          existing_reviewers=$(curl -s "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")
+          to_ping=""
+
+          for file in $(jq -r '.[]' <<<"${{ steps.changed-files.outputs.files }}"); do
+            for gh_id in ${jq -r '.[$file][]' result/gh_ids.json}; do
+              if [ $gh_id == "${{ github.event.pull_request.user.login }}" || $gh_id == $(echo "$existing_reviewers" | jq -r ".users[].login") ]; then
+                continue
+              fi
+              to_ping+="$gh_id,"
+            done
+          done
+
+          echo "::set-output name=to-ping::$to_ping"
+        # yamllint enable rule:line-length
+
+      - uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reviewers: ${{ steps.get-maintainers.outputs.to-ping }}

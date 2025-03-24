@@ -173,6 +173,10 @@
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
 
+              get-maintainers = import ./stylix/get-maintainers.nix {
+                inherit pkgs inputs lib;
+              };
+
               nix-flake-check = pkgs.writeShellApplication {
                 meta.description = "A parallelized alternative to 'nix flake check'";
                 name = "nix-flake-check";
