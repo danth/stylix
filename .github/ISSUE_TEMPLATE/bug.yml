@@ -50,7 +50,7 @@ body:
     attributes:
       description: >-
         Copy-paste the `flake.lock` file. If flakes are not used, provide the
-        locked input versions. Do not remove any pre-filled text in the field.
+        locked input versions.
 
       label: flake.lock
 
