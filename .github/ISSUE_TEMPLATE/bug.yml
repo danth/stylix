@@ -56,7 +56,7 @@ body:
 
       value: |-
         <details>
-        <summary>flake.lock</summary>
+        <summary><code>flake.lock</code></summary>
         <!-- paste flake.lock below, inside backticks --!>
         ```json
 
