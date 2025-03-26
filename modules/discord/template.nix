@@ -44,12 +44,14 @@
       --background-tertiary: var(--base00);
       --background-accent: var(--base0E);
       --background-floating: var(--base01);
-      --background-modifier-hover: #{{base00-hex}}4c; /* 30% of base00 */
+      --background-modifier-hover: var(--base00-hex); /* 30% of base00 */
       --background-modifier-selected: var(--base00);
       --text-normal: var(--base05);
       --text-secondary: var(--base03);
       --text-muted: var(--base04);
       --text-link: var(--base0C);
+      --text-primary: var(--base06);
+      --icon-primary: var(--base06);
       --interactive-normal: var(--base05);
       --interactive-hover: var(--base05);
       --interactive-active: var(--base07);
@@ -60,5 +62,12 @@
       --header-secondary: var(--base04);
       --scrollbar-thin-track: transparent;
       --scrollbar-auto-track: transparent;
+      --theme-base-color: var(--base00);
+      --background-base-lowest: var(--base00);
+      --bg-base-tertiary: var(--base01);
+      --bg-surface-overlay: transparent;
+      --chat-background-default: var(--base01);
+      --background-surface-high: var(--base01);
+      --background-base-low: var(--base01);
   }
 ''
