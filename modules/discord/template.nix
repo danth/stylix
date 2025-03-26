@@ -32,7 +32,7 @@
       --primary-660: var(--base00); /* Search input background */
   }
 
-  .theme-light, .theme-dark {
+  .visual-refresh, .theme-light, .visual-refresh ,.theme-dark {
       --search-popout-option-fade: none; /* Disable fade for search popout */
       --bg-overlay-2: var(--base00); /* These 2 are needed for proper threads coloring */
       --home-background: var(--base00);
@@ -60,5 +60,7 @@
       --header-secondary: var(--base04);
       --scrollbar-thin-track: transparent;
       --scrollbar-auto-track: transparent;
+
+      --theme-base-color: var(base00);
   }
 ''
