@@ -146,22 +146,41 @@ let
           ]
       );
 
-      system = lib.nixosSystem {
-        inherit (pkgs) system;
+      systems = {
+        clean = lib.nixosSystem {
+          inherit (pkgs) system;
 
-        modules = [
-          commonModule
-          applicationModule
-          inputs.self.nixosModules.stylix
-          inputs.home-manager.nixosModules.home-manager
-          testbed.path
+          modules = [
+            commonModule
+            applicationModule
+            inputs.home-manager.nixosModules.home-manager
+            testbed.path
+            { system.name = name; }
+          ];
+        };
 
-          {
-            inherit stylix;
-            system.name = name;
-          }
-        ];
+        disabled = systems.clean.extendModules {
+          modules = [
+            inputs.self.nixosModules.stylix
+          ];
+        };
+
+        enabled = systems.disabled.extendModules {
+          modules = [
+            { inherit stylix; }
+          ];
+        };
       };
+
+      vms = builtins.mapAttrs (_name: system: system.config.system.build.vm) systems;
+
+      disabledAssertion = lib.throwIf (
+        vms.disabled != vms.clean
+      ) "Stylix should not affect the system when disabled";
+
+      enabledAssertion = lib.throwIf (
+        vms.enabled == vms.clean
+      ) "Stylix should affect the system when enabled";
 
       script = pkgs.writeShellApplication {
         inherit name;
@@ -177,13 +196,12 @@ let
           directory="$(mktemp --directory)"
           trap cleanup EXIT
 
-          NIX_DISK_IMAGE="$directory/nixos.qcow2" \
-            ${lib.getExe system.config.system.build.vm}
+          NIX_DISK_IMAGE="$directory/nixos.qcow2" ${lib.getExe vms.enabled}
         '';
       };
     in
     {
-      ${name} = script;
+      ${name} = disabledAssertion (enabledAssertion script);
     };
 
   # This generates a copy of each testbed for each of the following themes.
