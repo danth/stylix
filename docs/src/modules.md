@@ -46,14 +46,15 @@ A general format for modules is shown below.
 
 ```nix
 { config, lib, ... }:
-
 {
   options.stylix.targets.«name».enable =
     config.lib.stylix.mkEnableTarget "«human readable name»" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable) {
-    programs.«name».backgroundColor = config.lib.stylix.colors.base00;
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        programs.«name».backgroundColor = config.lib.stylix.colors.base00;
+      };
 }
 ```
 
@@ -94,11 +95,13 @@ it as a function. This returns a derivation which builds the template.
 ```nix
 {
   environment.variables.MY_APPLICATION_CONFIG_FILE =
-    let configFile = config.lib.stylix.colors {
-      template = ./config.toml.mustache;
-      extension = ".toml";
-    };
-    in "${configFile}";
+    let
+      configFile = config.lib.stylix.colors {
+        template = ./config.toml.mustache;
+        extension = ".toml";
+      };
+    in
+    "${configFile}";
 }
 ```
 

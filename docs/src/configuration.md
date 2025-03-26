@@ -206,16 +206,19 @@ extension of it.
 For example:
 
 ```nix
-{ inputs, config, pkgs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
   nixvim-package = inputs.nixvim-config.packages.${system}.default;
   extended-nixvim = nixvim-package.extend config.lib.stylix.nixvim.config;
 in
 {
-  environment.systemPackages = [
-    extended-nixvim
-  ];
+  environment.systemPackages = [ extended-nixvim ];
 }
 ```
 
