@@ -28,7 +28,7 @@ jobs:
         run: |
           set -o pipefail
 
-          nix flake show --json \
+          nix flake show --allow-import-from-derivation --json \
             github:${{
               github.repository
             }}/${{
