@@ -73,6 +73,34 @@ one of the following applies:
 - There is no reliable way to detect whether the target is installed, *and*
   enabling it unconditionally would cause problems.
 
+### Overlays
+
+If your module is provided as an overlay it uses a special format, where config
+is transparently passed to the platform (e.g. nixos) and overlay is a function
+taking two arguments and returning an attrset:
+
+```nix
+{
+  lib,
+  config,
+  ...
+}:
+{
+  options.stylix.targets.«name».enable =
+    config.lib.stylix.mkEnableOverlay "«human readable name»";
+
+  overlay =
+    final: prev:
+    lib.optionalAttrs
+      (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        «name» = prev.«name».overrideAttrs (oldAttrs: {
+
+        });
+      };
+}
+```
+
 ## How to apply colors
 
 Refer to the [style guide](./styling.md) to see how colors are named,
