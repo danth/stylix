@@ -54,15 +54,15 @@ body:
 
       label: flake.lock
 
-      placeholder: |-
-        {
-          "nodes": {
-          },
-          "root": "root",
-          "version": 7
-        }
+      value: |-
+        <details>
+        <summary><code>flake.lock</code></summary>
+        <!-- paste flake.lock below, inside backticks --!>
+        ```json
 
-      render: json
+        ```
+        <!-- paste flake.lock above, inside backticks --!>
+        </details>
 
     validations:
       required: true
