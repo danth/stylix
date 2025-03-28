@@ -76,3 +76,27 @@ itself:
 imports = [ flake.inputs.stylix.nixosModules.stylix ];
 disabledModules = [ "${flake.inputs.stylix}/modules/<some-module>/nixos.nix" ];
 ```
+
+## Extending CSS options
+
+When trying to extend an attrset options the order does not matter because a
+delectation can only exists once. This is not the case for an option with the
+type of `lines` (most commonly `style` options in home-manager). For these options
+the order does matter and nix cannot guaranty that there aren't conflicting
+delectation. Nix will still merge these options, but it will not warn you if
+there are conflicting definition. In order to get around this you can make sure
+nix puts your CSS at the end and thus prioritizes it with `lib.mkAfter`:
+
+```nix
+{ lib, ... }:
+{
+  programs.waybar = {
+    enable = true;
+    style = lib.mkAfter ''
+      #workspaces button {
+        background: @base01;
+      }
+    '';
+  };
+}
+```
