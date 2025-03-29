@@ -17,9 +17,9 @@ serve as information for reviewers.
 - [ ] Commit message follows [commit convention](https://stylix.danth.me/commit_convention.html)
 - [ ] Fits [style guide](https://stylix.danth.me/styling.html)
 
-### Maintainer CC
+## Notify maintainers
 
 <!---
 If you are editing an existing target, consider pinging relevant
-`modules/<module>/meta.nix` module maintainers.
+module maintainers from `modules/<module>/meta.nix`.
 -->
