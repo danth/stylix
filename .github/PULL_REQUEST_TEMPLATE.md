@@ -16,6 +16,7 @@ serve as information for reviewers.
 - [ ] Tested in [testbed](https://stylix.danth.me/testbeds.html)
 - [ ] Commit message follows [commit convention](https://stylix.danth.me/commit_convention.html)
 - [ ] Fits [style guide](https://stylix.danth.me/styling.html)
+- [ ] Respects license of any existing code used
 
 ## Notify maintainers
 
