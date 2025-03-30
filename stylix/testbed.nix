@@ -147,7 +147,7 @@ let
       );
 
       systems = {
-        clean = lib.nixosSystem {
+        base = lib.nixosSystem {
           inherit (pkgs) system;
 
           modules = [
@@ -159,7 +159,21 @@ let
           ];
         };
 
-        disabled = systems.clean.extendModules {
+        clean = systems.base.extendModules {
+          modules = [
+            {
+              options.stylix.targets = lib.mkOption {
+                description = ''
+                  Mock option to replace Stylix options in testbeds before
+                  Stylix is installed; since the testbed may define options
+                  related to the target it is testing.
+                '';
+              };
+            }
+          ];
+        };
+
+        disabled = systems.base.extendModules {
           modules = [
             inputs.self.nixosModules.stylix
           ];
