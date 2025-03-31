@@ -35,7 +35,7 @@
     let
       cfg = config.stylix;
     in
-    {
+    rec {
       mkEnableTarget =
         humanName: autoEnable:
         lib.mkEnableOption "theming for ${humanName}"
@@ -57,5 +57,7 @@
         // lib.optionalAttrs autoEnable {
           defaultText = lib.literalMD "`stylix.image != null`";
         };
+      mkEnableOverlay =
+        humanName: mkEnableTarget humanName config.stylix.overlays.enable;
     };
 }
