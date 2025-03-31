@@ -152,6 +152,8 @@
           maintainers-sorted = (import ./stylix/check-maintainers-sorted.nix) pkgs;
         } self.packages.${system};
 
+        formatter = pkgs.nixfmt-tree.override { settings.width = 80; };
+
         devShells = {
           default =
             let
