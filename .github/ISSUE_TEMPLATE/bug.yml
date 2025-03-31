@@ -58,10 +58,10 @@ body:
         <details>
         <summary><code>flake.lock</code></summary>
         <!-- paste flake.lock below, inside backticks --!>
+
         ```json
 
         ```
-        <!-- paste flake.lock above, inside backticks --!>
         </details>
 
     validations:
