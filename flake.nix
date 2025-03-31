@@ -152,8 +152,6 @@
           maintainers-sorted = (import ./stylix/check-maintainers-sorted.nix) pkgs;
         } self.packages.${system};
 
-        formatter = pkgs.nixfmt-tree.override { settings.width = 80; };
-
         devShells = {
           default =
             let
@@ -189,6 +187,13 @@
           ghc = pkgs.mkShell {
             inputsFrom = [ self.devShells.${system}.default ];
             packages = [ pkgs.ghc ];
+          };
+        };
+
+        formatter = pkgs.nixfmt-tree.withConfig {
+          settings = {
+            tree-root-file = "flake.lock";
+            formatter.nixfmt.width = 80;
           };
         };
 
