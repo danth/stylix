@@ -209,10 +209,19 @@ in
   };
 
   config = lib.optionalAttrs (options ? home-manager) (
-    lib.mkIf config.stylix.homeManagerIntegration.autoImport {
-      home-manager.sharedModules =
-        [ config.stylix.homeManagerIntegration.module ]
-        ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
-    }
+    lib.mkMerge [
+      (lib.mkIf config.stylix.homeManagerIntegration.autoImport {
+        home-manager.sharedModules =
+          [
+            config.stylix.homeManagerIntegration.module
+          ]
+          ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
+      })
+      (lib.mkIf config.home-manager.useGlobalPkgs {
+        home-manager.sharedModules = lib.singleton {
+          config.stylix.overlays.enable = false;
+        };
+      })
+    ]
   );
 }

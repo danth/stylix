@@ -13,30 +13,38 @@ let
 in
 {
   options.stylix.targets =
-    let
-      inherit (config.lib.stylix) mkEnableTarget;
-    in
-    {
-      vencord.enable = mkEnableTarget "Vencord" true;
-      vesktop.enable = mkEnableTarget "Vesktop" true;
-      nixcord.enable = mkEnableTarget "Nixcord" true;
-    };
+    lib.mapAttrs
+      (_: prettyName: {
+        enable = config.lib.stylix.mkEnableTarget prettyName true;
+        extraCss = lib.mkOption {
+          description = "Extra CSS to added to ${prettyName}'s theme";
+          type = lib.types.lines;
+          default = "";
+        };
+      })
+      {
+        vencord = "Vencord";
+        vesktop = "Vesktop";
+        nixcord = "Nixcord";
+      };
 
   config = lib.mkIf config.stylix.enable (
     lib.mkMerge [
       (lib.mkIf config.stylix.targets.vencord.enable {
-        xdg.configFile."Vencord/themes/stylix.theme.css".text = template;
+        xdg.configFile."Vencord/themes/stylix.theme.css".text =
+          template + config.stylix.targets.vencord.extraCss;
       })
 
       (lib.mkIf config.stylix.targets.vesktop.enable (
         lib.mkMerge [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-            xdg.configFile."vesktop/themes/stylix.theme.css".text = template;
+            xdg.configFile."vesktop/themes/stylix.theme.css".text =
+              template + config.stylix.targets.vesktop.extraCss;
           })
 
           (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
             home.file."Library/Application Support/vesktop/themes/stylix.theme.css".text =
-              template;
+              template + config.stylix.targets.vesktop.extraCss;
           })
         ]
       ))
@@ -49,11 +57,13 @@ in
             in
             lib.mkMerge [
               (lib.mkIf nixcord.discord.enable {
-                "Vencord/themes/stylix.theme.css".text = template;
+                "Vencord/themes/stylix.theme.css".text =
+                  template + config.stylix.targets.nixcord.extraCss;
               })
 
               (lib.mkIf nixcord.vesktop.enable {
-                "vesktop/themes/stylix.theme.css".text = template;
+                "vesktop/themes/stylix.theme.css".text =
+                  template + config.stylix.targets.nixcord.extraCss;
               })
             ];
 

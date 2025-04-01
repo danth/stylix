@@ -46,14 +46,15 @@ A general format for modules is shown below.
 
 ```nix
 { config, lib, ... }:
-
 {
   options.stylix.targets.«name».enable =
     config.lib.stylix.mkEnableTarget "«human readable name»" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable) {
-    programs.«name».backgroundColor = config.lib.stylix.colors.base00;
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        programs.«name».backgroundColor = config.lib.stylix.colors.base00;
+      };
 }
 ```
 
@@ -71,6 +72,34 @@ one of the following applies:
 - The module requires further manual setup to work correctly.
 - There is no reliable way to detect whether the target is installed, *and*
   enabling it unconditionally would cause problems.
+
+### Overlays
+
+If your module is provided as an overlay it uses a special format, where config
+is transparently passed to the platform (e.g. nixos) and overlay is a function
+taking two arguments and returning an attrset:
+
+```nix
+{
+  lib,
+  config,
+  ...
+}:
+{
+  options.stylix.targets.«name».enable =
+    config.lib.stylix.mkEnableOverlay "«human readable name»";
+
+  overlay =
+    final: prev:
+    lib.optionalAttrs
+      (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        «name» = prev.«name».overrideAttrs (oldAttrs: {
+
+        });
+      };
+}
+```
 
 ## How to apply colors
 
@@ -94,11 +123,13 @@ it as a function. This returns a derivation which builds the template.
 ```nix
 {
   environment.variables.MY_APPLICATION_CONFIG_FILE =
-    let configFile = config.lib.stylix.colors {
-      template = ./config.toml.mustache;
-      extension = ".toml";
-    };
-    in "${configFile}";
+    let
+      configFile = config.lib.stylix.colors {
+        template = ./config.toml.mustache;
+        extension = ".toml";
+      };
+    in
+    "${configFile}";
 }
 ```
 

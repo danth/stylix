@@ -8,12 +8,11 @@ Here's an example Nix expression that takes an input image, applies a brightness
 
 ```nix
 { pkgs, ... }:
-
 let
   inputImage = ./path/to/image.jpg;
   brightness = -30;
   contrast = 0;
-  fillColor = "black"
+  fillColor = "black";
 in
 {
   stylix.image = pkgs.runCommand "dimmed-background.png" { } ''
@@ -29,14 +28,14 @@ Similarly, you can use a template image and repaint it for the current theme.
 
 ```nix
 { pkgs, ... }:
-
 let
   theme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
-  wallpaper = pkgs.runCommand "image.png" {} ''
-        COLOR=$(${pkgs.yq}/bin/yq -r .palette.base00 ${theme})
-        ${pkgs.imagemagick}/bin/magick -size 1920x1080 xc:$COLOR $out
+  wallpaper = pkgs.runCommand "image.png" { } ''
+    COLOR=$(${pkgs.yq}/bin/yq -r .palette.base00 ${theme})
+    ${pkgs.imagemagick}/bin/magick -size 1920x1080 xc:$COLOR $out
   '';
-in {
+in
+{
   stylix = {
     image = wallpaper;
     base16Scheme = theme;
@@ -48,7 +47,6 @@ Which is neatly implemented as a single function in `lib.stylix.pixel`:
 
 ```nix
 { pkgs, config, ... }:
-
 {
   stylix = {
     image = config.lib.stylix.pixel "base0A";
@@ -77,4 +75,28 @@ itself:
 ```nix
 imports = [ flake.inputs.stylix.nixosModules.stylix ];
 disabledModules = [ "${flake.inputs.stylix}/modules/<some-module>/nixos.nix" ];
+```
+
+## Extending CSS options
+
+When trying to extend an attrset option, the order does not matter because a
+declaration can only exist once. This is not the case for an option with the
+type of `lines` (most commonly `style` options in Home Manager). For these options,
+the order does matter and Nix cannot guarantee that there aren't conflicting
+definitions. Nix will still merge these options, but it will not warn you if
+there are conflicting declaration. In order to get around this, you can make sure
+Nix puts your CSS at the end - and thus prioritizes it - by using `lib.mkAfter`:
+
+```nix
+{ lib, ... }:
+{
+  programs.waybar = {
+    enable = true;
+    style = lib.mkAfter ''
+      #workspaces button {
+        background: @base01;
+      }
+    '';
+  };
+}
 ```

@@ -1,0 +1,32 @@
+---
+description: Request the addition of a new target
+labels: [new-target]
+name: New target
+title: "<TARGET>: add target"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: I assert that this feature request is relevant for Stylix
+
+      options:
+        - label: >-
+            I assert that this is not a duplicate of an [existing feature
+            request](https://github.com/danth/stylix/issues).
+
+          required: true
+
+  - type: textarea
+
+    attributes:
+      label: Description
+
+      description: >-
+        Describe the feature. Consider including links to existing themes, like
+        a [tinted-theming repository](https://github.com/tinted-theming).
+
+      placeholder: Type your description here…
+
+    validations:
+      required: true

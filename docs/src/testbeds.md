@@ -27,9 +27,11 @@ Home Manager module within the NixOS module using the following format:
 
 ```nix
 {
-    home-manager.sharedModules = [{
-        # Write Home Manager options here
-    }];
+  home-manager.sharedModules = [
+    {
+      # Write Home Manager options here
+    }
+  ];
 }
 ```
 
