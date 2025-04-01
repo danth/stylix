@@ -1,7 +1,6 @@
 # NVF
 
-This Stylix module leverages the modules provided by
-[NVF](https://github.com/NotAShelf/nvf).
+This module themes [Neovim] using the options provided by [NVF].
 
 > [!IMPORTANT]
 > This module will have no effect unless the desired NVF module is properly
@@ -12,3 +11,15 @@ This Stylix module leverages the modules provided by
 >
 > Ensure you are configuring this module on the same platform (NixOS, Home
 > Manager, Darwin) as where you installed NVF.
+
+## Related modules
+
+<!-- If updating this section, make sure to update it on the linked pages too. -->
+
+- [Vim](vim.md): themes Vim using the standard Home Manager options.
+- [Neovim](neovim.md): themes Neovim using the standard Home Manager options.
+- [Nixvim](nixvim.md): themes Neovim using the options provided by [Nixvim].
+
+[Neovim]: https://neovim.io
+[Nixvim]: https://github.com/nix-community/nixvim#readme
+[NVF]: https://github.com/NotAShelf/nvf#readme
