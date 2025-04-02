@@ -305,8 +305,9 @@ let
       builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
 
   # You can embed HTML inside a Markdown document, but to render further
-  # Markdown within that HTML, it must be surrounded by blank lines.
-  # This function helps with that.
+  # Markdown between the HTML tags, it must be surrounded by blank lines:
+  # see https://spec.commonmark.org/0.31.2/#html-blocks. This function
+  # helps with that.
   #
   # In the following functions, we use concatStrings to build embedded HTML,
   # rather than ${} and multiline strings, because Markdown is sensitive to
