@@ -39,7 +39,7 @@
           cursor == null
           || cursor.name != null && cursor.package != null && cursor.size != null;
         message = ''
-          stylix: `stylix.cursor` is only partially defined. set either none or
+          stylix: `stylix.cursor` is only partially defined. Set either none or
           all of the `stylix.cursor` options.
         '';
       }
