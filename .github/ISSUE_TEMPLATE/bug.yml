@@ -49,15 +49,15 @@ body:
 
     attributes:
       description: >-
-        Copy-paste the `flake.lock` file. If flakes are not used, provide the
-        locked input versions.
+        Copy-paste the `flake.lock` file. If flakes are not used, remove the
+        prefilled content and provide the locked input versions.
 
       label: flake.lock
 
       value: |-
         <details>
         <summary><code>flake.lock</code></summary>
-        <!-- paste flake.lock below, inside backticks --!>
+        <!-- Copy-paste the flake.lock file inside the following code block --!>
 
         ```json
 
