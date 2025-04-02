@@ -25,9 +25,8 @@
       {
         programs.bemenu.settings =
           with config.lib.stylix.colors.withHashtag;
-          with config.stylix.fonts;
-          with config.stylix.targets.bemenu;
           let
+            inherit (config.stylix.targets.bemenu) alternate fontSize;
             bemenuOpacity = lib.toHexString (
               ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
             );
@@ -51,7 +50,7 @@
             af = "${if alternate then base04 else base05}"; # Alternate fg
 
             # Font name
-            fn = "${sansSerif.name} ${
+            fn = "${config.stylix.fonts.sansSerif.name} ${
               lib.optionalString (fontSize != null) (builtins.toString fontSize)
             }";
           };
