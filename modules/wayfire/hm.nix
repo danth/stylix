@@ -22,18 +22,16 @@ in
 
       wayfireConfig = config.wayland.windowManager.wayfire;
 
-      wayfireBackground = lib.mkIf cfg.useWallpaper (
-        pkgs.runCommand "wayfire-background.png" { } ''
-          ${lib.getExe' pkgs.imagemagick "convert"} ${config.stylix.image} $out
-        ''
-      );
+      wayfireBackground = pkgs.runCommand "wayfire-background.png" { } ''
+        ${lib.getExe' pkgs.imagemagick "convert"} ${config.stylix.image} $out
+      '';
     in
     {
       wayland.windowManager.wayfire.settings = lib.mkIf wayfireConfig.enable {
         cube = {
           background = rgb colors.base00;
-          cubemap_image = lib.mkIf cfg.useWallpaper "${wayfireBackground}";
-          skydome_texture = lib.mkIf cfg.useWallpaper "${wayfireBackground}";
+          cubemap_image = lib.mkIf cfg.useWallpaper (toString wayfireBackground);
+          skydome_texture = lib.mkIf cfg.useWallpaper (toString wayfireBackground);
         };
 
         expo.background = rgb colors.base00;
@@ -42,7 +40,7 @@ in
         core.background_color = rgb colors.base00;
 
         decoration = {
-          font = "${config.stylix.fonts.monospace.name} ${builtins.toString config.stylix.fonts.sizes.desktop}";
+          font = "${config.stylix.fonts.monospace.name} ${toString config.stylix.fonts.sizes.desktop}";
           active_color = rgb colors.base0D;
           inactive_color = rgb colors.base03;
         };
@@ -51,7 +49,7 @@ in
       wayland.windowManager.wayfire.wf-shell.settings =
         lib.mkIf wayfireConfig.wf-shell.enable
           {
-            background.image = lib.mkIf cfg.useWallpaper "${wayfireBackground}";
+            background.image = lib.mkIf cfg.useWallpaper (toString wayfireBackground);
             background.fill_mode =
               if config.stylix.imageScalingMode == "stretch" then
                 "stretch"
