@@ -26,7 +26,7 @@ jobs:
     steps:
       # Use a GitHub App rather than the default token so that GitHub Actions
       # workflows may run on the created pull request.
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.BACKPORT_APP_ID }}
