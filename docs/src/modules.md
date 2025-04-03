@@ -87,7 +87,7 @@ taking two arguments and returning an attrset:
 }:
 {
   options.stylix.targets.«name».enable =
-    config.lib.stylix.mkEnableOverlay "«human readable name»";
+    config.lib.stylix.mkEnableTarget "«human readable name»" true;
 
   overlay =
     final: prev:

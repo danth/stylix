@@ -6,7 +6,7 @@
 }:
 {
   options.stylix.targets.nixos-icons.enable =
-    config.lib.stylix.mkEnableOverlay "the NixOS logo";
+    config.lib.stylix.mkEnableTarget "the NixOS logo" true;
 
   overlay =
     _: super:

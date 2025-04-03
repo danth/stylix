@@ -20,7 +20,9 @@ inputs:
     in
     {
       options = attrs.options or { };
-      config.nixpkgs.overlays = [ attrs.overlay ];
+      config.nixpkgs.overlays = lib.mkIf config.stylix.overlays.enable [
+        attrs.overlay
+      ];
     }
   ) (import ./autoload.nix { inherit lib inputs; } "overlay");
 }
