@@ -199,13 +199,13 @@ let
                 # combines it with homepages extracted from  the `packages`
                 # list, also from `meta.nix`.
                 homepages =
-                  (metadata.${module}.homepages or { })
-                  // (builtins.listToAttrs (
+                  (builtins.listToAttrs (
                     map (package: {
                       inherit (package.meta) name;
                       value = package.meta.homepage;
                     }) (metadata.${module}.packages or [ ])
-                  ));
+                  ))
+                  // (metadata.${module}.homepages or { });
 
                 renderHomepage = name: url: "[${name}](${url})";
 
@@ -214,6 +214,8 @@ let
                 homepageText =
                   if homepages == { } then
                     "Homepages: none listed"
+                  else if builtins.length (builtins.attrNames homepages) == 1 then
+                    renderHomepage "Homepage" (builtins.head (builtins.attrValues homepages))
                   else
                     "Homepages: ${renderedHomepages}";
               in
