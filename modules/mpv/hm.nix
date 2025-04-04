@@ -8,7 +8,6 @@
         osd-font = config.stylix.fonts.monospace.name;
         sub-font = config.stylix.fonts.monospace.name;
         osd-font-size = config.stylix.fonts.sizes.applications;
-        sub-font-size = config.stylix.fonts.sizes.applications;
 
         background-color = "#000000";
         osd-back-color = base01;
