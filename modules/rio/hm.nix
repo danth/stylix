@@ -16,7 +16,7 @@
         # converting font size to px
         size = sizes.terminal * 4.0 / 3.0;
       };
-      window.opacity = with config.stylix.opacity; terminal;
+      window.opacity = config.stylix.opacity.terminal;
       colors = with config.lib.stylix.colors.withHashtag; {
         selection-background = base02;
         selection-foreground = base05;

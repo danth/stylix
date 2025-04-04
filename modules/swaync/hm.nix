@@ -12,7 +12,9 @@
     lib.mkIf (config.stylix.enable && config.stylix.targets.swaync.enable)
       {
         services.swaync.style =
-          with config.stylix.fonts;
+          let
+            inherit (config.stylix) fonts;
+          in
           with config.lib.stylix.colors.withHashtag;
           ''
             @define-color base00 ${base00}; @define-color base01 ${base01}; @define-color base02 ${base02}; @define-color base03 ${base03};
@@ -22,8 +24,8 @@
             @define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
 
             * {
-                font-family: "${sansSerif.name}";
-                font-size: ${builtins.toString sizes.desktop}pt;
+                font-family: "${fonts.sansSerif.name}";
+                font-size: ${builtins.toString fonts.sizes.desktop}pt;
             }
           ''
           + (builtins.readFile ./base.css);

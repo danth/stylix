@@ -21,7 +21,7 @@ in
             };
             size = sizes.terminal;
           };
-          window.opacity = with config.stylix.opacity; terminal;
+          window.opacity = config.stylix.opacity.terminal;
           colors = with colors; {
             primary = {
               foreground = base05;

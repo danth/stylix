@@ -8,11 +8,13 @@
     lib.mkIf (config.stylix.enable && config.stylix.targets.xresources.enable)
       {
         xresources.properties =
+          let
+            inherit (config.stylix) fonts;
+          in
           with config.lib.stylix.colors.withHashtag;
-          with config.stylix.fonts;
           {
-            "*.faceName" = monospace.name;
-            "*.faceSize" = toString sizes.terminal;
+            "*.faceName" = fonts.monospace.name;
+            "*.faceSize" = toString fonts.sizes.terminal;
             "*.renderFont" = true;
             "*foreground" = base05;
             "*background" = base00;
