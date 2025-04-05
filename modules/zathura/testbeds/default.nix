@@ -4,8 +4,7 @@ let
   package = pkgs.zathura;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.pwmt.zathura";
     inherit package;
   };

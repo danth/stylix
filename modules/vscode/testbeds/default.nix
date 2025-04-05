@@ -5,8 +5,7 @@ let
   package = pkgs.vscodium;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "codium";
     inherit package;
   };
