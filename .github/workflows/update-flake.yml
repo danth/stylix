@@ -18,10 +18,6 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
       - uses: DeterminateSystems/nix-installer-action@v16
-      - uses: cachix/cachix-action@v16
-        with:
-          name: stylix
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - id: generate-token
         uses: actions/create-github-app-token@v1
