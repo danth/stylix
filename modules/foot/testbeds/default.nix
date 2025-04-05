@@ -4,8 +4,7 @@ let
   package = pkgs.foot;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "foot";
     inherit package;
   };

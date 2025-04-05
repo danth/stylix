@@ -4,8 +4,7 @@ let
   package = pkgs.wezterm;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.wezfurlong.wezterm";
     inherit package;
   };
