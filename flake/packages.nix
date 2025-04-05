@@ -23,7 +23,7 @@
           testbedPackages' =
             if system == "aarch64-linux" then
               lib.filterAttrs (
-                name: _: !lib.hasPrefix "testbed:discord:vencord" name
+                name: _: !lib.hasPrefix "testbed:vencord" name
               ) testbedPackages
             else
               testbedPackages;
