@@ -33,13 +33,14 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update_flake_lock_action_${{ matrix.branch }}
+          commit-msg: "stylix: update all flake inputs"
           pr-title: "stylix: update all flake inputs"
-          pr-labels: dependencies github_actions
+          pr-labels: dependencies
+          # yamllint disable rule:line-length
           pr-body: |
-            Automated changes by the
-            [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock)
-            GitHub Action.
+            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
 
             ```
-            ${{ env.GIT_COMMIT_MESSAGE }}
+            {{ env.GIT_COMMIT_MESSAGE }}
             ```
+          # yamllint enable rule:line-length
