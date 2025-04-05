@@ -31,9 +31,7 @@ jobs:
           pr-title: "stylix: update all flake inputs"
           pr-labels: dependencies github_actions
           pr-body: |
-            Automated changes by the
-            [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock)
-            GitHub Action.
+            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
 
             ```
             {{ env.GIT_COMMIT_MESSAGE }}
