@@ -28,7 +28,7 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
           pr-title: "stylix: update all flake inputs"
-          pr-labels: dependencies github_actions
+          pr-labels: dependencies
           pr-body: |
             Automated changes by the
             [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock)
