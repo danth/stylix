@@ -162,11 +162,10 @@
                   nix-fast-build
                 ];
                 text = ''
-                  cores="$(nproc)"
                   system="$(nix eval --expr builtins.currentSystem --impure --raw)"
                   nix-fast-build \
                     --eval-max-memory-size 512 \
-                    --eval-workers "$cores" \
+                    --eval-workers 1 \
                     --flake ".#checks.$system" \
                     --no-link \
                     --skip-cached \
