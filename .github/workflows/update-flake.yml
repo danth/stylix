@@ -35,5 +35,5 @@ jobs:
             GitHub Action.
 
             ```
-            ${{ env.GIT_COMMIT_MESSAGE }}
+            {{ env.GIT_COMMIT_MESSAGE }}
             ```
