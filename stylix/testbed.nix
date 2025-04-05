@@ -21,6 +21,8 @@ let
 
       security.sudo.wheelNeedsPassword = false;
 
+      services.getty.autologinUser = username;
+
       # The state version can safely track the latest release because the disk
       # image is ephemeral.
       system.stateVersion = config.system.nixos.release;
