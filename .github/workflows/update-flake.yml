@@ -1,0 +1,39 @@
+---
+name: Update flake inputs
+
+on:  # yamllint disable-line rule:truthy
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
+
+jobs:
+  flake-update:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'danth'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: cachix/cachix-action@v16
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - uses: DeterminateSystems/update-flake-lock@v24
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          pr-title: "stylix: update all flake inputs"
+          pr-labels: dependencies github_actions
+          pr-body: |
+            Automated changes by the
+            [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock)
+            GitHub Action.
+
+            ```
+            ${{ env.GIT_COMMIT_MESSAGE }}
+            ```
