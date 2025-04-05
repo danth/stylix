@@ -192,10 +192,13 @@
 
         packages =
           let
-            universalPackages = {
-              docs = import ./docs { inherit pkgs inputs lib; };
-              palette-generator = pkgs.callPackage ./palette-generator { };
-            };
+            universalPackages =
+              {
+                palette-generator = pkgs.callPackage ./palette-generator { };
+              }
+              // lib.optionalAttrs (!lib.hasSuffix "-darwin" system) {
+                docs = import ./docs { inherit pkgs inputs lib; };
+              };
 
             # Testbeds are virtual machines based on NixOS, therefore they are
             # only available for Linux systems.
