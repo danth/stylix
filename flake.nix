@@ -190,6 +190,13 @@
           };
         };
 
+        formatter = pkgs.nixfmt-tree.withConfig {
+          settings = {
+            tree-root-file = "flake.lock";
+            formatter.nixfmt.width = 80;
+          };
+        };
+
         packages =
           let
             universalPackages = {
