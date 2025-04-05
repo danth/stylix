@@ -56,9 +56,9 @@ in
         programs.swaylock.settings =
           with config.lib.stylix.colors;
           let
-            inside = base01-hex;
-            outside = base01-hex;
-            ring = base05-hex;
+            inside = base00-hex;
+            outside = base00-hex;
+            ring = base01-hex;
             text = base05-hex;
             positive = base0B-hex;
             negative = base08-hex;
