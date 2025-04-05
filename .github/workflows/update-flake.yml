@@ -10,8 +10,13 @@ jobs:
   flake-update:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'danth'
+    strategy:
+      matrix:
+        branch: [master, release-24.11]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
       - uses: DeterminateSystems/nix-installer-action@v16
       - uses: cachix/cachix-action@v16
         with:
@@ -27,6 +32,7 @@ jobs:
       - uses: DeterminateSystems/update-flake-lock@v24
         with:
           token: ${{ steps.generate-token.outputs.token }}
+          branch: update_flake_lock_action_${{ matrix.branch }}
           commit-msg: "stylix: update all flake inputs"
           pr-title: "stylix: update all flake inputs"
           pr-labels: dependencies
