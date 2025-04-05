@@ -9,8 +9,7 @@ let
   port = 1234;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "firefox";
     inherit package;
   };

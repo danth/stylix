@@ -5,8 +5,7 @@ let
 in
 
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "yazi";
     inherit package;
   };
