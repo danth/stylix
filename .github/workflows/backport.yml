@@ -3,7 +3,7 @@
 # https://github.com/NixOS/nixpkgs/blob/2566f9dcb469b06241519a8185863d67773f943a/.github/workflows/backport.yml
 name: Backport
 
-on:  # yamllint disable-line rule:truthy
+on:
   pull_request_target:
     types: [closed, labeled]
 

@@ -1,7 +1,7 @@
 ---
 name: Update flake inputs
 
-on:  # yamllint disable-line rule:truthy
+on:
   schedule:
     - cron: "0 0 1 * *"
   workflow_dispatch:
