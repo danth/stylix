@@ -1,3 +1,4 @@
 {
   maintainers = [ ];
+  name = "Sway";
 }

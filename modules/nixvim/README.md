@@ -1,6 +1,6 @@
-# Nixvim
+# NixVim
 
-This module themes [Neovim] using the options provided by [Nixvim].
+This module themes [Neovim] using the options provided by [NixVim].
 
 > [!IMPORTANT]
 > This module will have no effect unless the desired Nixvim module is properly
@@ -18,8 +18,8 @@ This module themes [Neovim] using the options provided by [Nixvim].
 
 - [Vim](vim.md): themes Vim using the standard Home Manager options.
 - [Neovim](neovim.md): themes Neovim using the standard Home Manager options.
-- [NVF](nvf.md): themes Neovim using the options provided by [NVF].
+- [nvf](nvf.md): themes Neovim using the options provided by [nvf].
 
 [Neovim]: https://neovim.io
-[Nixvim]: https://github.com/nix-community/nixvim#readme
-[NVF]: https://github.com/NotAShelf/nvf#readme
+[NixVim]: https://github.com/nix-community/nixvim#readme
+[nvf]: https://github.com/NotAShelf/nvf#readme
