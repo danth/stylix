@@ -134,12 +134,26 @@ let
                 path = "${inputs.self}/modules/${module}/README.md";
 
                 # This doesn't count as IFD because ${inputs.self} is a flake input
+                #
+                # In addition, this checks that the README.md starts with an
+                # appropriate title
                 mainText =
+                  let
+                    inherit (metadata.${module}) name;
+                  in
                   if builtins.pathExists path then
-                    builtins.readFile path
+                    let
+                      text = builtins.readFile path;
+                    in
+                    if ((builtins.head (lib.splitString "\n" text)) == "# ${name}") then
+                      text
+                    else
+                      throw ''
+                        README.md of ${name} must have a title which matches its `meta.name`
+                      ''
                   else
                     ''
-                      # ${module}
+                      # ${name}
                       > [!NOTE]
                       > This module doesn't include any additional documentation.
                       > You can browse the options it provides below.
