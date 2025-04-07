@@ -139,7 +139,11 @@ let
                 # appropriate title
                 mainText =
                   let
-                    inherit (metadata.${module}) name;
+                    name =
+                      if (metadata.${module}.name or null == null) then
+                        throw "stylix: ${module} is missing `meta.name`"
+                      else
+                        metadata.${module}.name;
                   in
                   if builtins.pathExists path then
                     let
@@ -159,7 +163,11 @@ let
                       > You can browse the options it provides below.
                     '';
 
-                inherit (metadata.${module}) maintainers;
+                maintainers =
+                  if (metadata.${module}.maintainers or null == null) then
+                    throw "stylix: ${module} is missing `meta.maintainers`"
+                  else
+                    metadata.${module}.maintainers;
 
                 # Render a maintainer's name and a link to the best contact
                 # information we have for them.
