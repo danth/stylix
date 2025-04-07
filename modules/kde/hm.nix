@@ -370,7 +370,7 @@ in
 
           # This activation entry will run the theme activator when the homeConfiguration is activated
           activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            ${activator} || verboseEcho \
+            run ${activator} || verboseEcho \
               "Stylix KDE theme setting failed. This only works in a running Plasma session."
           '';
         };
