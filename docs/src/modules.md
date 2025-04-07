@@ -201,3 +201,11 @@ This will be inserted before the automatically generated list of options.
 
 Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
 mandatory.
+
+## Common Mistakes
+
+### `home.activation` Scripts
+
+Any script run by `home.activation` must be preceded by `run` if the script is
+to produce any permanent changes. Without this `run` wrapper, the script is run
+in dry-run mode.
