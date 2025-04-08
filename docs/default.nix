@@ -139,22 +139,17 @@ let
                 # appropriate title
                 mainText =
                   let
-                    name =
-                      if (metadata.${module}.name or null == null) then
-                        throw "stylix: ${module} is missing `meta.name`"
-                      else
-                        metadata.${module}.name;
+                    name = lib.throwIfNot (
+                      metadata ? ${module}.name
+                    ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
                   in
                   if builtins.pathExists path then
                     let
                       text = builtins.readFile path;
                     in
-                    if ((builtins.head (lib.splitString "\n" text)) == "# ${name}") then
-                      text
-                    else
-                      throw ''
-                        README.md of ${name} must have a title which matches its `meta.name`
-                      ''
+                    lib.throwIfNot (
+                      (builtins.head (lib.splitString "\n" text)) == "# ${name}"
+                    ) "README.md of ${name} must have a title which matches its `meta.name`" text
                   else
                     ''
                       # ${name}
@@ -164,9 +159,8 @@ let
                     '';
 
                 maintainers =
-                  if (metadata.${module}.maintainers or null == null) then
-                    throw "stylix: ${module} is missing `meta.maintainers`"
-                  else
+                  lib.throwIfNot (metadata ? ${module}.maintainers)
+                    "stylix: ${module} is missing `meta.maintainers`"
                     metadata.${module}.maintainers;
 
                 # Render a maintainer's name and a link to the best contact
