@@ -8,6 +8,7 @@
 let
   cfg = config.stylix.targets.grub;
   inherit (config.stylix) imageScalingMode fonts;
+  inherit (config.lib.stylix) mkEnableTarget mkEnableWallpaper pixel;
   # Grub requires fonts to be converted to "PFF2 format"
   # This function takes a font { name, package } and produces a .pf2 file
   mkGrubFont =
@@ -57,15 +58,13 @@ in
       ];
     })
   ];
-  options.stylix.targets.grub = with config.lib.stylix; {
+  options.stylix.targets.grub = {
     enable = mkEnableTarget "GRUB" true;
     useWallpaper = mkEnableWallpaper "GRUB" false;
   };
 
   config.boot.loader.grub =
     with config.lib.stylix.colors.withHashtag;
-    with config.lib.stylix;
-    with config.stylix.fonts;
     lib.mkIf (config.stylix.enable && cfg.enable) {
       backgroundColor = base00;
       # Need to override the NixOS splash, this will match the background
@@ -144,7 +143,7 @@ in
             cp ${pixel "base01"} $out/background_c.png
             cp ${pixel "base0B"} $out/selection_c.png
 
-            cp ${mkGrubFont sansSerif} $out/sans_serif.pf2
+            cp ${mkGrubFont fonts.sansSerif} $out/sans_serif.pf2
           '';
     };
 }
