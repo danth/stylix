@@ -1,4 +1,4 @@
 {
   maintainers = [ ];
-  name = "Fcitx 5";
+  name = "Eye of GNOME";
 }
