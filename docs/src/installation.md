@@ -13,15 +13,30 @@ screens, and display managers.
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { nixpkgs, stylix, ... }: {
-    nixosConfigurations."«hostname»" = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [ stylix.nixosModules.stylix ./configuration.nix ];
+  outputs =
+    { nixpkgs, stylix, ... }:
+    {
+      nixosConfigurations."«hostname»" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          stylix.nixosModules.stylix
+          ./configuration.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a NixOS configuration.</small>
+
+If you are using a stable release of NixOS, ensure that you use the matching
+Stylix release. For example:
+
+```nix
+{
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+  stylix.url = "github:danth/stylix/release-24.11";
+}
+```
 
 Many applications cannot be configured system wide, so Stylix will also need
 [Home Manager][nix-hm] to be able to change their settings within your home
@@ -54,12 +69,21 @@ to NixOS via [Flakes][nix-flakes].
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { darwin, nixpkgs, stylix, ... }: {
-    darwinConfigurations."«hostname»" = darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [ stylix.darwinModules.stylix ./configuration.nix ];
+  outputs =
+    {
+      darwin,
+      stylix,
+      ...
+    }:
+    {
+      darwinConfigurations."«hostname»" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          stylix.darwinModules.stylix
+          ./configuration.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a nix-darwin configuration.</small>
@@ -67,6 +91,49 @@ to NixOS via [Flakes][nix-flakes].
 While this won't have an effect on the looks of MacOS, since we don't have the
 controls to theme it like we do NixOS, it will automatically set up the [Home
 Manager][nix-hm] modules for you.
+
+## Nix-on-Droid
+
+You can install Stylix into your
+[Nix-on-Droid](https://github.com/nix-community/nix-on-droid) configuration in
+a similar fashion to NixOS via [Flakes][nix-flakes].
+
+```nix
+{
+  inputs = {
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    stylix.url = "github:danth/stylix";
+  };
+
+  outputs =
+    {
+      nix-on-droid,
+      nixpkgs,
+      stylix,
+      ...
+    }:
+    {
+      nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+        pkgs = nixpkgs.legacyPackages."aarch64-linux";
+        modules = [
+          stylix.nixOnDroidModules.stylix
+          ./nix-on-droid.nix
+        ];
+      };
+    };
+}
+```
+<small>Minimal `flake.nix` for a Nix-on-Droid configuration.</small>
+
+This will apply your configured color scheme and monospace font to the
+nix-on-droid terminal. If [Home Manager integration for
+Nix-on-Droid](https://github.com/nix-community/nix-on-droid#home-manager-integration)
+is used, Stylix will automatically set up the [Home Manager][nix-hm] modules for
+you.
 
 ## Home Manager
 
@@ -84,20 +151,40 @@ is managed by someone else.
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = { nixpkgs, home-manager, stylix, ... }: {
-    homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ stylix.homeManagerModules.stylix ./home.nix ];
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      stylix,
+      ...
+    }:
+    {
+      homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          stylix.homeManagerModules.stylix
+          ./home.nix
+        ];
+      };
     };
-  };
 }
 ```
 <small>Minimal `flake.nix` for a Home Manager configuration.</small>
 
+If you are using a stable release of Home Manager, ensure that you use the
+matching Stylix release. For example:
+
+```nix
+{
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+  home-manager.url = "github:nix-community/home-manager/release-24.11";
+  stylix.url = "github:danth/stylix/release-24.11";
+}
+```
+
 If you choose to use both NixOS and Home Manager but configure them separately,
-you will need to copy the settings described below into both of your
-configurations, as keeping them separate means that they cannot follow each
-other automatically.
+you will need to copy your theme into both of your configurations, as keeping them
+separate means they cannot follow each other automatically.
 
 ## Without flakes
 
@@ -111,20 +198,20 @@ module as the `homeManagerModules.stylix` attribute.
 ```nix
 let
   stylix = pkgs.fetchFromGitHub {
-      owner = "danth";
-      repo = "stylix";
-      rev = "...";
-      sha256 = "...";
+    owner = "danth";
+    repo = "stylix";
+    rev = "...";
+    sha256 = "...";
   };
-in {
-    imports = [ (import stylix).homeManagerModules.stylix ];
+in
+{
+  imports = [ (import stylix).homeManagerModules.stylix ];
 
-    stylix = {
-      enable = true;
-      image = ./wallpaper.jpg;
-    };
+  stylix = {
+    enable = true;
+    image = ./wallpaper.jpg;
+  };
 }
-
 ```
 <small>Example usage of the Home Manager module without flakes.</small>
 

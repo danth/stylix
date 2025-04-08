@@ -1,12 +1,13 @@
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 
 let
   style = config.lib.stylix.colors {
-    template = ./template.mustache;
+    template = ./template.xml.mustache;
     extension = "xml";
   };
 
-in {
+in
+{
   options.stylix.targets.gedit.enable =
     config.lib.stylix.mkEnableTarget "GEdit" true;
 

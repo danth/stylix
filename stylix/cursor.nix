@@ -1,26 +1,47 @@
-{ pkgs, config, lib, ... } @ args:
+{ lib, config, ... }:
 
-with lib;
-
-let
-  cfg = config.stylix.cursor;
-  fromOs = import ./fromos.nix { inherit lib args; };
-in {
-    options.stylix.cursor = {
-        name = mkOption {
+{
+  options.stylix.cursor = lib.mkOption {
+    description = ''
+      Attributes defining the systemwide cursor. Set either all or none of
+      these attributes.
+    '';
+    type = lib.types.nullOr (
+      lib.types.submodule {
+        options = {
+          name = lib.mkOption {
             description = "The cursor name within the package.";
-            type = types.str;
-            default = fromOs [ "cursor" "name" ] "Vanilla-DMZ";
-        };
-        package = mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+          };
+          package = lib.mkOption {
             description = "Package providing the cursor theme.";
-            type = types.package;
-            default = fromOs [ "cursor" "package" ] pkgs.vanilla-dmz;
-        };
-        size = mkOption {
+            type = lib.types.nullOr lib.types.package;
+            default = null;
+          };
+          size = lib.mkOption {
             description = "The cursor size.";
-            type = types.int;
-            default = fromOs [ "cursor" "size" ] 32;
+            type = lib.types.nullOr lib.types.int;
+            default = null;
+          };
         };
-    };
+      }
+    );
+    default = null;
+  };
+  config.assertions =
+    let
+      inherit (config.stylix) cursor;
+    in
+    [
+      {
+        assertion =
+          cursor == null
+          || cursor.name != null && cursor.package != null && cursor.size != null;
+        message = ''
+          stylix: `stylix.cursor` is only partially defined. Set either none or
+          all of the `stylix.cursor` options.
+        '';
+      }
+    ];
 }

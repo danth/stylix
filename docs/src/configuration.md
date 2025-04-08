@@ -2,7 +2,7 @@
 
 ## Enable
 
-To enable the Stylix module, declare:
+Stylix must be enabled before it will apply any changes to your system:
 
 ```nix
 {
@@ -10,59 +10,12 @@ To enable the Stylix module, declare:
 }
 ```
 
-> [!NOTE]
->
-> The global enable option was recently added, so you may come across old
-> examples which don't include it. No other settings will take effect unless
-> `stylix.enable` is set to `true`.
-
-## Wallpaper
-
-To start theming, you need to set a wallpaper image.
-
-```nix
-{
-  stylix.image = ./wallpaper.png;
-}
-```
-
-The option accepts derivations as well as paths, so you can fetch an image
-directly from the internet:
-
-```nix
-{
-  stylix.image = pkgs.fetchurl {
-    url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
-    sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
-  };
-}
-```
-
 ## Color scheme
-
-### Generated schemes
-
-If you only set a wallpaper, Stylix will use a
-[genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm)
-to create a color scheme. The quality of these schemes can vary, but more
-colorful images tend to have better results.
-
-You can force a light or dark scheme using the polarity option:
-
-```nix
-{
-  stylix.polarity = "dark";
-}
-```
-
-The current scheme can be previewed in a web browser at either
-[`/etc/stylix/palette.html`](file:///etc/stylix/palette.html) for NixOS, or
-`~/.config/stylix/palette.html` for Home Manager.
 
 ### Handmade schemes
 
-If you prefer a handmade color scheme, you can choose anything from
-[the Tinted Theming repository](https://github.com/tinted-theming/base16-schemes):
+To set a [Tinted Theming](https://github.com/tinted-theming/schemes) color
+scheme, declare:
 
 ```nix
 {
@@ -89,11 +42,11 @@ only the user override is used.
 
 When passing colors to unsupported targets or creating custom modules, it
 is possible to access values from the configured color scheme through
-`lib.stylix.colors`.
+`config.lib.stylix.colors`.
 An overview of the available values is shown below.
 
 ```nix
-lib.stylix.colors = {
+config.lib.stylix.colors = {
   base08 = "ff0000";
   base08-hex-r = "ff";
   base08-dec-r = "0.996094";
@@ -115,6 +68,46 @@ For more complex configurations you may find it simpler to use
 [mustache](http://mustache.github.io/) templates to generate output files.
 See [base16.nix](https://github.com/SenchoPens/base16.nix) documentation for
 usage examples.
+
+## Wallpaper
+
+To set a wallpaper, provide a path or an arbitrary derivation:
+
+- ```nix
+  {
+    stylix.image = ./wallpaper.png;
+  }
+  ```
+
+- ```nix
+  {
+    stylix.image = pkgs.fetchurl {
+      url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
+      sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
+    };
+  }
+  ```
+
+If `stylix.base16Scheme` is undeclared, Stylix generates a color scheme based on
+the wallpaper using a [genetic
+algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm). Note that more
+colorful images tend to yield better results. The algorithm's polarity can be
+schewed towards a dark or light theme with:
+
+- ```nix
+  {
+    stylix.polarity = "dark";
+  }
+  ```
+
+- ```nix
+  {
+    stylix.polarity = "light";
+  }
+  ```
+
+The generated color scheme can be viewed at `/etc/stylix/palette.html` on NixOS,
+or at `~/.config/stylix/palette.html` on Home Manager.
 
 ## Fonts
 
@@ -169,42 +162,84 @@ Or even choose monospace for everything:
 }
 ```
 
-## Multi-user configurations
+## Home Manager inheritance
 
-For those apps which are configured through Home Manager, Stylix allows you to
-choose a different theme for each user. This can be done by setting the theme
-within Home Manager for that user rather than at the system level.
+By default, if Home Manager is used as part of NixOS, then Stylix will be
+automatically installed for all users, and the NixOS theme will become their
+default settings.
 
-By default, all users follow the system theme. This can be turned off by
-setting `stylix.homeManagerIntegration.followSystem = false`, in which case you
-must explicitly set a theme for each user. Setting that option is not required
-just to be able to override an individual theme.
+This is convenient for single-user systems, since you can configure everything
+once at the system level and it will automatically carry over. For multi-user
+systems, you can override the settings within Home Manager to select a different
+theme for each user.
 
-If you would like to disable all Home Manager activity for a user, you can set
-`stylix.homeManagerIntegration.autoImport = false`, then manually import the
-Home Manager module for the users for which it should be enabled.
+You may prefer to disable inheritance entirely, and set up the Home Manager
+version of Stylix yourself if required. Refer to the options
+[`stylix.homeManagerIntegration.autoImport`](options/global/nixos.md#stylixhomemanagerintegrationautoimport)
+and
+[`stylix.homeManagerIntegration.followSystem`](options/global/nixos.md#stylixhomemanagerintegrationfollowsystem)
+to customize this.
 
-Note that if the wallpaper image for a user is different to the rest of the
-system, a separate theme will always be generated for them, even though their
-`base16Scheme` option has not been overridden. If you want that user to follow
-the system theme while having a different wallpaper, you will need to manually
-copy the system theme into their configuration. (This behaviour is necessary as
-otherwise it would be impossible to use a generated theme for a user while
-having a manually created theme for the rest of the system.)
+> [!NOTE]
+>
+> There is a special case involving the
+> [`stylix.base16Scheme`](options/global/nixos.md#stylixbase16scheme)
+> option:
+>
+> If the wallpaper in a Home Manager configuration is changed, then Home Manager
+> will stop inheriting the color scheme from NixOS. This allows Home Manager
+> configurations to use the automatic palette generator without being overridden.
+>
+> Similarly, [`stylix.override`](options/global/nixos.md#stylixoverride) is not inherited
+> if the color scheme is different.
+
+## Standalone Nixvim
+
+When using a NixOS or home-manager installation of [Nixvim], you can use Stylix
+as normal. However, when using Nixvim's ["standalone" configuration mode][Nixvim Standalone],
+you will need to pass Stylix's generated config to Nixvim yourself.
+
+The generated config can be accessed as `config.lib.stylix.nixvim.config`. You
+can use this as a module in your standalone Nixvim Configuration or an
+extension of it.
+
+For example:
+
+```nix
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (pkgs.stdenv.hostPlatform) system;
+  nixvim-package = inputs.nixvim-config.packages.${system}.default;
+  extended-nixvim = nixvim-package.extend config.lib.stylix.nixvim.config;
+in
+{
+  environment.systemPackages = [ extended-nixvim ];
+}
+```
+
+[Nixvim]: https://nix-community.github.io/nixvim
+[Nixvim Standalone]: https://nix-community.github.io/nixvim/user-guide/install.html#standalone-usage
 
 ## Turning targets on and off
 
-In Stylix terms, a target is anything which can have colors, fonts or a
-wallpaper applied to it. Each module in this repository should correspond to a
-target of the same name.
+A target is anything which can have colors, fonts or a wallpaper applied to it.
 
-Each target has an option like `stylix.targets.«target».enable` to turn its
-styling on or off. Normally, it's turned on automatically when the target is
-installed. You can set `stylix.autoEnable = false` to opt out of this
-behaviour, in which case you'll need to manually enable each target you want to
-be styled.
+You can discover the available targets and their options by browsing through
+the module reference at the end of this book. Most targets will be found under
+a module of the same name, but occasionally a module will serve multiple similar
+targets. For example, the [Firefox module](options/modules/firefox.md) also
+provides options for other browsers which are based on Firefox.
+
+For each target, there is an option like `stylix.targets.«target».enable` which
+you can use to turn its styling on or off. By default, it's turned on
+automatically whenever the target is installed. You can globally set
+`stylix.autoEnable = false` to opt out of this behaviour, in which case you'll
+need to manually enable each target you want to be themed.
 
 Targets are different between Home Manager and NixOS, and sometimes available
 in both cases. If both are available, it is always correct to enable both.
-The reference pages have a list of targets for [NixOS](options/nixos.md) and
-[Home Manager](options/hm.md) respectively.

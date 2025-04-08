@@ -2,10 +2,10 @@
 
 let
   cfg = config.stylix.fonts;
-in {
-  imports = [ ../fonts.nix ];
+in
+{
   config.fonts = lib.mkIf config.stylix.enable {
-    packages = cfg.packages;
+    inherit (cfg) packages;
 
     fontconfig.defaultFonts = {
       monospace = [ cfg.monospace.name ];

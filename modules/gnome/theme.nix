@@ -1,21 +1,31 @@
-{ config, pkgs, ... }:
+{
+  stdenv,
+  sass,
+  glib,
+  colors,
+  inputs,
+}:
 
 let
-  colors = config.lib.stylix.colors {
-    template = ./colors.mustache;
+  colorsScss = colors {
+    template = ./colors.scss.mustache;
     extension = "scss";
   };
 
-in pkgs.stdenv.mkDerivation {
-  name = "${config.lib.stylix.colors.slug}-gnome-shell-theme";
-  src = config.lib.stylix.templates.gnome-shell;
+in
+stdenv.mkDerivation {
+  name = "${colors.slug}-gnome-shell-theme";
+  src = inputs.gnome-shell;
   patches = [ ./shell_colors.patch ];
   postPatch = ''
     rm data/theme/gnome-shell-sass/{_colors.scss,_default-colors.scss,_palette.scss}
-    cp ${colors} data/theme/gnome-shell-sass/_colors.scss
+    cp ${colorsScss} data/theme/gnome-shell-sass/_colors.scss
   '';
 
-  nativeBuildInputs = with pkgs; [ sass glib.dev ];
+  nativeBuildInputs = [
+    sass
+    glib.dev
+  ];
   buildPhase = ''
     sass data/theme/gnome-shell-light.scss \
       >data/theme/gnome-shell-light.css

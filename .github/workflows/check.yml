@@ -1,0 +1,45 @@
+---
+name: Check
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+      - release-**
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runs-on }}
+
+    # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    strategy:
+      matrix:
+        include:
+          - name: aarch64-linux
+            runs-on: ubuntu-24.04-arm
+          - name: aarch64-darwin
+            runs-on: macos-15
+          - name: x86_64-linux
+            runs-on: ubuntu-24.04
+          - name: x86_64-darwin
+            runs-on: macos-13
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        continue-on-error: true
+
+      - run: nix develop --command stylix-check --no-nom

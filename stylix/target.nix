@@ -1,22 +1,20 @@
-{ config, lib, ... }@args:
-
-with lib;
+{ config, lib, ... }:
 
 {
   options.stylix = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = ''
         Whether to enable Stylix.
 
         When this is `false`, all theming is disabled and all other options
         are ignored.
       '';
-      type = types.bool;
-      default = import ./fromos.nix { inherit lib args; } [ "enable" ] false;
+      type = lib.types.bool;
+      default = false;
       example = true;
     };
 
-    autoEnable = mkOption {
+    autoEnable = lib.mkOption {
       description = ''
         Whether to enable targets by default.
 
@@ -27,24 +25,37 @@ with lib;
         they are only applicable in specific circumstances which cannot be
         detected automatically.
       '';
-      type = types.bool;
-      default = import ./fromos.nix { inherit lib args; } [ "autoEnable" ] true;
+      type = lib.types.bool;
+      default = true;
       example = false;
     };
   };
 
-  config.lib.stylix.mkEnableTarget = let
-    cfg = config.stylix;
-  in
-    humanName:
-    autoEnable:
-      mkEnableOption
-      "theming for ${humanName}"
-      // {
-        default = cfg.autoEnable && autoEnable;
-        example = !autoEnable;
-      }
-      // optionalAttrs autoEnable {
-        defaultText = literalMD "same as [`stylix.autoEnable`](#stylixautoenable)";
-      };
+  config.lib.stylix =
+    let
+      cfg = config.stylix;
+    in
+    {
+      mkEnableTarget =
+        humanName: autoEnable:
+        lib.mkEnableOption "theming for ${humanName}"
+        // {
+          default = cfg.autoEnable && autoEnable;
+          example = !autoEnable;
+        }
+        // lib.optionalAttrs autoEnable {
+          defaultText = lib.literalMD "same as `stylix.autoEnable`";
+        };
+      mkEnableWallpaper =
+        humanName: autoEnable:
+        lib.mkOption {
+          default = config.stylix.image != null && autoEnable;
+          example = config.stylix.image == null;
+          description = "Whether to set the wallpaper for ${humanName}.";
+          type = lib.types.bool;
+        }
+        // lib.optionalAttrs autoEnable {
+          defaultText = lib.literalMD "`stylix.image != null`";
+        };
+    };
 }

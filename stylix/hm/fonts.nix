@@ -2,8 +2,8 @@
 
 let
   cfg = config.stylix.fonts;
-in {
-  imports = [ ../fonts.nix ];
+in
+{
   config = lib.mkIf config.stylix.enable {
     fonts.fontconfig.enable = true;
     home.packages = cfg.packages;

@@ -1,18 +1,18 @@
 { config, lib, ... }:
-
-with config.lib.stylix.colors.withHashtag;
-with config.stylix.fonts;
 let
-  dunstOpacity = lib.toHexString ((((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100));
-in {
+  dunstOpacity = lib.toHexString (
+    ((builtins.floor (config.stylix.opacity.popups * 100 + 0.5)) * 255) / 100
+  );
+in
+{
   options.stylix.targets.dunst.enable =
     config.lib.stylix.mkEnableTarget "Dunst" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.dunst.enable) {
-    services.dunst.settings = {
+    services.dunst.settings = with config.lib.stylix.colors.withHashtag; {
       global = {
         separator_color = base02;
-        font = "${sansSerif.name} ${toString sizes.popups}";
+        font = with config.stylix.fonts; "${sansSerif.name} ${toString sizes.popups}";
       };
 
       urgency_low = {

@@ -25,6 +25,7 @@ The following platforms are supported:
 - NixOS (`nixos`)
 - Home Manager (`hm`)
 - Nix-Darwin (`darwin`)
+- Nix-on-Droid (`droid`)
 
 Correctly named modules will be imported automatically.
 
@@ -45,14 +46,15 @@ A general format for modules is shown below.
 
 ```nix
 { config, lib, ... }:
-
 {
   options.stylix.targets.«name».enable =
     config.lib.stylix.mkEnableTarget "«human readable name»" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable) {
-    programs.«name».backgroundColor = config.lib.stylix.colors.base00;
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        programs.«name».backgroundColor = config.lib.stylix.colors.base00;
+      };
 }
 ```
 
@@ -70,6 +72,34 @@ one of the following applies:
 - The module requires further manual setup to work correctly.
 - There is no reliable way to detect whether the target is installed, *and*
   enabling it unconditionally would cause problems.
+
+### Overlays
+
+If your module is provided as an overlay it uses a special format, where config
+is transparently passed to the platform (e.g. nixos) and overlay is a function
+taking two arguments and returning an attrset:
+
+```nix
+{
+  lib,
+  config,
+  ...
+}:
+{
+  options.stylix.targets.«name».enable =
+    config.lib.stylix.mkEnableTarget "«human readable name»" true;
+
+  overlay =
+    final: prev:
+    lib.optionalAttrs
+      (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        «name» = prev.«name».overrideAttrs (oldAttrs: {
+
+        });
+      };
+}
+```
 
 ## How to apply colors
 
@@ -93,11 +123,13 @@ it as a function. This returns a derivation which builds the template.
 ```nix
 {
   environment.variables.MY_APPLICATION_CONFIG_FILE =
-    let configFile = config.lib.stylix.colors {
-      template = ./config.toml.mustache;
-      extension = ".toml";
-    };
-    in "${configFile}";
+    let
+      configFile = config.lib.stylix.colors {
+        template = ./config.toml.mustache;
+        extension = ".toml";
+      };
+    in
+    "${configFile}";
 }
 ```
 
@@ -112,3 +144,60 @@ slow and should be avoided.
 
 For everything else, like fonts and wallpapers, you can just take option values
 directly from `config`. See the reference pages for a list of options.
+
+## Maintainers
+
+New modules must have at least one maintainer defined in
+`/modules/«module»/meta.nix`.
+
+If you are not already listed in the Nixpkgs `/maintainers/maintainer-list.nix`
+maintainer list, add yourself to `/stylix/maintainers.nix`.
+
+Add yourself as a maintainer in one of the following ways, depending on the
+number of maintainers:
+
+- ```nix
+  { lib, ... }:
+  {
+    maintainers = [ lib.maintainers.danth ];
+  }
+  ```
+
+- ```nix
+  { lib, ... }:
+  {
+    maintainers = with lib.maintainers; [
+      danth
+      naho
+    ];
+  }
+  ```
+
+The main responsibility of module maintainers is to update and fix their
+modules.
+
+## Documentation
+
+Documentation for options is automatically generated. To improve the quality
+of this documentation, ensure that any custom options created using `mkOption`
+are given an appropriate `type` and a detailed `description`. This may use
+Markdown syntax for formatting and links.
+
+For modules needing more general documentation, create
+`modules/«module»/README.md`:
+
+```markdown
+# Module Name
+
+Consider describing which applications are themed by this module (if it's not
+obvious from the module name), how the applications need to be installed for the
+module to work correctly, which theming items are supported (colors, fonts,
+wallpaper, ...), and any caveats the user should be aware of.
+```
+
+This will be inserted before the automatically generated list of options.
+
+## Testbeds
+
+Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
+mandatory.

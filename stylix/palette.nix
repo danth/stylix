@@ -1,60 +1,24 @@
-{ palette-generator, base16 }:
-{ pkgs, lib, config, ... }@args:
-
-with lib;
+{
+  pkgs,
+  lib,
+  config,
+  options,
+  ...
+}:
 
 let
-  fromOs = import ./fromos.nix { inherit lib args; };
-
   cfg = config.stylix;
 
-  paletteJSON = let
-    generatedJSON = pkgs.runCommand "palette.json" { } ''
-      ${palette-generator}/bin/palette-generator \
-        "${cfg.polarity}" \
-        ${lib.escapeShellArg "${cfg.image}"} \
-        "$out"
-    '';
-    palette = importJSON generatedJSON;
-    scheme = base16.mkSchemeAttrs palette;
-    json = scheme {
-      template = ./palette.json.mustache;
-      extension = ".json";
-    };
-  in json;
-  generatedScheme = importJSON paletteJSON;
-
-  override =
-    (if cfg.base16Scheme == fromOs [ "base16Scheme" ] {}
-     then fromOs [ "override" ] {}
-     else {})
-    // cfg.override;
-
-in {
-  # TODO link to doc on how to do instead
-  imports = [
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base00" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base01" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base02" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base03" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base04" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base05" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base06" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base07" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base08" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base09" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0A" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0B" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0C" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0D" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0E" ] "Using stylix.palette to override scheme is not supported anymore")
-    (lib.mkRemovedOptionModule [ "stylix" "palette" "base0F" ] "Using stylix.palette to override scheme is not supported anymore")
-  ];
-
+in
+{
   options.stylix = {
-    polarity = mkOption {
-      type = types.enum [ "either" "light" "dark" ];
-      default = fromOs [ "polarity" ] "either";
+    polarity = lib.mkOption {
+      type = lib.types.enum [
+        "either"
+        "light"
+        "dark"
+      ];
+      default = "either";
       description = ''
         Use this option to force a light or dark theme.
 
@@ -64,65 +28,100 @@ in {
       '';
     };
 
-    image = mkOption {
-      type = types.coercedTo types.package toString types.path;
+    image = lib.mkOption {
+      type = with lib.types; nullOr (coercedTo package toString path);
       description = ''
         Wallpaper image.
 
         This is set as the background of your desktop environment, if possible,
         and used to generate a colour scheme if you don't set one manually.
       '';
-      default = fromOs [ "image" ] null;
+      default = null;
     };
 
-    imageScalingMode = mkOption {
-      type = types.enum [ "stretch" "fill" "fit" "center" "tile" ];
-      default = fromOs [ "imageScalingMode" ] "fill";
+    imageScalingMode = lib.mkOption {
+      type = lib.types.enum [
+        "stretch"
+        "fill"
+        "fit"
+        "center"
+        "tile"
+      ];
+      default = "fill";
       description = ''
-        Wallpaper scaling mode;
+        Scaling mode for the wallpaper image.
 
-        This is the scaling mode your wallpaper image will use assuming it
-        doesnt fix your monitor perfectly
+        `stretch`
+        : Stretch the image to cover the screen.
+
+        `fill`
+        : Scale the image to fill the screen, potentially cropping it.
+
+        `fit`
+        : Scale the image to fit the screen without being cropped.
+
+        `center`
+        : Center the image without resizing it.
+
+        `tile`
+        : Tile the image to cover the screen.
       '';
     };
 
     generated = {
-      json = mkOption {
-        type = types.path;
-        description = "The result of palette-generator.";
+      json = lib.mkOption {
+        type = lib.types.package;
+        description = "The output file produced by the palette generator.";
         readOnly = true;
         internal = true;
-        default = paletteJSON;
+        # This *must* be the derivation running the palette generator,
+        # and not anything indirect such as filling a template, otherwise
+        # the output of the palette generator will not be protected from
+        # garbage collection.
+        default = pkgs.runCommand "palette.json" { } ''
+          ${cfg.paletteGenerator}/bin/palette-generator \
+            "${cfg.polarity}" \
+            ${lib.escapeShellArg "${cfg.image}"} \
+            "$out"
+        '';
       };
 
-      palette = mkOption {
-        type = types.attrs;
-        description = "The imported json";
+      palette = lib.mkOption {
+        type = lib.types.attrs;
+        description = "The palette generated by the palette generator.";
         readOnly = true;
         internal = true;
-        default = generatedScheme;
+        default = (lib.importJSON cfg.generated.json) // {
+          author = "Stylix";
+          scheme = "Stylix";
+          slug = "stylix";
+        };
       };
 
-      fileTree = mkOption {
-        type = types.raw;
+      fileTree = lib.mkOption {
+        type = lib.types.raw;
         description = "The files storing the palettes in json and html.";
         readOnly = true;
         internal = true;
       };
     };
 
-    base16Scheme = mkOption {
+    base16Scheme = lib.mkOption {
       description = ''
         A scheme following the base16 standard.
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type = with types; oneOf [ path lines attrs ];
-      default =
-        if cfg.image != fromOs [ "image" ] null
-          then generatedScheme
-          else fromOs [ "base16Scheme" ] generatedScheme;
-      defaultText = literalMD ''
+      type =
+        with lib.types;
+        nullOr (oneOf [
+          path
+          lines
+          attrs
+        ]);
+      # defaults to null when cfg.image is also null, in order to trigger the assertion below correctly
+      default = if cfg.image == null then null else cfg.generated.palette;
+      defaultText = lib.literalMD ''
         The colors used in the theming.
 
         Those are automatically selected from the background image by default,
@@ -130,38 +129,84 @@ in {
       '';
     };
 
-    override = mkOption {
+    override = lib.mkOption {
       description = ''
         An override that will be applied to stylix.base16Scheme when generating
-        lib.stylix.colors.
+        config.lib.stylix.colors.
 
         Takes anything that a scheme generated by base16nix can take as argument
         to override.
       '';
-      type = types.attrs;
-      default = {};
+      type = lib.types.attrs;
+      default = { };
+    };
+
+    paletteGenerator = lib.mkOption {
+      description = "The palette generator executable.";
+      type = lib.types.package;
+      internal = true;
+      readOnly = true;
+    };
+
+    base16 = lib.mkOption {
+      description = "The base16.nix library.";
+      internal = true;
+      readOnly = true;
+    };
+
+    inputs = lib.mkOption {
+      description = "Inputs of the Stylix flake.";
+      internal = true;
+      readOnly = true;
     };
   };
 
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
-    lib.stylix.colors = (base16.mkSchemeAttrs cfg.base16Scheme).override override;
-    lib.stylix.scheme = base16.mkSchemeAttrs cfg.base16Scheme;
+    lib.stylix.colors = (cfg.base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
+
+    assertions = lib.mkIf cfg.enable [
+      {
+        assertion = !(cfg.image == null && cfg.base16Scheme == null);
+        message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
+      }
+    ];
 
     stylix.generated.fileTree = {
-      # Making palette.json part of the system closure will protect it from
-      # garbage collection, so future configurations can be evaluated without
-      # having to generate the palette again. The generator is not kept, only
-      # the palette which came from it, so this uses very little disk space.
-      # The extra indirection should prevent the palette generator from running
-      # when the theme is manually specified. generated.json is necessary in
-      # the presence of overrides.
-      "stylix/generated.json".source = config.lib.stylix.scheme {
-        template = ./palette.json.mustache;
-        extension = ".json";
+      # The raw output of the palette generator.
+      "stylix/generated.json" = {
+        # We import the generated palette during evaluation but don't make it
+        # a dependency, which means the garbage collector is free to delete it
+        # immediately. Future evaluations may need to download, compile, and
+        # run the palette generator from scratch to recreate the same palette.
+        #
+        # To improve performance, we can make the generated file part of the
+        # system, which protects it from garbage collection and so increases
+        # the potential for reuse between evaluations.
+        #
+        # The palette generator executable is not affected, and can still be
+        # cleaned up as usual, so the overhead on system size is less than a
+        # kilobyte.
+        source = cfg.generated.json;
+
+        # Only do this when `base16Scheme` is still the option default, which
+        # is when the generated palette is used. Depending on the file in other
+        # cases would force the palette generator to run when we never read the
+        # output.
+        #
+        # Controlling this by comparing against the default value with == would
+        # also force the palette generator to run, as we would have to evaluate
+        # the default value to check for equality. To work around this, we
+        # check only the priority of the resolved value. The priority of option
+        # defaults is 1500 [1], and any value less than this means the user has
+        # changed the option.
+        #
+        # [1]: https://github.com/NixOS/nixpkgs/blob/5f30488d37f91fd41f0d40437621a8563a70b285/lib/modules.nix#L1063
+        enable = options.stylix.base16Scheme.highestPrio >= 1500;
       };
 
+      # The current palette, with overrides applied.
       "stylix/palette.json".source = config.lib.stylix.colors {
         template = ./palette.json.mustache;
         extension = ".json";

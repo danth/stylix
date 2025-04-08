@@ -1,19 +1,27 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-with lib;
 let
   cfg = config.stylix.cursor;
 
-in {
-  imports = [ ../cursor.nix ];
-
-  config = mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.pointerCursor = {
-      name = cfg.name;
-      package = cfg.package;
-      size = cfg.size;
-      x11.enable = true;
-      gtk.enable = true;
-    };
-  };
+in
+{
+  config =
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.cursor != null
+        && pkgs.stdenv.hostPlatform.isLinux
+      )
+      {
+        home.pointerCursor = {
+          inherit (cfg) name package size;
+          x11.enable = true;
+          gtk.enable = true;
+        };
+      };
 }

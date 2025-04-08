@@ -1,50 +1,52 @@
 inputs:
-{ palette-generator, base16, homeManagerModule }:
-{ options, config, lib, ... }:
+{
+  lib,
+  config,
+  ...
+}:
+
+# Imported modules which define new options must use an absolute path based
+# on ${inputs.self}, otherwise those options will not appear in the generated
+# documentation.
 
 let
-  hm = config.stylix.homeManagerIntegration;
-  autoload = import ../autoload.nix { inherit lib; } "nixos";
-in {
+  autoload = import ../autoload.nix { inherit lib inputs; } "nixos";
+in
+{
   imports = [
-    ../pixel.nix
-    ../target.nix
-    ../opacity.nix
-    ./cursor.nix
-    ./fonts.nix
-    (import ./palette.nix { inherit palette-generator base16; })
-    (import ../templates.nix inputs)
+    "${inputs.self}/stylix/cursor.nix"
+    "${inputs.self}/stylix/fonts.nix"
+    "${inputs.self}/stylix/home-manager-integration.nix"
+    "${inputs.self}/stylix/nixos/cursor.nix"
+    "${inputs.self}/stylix/nixos/fonts.nix"
+    "${inputs.self}/stylix/nixos/palette.nix"
+    "${inputs.self}/stylix/opacity.nix"
+    "${inputs.self}/stylix/palette.nix"
+    "${inputs.self}/stylix/pixel.nix"
+    "${inputs.self}/stylix/target.nix"
+    "${inputs.self}/stylix/release.nix"
+    (import "${inputs.self}/stylix/overlays.nix" inputs)
   ] ++ autoload;
+  config.warnings =
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.enableReleaseChecks
+        && (config.stylix.release != config.system.nixos.release)
+      )
+      [
+        ''
+          You are using different Stylix and NixOS versions. This is
+          likely to cause errors and unexpected behavior. It is highly
+          recommended that you use a version of Stylix that matches your chosen
+          version of NixOS.
 
-  options.stylix.homeManagerIntegration = {
-    followSystem = lib.mkOption {
-      description = ''
-        When this option is `true`, Home Manager will follow
-        the system theme by default, rather than requiring a theme to be set.
+          If you are willing to accept the risks that come with using
+          mismatched versions, you may disable this warning by adding
 
-        This will only affect Home Manager configurations which are built
-        within the NixOS configuration.
-      '';
-      type = lib.types.bool;
-      default = true;
-    };
+              stylix.enableReleaseChecks = false;
 
-    autoImport = lib.mkOption {
-      description = ''
-        Whether to enable Stylix automatically for every user.
-
-        This only applies to users for which Home Manager is set up within the
-        NixOS configuration.
-      '';
-      type = lib.types.bool;
-      default = options ? home-manager;
-      defaultText = lib.literalMD ''
-        `true` when Home Manager is present.
-      '';
-    };
-  };
-
-  config = lib.optionalAttrs (options ? home-manager) (lib.mkIf hm.autoImport {
-    home-manager.sharedModules = [ homeManagerModule ];
-  });
+          to your configuration.
+        ''
+      ];
 }

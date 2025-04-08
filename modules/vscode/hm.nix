@@ -1,36 +1,52 @@
-{pkgs, config, lib, ... }:
-
-with config.stylix.fonts;
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}@args:
 
 let
-  themeFile = config.lib.stylix.colors {
-    template = ./template.mustache;
-    extension = ".json";
+  extension =
+    pkgs.runCommandLocal "stylix-vscode"
+      {
+        vscodeExtUniqueId = "stylix.stylix";
+        vscodeExtPublisher = "stylix";
+        version = "0.0.0";
+        theme = builtins.toJSON (import ./templates/theme.nix args);
+        passAsFile = [ "theme" ];
+      }
+      ''
+        mkdir -p "$out/share/vscode/extensions/$vscodeExtUniqueId/themes"
+        ln -s ${./package.json} "$out/share/vscode/extensions/$vscodeExtUniqueId/package.json"
+        cp "$themePath" "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
+      '';
+
+  settings = import ./templates/settings.nix args;
+
+  profile = {
+    extensions = [ extension ];
+    userSettings = settings;
   };
 
-  themeExtension = pkgs.runCommandLocal "stylix-vscode" {
-    vscodeExtUniqueId = "stylix.stylix";
-    vscodeExtPublisher = "stylix";
-    version = "0.0.0";
-  } ''
-    mkdir -p "$out/share/vscode/extensions/$vscodeExtUniqueId/themes"
-    ln -s ${./package.json} "$out/share/vscode/extensions/$vscodeExtUniqueId/package.json"
-    ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
-  '';
+  cfg = config.stylix.targets.vscode;
 
-in {
-  options.stylix.targets.vscode.enable =
-    config.lib.stylix.mkEnableTarget "VSCode" true;
+in
+{
+  options.stylix.targets.vscode = {
+    enable = config.lib.stylix.mkEnableTarget "VSCode" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable) {
-    programs.vscode = {
-      extensions = [ themeExtension ];
-      userSettings = {
-        "workbench.colorTheme" = "Stylix";
-        "terminal.integrated.fontFamily" = "'${monospace.name}'";
-        "editor.fontFamily" = "'${monospace.name}'";
-      };
+    profileNames = lib.mkOption {
+      description = "The VSCode profile names to apply styling on.";
+      type = lib.types.listOf lib.types.str;
+      default = [ "default" ];
     };
   };
-}
 
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
+    programs.vscode.profiles = lib.genAttrs cfg.profileNames (_name: profile);
+
+    warnings =
+      lib.optional (config.programs.vscode.enable && cfg.profileNames == [ ])
+        ''stylix: vscode: `config.stylix.targets.vscode.profileNames` is empty. No theming will be applied. Add a profile or disable this warning by setting `stylix.targets.vscode.enable = false`.'';
+  };
+}

@@ -1,105 +1,121 @@
-{ pkgs, config, lib, ... } @ args:
-
-with lib;
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   cfg = config.stylix.fonts;
 
-  fromOs = import ./fromos.nix { inherit lib args; };
-
-  fontType = types.submodule {
+  fontType = lib.types.submodule {
     options = {
-      package = mkOption {
+      package = lib.mkOption {
         description = "Package providing the font.";
-        type = types.package;
+        type = lib.types.package;
       };
 
-      name = mkOption {
+      name = lib.mkOption {
         description = "Name of the font within the package.";
-        type = types.str;
+        type = lib.types.str;
       };
     };
   };
 
-in {
+in
+{
   options.stylix.fonts = {
-    serif = mkOption {
+    serif = lib.mkOption {
       description = "Serif font.";
       type = fontType;
-      default = fromOs [ "fonts" "serif" ] {
+      default = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
       };
     };
 
-    sansSerif = mkOption {
+    sansSerif = lib.mkOption {
       description = "Sans-serif font.";
       type = fontType;
-      default = fromOs [ "fonts" "sansSerif" ] {
+      default = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
       };
     };
 
-    monospace = mkOption {
+    monospace = lib.mkOption {
       description = "Monospace font.";
       type = fontType;
-      default = fromOs [ "fonts" "monospace" ] {
+      default = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
       };
     };
 
-    emoji = mkOption {
+    emoji = lib.mkOption {
       description = "Emoji font.";
       type = fontType;
-      default = fromOs [ "fonts" "emoji" ] {
-        package = pkgs.noto-fonts-emoji;
+      default = {
+        package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
       };
     };
 
-    sizes = {
-      desktop = mkOption {
-        description = ''
-          The font size used in window titles/bars/widgets elements of
-          the desktop.
-        '';
-        type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "desktop" ] 10;
+    sizes =
+      let
+        mkFontSizeOption =
+          { default, target }:
+          lib.mkOption {
+            inherit default;
+
+            description = ''
+              The font size used for ${target}.
+
+              This is measured in [points](https://en.wikipedia.org/wiki/Point_(typography)).
+              In a computing context, there should be 72 points per inch.
+
+              [The CSS specification](https://drafts.csswg.org/css-values/#absolute-lengths)
+              says there should be 96 reference pixels per inch. This means CSS
+              uses a fixed ratio of 3 points to every 4 pixels, which is
+              sometimes useful. However, reference pixels might not correspond
+              to physical pixels, so this conversion may be invalid for other
+              applications.
+
+              The measurements given in inches are likely to be incorrect
+              unless you've
+              [manually set your DPI](https://linuxreviews.org/HOWTO_set_DPI_in_Xorg).
+            '';
+
+            type = with lib.types; either ints.unsigned float;
+          };
+      in
+      {
+        desktop = mkFontSizeOption {
+          target = "window titles, status bars, and other general elements of the desktop";
+          default = 10;
+        };
+
+        applications = mkFontSizeOption {
+          target = "applications";
+          default = 12;
+        };
+
+        terminal = mkFontSizeOption {
+          target = "terminals and text editors";
+          default = cfg.sizes.applications;
+        };
+
+        popups = mkFontSizeOption {
+          target = "notifications, popups, and other overlay elements of the desktop";
+          default = cfg.sizes.desktop;
+        };
       };
 
-      applications = mkOption {
-        description = ''
-          The font size used by applications.
-        '';
-        type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "applications" ] 12;
-      };
-
-      terminal = mkOption {
-        description = ''
-          The font size for terminals/text editors.
-        '';
-        type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "terminal" ] cfg.sizes.applications;
-      };
-
-      popups = mkOption {
-        description = ''
-          The font size for notifications/popups and in general overlay
-          elements of the desktop.
-        '';
-        type = types.ints.unsigned;
-        default = fromOs [ "fonts" "sizes" "popups" ] cfg.sizes.desktop;
-      };
-    };
-
-    packages = mkOption {
+    packages = lib.mkOption {
       description = ''
         A list of all the font packages that will be installed.
       '';
-      type = types.listOf types.package;
+      type = lib.types.listOf lib.types.package;
       readOnly = true;
     };
   };
