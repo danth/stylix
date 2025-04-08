@@ -133,7 +133,6 @@
             hooks = {
               deadnix.enable = true;
               editorconfig-checker.enable = true;
-              hlint.enable = true;
 
               nixfmt-rfc-style = {
                 enable = true;
@@ -141,7 +140,6 @@
               };
 
               statix.enable = true;
-              stylish-haskell.enable = true;
               typos.enable = true;
               yamllint.enable = true;
             };
@@ -194,7 +192,6 @@
           let
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
-              palette-generator = pkgs.callPackage ./palette-generator { };
             };
 
             # Testbeds are virtual machines based on NixOS, therefore they are
@@ -219,6 +216,7 @@
     )
     // {
       nixosModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
@@ -226,7 +224,6 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -235,6 +232,7 @@
         };
 
       homeManagerModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
@@ -242,7 +240,6 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
               };
             }
@@ -250,6 +247,7 @@
         };
 
       darwinModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
@@ -257,7 +255,6 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -266,13 +263,13 @@
         };
 
       nixOnDroidModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/droid inputs)
             {
               stylix = {
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
