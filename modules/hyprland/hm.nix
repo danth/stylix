@@ -23,7 +23,10 @@ let
         "col.inactive" = rgb base03;
       };
     };
-    misc.background_color = rgb base00;
+    misc = {
+      background_color = rgb base00;
+      disable_hyprland_logo = true;
+    };
   };
 
 in
