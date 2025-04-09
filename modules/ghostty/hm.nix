@@ -26,32 +26,32 @@
           themes.stylix =
             let
               inherit (config.lib.stylix) colors;
-              inherit (config.lib.stylix.colors) withHashtag;
             in
             {
-              palette = [
-                "0=${withHashtag.base00}"
-                "1=${withHashtag.base08}"
-                "2=${withHashtag.base0B}"
-                "3=${withHashtag.base0A}"
-                "4=${withHashtag.base0D}"
-                "5=${withHashtag.base0E}"
-                "6=${withHashtag.base0C}"
-                "7=${withHashtag.base05}"
-                "8=${withHashtag.base03}"
-                "9=${withHashtag.base08}"
-                "10=${withHashtag.base0B}"
-                "11=${withHashtag.base0A}"
-                "12=${withHashtag.base0D}"
-                "13=${withHashtag.base0E}"
-                "14=${withHashtag.base0C}"
-                "15=${withHashtag.base07}"
-              ];
               background = colors.base00;
               foreground = colors.base05;
               cursor-color = colors.base05;
               selection-background = colors.base02;
               selection-foreground = colors.base05;
+
+              palette = with colors.withHashtag; [
+                "0=${base00}"
+                "1=${base08}"
+                "2=${base0B}"
+                "3=${base0A}"
+                "4=${base0D}"
+                "5=${base0E}"
+                "6=${base0C}"
+                "7=${base05}"
+                "8=${base03}"
+                "9=${base08}"
+                "10=${base0B}"
+                "11=${base0A}"
+                "12=${base0D}"
+                "13=${base0E}"
+                "14=${base0C}"
+                "15=${base07}"
+              ];
             };
         };
       };

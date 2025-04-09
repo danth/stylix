@@ -27,9 +27,7 @@ in
         inherit (config.stylix.fonts.monospace) package name;
         size = config.stylix.fonts.sizes.terminal;
       };
-      settings.background_opacity =
-        with config.stylix.opacity;
-        "${builtins.toString terminal}";
+      settings.background_opacity = "${builtins.toString config.stylix.opacity.terminal}";
       extraConfig = ''
         include ${theme}
       '';

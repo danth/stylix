@@ -9,12 +9,14 @@
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.wofi.enable) {
     programs.wofi.style =
+      let
+        inherit (config.stylix) fonts;
+      in
       with config.lib.stylix.colors.withHashtag;
-      with config.stylix.fonts;
       ''
         window {
-          font-family: "${monospace.name}";
-          font-size: ${toString sizes.popups}pt;
+          font-family: "${fonts.monospace.name}";
+          font-size: ${toString fonts.sizes.popups}pt;
 
           background-color: ${base00};
           color: ${base05};

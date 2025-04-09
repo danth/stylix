@@ -5,13 +5,13 @@
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.wob.enable) {
     services.wob.settings = {
-      "" = {
-        border_color = config.lib.stylix.colors.base05;
-        background_color = config.lib.stylix.colors.base00;
-        bar_color = config.lib.stylix.colors.base0A;
-        overflow_bar_color = config.lib.stylix.colors.base08;
-        overflow_background_color = config.lib.stylix.colors.base00;
-        overflow_border_color = config.lib.stylix.colors.base05;
+      "" = with config.lib.stylix.colors; {
+        border_color = base05;
+        background_color = base00;
+        bar_color = base0A;
+        overflow_bar_color = base08;
+        overflow_background_color = base00;
+        overflow_border_color = base05;
       };
     };
   };

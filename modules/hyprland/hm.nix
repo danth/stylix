@@ -52,6 +52,7 @@
           (lib.mkIf cfg.hyprpaper.enable {
             services.hyprpaper.enable = true;
             stylix.targets.hyprpaper.enable = true;
+            wayland.windowManager.hyprland.settings.misc.disable_hyprland_logo = true;
           })
         ]
       );
