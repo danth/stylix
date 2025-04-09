@@ -7,11 +7,6 @@
       url = "github:tomyun/base16-fish";
     };
 
-    base16-helix = {
-      flake = false;
-      url = "github:tinted-theming/base16-helix";
-    };
-
     base16-vim = {
       flake = false;
 
