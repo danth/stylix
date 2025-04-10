@@ -134,18 +134,34 @@ let
                 path = "${inputs.self}/modules/${module}/README.md";
 
                 # This doesn't count as IFD because ${inputs.self} is a flake input
+                #
+                # In addition, this checks that the README.md starts with an
+                # appropriate title
                 mainText =
+                  let
+                    name = lib.throwIfNot (
+                      metadata ? ${module}.name
+                    ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
+                  in
                   if builtins.pathExists path then
-                    builtins.readFile path
+                    let
+                      text = builtins.readFile path;
+                    in
+                    lib.throwIfNot (
+                      (builtins.head (lib.splitString "\n" text)) == "# ${name}"
+                    ) "README.md of ${name} must have a title which matches its `meta.name`" text
                   else
                     ''
-                      # ${module}
+                      # ${name}
                       > [!NOTE]
                       > This module doesn't include any additional documentation.
                       > You can browse the options it provides below.
                     '';
 
-                inherit (metadata.${module}) maintainers;
+                maintainers =
+                  lib.throwIfNot (metadata ? ${module}.maintainers)
+                    "stylix: ${module} is missing `meta.maintainers`"
+                    metadata.${module}.maintainers;
 
                 # Render a maintainer's name and a link to the best contact
                 # information we have for them.
@@ -305,8 +321,9 @@ let
       builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
 
   # You can embed HTML inside a Markdown document, but to render further
-  # Markdown within that HTML, it must be surrounded by blank lines.
-  # This function helps with that.
+  # Markdown between the HTML tags, it must be surrounded by blank lines:
+  # see https://spec.commonmark.org/0.31.2/#html-blocks. This function
+  # helps with that.
   #
   # In the following functions, we use concatStrings to build embedded HTML,
   # rather than ${} and multiline strings, because Markdown is sensitive to

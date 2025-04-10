@@ -4,11 +4,6 @@
   options,
   ...
 }:
-let
-  makoOpacity = lib.toHexString (
-    ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
-  );
-in
 {
   options.stylix.targets.mako.enable =
     config.lib.stylix.mkEnableTarget "Mako" true;
@@ -17,14 +12,19 @@ in
   config = lib.optionalAttrs (options.services ? mako) (
     lib.mkIf (config.stylix.enable && config.stylix.targets.mako.enable) {
       services.mako =
+        let
+          makoOpacity = lib.toHexString (
+            ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
+          );
+          inherit (config.stylix) fonts;
+        in
         with config.lib.stylix.colors.withHashtag;
-        with config.stylix.fonts;
         {
           backgroundColor = base00 + makoOpacity;
           borderColor = base0D;
           textColor = base05;
           progressColor = "over ${base02}";
-          font = "${sansSerif.name} ${toString sizes.popups}";
+          font = "${fonts.sansSerif.name} ${toString fonts.sizes.popups}";
           # I wish the mako hm module was like the dunst one
           extraConfig = ''
             [urgency=low]
