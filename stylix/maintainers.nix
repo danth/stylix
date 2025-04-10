@@ -12,4 +12,10 @@
     github = "cluther";
     githubId = 86579;
   };
+  mrbroggle = {
+    name = "Grady Brown";
+    email = "gradyb@broggl.farm";
+    github = "Mrbroggle";
+    githubId = 40074860;
+  };
 }
