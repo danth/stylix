@@ -91,6 +91,11 @@
             ''
             + lib.optionalString (iconTheme != null) ''
               icon_theme=${iconTheme}
+            ''
+            + ''
+              [Fonts]
+              fixed="${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications}"
+              general="${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications}"
             '';
 
         in
