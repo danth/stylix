@@ -1,16 +1,16 @@
-# NVF
+# nvf
 
-This module themes [Neovim] using the options provided by [NVF].
+This module themes [Neovim] using the options provided by [nvf].
 
 > [!IMPORTANT]
-> This module will have no effect unless the desired NVF module is properly
+> This module will have no effect unless the desired nvf module is properly
 > [installed](https://notashelf.github.io/nvf/index.xhtml#ch-installation)
 > and
 > [imported](https://notashelf.github.io/nvf/index.xhtml#ch-module-installation)
 > into your configuration.
 >
 > Ensure you are configuring this module on the same platform (NixOS, Home
-> Manager, Darwin) as where you installed NVF.
+> Manager, Darwin) as where you installed nvf.
 
 ## Related modules
 
@@ -22,4 +22,4 @@ This module themes [Neovim] using the options provided by [NVF].
 
 [Neovim]: https://neovim.io
 [Nixvim]: https://github.com/nix-community/nixvim#readme
-[NVF]: https://github.com/NotAShelf/nvf#readme
+[nvf]: https://github.com/NotAShelf/nvf#readme
