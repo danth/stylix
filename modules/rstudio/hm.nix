@@ -17,16 +17,31 @@
             extension = ".rstheme";
           };
         };
-        # Modifies the RStudio config file to change the theme to stylix
+
         home.activation.rstudioThemeSelect =
-          lib.hm.dag.entryAfter [ "writeBoundary" ]
-            ''
-              CONF=$HOME/.config/rstudio/rstudio-prefs.json
-              if [ -f "$CONF" ]; then
-                ${pkgs.jq}/bin/jq -r '.editor_theme|= "stylixBase16"' "$CONF" | ${pkgs.moreutils}/bin/sponge "$CONF"
-              else
-                echo "{\"editor_theme\": \"stylixBase16\"}" >"$CONF"
-              fi
-            '';
+          let
+            file = builtins.toFile "rstudio-prefs.json" (
+              builtins.toJSON { editor_theme = name; }
+            );
+
+            name = "stylixBase16";
+          in
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            config="$HOME/.config/rstudio/rstudio-prefs.json"
+
+            if [[ -f "$config" ]]; then
+              run ${lib.getExe pkgs.jq} \
+                --raw-output \
+                '.editor_theme |= "stylixBase16"' \
+                "$config" |
+                ${lib.getExe' pkgs.moreutils "sponge"} "$config"
+
+              verboseEcho \
+                "stylix: rstudio: setting editor_theme to '${name}' in $config"
+
+            else
+              run cp ${file} "$config"
+            fi
+          '';
       };
 }
