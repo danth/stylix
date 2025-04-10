@@ -4,8 +4,7 @@ let
   package = pkgs.halloy;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.squidowl.halloy";
     inherit package;
   };
