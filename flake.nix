@@ -62,6 +62,11 @@
     # Interface flake systems.
     systems.url = "github:nix-systems/default";
 
+    treefmt-nix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:numtide/treefmt-nix";
+    };
+
     tinted-foot = {
       flake = false;
 
@@ -118,6 +123,7 @@
     {
       nixpkgs,
       base16,
+      treefmt-nix,
       self,
       ...
     }@inputs:
@@ -126,6 +132,18 @@
       let
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
+
+        treefmtEval = treefmt-nix.lib.evalModule pkgs {
+          projectRootFile = "flake.nix";
+
+          programs = {
+            stylish-haskell.enable = true;
+            nixfmt = {
+              enable = true;
+              width = 80;
+            };
+          };
+        };
       in
       {
         checks = lib.attrsets.unionOfDisjoint {
@@ -135,13 +153,12 @@
               editorconfig-checker.enable = true;
               hlint.enable = true;
 
-              nixfmt-rfc-style = {
+              treefmt = {
                 enable = true;
-                settings.width = 80;
+                package = treefmtEval.config.build.wrapper;
               };
 
               statix.enable = true;
-              stylish-haskell.enable = true;
               typos.enable = true;
               yamllint.enable = true;
             };
@@ -181,6 +198,7 @@
                 check
                 inputs.home-manager.packages.${system}.default
                 self.checks.${system}.git-hooks.enabledPackages
+                treefmtEval.config.build.devShell
               ];
             };
 
@@ -189,6 +207,8 @@
             packages = [ pkgs.ghc ];
           };
         };
+
+        formatter = treefmtEval.config.build.wrapper;
 
         packages =
           let
