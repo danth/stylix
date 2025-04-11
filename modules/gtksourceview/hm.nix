@@ -8,9 +8,6 @@ let
 
 in
 {
-  options.stylix.targets.gtksourceview.enable =
-    config.lib.stylix.mkEnableTarget "GTKSourceView" true;
-
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.gtksourceview.enable)
       {
