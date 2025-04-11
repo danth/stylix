@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 let
-  inherit (lib) optionalAttrs;
+  inherit (lib) optionalAttrs mkEnableOption;
   inherit (config.lib.stylix) colors mkEnableTarget;
 
   cfg = config.stylix.targets.gtksourceview;
@@ -23,7 +23,9 @@ in
 {
   options.stylix.targets.gtksourceview = {
     enable = mkEnableTarget "GTKSourceView" true;
-    overlay.enable = mkEnableTarget "the overlay" (!config ? home);
+    overlay.enable = mkEnableOption "the overlay" // {
+      default = !config ? home;
+    };
   };
 
   overlay =
