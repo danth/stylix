@@ -1,6 +1,10 @@
 { config, lib, ... }:
 
 let
+  inherit (lib) mkEnableOption optionalAttrs;
+
+  cfg = config.stylix.targets.gtksourceview;
+
   style = config.lib.stylix.colors {
     template = ./template.xml.mustache;
     extension = "xml";
@@ -16,19 +20,19 @@ let
   };
 in
 {
-  options.stylix.targets.gtksourceview.enable =
-    config.lib.stylix.mkEnableTarget "GTKSourceView" false;
+  options.stylix.targets.gtksourceview = {
+    enable = config.lib.stylix.mkEnableTarget "GTKSourceView" (config ? home);
+    overlay.enable = mkEnableOption "the overlay";
+  };
 
   overlay =
     _final: prev:
-    lib.optionalAttrs
-      (config.stylix.enable && config.stylix.targets.gtksourceview.enable)
-      {
-        gnome2.gtksourceview = prev.gnome2.gtksourceview.overrideAttrs (
-          attrsOverride "2.0"
-        );
-        gtksourceview = prev.gtksourceview.overrideAttrs (attrsOverride "3.0");
-        gtksourceview4 = prev.gtksourceview4.overrideAttrs (attrsOverride "4");
-        gtksourceview5 = prev.gtksourceview5.overrideAttrs (attrsOverride "5");
-      };
+    optionalAttrs (config.stylix.enable && cfg.enable && cfg.overlay.enable) {
+      gnome2.gtksourceview = prev.gnome2.gtksourceview.overrideAttrs (
+        attrsOverride "2.0"
+      );
+      gtksourceview = prev.gtksourceview.overrideAttrs (attrsOverride "3.0");
+      gtksourceview4 = prev.gtksourceview4.overrideAttrs (attrsOverride "4");
+      gtksourceview5 = prev.gtksourceview5.overrideAttrs (attrsOverride "5");
+    };
 }
