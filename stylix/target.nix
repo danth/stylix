@@ -57,5 +57,78 @@
         // lib.optionalAttrs autoEnable {
           defaultText = lib.literalMD "`stylix.image != null`";
         };
+
+      mkTarget =
+        {
+          name,
+          humanName,
+          autoEnable ? true,
+          extraOptions ? { },
+          configElements ? [ ],
+          generalConfig ? null,
+        }:
+        let
+          cfg = config.stylix.targets.${name};
+        in
+        {
+          options.stylix.targets.${name} = {
+            enable = config.lib.stylix.mkEnableTarget humanName autoEnable;
+          } // extraOptions;
+
+          config =
+            let
+              provideStylixArgs =
+                args:
+                (lib.mkMerge map (
+                  arg:
+                  if arg == "cfg" then
+                    {
+                      inherit cfg;
+                    }
+                  else
+                    {
+                      ${arg} = config.stylix.${arg};
+                    }
+                ) args);
+              provideAvailableStylixArgs =
+                args:
+                (lib.mkMerge map (
+                  arg:
+                  if arg == "cfg" then
+                    {
+                      inherit cfg;
+                    }
+                  else if (config.stylix ? arg) then
+                    {
+                      ${arg} = config.stylix.${arg};
+                    }
+                  else
+                    { }
+                ) args);
+              mkConfig =
+                fn:
+                let
+                  args = cfg builtins.attrNames (lib.functionArgs fn);
+                in
+                fn (provideAvailableStylixArgs args);
+              mkConditionalConfig =
+                fn:
+                let
+                  args = cfg builtins.attrNames (lib.functionArgs fn);
+                in
+                fn:
+                if
+                  builtins.all (arg: (arg == "cfg") || (builtins.hasAttr config.stylix arg)) args
+                then
+                  fn (provideStylixArgs args)
+                else
+                  { };
+            in
+            lib.mkIf (config.stylix.enable && cfg.enable) (
+              lib.mkMerge (
+                (map mkConditionalConfig configElements) ++ [ (mkConfig generalConfig) ]
+              )
+            );
+        };
     };
 }
