@@ -4,4 +4,6 @@
     naho
     skoove
   ];
+
+  name = "Hyprland";
 }

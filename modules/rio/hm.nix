@@ -5,9 +5,6 @@
   lib,
   ...
 }:
-let
-  colors = config.lib.stylix.colors.withHashtag;
-in
 {
   options.stylix.targets.rio.enable = config.lib.stylix.mkEnableTarget "Rio" true;
 
@@ -19,8 +16,8 @@ in
         # converting font size to px
         size = sizes.terminal * 4.0 / 3.0;
       };
-      window.opacity = with config.stylix.opacity; terminal;
-      colors = with colors; {
+      window.opacity = config.stylix.opacity.terminal;
+      colors = with config.lib.stylix.colors.withHashtag; {
         selection-background = base02;
         selection-foreground = base05;
         cursor = base05;

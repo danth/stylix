@@ -3,15 +3,15 @@
   lib,
   ...
 }:
-with config.stylix.fonts;
-with config.lib.stylix.colors.withHashtag;
 {
   options.stylix.targets.tofi.enable =
     config.lib.stylix.mkEnableTarget "Tofi" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.tofi.enable) {
     programs.tofi.settings =
+      with config.lib.stylix.colors.withHashtag;
       let
+        inherit (config.stylix) fonts;
         opacity = lib.toHexString (
           ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
         );
@@ -21,8 +21,8 @@ with config.lib.stylix.colors.withHashtag;
         selection = base03 + opacity;
       in
       {
-        font = monospace.name;
-        font-size = toString sizes.popups;
+        font = fonts.monospace.name;
+        font-size = toString fonts.sizes.popups;
         background-color = background;
         outline-color = darkForeground;
         border-color = foreground;

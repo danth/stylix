@@ -4,4 +4,6 @@
     _0x5a4
     danth
   ];
+
+  name = "Plymouth";
 }

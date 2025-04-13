@@ -1,0 +1,44 @@
+---
+name: Update flake inputs
+
+on:  # yamllint disable-line rule:truthy
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
+
+jobs:
+  flake-update:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'danth'
+    strategy:
+      matrix:
+        branch: [master, release-24.11]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+      - uses: DeterminateSystems/nix-installer-action@v16
+
+      - id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: DeterminateSystems/update-flake-lock@v24
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          branch: update_flake_lock_action_${{ matrix.branch }}
+          commit-msg: "stylix: update all flake inputs"
+          pr-title: "${{ contains('release', ${{ matrix.branch }}) && '[${{ matrix.branch }}] ' || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
+          pr-labels: dependencies
+          # yamllint disable rule:line-length
+          pr-body: |
+            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
+
+            ```
+            {{ env.GIT_COMMIT_MESSAGE }}
+            ```
+          # yamllint enable rule:line-length

@@ -46,14 +46,15 @@ A general format for modules is shown below.
 
 ```nix
 { config, lib, ... }:
-
 {
   options.stylix.targets.«name».enable =
     config.lib.stylix.mkEnableTarget "«human readable name»" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable) {
-    programs.«name».backgroundColor = config.lib.stylix.colors.base00;
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        programs.«name».backgroundColor = config.lib.stylix.colors.base00;
+      };
 }
 ```
 
@@ -71,6 +72,34 @@ one of the following applies:
 - The module requires further manual setup to work correctly.
 - There is no reliable way to detect whether the target is installed, *and*
   enabling it unconditionally would cause problems.
+
+### Overlays
+
+If your module is provided as an overlay it uses a special format, where config
+is transparently passed to the platform (e.g. nixos) and overlay is a function
+taking two arguments and returning an attrset:
+
+```nix
+{
+  lib,
+  config,
+  ...
+}:
+{
+  options.stylix.targets.«name».enable =
+    config.lib.stylix.mkEnableTarget "«human readable name»" true;
+
+  overlay =
+    final: prev:
+    lib.optionalAttrs
+      (config.stylix.enable && config.stylix.targets.«name».enable)
+      {
+        «name» = prev.«name».overrideAttrs (oldAttrs: {
+
+        });
+      };
+}
+```
 
 ## How to apply colors
 
@@ -94,11 +123,13 @@ it as a function. This returns a derivation which builds the template.
 ```nix
 {
   environment.variables.MY_APPLICATION_CONFIG_FILE =
-    let configFile = config.lib.stylix.colors {
-      template = ./config.toml.mustache;
-      extension = ".toml";
-    };
-    in "${configFile}";
+    let
+      configFile = config.lib.stylix.colors {
+        template = ./config.toml.mustache;
+        extension = ".toml";
+      };
+    in
+    "${configFile}";
 }
 ```
 
@@ -114,10 +145,17 @@ slow and should be avoided.
 For everything else, like fonts and wallpapers, you can just take option values
 directly from `config`. See the reference pages for a list of options.
 
-## Maintainers
+## Metadata
 
-New modules must have at least one maintainer defined in
-`/modules/«module»/meta.nix`.
+Metadata is stored in `/modules/«module»/meta.nix`. The following attributes are
+available under `meta`:
+
+- `maintainers`: required list of maintainers. See [Maintainers](#maintainers) section.
+- `name`: required human-readable string name.
+
+### Maintainers
+
+New modules must have at least one maintainer.
 
 If you are not already listed in the Nixpkgs `/maintainers/maintainer-list.nix`
 maintainer list, add yourself to `/stylix/maintainers.nix`.
@@ -135,7 +173,10 @@ number of maintainers:
 - ```nix
   { lib, ... }:
   {
-    maintainers = with lib.maintainers; [ danth naho ];
+    maintainers = with lib.maintainers; [
+      danth
+      naho
+    ];
   }
   ```
 
@@ -167,3 +208,11 @@ This will be inserted before the automatically generated list of options.
 
 Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
 mandatory.
+
+## Common Mistakes
+
+### `home.activation` Scripts
+
+Any script run by `home.activation` must be preceded by `run` if the script is
+to produce any permanent changes. Without this `run` wrapper, the script is run
+in dry-run mode.

@@ -1,4 +1,9 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.danth ];
+  maintainers = with lib.maintainers; [
+    Flameopathic
+    danth
+  ];
+
+  name = "VSCode";
 }

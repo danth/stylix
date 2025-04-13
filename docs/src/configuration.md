@@ -2,19 +2,13 @@
 
 ## Enable
 
-To enable the Stylix module, declare:
+Stylix must be enabled before it will apply any changes to your system:
 
 ```nix
 {
   stylix.enable = true;
 }
 ```
-
-> [!NOTE]
->
-> The global enable option was recently added, so you may come across old
-> examples which don't include it. No other settings will take effect unless
-> `stylix.enable` is set to `true`.
 
 ## Color scheme
 
@@ -212,16 +206,19 @@ extension of it.
 For example:
 
 ```nix
-{ inputs, config, pkgs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
   nixvim-package = inputs.nixvim-config.packages.${system}.default;
   extended-nixvim = nixvim-package.extend config.lib.stylix.nixvim.config;
 in
 {
-  environment.systemPackages = [
-    extended-nixvim
-  ];
+  environment.systemPackages = [ extended-nixvim ];
 }
 ```
 

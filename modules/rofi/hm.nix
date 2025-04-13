@@ -1,7 +1,4 @@
 { config, lib, ... }:
-
-with config.stylix.fonts;
-
 let
   inherit (config.lib.formats.rasi) mkLiteral;
   mkRgba =
@@ -24,7 +21,7 @@ in
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.rofi.enable) {
     programs.rofi = {
-      font = "${monospace.name} ${toString sizes.popups}";
+      font = with config.stylix.fonts; "${monospace.name} ${toString sizes.popups}";
       theme = {
         "*" = {
           background = mkRgba rofiOpacity "base00";

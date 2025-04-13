@@ -1,0 +1,113 @@
+---
+description: Report a bug
+labels: [bug]
+name: Bug
+title: "<SCOPE>: <SUMMARY>"
+
+body:
+  - type: checkboxes
+
+    attributes:
+      label: I assert that this issue is relevant for Stylix
+
+      description: >-
+        If you need help or are unsure whether this is a Stylix bug, please
+        consider reading the [documentation](https://stylix.danth.me) or asking
+        for help in a [GitHub
+        Discussion](https://github.com/danth/stylix/discussions) or the [Stylix
+        Matrix Room](https://matrix.to/#/#stylix:danth.me) before opening an
+        issue.
+
+      options:
+        - label: >-
+            I assert that this is a bug and not a user error or support
+            request.
+
+          required: true
+
+        - label: >-
+            I assert that this is not a duplicate of an [existing
+            issue](https://github.com/danth/stylix/issues).
+
+          required: true
+
+  - type: textarea
+
+    attributes:
+      description: >-
+        Describe the issue in detail. Consider including a minimal reproducible
+        example, logs, or screenshots.
+
+      label: Description
+
+      placeholder: Type your description here…
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      description: >-
+        Copy-paste the `flake.lock` file. If flakes are not used, remove the
+        prefilled content and provide the locked input versions.
+
+      label: flake.lock
+
+      value: |-
+        <details>
+        <summary><code>flake.lock</code></summary>
+        <!-- Copy-paste the flake.lock file inside the following code block -->
+
+        ```json
+
+        ```
+        </details>
+
+    validations:
+      required: true
+
+  - type: dropdown
+
+    attributes:
+      description: How is Stylix installed?
+      label: Installation Method
+
+      options:
+        - NixOS
+        - Home Manager
+        - nix-darwin
+        - Nix-on-Droid
+        - Other
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      description: "`nix-info --markdown` output."
+      label: System Information
+
+      placeholder: |-
+         - system:
+         - host os:
+         - multi-user?:
+         - sandbox:
+         - version:
+         - nixpkgs:
+
+    validations:
+      required: true
+
+  - type: textarea
+
+    attributes:
+      label: Notify maintainers
+
+      description: >-
+        If this bug is module-specific, consider pinging its maintainers. Each
+        module lists its maintainers in the
+        [documentation](https://stylix.danth.me).
+
+      placeholder: "@danth, @trueNAHO"

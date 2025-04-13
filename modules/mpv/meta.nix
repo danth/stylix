@@ -4,4 +4,6 @@
     awwpotato
     naho
   ];
+
+  name = "mpv";
 }

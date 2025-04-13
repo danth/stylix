@@ -40,7 +40,7 @@ philosophy.
 Try a live demo of this dark theme by running:
 
 ```console
-nix run github:danth/stylix#testbed:gnome:default:dark:image:scheme
+nix run github:danth/stylix#testbed:gnome:default:dark:image:scheme:cursor
 ```
 
 ### KDE Plasma 5

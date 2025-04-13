@@ -4,4 +4,6 @@
     mateusauler
     naho
   ];
+
+  name = "zathura";
 }
