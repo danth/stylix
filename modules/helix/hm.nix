@@ -4,20 +4,6 @@
   lib,
   ...
 }:
-
-let
-  theme = config.lib.stylix.colors {
-    templateRepo = config.stylix.inputs.base16-helix;
-  };
-
-  # Removing the background exposes transparency from the terminal. The
-  # background might be helpful if the terminal isn't themed, so we only
-  # do this if transparency is actually enabled.
-  transparentTheme = pkgs.runCommandLocal "helix-transparent.toml" { } ''
-    sed 's/,\? bg = "base00"//g' <${theme} >$out
-  '';
-
-in
 {
   options.stylix.targets.helix.enable =
     config.lib.stylix.mkEnableTarget "Helix" true;
@@ -30,9 +16,23 @@ in
         && config.programs.helix.enable
       )
       {
-        programs.helix.settings.theme = "stylix";
+        programs.helix = {
+          settings.theme = "stylix";
 
-        xdg.configFile."helix/themes/stylix.toml".source =
-          if config.stylix.opacity.terminal == 1.0 then theme else transparentTheme;
+          themes.stylix =
+            let
+              theme = config.lib.stylix.colors {
+                templateRepo = config.stylix.inputs.base16-helix;
+              };
+
+              # Removing the background exposes transparency from the terminal. The
+              # background might be helpful if the terminal isn't themed, so we only
+              # do this if transparency is actually enabled.
+              transparentTheme = pkgs.runCommandLocal "helix-transparent.toml" { } ''
+                sed 's/,\? bg = "base00"//g' <${theme} >$out
+              '';
+            in
+            if config.stylix.opacity.terminal == 1.0 then theme else transparentTheme;
+        };
       };
 }
