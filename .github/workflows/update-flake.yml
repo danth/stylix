@@ -32,11 +32,11 @@ jobs:
           commit-msg: "stylix: update all flake inputs"
           pr-title: "${{ contains('release', ${{ matrix.branch }}) && '[${{ matrix.branch }}] ' || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
           pr-labels: dependencies
-          # yamllint disable rule:line-length
-          pr-body: |
-            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
+          pr-body: >
+            Automated changes by the
+            [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock)
+            GitHub Action.
 
             ```
             {{ env.GIT_COMMIT_MESSAGE }}
             ```
-          # yamllint enable rule:line-length
