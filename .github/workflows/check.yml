@@ -1,7 +1,7 @@
 ---
 name: Check
 
-on:  # yamllint disable-line rule:truthy
+on:
   push:
     branches:
       - master
