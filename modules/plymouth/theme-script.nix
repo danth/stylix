@@ -78,7 +78,7 @@ builtins.toFile "stylix-plymouth-theme" ''
   fun password_callback (prompt_text, bullet_count) {
     ${lib.optionalString cfg.logoAnimated "deactivate_spinner();"}
 
-    prompt.image = Image.Text("Enter password", ${foregroundColor});
+    prompt.image = Image.Text(prompt_text, ${foregroundColor});
     prompt.sprite = Sprite(prompt.image);
     prompt.sprite.SetPosition(
       center_x - (prompt.image.GetWidth() / 2),
