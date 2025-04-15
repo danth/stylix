@@ -203,11 +203,18 @@ let
 
                 renderedMaintainers = joinItems (map renderMaintainer maintainers);
 
+                ghHandles = toString (
+                  map (m: lib.optionalString (m ? github) "@${m.github}") maintainers
+                );
+
                 maintainersText =
                   if maintainers == [ ] then
                     "This module has no [dedicated maintainers](../../modules.md#maintainers)."
                   else
-                    "This module is maintained by ${renderedMaintainers}.";
+                    ''
+                      This module is maintained by ${renderedMaintainers},
+                      pingable via: `${ghHandles}`.
+                    '';
               in
               lib.concatLines [
                 mainText
