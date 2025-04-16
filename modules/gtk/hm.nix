@@ -64,7 +64,7 @@ in
         lib.mkMerge [
           {
             # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
-            home.file.".themes/${config.gtk.theme.name}".source =
+            home.file.".local/share/themes/${config.gtk.theme.name}".source =
               pkgs.stdenvNoCC.mkDerivation
                 {
                   name = "flattenedGtkTheme";
@@ -78,7 +78,7 @@ in
           }
           (
             let
-              filesystem = "${config.home.homeDirectory}/.themes/${config.gtk.theme.name}:ro";
+              filesystem = "${config.home.homeDirectory}/.local/share/themes/${config.gtk.theme.name}:ro";
               theme = config.gtk.theme.name;
             in
             if options ? services.flatpak.overrides then
