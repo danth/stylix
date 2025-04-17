@@ -64,7 +64,7 @@ in
         lib.mkMerge [
           {
             # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
-            xdg.dataHome."themes/${config.gtk.theme.name}".source =
+            xdg.dataFile."themes/${config.gtk.theme.name}".source =
               pkgs.stdenvNoCC.mkDerivation
                 {
                   name = "flattenedGtkTheme";
