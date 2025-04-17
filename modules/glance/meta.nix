@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.louis-thevenet ];
   name = "Glance";
+  homepages = "https://github.com/glanceapp/glance";
+  maintainers = [ lib.maintainers.louis-thevenet ];
 }

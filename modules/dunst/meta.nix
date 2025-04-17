@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "Dunst";
+  homepages = "https://dunst-project.org/";
+  maintainers = [ lib.maintainers.naho ];
 }

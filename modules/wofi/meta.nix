@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.mateusauler ];
   name = "Wofi";
+  homepages = "https://hg.sr.ht/~scoopta/wofi";
+  maintainers = [ lib.maintainers.mateusauler ];
 }

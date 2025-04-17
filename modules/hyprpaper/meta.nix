@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "hyprpaper";
+  homepages = "https://github.com/hyprwm/hyprpaper";
+  maintainers = [ lib.maintainers.naho ];
 }

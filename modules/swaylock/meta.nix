@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "swaylock";
+  homepages = "https://github.com/swaywm/swaylock";
+  maintainers = [ lib.maintainers.naho ];
 }

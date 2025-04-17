@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "Zellij";
+  homepages = "https://zellij.dev/";
+  maintainers = [ lib.maintainers.naho ];
 }

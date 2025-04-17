@@ -163,6 +163,15 @@ let
                     "stylix: ${module} is missing `meta.maintainers`"
                     metadata.${module}.maintainers;
 
+                joinItems =
+                  items:
+                  if builtins.length items <= 2 then
+                    builtins.concatStringsSep " and " items
+                  else
+                    builtins.concatStringsSep ", " (
+                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
+                    );
+
                 # Render a maintainer's name and a link to the best contact
                 # information we have for them.
                 #
@@ -192,27 +201,38 @@ let
                   else
                     maintainer.name;
 
-                joinItems =
-                  items:
-                  if builtins.length items <= 2 then
-                    builtins.concatStringsSep " and " items
-                  else
-                    builtins.concatStringsSep ", " (
-                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
-                    );
-
                 renderedMaintainers = joinItems (map renderMaintainer maintainers);
 
                 maintainersText =
                   if maintainers == [ ] then
-                    "This module has no [dedicated maintainers](../../modules.md#maintainers)."
+                    "This module has no [dedicated maintainers](../../modules.md#maintainers).\n"
                   else
-                    "This module is maintained by ${renderedMaintainers}.";
+                    "This module is maintained by ${renderedMaintainers}.\n";
+
+                # Render homepages as hyperlinks in readme
+                #
+                # Takes the `homepages` attribute set from `meta.nix` and
+                # combines it with homepages extracted from  the `packages`
+                # list, also from `meta.nix`.
+                homepages = metadata.${module}.homepages or { };
+
+                renderHomepage = name: url: "[${name}](${url})";
+
+                renderedHomepages = joinItems (lib.mapAttrsToList renderHomepage homepages);
+
+                homepageText =
+                  if homepages == { } then
+                    "Homepages: none listed"
+                  else if builtins.isString homepages then
+                    renderHomepage "Homepage" homepages
+                  else
+                    "Homepages: ${renderedHomepages}";
               in
               lib.concatLines [
                 mainText
                 "## Module information"
                 maintainersText
+                homepageText
               ];
 
             # Module pages initialise all platforms to an empty list, so that

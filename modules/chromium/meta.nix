@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.danth ];
   name = "Chromium";
+  homepages = "https://www.chromium.org/";
+  maintainers = [ lib.maintainers.danth ];
 }
