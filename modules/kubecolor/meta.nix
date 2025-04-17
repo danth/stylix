@@ -1,4 +1,5 @@
+{ lib, ... }:
 {
-  maintainers = [ ];
+  maintainers = [ lib.maintainers.ajgon ];
   name = "Kubecolor";
 }

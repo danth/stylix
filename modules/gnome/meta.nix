@@ -1,4 +1,5 @@
+{ lib, ... }:
 {
-  maintainers = [ ];
+  maintainers = [ lib.maintainers.danth ];
   name = "GNOME";
 }
