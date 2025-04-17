@@ -78,7 +78,7 @@ in
           }
           (
             let
-              filesystem = "${xdg.dataFile}/themes/${config.gtk.theme.name}:ro";
+              filesystem = "${config.xdg.dataFile}/themes/${config.gtk.theme.name}:ro";
               theme = config.gtk.theme.name;
             in
             if options ? services.flatpak.overrides then
