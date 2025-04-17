@@ -1,4 +1,5 @@
 {
-  maintainers = [ ];
   name = "GRUB";
+  homepages = "";
+  maintainers = [ ];
 }

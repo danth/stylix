@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.danth ];
   name = "GTK";
+  homepages = "https://www.gtk.org/";
+  maintainers = [ lib.maintainers.danth ];
 }

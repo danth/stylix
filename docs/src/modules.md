@@ -150,8 +150,12 @@ directly from `config`. See the reference pages for a list of options.
 Metadata is stored in `/modules/«module»/meta.nix`. The following attributes are
 available under `meta`:
 
-- `maintainers`: required list of maintainers. See [Maintainers](#maintainers) section.
 - `name`: required human-readable string name.
+- `homepages`: homepage string or attribute set of homepage strings. Attribute names are used as
+    hyperlink text, and values are used as the URLs.
+  - If the module only has one homepage, declare it using
+      `homepages = "https://url.to.homepage/"`
+- `maintainers`: required list of maintainers. See [Maintainers](#maintainers) section.
 
 ### Maintainers
 

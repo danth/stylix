@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.mateusauler ];
   name = "sxiv";
+  homepages = "https://github.com/muennich/sxiv";
+  maintainers = [ lib.maintainers.mateusauler ];
 }

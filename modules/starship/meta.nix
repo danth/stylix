@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.cluther ];
   name = "starship";
+  homepages = "https://starship.rs/";
+  maintainers = [ lib.maintainers.cluther ];
 }
