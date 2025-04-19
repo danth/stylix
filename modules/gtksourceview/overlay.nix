@@ -23,9 +23,7 @@ in
 {
   options.stylix.targets.gtksourceview = {
     enable = mkEnableTarget "GTKSourceView" true;
-    overlay.enable = mkEnableOption "the overlay" // {
-      default = !config ? home;
-    };
+    overlay.enable = mkEnableOption "the overlay";
   };
 
   overlay =
