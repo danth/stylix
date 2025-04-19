@@ -6,7 +6,7 @@
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gitui.enable) {
     programs.gitui.theme = with config.lib.stylix.colors.withHashtags; ''
       (
-          selected_tab: Some(Reset),
+          selected_tab: Some("Reset"),
           command_fg: Some("${base05}"),
           selection_bg: Some("${base04}"),
           selection_fg: Some("${base05}"),
