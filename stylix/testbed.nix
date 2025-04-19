@@ -129,7 +129,7 @@ let
     );
 
   makeTestbed =
-    testbed: stylix:
+    testbed: testcase: stylix:
     let
       name = builtins.concatStringsSep testbedFieldSeparator (
         map
@@ -141,12 +141,8 @@ let
           )
           [
             "testbed"
-            testbed.module
             testbed.name
-            stylix.polarity
-            "image${lib.optionalString (stylix.image or null == null) "less"}"
-            "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
-            "cursor${lib.optionalString (stylix.cursor or null == null) "less"}"
+            testcase
           ]
       );
 
@@ -208,30 +204,19 @@ let
       };
     in
     testbed:
-    map (makeTestbed testbed) [
-      {
+    lib.mapAttrsToList (makeTestbed testbed) {
+      light = {
         enable = true;
         image = images.light;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-latte.yaml";
         polarity = "light";
-      }
-      {
-        enable = true;
-        image = images.dark;
-        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
-      }
-      {
-        enable = true;
-        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
-      }
-      {
-        enable = true;
-        image = images.dark;
-        polarity = "dark";
-      }
-      {
+        cursor = {
+          name = "Vanilla-DMZ";
+          package = pkgs.vanilla-dmz;
+          size = 32;
+        };
+      };
+      dark = {
         enable = true;
         image = images.dark;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
@@ -241,8 +226,34 @@ let
           package = pkgs.vanilla-dmz;
           size = 32;
         };
-      }
-    ];
+      };
+      imageless = {
+        enable = true;
+        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+        cursor = {
+          name = "Vanilla-DMZ";
+          package = pkgs.vanilla-dmz;
+          size = 32;
+        };
+      };
+      schemeless = {
+        enable = true;
+        image = images.dark;
+        polarity = "dark";
+        cursor = {
+          name = "Vanilla-DMZ";
+          package = pkgs.vanilla-dmz;
+          size = 32;
+        };
+      };
+      cursorless = {
+        enable = true;
+        image = images.dark;
+        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
+        polarity = "dark";
+      };
+    };
 
 in
 # Testbeds are merged using lib.attrsets.unionOfDisjoint to throw an error if
