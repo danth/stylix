@@ -198,8 +198,8 @@
                 check
                 inputs.home-manager.packages.${system}.default
                 self.checks.${system}.git-hooks.enabledPackages
-                treefmtEval.config.build.devShell
-              ];
+                treefmtEval.config.build.wrapper
+              ] ++ (lib.attrValues treefmtEval.config.build.programs);
             };
 
           ghc = pkgs.mkShell {
