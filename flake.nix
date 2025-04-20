@@ -126,33 +126,6 @@
       let
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
-
-        treefmt = pkgs.treefmt.withConfig {
-          runtimeInputs = with pkgs; [
-            nixfmt-rfc-style
-            stylish-haskell
-          ];
-
-          settings = {
-            on-unmatched = "info";
-            tree-root-file = "flake.nix";
-
-            formatter = {
-              stylish-haskell = {
-                command = "stylish-haskell";
-                includes = [ "*.hx" ];
-              };
-              nixfmt = {
-                command = "nixfmt";
-                options = [
-                  "--width"
-                  "80"
-                ];
-                includes = [ "*.nix" ];
-              };
-            };
-          };
-        };
       in
       {
         checks = lib.attrsets.unionOfDisjoint {
@@ -164,7 +137,7 @@
 
               treefmt = {
                 enable = true;
-                package = treefmt;
+                package = self.formatter.${system};
               };
 
               statix.enable = true;
@@ -207,7 +180,7 @@
                 check
                 inputs.home-manager.packages.${system}.default
                 self.checks.${system}.git-hooks.enabledPackages
-                treefmt
+                self.formatter.${system}
                 pkgs.nixfmt-rfc-style
                 pkgs.stylish-haskell
               ];
@@ -219,7 +192,32 @@
           };
         };
 
-        formatter = treefmt;
+        formatter = pkgs.treefmt.withConfig {
+          runtimeInputs = with pkgs; [
+            nixfmt-rfc-style
+            stylish-haskell
+          ];
+
+          settings = {
+            on-unmatched = "info";
+            tree-root-file = "flake.nix";
+
+            formatter = {
+              stylish-haskell = {
+                command = "stylish-haskell";
+                includes = [ "*.hx" ];
+              };
+              nixfmt = {
+                command = "nixfmt";
+                options = [
+                  "--width"
+                  "80"
+                ];
+                includes = [ "*.nix" ];
+              };
+            };
+          };
+        };
 
         packages =
           let
