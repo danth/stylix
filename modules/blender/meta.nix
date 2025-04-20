@@ -1,4 +1,4 @@
 {
-  maintainers = [lib.maintainers.make-42];
+  maintainers = [ lib.maintainers.make-42 ];
   name = "Blender";
 }
