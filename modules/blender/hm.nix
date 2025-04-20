@@ -4,9 +4,6 @@
   lib,
   ...
 }: let
-  blenderInstalled =
-    lib.any (pkg: lib.getName pkg == "blender") environment.systemPackages
-    || lib.any (pkg: lib.getName pkg == "blender") config.home.packages;
   blenderVersions = ["blender/4.2/scripts/presets/interface_theme" "blender/4.3/scripts/presets/interface_theme" "blender/4.4/scripts/presets/interface_theme"];
 in {
   options.stylix.targets.blender.enable = config.lib.stylix.mkEnableTarget "blender" true;
@@ -16,7 +13,6 @@ in {
     (
       config.stylix.enable
       && config.stylix.targets.blender.enable
-      && blenderInstalled
     )
     {
       xdg.configFile = builtins.listToAttrs (builtins.concatMap (version: [
