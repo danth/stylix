@@ -1,10 +1,11 @@
 {
+  environment,
   config,
   lib,
   ...
 }: let
   blenderInstalled =
-    lib.any (pkg: lib.getName pkg == "blender") config.environment.systemPackages
+    lib.any (pkg: lib.getName pkg == "blender") environment.systemPackages
     || lib.any (pkg: lib.getName pkg == "blender") config.home.packages;
   blenderVersions = ["blender/4.2/scripts/presets/interface_theme" "blender/4.3/scripts/presets/interface_theme" "blender/4.4/scripts/presets/interface_theme"];
 in {
@@ -20,7 +21,7 @@ in {
     {
       xdg.configFile = builtins.listToAttrs (builtins.concatMap (version: [
           {
-            name = "${version}/OnTakeTheme.xml";
+            name = "${version}/Stylix.xml";
             value.text = ''
               <bpy>
                   <Theme>
@@ -1590,12 +1591,6 @@ in {
                   </ThemeStyle>
               </bpy>'';
           }
-          /*
-            {
-            name = ".config/blender/${version}/extensions/blender_org/ontake_theme/blender_manifest.toml";
-            value.source = ./src/blender_manifest.toml;
-          }
-          */
         ])
         blenderVersions);
     };
