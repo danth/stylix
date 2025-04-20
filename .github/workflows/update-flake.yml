@@ -24,13 +24,15 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
       - uses: DeterminateSystems/update-flake-lock@v24
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update_flake_lock_action_${{ matrix.branch }}
           commit-msg: "stylix: update all flake inputs"
-          pr-title: "stylix: update all flake inputs"
+          pr-title: "${{ contains('release', ${{ matrix.branch }}) && '[${{ matrix.branch }}] ' || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
           pr-labels: dependencies
           # yamllint disable rule:line-length
           pr-body: |

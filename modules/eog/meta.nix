@@ -1,3 +1,5 @@
+{ lib, ... }:
 {
-  maintainers = [ ];
+  maintainers = [ lib.maintainers.danth ];
+  name = "Eye of GNOME";
 }

@@ -145,10 +145,17 @@ slow and should be avoided.
 For everything else, like fonts and wallpapers, you can just take option values
 directly from `config`. See the reference pages for a list of options.
 
-## Maintainers
+## Metadata
 
-New modules must have at least one maintainer defined in
-`/modules/«module»/meta.nix`.
+Metadata is stored in `/modules/«module»/meta.nix`. The following attributes are
+available under `meta`:
+
+- `maintainers`: required list of maintainers. See [Maintainers](#maintainers) section.
+- `name`: required human-readable string name.
+
+### Maintainers
+
+New modules must have at least one maintainer.
 
 If you are not already listed in the Nixpkgs `/maintainers/maintainer-list.nix`
 maintainer list, add yourself to `/stylix/maintainers.nix`.
@@ -201,3 +208,11 @@ This will be inserted before the automatically generated list of options.
 
 Adding [testbeds](./testbeds.md) for new modules is encouraged, but not
 mandatory.
+
+## Common Mistakes
+
+### `home.activation` Scripts
+
+Any script run by `home.activation` must be preceded by `run` if the script is
+to produce any permanent changes. Without this `run` wrapper, the script is run
+in dry-run mode.

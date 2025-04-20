@@ -1,3 +1,5 @@
+{ lib, ... }:
 {
-  maintainers = [ ];
+  maintainers = [ lib.maintainers._0x5a4 ];
+  name = "Wayfire";
 }

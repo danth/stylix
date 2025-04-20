@@ -246,7 +246,8 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -262,7 +263,8 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
               };
             }
@@ -277,7 +279,8 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -292,7 +295,8 @@
             (import ./stylix/droid inputs)
             {
               stylix = {
-                paletteGenerator = self.packages.${pkgs.system}.palette-generator;
+                paletteGenerator =
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };

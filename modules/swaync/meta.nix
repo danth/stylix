@@ -1,3 +1,5 @@
+{ lib, ... }:
 {
-  maintainers = [ ];
+  maintainers = [ lib.maintainers.themaxmur ];
+  name = "SwayNotificationCenter";
 }
