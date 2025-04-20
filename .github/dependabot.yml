@@ -3,11 +3,10 @@ version: 2
 
 updates:
   - package-ecosystem: github-actions
-
-    commit-message:
-      prefix: ci
-
     directory: /
-
+    target-branch: "master"
     schedule:
       interval: daily
+    labels: ["dependencies", "backport-24.11"]
+    commit-message:
+      prefix: "ci"
