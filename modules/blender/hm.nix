@@ -34,7 +34,7 @@ in
                                         widget_emboss="#${config.lib.stylix.colors.base00}05"
                                         editor_outline="#${config.lib.stylix.colors.base01}"
                                         widget_text_cursor="#${config.lib.stylix.colors.base03}"
-                                        panel_roundness="0.373545"
+                                        panel_roundness="0.4"
                                         transparent_checker_primary="#${config.lib.stylix.colors.base03}"
                                         transparent_checker_secondary="#${config.lib.stylix.colors.base02}"
                                         transparent_checker_size="8"
@@ -179,7 +179,7 @@ in
                                             show_shaded="FALSE"
                                             shadetop="-4"
                                             shadedown="0"
-                                            roundness="1"
+                                            roundness="0.4"
                                             ></ThemeWidgetColors>
                                 </wcol_numslider>
                                 <wcol_box>
@@ -207,7 +207,7 @@ in
                                             show_shaded="FALSE"
                                             shadetop="10"
                                             shadedown="-10"
-                                            roundness="1"
+                                            roundness="0.4"
                                             ></ThemeWidgetColors>
                                 </wcol_menu>
                                 <wcol_pulldown>
