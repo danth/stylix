@@ -62,11 +62,6 @@
     # Interface flake systems.
     systems.url = "github:nix-systems/default";
 
-    treefmt-nix = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:numtide/treefmt-nix";
-    };
-
     tinted-foot = {
       flake = false;
 
@@ -123,7 +118,6 @@
     {
       nixpkgs,
       base16,
-      treefmt-nix,
       self,
       ...
     }@inputs:
@@ -133,14 +127,29 @@
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
 
-        treefmtEval = treefmt-nix.lib.evalModule pkgs {
-          projectRootFile = "flake.nix";
+        treefmt = pkgs.treefmt.withConfig {
+          runtimeInputs = with pkgs; [
+            nixfmt-rfc-style
+            stylish-haskell
+          ];
 
-          programs = {
-            stylish-haskell.enable = true;
-            nixfmt = {
-              enable = true;
-              width = 80;
+          settings = {
+            on-unmatched = "info";
+            tree-root-file = "flake.nix";
+
+            formatter = {
+              stylish-haskell = {
+                command = "stylish-haskell";
+                includes = [ "*.hx" ];
+              };
+              nixfmt = {
+                command = "nixfmt";
+                options = [
+                  "--width"
+                  "80"
+                ];
+                includes = [ "*.nix" ];
+              };
             };
           };
         };
@@ -155,7 +164,7 @@
 
               treefmt = {
                 enable = true;
-                package = treefmtEval.config.build.wrapper;
+                package = treefmt;
               };
 
               statix.enable = true;
@@ -198,8 +207,10 @@
                 check
                 inputs.home-manager.packages.${system}.default
                 self.checks.${system}.git-hooks.enabledPackages
-                treefmtEval.config.build.wrapper
-              ] ++ (lib.attrValues treefmtEval.config.build.programs);
+                treefmt
+                pkgs.nixfmt-rfc-style
+                pkgs.stylish-haskell
+              ];
             };
 
           ghc = pkgs.mkShell {
@@ -208,7 +219,7 @@
           };
         };
 
-        formatter = treefmtEval.config.build.wrapper;
+        formatter = treefmt;
 
         packages =
           let
