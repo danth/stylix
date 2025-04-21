@@ -10,7 +10,7 @@ let
       pkgs.gitui
       (pkgs.makeDesktopItem {
         name = "gitui";
-        exec = "kgx -e \"gitui --directory ${inputs.self}\"";
+        exec = "kgx -e \"git clone https://github.com/danth/stylix && gitui -d stylix\"";
         desktopName = "gitui";
         categories = [ "Development" ];
       })
