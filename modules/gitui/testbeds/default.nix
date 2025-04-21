@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   ...
@@ -10,7 +11,7 @@ let
       pkgs.gitui
       (pkgs.makeDesktopItem {
         name = "gitui";
-        exec = "kgx -e \"git clone https://github.com/danth/stylix && gitui -d stylix\"";
+        exec = "kgx -e \"gitui --directory ${inputs.self}\"";
         desktopName = "gitui";
         categories = [ "Development" ];
       })
@@ -33,6 +34,5 @@ in
 
   environment.systemPackages = [
     package
-    pkgs.git
   ];
 }
