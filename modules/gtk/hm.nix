@@ -44,8 +44,8 @@ in
         assertions = lib.singleton {
           assertion = config.gtk.gtk3.extraCss == "" && config.gtk.gtk4.extraCss == "";
           message = ''
-            Stylix makes `gtk.gtk3.extraCss` and `gtk.gtk4.extraCss` non-functional,
-            use `stylix.targets.gtk.extraCss` instead.
+            stylix: `gtk.gtk3.extraCss` and `gtk.gtk4.extraCss` have no effect.
+            Use `stylix.targets.gtk.extraCss` instead.
           '';
         };
 
