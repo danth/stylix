@@ -41,6 +41,14 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
+        assertions = lib.singleton {
+          assertion = config.gtk.gtk3.extraCss == "" && config.gtk.gtk4.extraCss == "";
+          message = ''
+            Stylix makes `gtk.gtk3.extraCss` and `gtk.gtk4.extraCss` non-functional,
+            use `stylix.targets.gtk.extraCss` instead.
+          '';
+        };
+
         # programs.dconf.enable = true; required in system config
         gtk = {
           enable = true;
