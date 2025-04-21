@@ -21,10 +21,20 @@ in
           builtins.concatMap (version: [
             {
               name = "${version}/Stylix.xml";
-              value.source = config.lib.stylix.colors {
-                template = ./Stylix.xml.mustache;
-                extension = ".xml";
-              };
+              value.text =
+                let
+                  coloredFile = config.lib.stylix.colors {
+                    template = ./Stylix.xml.mustache;
+                    extension = ".xml";
+                  };
+                in
+                builtins.replaceStrings
+                  [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
+                  [
+                    (toString config.stylix.fonts.sizes.popups)
+                    (toString config.stylix.fonts.sizes.desktop)
+                  ]
+                  (builtins.readFile coloredFile);
             }
           ]) blenderVersions
         );
