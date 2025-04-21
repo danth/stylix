@@ -169,7 +169,10 @@ in
     assertions = lib.mkIf cfg.enable [
       {
         assertion = !(cfg.image == null && cfg.base16Scheme == null);
-        message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
+
+        message = ''
+          stylix: one of `stylix.image` or `stylix.base16Scheme` must be set
+        '';
       }
     ];
 
