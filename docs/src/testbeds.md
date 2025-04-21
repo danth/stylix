@@ -26,12 +26,11 @@ If the target can only be used through Home Manager, you can write a
 Home Manager module within the NixOS module using the following format:
 
 ```nix
+{ lib, ... }:
 {
-  home-manager.sharedModules = [
-    {
-      # Write Home Manager options here
-    }
-  ];
+  home-manager.sharedModules = lib.singleton {
+    # Write Home Manager options here
+  };
 }
 ```
 
