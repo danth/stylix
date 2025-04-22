@@ -10,20 +10,18 @@
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.fcitx5.enable)
       {
-        xdg = {
-          configFile."fcitx5/conf/classicui.conf".text = "Theme=stylix";
-          dataFile = {
-            # Adapted from https://github.com/sanweiya/fcitx5-mellow-themes under the BSD 2 license (compatible with this project's license (MIT))
-            # Copyright (c) 2024, sanweiya
-            "fcitx5/themes/stylix/highlight.svg".source = config.lib.stylix.colors {
+        i18n.inputMethod.fcitx5 = {
+          classicUiConfig = "Theme=stylix";
+          themes.stylix = {
+            highlightImage = config.lib.stylix.colors {
               template = ./highlight.svg.mustache;
               extension = ".svg";
             };
-            "fcitx5/themes/stylix/panel.svg".source = config.lib.stylix.colors {
+            panelImage = config.lib.stylix.colors {
               template = ./panel.svg.mustache;
               extension = ".svg";
             };
-            "fcitx5/themes/stylix/theme.conf".source = config.lib.stylix.colors {
+            theme = config.lib.stylix.colors {
               template = ./theme.conf.mustache;
               extension = ".conf";
             };
