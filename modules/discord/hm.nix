@@ -12,26 +12,15 @@ let
   };
 in
 {
-  imports = lib.singleton (
-    lib.mkRemovedOptionModule [ "stylix" "targets" "vesktop" "extraCss" ]
-      "CSS can be added to by declaring 'programs.vesktop.vencord.themes.stylix = lib.mkAfter \"YOUR EXTRA CSS\";"
-  );
   options.stylix.targets =
-    {
-      vencord.extraCss = lib.mkOption {
-        description = "Extra CSS to added to Vencord's theme";
-        type = lib.types.lines;
-        default = "";
-      };
-      nixcord.extraCss = lib.mkOption {
-        description = "Extra CSS to added to Nixcord's theme";
-        type = lib.types.lines;
-        default = "";
-      };
-    }
-    // lib.mapAttrs
+    lib.mapAttrs
       (_: prettyName: {
         enable = config.lib.stylix.mkEnableTarget prettyName true;
+        extraCss = lib.mkOption {
+          description = "Extra CSS to added to ${prettyName} theme";
+          type = lib.types.lines;
+          default = "";
+        };
       })
       {
         vencord = "Vencord";
@@ -50,7 +39,7 @@ in
         lib.mkMerge [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
             programs.vesktop.vencord = {
-              themes.stylix = template;
+              themes.stylix = template + config.stylix.targets.vesktop.extraCss;
               settings.enabledThemes = [ "stylix.css" ];
             };
           })
