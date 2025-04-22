@@ -158,11 +158,6 @@ let
           applicationModule
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
-          {
-            _module.args = {
-              inherit inputs;
-            };
-          }
           testbed.path
 
           {
