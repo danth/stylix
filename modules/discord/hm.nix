@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   options,
   ...
 }:
@@ -16,7 +15,7 @@ in
     lib.mkRemovedOptionModule [ "stylix" "targets" "vesktop" "extraCss" ]
       "CSS can be added to by declaring 'programs.vesktop.vencord.themes.stylix = lib.mkAfter \"YOUR EXTRA CSS\";"
   );
-  options.stylix.targets =
+  options.stylix.targets = lib.mkMerge [
     {
       vencord.extraCss = lib.mkOption {
         description = "Extra CSS to added to Vencord's theme";
@@ -29,7 +28,7 @@ in
         default = "";
       };
     }
-    // lib.mapAttrs
+    (lib.mapAttrs
       (_: prettyName: {
         enable = config.lib.stylix.mkEnableTarget prettyName true;
       })
@@ -37,7 +36,9 @@ in
         vencord = "Vencord";
         vesktop = "Vesktop";
         nixcord = "Nixcord";
-      };
+      }
+    )
+  ];
 
   config = lib.mkIf config.stylix.enable (
     lib.mkMerge [
@@ -46,21 +47,12 @@ in
           template + config.stylix.targets.vencord.extraCss;
       })
 
-      (lib.mkIf config.stylix.targets.vesktop.enable (
-        lib.mkMerge [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-            programs.vesktop.vencord = {
-              themes.stylix = template;
-              settings.enabledThemes = [ "stylix.css" ];
-            };
-          })
-
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".text =
-              template + config.stylix.targets.vesktop.extraCss;
-          })
-        ]
-      ))
+      (lib.mkIf config.stylix.targets.vesktop.enable {
+        programs.vesktop.vencord = {
+          themes.stylix = template;
+          settings.enabledThemes = [ "stylix.css" ];
+        };
+      })
 
       (lib.mkIf config.stylix.targets.nixcord.enable (
         lib.optionalAttrs (builtins.hasAttr "nixcord" options.programs) {
