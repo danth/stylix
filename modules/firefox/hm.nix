@@ -59,7 +59,7 @@ in
         profileNames = lib.mkOption {
           description = "The ${target.name} profile names to apply styling on.";
           type = lib.types.listOf lib.types.str;
-          default = [ ];
+          default = [ "Default" ];
         };
 
         colorTheme.enable = lib.mkEnableOption "[Firefox Color](https://color.firefox.com/) on ${target.name}";
@@ -156,15 +156,6 @@ in
           })
         ];
       }) cfg.profileNames
-    );
-    warnings = eachTarget (
-      { target, ... }:
-      lib.optional
-        (
-          config.programs.${target.path}.enable
-          && config.stylix.targets.${target.path}.profileNames == [ ]
-        )
-        ''stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` is not set. Declare profile names with 'config.stylix.targets.${target.path}.profileNames = [ "<PROFILE_NAME>" ];'.''
     );
   };
 }
