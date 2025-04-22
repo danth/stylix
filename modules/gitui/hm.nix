@@ -4,7 +4,7 @@
     config.lib.stylix.mkEnableTarget "GitUI" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gitui.enable) {
-    programs.gitui.theme = with config.lib.stylix.colors.withHashtags; ''
+    programs.gitui.theme = with config.lib.stylix.colors.withHashtag; ''
       (
           selected_tab: Some("Reset"),
           command_fg: Some("${base05}"),
