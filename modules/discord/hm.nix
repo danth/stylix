@@ -42,14 +42,15 @@ in
   config = lib.mkIf config.stylix.enable (
     lib.mkMerge [
       (lib.mkIf config.stylix.targets.vencord.enable {
-        xdg.configFile."Vencord/themes/stylix.theme.css".text = template;
+        xdg.configFile."Vencord/themes/stylix.theme.css".text =
+          template + config.stylix.targets.vencord.extraCss;
       })
 
       (lib.mkIf config.stylix.targets.vesktop.enable (
         lib.mkMerge [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
             programs.vesktop.vencord = {
-              themes.stylix = template + config.stylix.targets.vesktop.extraCss;
+              themes.stylix = template;
               settings.enabledThemes = [ "stylix.css" ];
             };
           })
