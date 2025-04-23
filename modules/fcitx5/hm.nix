@@ -13,6 +13,8 @@
         i18n.inputMethod.fcitx5 = {
           classicUiConfig = "Theme=stylix";
           themes.stylix = {
+            # Adapted from https://github.com/sanweiya/fcitx5-mellow-themes under the BSD 2 license (compatible with this project's license (MIT))
+            # Copyright (c) 2024, sanweiya
             highlightImage = config.lib.stylix.colors {
               template = ./highlight.svg.mustache;
               extension = ".svg";
