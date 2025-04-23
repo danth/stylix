@@ -15,7 +15,7 @@
       with config.lib.stylix.colors.withHashtag;
       ''
         window {
-          font-family: "${fonts.monospace.name}";
+          font-family: "${fonts.monospace.name}, ${fonts.emoji.name}";
           font-size: ${toString fonts.sizes.popups}pt;
 
           background-color: ${base00};
