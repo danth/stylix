@@ -126,11 +126,6 @@
       let
         inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
-
-        formatters = with pkgs; [
-          nixfmt-rfc-style
-          stylish-haskell
-        ];
       in
       {
         checks = lib.attrsets.unionOfDisjoint {
@@ -186,7 +181,7 @@
                 inputs.home-manager.packages.${system}.default
                 self.checks.${system}.git-hooks.enabledPackages
                 self.formatter.${system}
-              ] ++ formatters;
+              ] ++ self.formatter.${system}.runtimeInputs;
             };
 
           ghc = pkgs.mkShell {
@@ -196,7 +191,10 @@
         };
 
         formatter = pkgs.treefmt.withConfig {
-          runtimeInputs = formatters;
+          runtimeInputs = with pkgs; [
+            nixfmt-rfc-style
+            stylish-haskell
+          ];
 
           settings = {
             on-unmatched = "info";
