@@ -9,7 +9,7 @@
 let
   colorsScss = colors {
     template = ./colors.scss.mustache;
-    extension = "scss";
+    extension = ".scss";
   };
 
 in
