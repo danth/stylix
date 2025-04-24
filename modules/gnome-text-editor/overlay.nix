@@ -2,7 +2,7 @@
 let
   style = config.lib.stylix.colors {
     template = ../gedit/template.xml.mustache;
-    extension = "xml";
+    extension = ".xml";
   };
 in
 {

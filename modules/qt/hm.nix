@@ -53,7 +53,7 @@
           };
           svg = config.lib.stylix.colors {
             template = ./kvantum.svg.mustache;
-            extension = "svg";
+            extension = ".svg";
           };
         in
         pkgs.runCommandLocal "base16-kvantum" { } ''

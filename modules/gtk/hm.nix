@@ -11,7 +11,7 @@ let
 
   baseCss = config.lib.stylix.colors {
     template = ./gtk.css.mustache;
-    extension = "css";
+    extension = ".css";
   };
 
   finalCss = pkgs.runCommandLocal "gtk.css" { } ''
