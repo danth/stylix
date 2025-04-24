@@ -25,7 +25,7 @@
       url = "github:tinted-theming/base16-vim/577fe8125d74ff456cf942c733a85d769afe58b7";
     };
 
-    base16.url = "github:awwpotato/base16.nix";
+    base16.url = "github:SenchoPens/base16.nix";
     flake-compat.url = "github:edolstra/flake-compat";
 
     flake-utils = {
