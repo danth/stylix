@@ -23,7 +23,9 @@
               template = ./panel.svg.mustache;
               extension = ".svg";
             };
-            theme = import ./theme.nix { colors = config.lib.stylix.colors.withHashtag; };
+            theme = import ./template.nix {
+              colors = config.lib.stylix.colors.withHashtag;
+            };
           };
         };
       };
