@@ -9,7 +9,7 @@ with colors;
   };
   InputPanel = {
     NormalColor = base05;
-    HighlightCandidateColor = base04;
+    HighlightCandidateColor = base06;
     EnableBlur = false;
     FullWidthHighlight = true;
     HighlightColor = base04;
