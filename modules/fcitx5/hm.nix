@@ -17,15 +17,15 @@
             # Copyright (c) 2024, sanweiya
             "fcitx5/themes/stylix/highlight.svg".source = config.lib.stylix.colors {
               template = ./highlight.svg.mustache;
-              extension = "svg";
+              extension = ".svg";
             };
             "fcitx5/themes/stylix/panel.svg".source = config.lib.stylix.colors {
               template = ./panel.svg.mustache;
-              extension = "svg";
+              extension = ".svg";
             };
             "fcitx5/themes/stylix/theme.conf".source = config.lib.stylix.colors {
               template = ./theme.conf.mustache;
-              extension = "conf";
+              extension = ".conf";
             };
           };
         };
