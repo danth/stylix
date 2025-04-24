@@ -207,10 +207,7 @@
               };
               nixfmt = {
                 command = "nixfmt";
-                options = [
-                  "--width"
-                  "80"
-                ];
+                options = [ "--width=80" ];
                 includes = [ "*.nix" ];
               };
             };
