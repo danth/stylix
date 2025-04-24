@@ -15,6 +15,5 @@ in
       enable = true;
       inherit package;
     };
-    i18n.inputMethod.enabled = "fcitx5";
   };
 }
