@@ -25,7 +25,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v17
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: stylix
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        continue-on-error: true
+
       - run: nix build .#docs
 
       - uses: actions/upload-pages-artifact@v3
