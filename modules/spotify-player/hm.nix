@@ -10,31 +10,33 @@
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.spotify-player.enable)
       {
-        programs.spotify-player.settings.theme = "stylix";
-        programs.spotify-player.themes = [
-          {
-            name = "stylix";
-            palette = {
-              background = "#${config.lib.stylix.colors.base00}";
-              foreground = "#${config.lib.stylix.colors.base05}";
-              black = "#${config.lib.stylix.colors.base00}";
-              red = "#${config.lib.stylix.colors.base08}";
-              green = "#${config.lib.stylix.colors.base0B}";
-              yellow = "#${config.lib.stylix.colors.base0A}";
-              blue = "#${config.lib.stylix.colors.base0D}";
-              magenta = "#${config.lib.stylix.colors.base0E}";
-              cyan = "#${config.lib.stylix.colors.base0C}";
-              white = "#${config.lib.stylix.colors.base05}";
-              bright_black = "#${config.lib.stylix.colors.base03}";
-              bright_red = "#${config.lib.stylix.colors.base08}";
-              bright_green = "#${config.lib.stylix.colors.base0B}";
-              bright_yellow = "#${config.lib.stylix.colors.base0A}";
-              bright_blue = "#${config.lib.stylix.colors.base0D}";
-              bright_magenta = "#${config.lib.stylix.colors.base0E}";
-              bright_cyan = "#${config.lib.stylix.colors.base0C}";
-              bright_white = "#${config.lib.stylix.colors.base07}";
-            };
-          }
-        ];
+        programs.spotify-player = {
+          settings.theme = "stylix";
+          themes = [
+            {
+              name = "stylix";
+              palette = with config.lib.stylix.colors.withHashtag; {
+                background = base00;
+                foreground = base05;
+                black = base00;
+                red = base08;
+                green = base0B;
+                yellow = base0A;
+                blue = base0D;
+                magenta = base0E;
+                cyan = base0C;
+                white = base05;
+                bright_black = base03;
+                bright_red = base08;
+                bright_green = base0B;
+                bright_yellow = base0A;
+                bright_blue = base0D;
+                bright_magenta = base0E;
+                bright_cyan = base0C;
+                bright_white = base07;
+              };
+            }
+          ];
+        };
       };
 }
