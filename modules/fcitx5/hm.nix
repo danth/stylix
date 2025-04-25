@@ -11,7 +11,15 @@
     lib.mkIf (config.stylix.enable && config.stylix.targets.fcitx5.enable)
       {
         i18n.inputMethod.fcitx5 = {
-          settings.addons.classicui.globalSection.Theme = "stylix";
+          settings.addons.classicui.globalSection = {
+            Theme = "stylix";
+            UseDarkTheme = false;
+            UseAccentColor = false;
+
+            Font = config.stylix.fonts.sansSerif.name;
+            MenuFont = config.stylix.fonts.sansSerif.name;
+            TrayFont = config.stylix.fonts.sansSerif.name;
+          };
           themes.stylix = {
             # Adapted from https://github.com/sanweiya/fcitx5-mellow-themes under the BSD 2 license (compatible with this project's license (MIT))
             # Copyright (c) 2024, sanweiya
