@@ -16,9 +16,9 @@
             UseDarkTheme = false;
             UseAccentColor = false;
 
-            Font = "${sansSerif.name} ${builtins.floor (sansSerif.size * 3 / 2 + 0.5)}";
-            MenuFont = "${sansSerif.name} ${builtins.floor (sansSerif.size * 3 / 2 + 0.5)}";
-            TrayFont = "${sansSerif.name} ${builtins.floor (sansSerif.size * 3 / 2 + 0.5)}";
+            Font = "${sansSerif.name} ${sizes.applications}";
+            MenuFont = "${sansSerif.name} ${sizes.applications}";
+            TrayFont = "${sansSerif.name} ${sizes.applications}";
           };
           themes.stylix = {
             # Adapted from https://github.com/sanweiya/fcitx5-mellow-themes under the BSD 2 license (compatible with this project's license (MIT))
