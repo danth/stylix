@@ -28,3 +28,7 @@ punctuation.
 
 Most commits to `master` will also include a pull request number in brackets
 after the summary. GitHub adds this automatically when creating a squash merge.
+
+> [!NOTE]
+> It discouraged to force push in medium to large pull requests because it
+> forces reviewers to re-review the entire pr.
