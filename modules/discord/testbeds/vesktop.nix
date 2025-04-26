@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   package = pkgs.vesktop;
@@ -10,5 +10,10 @@ in
     inherit package;
   };
 
-  environment.systemPackages = [ package ];
+  home-manager.sharedModules = lib.singleton {
+    programs.vesktop = {
+      enable = true;
+      inherit package;
+    };
+  };
 }
