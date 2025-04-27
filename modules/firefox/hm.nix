@@ -56,10 +56,12 @@ in
       lib.nameValuePair target.path {
         enable = config.lib.stylix.mkEnableTarget target.name true;
 
+        disableWarnings = lib.mkEnableOption "Disable profile related Warnings";
+
         profileNames = lib.mkOption {
           description = "The ${target.name} profile names to apply styling on.";
           type = lib.types.listOf lib.types.str;
-          default = [ "Default" ];
+          default = [ "default" ];
         };
 
         colorTheme.enable = lib.mkEnableOption "[Firefox Color](https://color.firefox.com/) on ${target.name}";
@@ -156,6 +158,22 @@ in
           })
         ];
       }) cfg.profileNames
+    );
+    warnings = eachTarget (
+      { target, ... }:
+      let
+        missingProfiles = lib.lists.subtractLists (builtins.attrNames
+          config.programs.${target.path}.profiles
+        ) config.stylix.targets.${target.path}.profileNames;
+        warn = !config.stylix.targets.${target.path}.disableWarnings;
+      in
+      lib.optional
+        (config.programs.${target.path}.enable && missingProfiles != [ ] && warn)
+        ''
+          stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` does not include the following profiles:
+          ${lib.concatStringsSep ", " missingProfiles}
+          If this was intentional, you can disable this warning by setting `config.stylix.targets.${target.path}.disableWarnings'.
+        ''
     );
   };
 }
