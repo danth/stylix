@@ -33,7 +33,7 @@
     email = "gradyb@broggl.farm";
     github = "Mrbroggle";
     githubId = 40074860;
-};
+  };
   repparw = {
     email = "ubritos@gmail.com";
     name = "Ulises Britos";
