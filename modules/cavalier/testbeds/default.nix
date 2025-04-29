@@ -4,8 +4,7 @@ let
   package = pkgs.cavalier;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.nickvision.cavalier";
     inherit package;
   };

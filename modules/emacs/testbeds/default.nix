@@ -4,8 +4,7 @@ let
   package = pkgs.emacs;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "emacs";
     inherit package;
   };

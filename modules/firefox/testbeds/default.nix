@@ -5,8 +5,7 @@ let
   profileName = "stylix";
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "firefox";
     inherit package;
   };

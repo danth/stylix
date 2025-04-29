@@ -4,8 +4,7 @@ let
   package = pkgs.qutebrowser;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.qutebrowser.qutebrowser";
     inherit package;
   };

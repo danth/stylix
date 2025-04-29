@@ -4,8 +4,7 @@ let
   package = pkgs.gedit;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.gnome.gedit";
     inherit package;
   };
