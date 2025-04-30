@@ -4,8 +4,7 @@ let
   package = pkgs.alacritty;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "Alacritty";
     inherit package;
   };
