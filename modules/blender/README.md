@@ -1,7 +1,6 @@
 # Blender
 This module supports [Blender](https://blender.org).
 
-
 > [!IMPORTANT]
 > The Blender target will have no effect unless the Blender theme is properly
 > [enabled](https://docs.blender.org/manual/en/latest/editors/preferences/themes.html)
