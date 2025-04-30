@@ -13,7 +13,7 @@
         i18n.inputMethod.fcitx5 = {
           settings.addons.classicui.globalSection = with config.stylix.fonts; {
             Theme = "stylix";
-            UseDarkTheme = config.stylix.polarity == "dark";
+            UseDarkTheme = false;
             UseAccentColor = false;
 
             Font = "${sansSerif.name} ${toString sizes.popups}";
