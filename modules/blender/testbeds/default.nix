@@ -3,7 +3,6 @@
 let
   package = pkgs.blender;
 in
-
 {
   stylix.testbed.application = {
     enable = true;
