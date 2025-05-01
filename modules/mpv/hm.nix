@@ -24,8 +24,8 @@
             foreground = base05;
             foreground_text = base00;
             curtain = base00;
-            success = green;
-            error = red;
+            success = base0B;
+            error = base08;
           };
 
         modernz = with config.lib.stylix.colors.withHashtag; {
