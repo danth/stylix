@@ -8,6 +8,6 @@ in
     name = "com.github.johnfactotum.Foliate";
     inherit package;
   };
-  home-manager.sharedModules = lib.singleton { home.packages = [ package ]; };
 
+  home-manager.sharedModules = lib.singleton { home.packages = [ package ]; };
 }
