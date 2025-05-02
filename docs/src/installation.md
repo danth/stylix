@@ -162,7 +162,7 @@ is managed by someone else.
       homeConfigurations."«username»" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
-          stylix.homeManagerModules.stylix
+          stylix.homeModules.stylix
           ./home.nix
         ];
       };
@@ -193,7 +193,7 @@ re-exports all the flake outputs, without requiring flakes to be enabled. This m
 that once you have a copy of this repo, using either a local checkout,
 [niv](https://github.com/nmattia/niv), or any other method, you can import it to
 get the NixOS module as the `nixosModules.stylix` attribute and the Home Manager
-module as the `homeManagerModules.stylix` attribute.
+module as the `homeModules.stylix` attribute.
 
 ```nix
 let
@@ -205,7 +205,7 @@ let
   };
 in
 {
-  imports = [ (import stylix).homeManagerModules.stylix ];
+  imports = [ (import stylix).homeModules.stylix ];
 
   stylix = {
     enable = true;
