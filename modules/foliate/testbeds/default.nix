@@ -1,13 +1,13 @@
 { lib, pkgs, ... }:
 
-let package = pkgs.foliate;
-in {
+let
+  package = pkgs.foliate;
+in
+{
   stylix.testbed.ui.application = {
     name = "com.github.johnfactotum.Foliate";
     inherit package;
   };
-  home-manager.sharedModules = lib.singleton {
-    home.packages = [ pkgs.foliate ];
-  };
+  home-manager.sharedModules = lib.singleton { home.packages = [ package ]; };
 
 }
