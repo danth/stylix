@@ -138,7 +138,9 @@ let
               package = pkgs.makeDesktopItem {
                 name = "stylix-testbed";
                 desktopName = "stylix-testbed";
-                exec = config.stylix.testbed.ui.command.text;
+                exec = toString (
+                  pkgs.writeShellScript "startup" config.stylix.testbed.ui.command.text
+                );
                 terminal = config.stylix.testbed.ui.command.useTerminal;
               };
             }
