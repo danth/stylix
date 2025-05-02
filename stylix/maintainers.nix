@@ -40,4 +40,10 @@
     github = "skoove";
     githubId = 53106860;
   };
+  gideonwolfe = {
+    email = "wolfegideon@gmail.com";
+    name = "Gideon Wolfe";
+    github = "gideonwolfe";
+    githubId = 32942052;
+  };
 }
