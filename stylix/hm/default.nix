@@ -9,24 +9,23 @@
 # documentation.
 
 let
-  inherit (config.stylix) inputs;
-  autoload = import ../autoload.nix { inherit lib inputs; } "hm";
+  autoload = import ../autoload.nix { inherit lib; } "hm";
 in
 {
   imports = [
-    "${inputs.self}/stylix/cursor.nix"
-    "${inputs.self}/stylix/fonts.nix"
-    "${inputs.self}/stylix/hm/cursor.nix"
-    "${inputs.self}/stylix/hm/fonts.nix"
-    "${inputs.self}/stylix/hm/icon.nix"
-    "${inputs.self}/stylix/hm/palette.nix"
-    "${inputs.self}/stylix/icon.nix"
-    "${inputs.self}/stylix/opacity.nix"
-    "${inputs.self}/stylix/palette.nix"
-    "${inputs.self}/stylix/pixel.nix"
-    "${inputs.self}/stylix/target.nix"
-    "${inputs.self}/stylix/release.nix"
-    "${inputs.self}/stylix/overlays.nix"
+    ./cursor.nix
+    ./fonts.nix
+    ./icon.nix
+    ./palette.nix
+    ../cursor.nix
+    ../fonts.nix
+    ../icon.nix
+    ../opacity.nix
+    ../palette.nix
+    ../pixel.nix
+    ../target.nix
+    ../release.nix
+    ../overlays.nix
   ] ++ autoload;
   config.warnings =
     lib.mkIf

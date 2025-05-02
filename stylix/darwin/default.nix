@@ -9,21 +9,20 @@
 # documentation.
 
 let
-  inherit (config.stylix) inputs;
-  autoload = import ../autoload.nix { inherit lib inputs; } "darwin";
+  autoload = import ../autoload.nix { inherit lib; } "darwin";
 in
 {
   imports = [
-    "${inputs.self}/stylix/darwin/fonts.nix"
-    "${inputs.self}/stylix/darwin/palette.nix"
-    "${inputs.self}/stylix/fonts.nix"
-    "${inputs.self}/stylix/home-manager-integration.nix"
-    "${inputs.self}/stylix/opacity.nix"
-    "${inputs.self}/stylix/palette.nix"
-    "${inputs.self}/stylix/pixel.nix"
-    "${inputs.self}/stylix/target.nix"
-    "${inputs.self}/stylix/release.nix"
-    "${inputs.self}/stylix/overlays.nix"
+    ./fonts.nix
+    ./palette.nix
+    ../fonts.nix
+    ../home-manager-integration.nix
+    ../opacity.nix
+    ../palette.nix
+    ../pixel.nix
+    ../target.nix
+    ../release.nix
+    ../overlays.nix
   ] ++ autoload;
   config.warnings =
     lib.mkIf

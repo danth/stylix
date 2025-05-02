@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  inputs,
   ...
 }:
 builtins.mapAttrs
@@ -23,7 +22,7 @@ builtins.mapAttrs
     lib.concatMapAttrs (
       path: kind:
       lib.optionalAttrs (kind == "directory") {
-        ${path} = import "${inputs.self}/modules/${path}/meta.nix";
+        ${path} = import ../modules + "${path}/meta.nix";
       }
-    ) (builtins.readDir "${inputs.self}/modules")
+    ) (builtins.readDir ../modules)
   )
