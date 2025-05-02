@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-with config.lib.stylix.colors.withHashtag;
+with config.lib.stylix.colors;
 
 {
   options.stylix.targets.foliate.enable =
