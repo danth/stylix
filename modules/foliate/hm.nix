@@ -13,7 +13,7 @@
             label = "Stylix";
             light = {
               fg = base00;
-              bg = base05";
+              bg = base05;
               link = base0D;
             };
             dark = {
