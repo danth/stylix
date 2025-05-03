@@ -8,19 +8,18 @@
     lib.mkIf (config.stylix.enable && config.stylix.targets.foliate.enable)
       {
         xdg.configFile."com.github.johnfactotum.Foliate/themes/stylix.json".text =
-          with config.lib.stylix.colors;
-
+          with config.lib.stylix.colors.withHashtag;
           builtins.toJSON {
             label = "Stylix";
             light = {
-              fg = "#${base00}";
-              bg = "#${base05}";
-              link = "#${base0D}";
+              fg = base00;
+              bg = base05";
+              link = base0D;
             };
             dark = {
-              fg = "#${base05}";
-              bg = "#${base00}";
-              link = "#${base0D}";
+              fg = base05;
+              bg = base00;
+              link = base0D;
             };
           };
           
