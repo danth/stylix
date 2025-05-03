@@ -56,7 +56,11 @@ in
       lib.nameValuePair target.path {
         enable = config.lib.stylix.mkEnableTarget target.name true;
 
-        disableWarnings = lib.mkEnableOption "Disable profile related Warnings";
+        enableProfileWarning = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Whether to warn when any ${target.name} profiles are detected as being set through Home Manager but not themed through Stylix.";
+        };
 
         profileNames = lib.mkOption {
           description = "The ${target.name} profile names to apply styling on.";
@@ -165,14 +169,17 @@ in
         missingProfiles = lib.lists.subtractLists (builtins.attrNames
           config.programs.${target.path}.profiles
         ) config.stylix.targets.${target.path}.profileNames;
-        warn = !config.stylix.targets.${target.path}.disableWarnings;
       in
       lib.optional
-        (config.programs.${target.path}.enable && missingProfiles != [ ] && warn)
+        (
+          config.programs.${target.path}.enable
+          && missingProfiles != [ ]
+          && config.programs.${target.path}.enableProfileWarnings
+        )
         ''
           stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` does not include the following profiles:
           ${lib.concatStringsSep ", " missingProfiles}
-          If this was intentional, you can disable this warning by setting `config.stylix.targets.${target.path}.disableWarnings'.
+          If this was intentional, you can disable this warning by setting `config.stylix.targets.${target.path}.enableProfileWarnings = false;'.
         ''
     );
   };
