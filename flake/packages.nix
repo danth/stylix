@@ -20,7 +20,7 @@
 
       packages =
         let
-          testbedPackages = import "${self}/stylix/testbed.nix" {
+          testbedPackages = import "${self}/stylix/testbed" {
             inherit pkgs inputs lib;
           };
 
