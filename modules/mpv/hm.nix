@@ -5,8 +5,8 @@
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.mpv.enable) {
     programs.mpv = {
       config = with config.lib.stylix.colors.withHashtag; {
-        osd-font = config.stylix.fonts.monospace.name;
-        sub-font = config.stylix.fonts.monospace.name;
+        osd-font = config.stylix.fonts.sansSerif.name;
+        sub-font = config.stylix.fonts.sansSerif.name;
 
         background-color = "#000000";
         osd-back-color = base01;
@@ -23,9 +23,9 @@
             background_text = base05;
             foreground = base05;
             foreground_text = base00;
-            curtain = base0D;
-            success = base0A;
-            error = base0F;
+            curtain = base00;
+            success = base0B;
+            error = base08;
           };
 
         modernz = with config.lib.stylix.colors.withHashtag; {

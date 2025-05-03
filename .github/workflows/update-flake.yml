@@ -32,7 +32,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update_flake_lock_action_${{ matrix.branch }}
           commit-msg: "stylix: update all flake inputs"
-          pr-title: "${{ startsWith(matrix.branch, 'release') && '[${{ matrix.branch }}] ' || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
+          pr-title: "${{ startsWith(matrix.branch, 'release') && format('[{0}] ', matrix.branch) || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
           pr-labels: dependencies
           # yamllint disable rule:line-length
           pr-body: |

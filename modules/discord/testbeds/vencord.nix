@@ -6,8 +6,7 @@ let
   };
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "discord";
     inherit package;
   };

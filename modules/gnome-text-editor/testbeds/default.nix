@@ -4,8 +4,7 @@ let
   package = pkgs.gnome-text-editor;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "org.gnome.TextEditor";
     inherit package;
   };
