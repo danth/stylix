@@ -224,7 +224,7 @@
             # Testbeds are virtual machines based on NixOS, therefore they are
             # only available for Linux systems.
             testbedPackages = lib.optionalAttrs (lib.hasSuffix "-linux" system) (
-              import ./stylix/testbed.nix { inherit pkgs inputs lib; }
+              import ./stylix/testbed { inherit pkgs inputs lib; }
             );
 
             # Discord is not available on arm64. This workaround filters out

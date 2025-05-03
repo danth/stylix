@@ -8,6 +8,10 @@
 let
   testbedFieldSeparator = ":";
   username = "guest";
+  defaultDesktop = "gnome";
+  availableDesktops = lib.mapAttrsToList (name: _: lib.removeSuffix ".nix" name) (
+    builtins.readDir ./desktops
+  );
 
   commonModule =
     { config, ... }:
@@ -56,6 +60,13 @@ let
 
                   This is currently based on GNOME, but the specific desktop environment
                   used may change in the future.
+                '';
+              };
+              desktop = lib.mkOption {
+                type = lib.types.enum availableDesktops;
+                default = defaultDesktop;
+                description = ''
+                  The desktop environment/window manager to run on VM startup.
                 '';
               };
               application = lib.mkOption {
@@ -116,19 +127,10 @@ let
       };
 
       config = lib.mkIf (config.stylix.testbed.ui != null) {
-        services.xserver = {
-          enable = true;
-          displayManager.gdm.enable = true;
-          desktopManager.gnome.enable = true;
-        };
-
         services.displayManager.autoLogin = {
-          enable = true;
+          enable = lib.mkDefault true;
           user = username;
         };
-
-        # Disable the GNOME tutorial which pops up on first login.
-        environment.gnome.excludePackages = [ pkgs.gnome-tour ];
 
         # for use when application is set
         environment.systemPackages =
@@ -222,7 +224,7 @@ let
             inherit stylix;
             system.name = name;
           }
-        ];
+        ] ++ map (name: import ./desktops/${name}.nix) availableDesktops;
       };
 
       script = pkgs.writeShellApplication {
