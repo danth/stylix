@@ -50,7 +50,9 @@ jobs:
               # Do not request the original author or already requested
               # reviewers.
               if [[
-                "$gh_id" == "$PR_AUTHOR" || "$existing_reviewers" =~ $gh_id
+                "$gh_id" == "$PR_AUTHOR" || \
+                jq "if index(\"$gh_id\") then true else false end" <<< \
+                  "$existing_reviewers"
               ]]; then
                   continue
               fi
