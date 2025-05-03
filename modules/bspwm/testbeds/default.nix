@@ -1,17 +1,17 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  services.xserver = {
-    enable = true;
-    windowManager.bspwm.enable = true;
-  };
+  config = {
+    environment.systemPackages = [ pkgs.kitty ];
 
-  home-manager.sharedModules = lib.singleton {
-    xsession.windowManager.bspwm = {
-      enable = true;
+    stylix.testbed.ui = {
+      graphicalEnvironment = "bspwm";
 
       # We need something to open a window so that we can check the window borders
-      startupPrograms = [ "${lib.getExe pkgs.kitty}" ];
+      application = {
+        name = "kitty";
+        package = pkgs.kitty;
+      };
     };
   };
 }
