@@ -2,9 +2,6 @@
   lib,
   pkgs,
   inputs,
-  nixosSystem,
-  homeManagerConfiguration,
-  system,
   callPackage,
   writeText,
   stdenvNoCC,
@@ -16,38 +13,26 @@ let
   # Prefix to remove from option declaration file paths.
   rootPrefix = toString ../. + "/";
 
-  nixosConfiguration = nixosSystem {
-    inherit system;
-    modules = [
-      inputs.home-manager.nixosModules.home-manager
-      inputs.self.nixosModules.stylix
-    ];
-  };
-
-  homeConfiguration = homeManagerConfiguration {
-    inherit pkgs;
-    modules = [
-      inputs.self.homeModules.stylix
-      {
-        home = {
-          homeDirectory = "/home/book";
-          stateVersion = "22.11";
-          username = "book";
-        };
-      }
-    ];
-  };
+  evalDocs =
+    module:
+    lib.evalModules {
+      modules = [ ./eval_compat.nix ] ++ lib.toList module;
+      specialArgs = { inherit pkgs; };
+    };
 
   # TODO: Include Nix Darwin options
 
   platforms = {
     home_manager = {
       name = "Home Manager";
-      configuration = homeConfiguration;
+      configuration = evalDocs [
+        inputs.self.homeModules.stylix
+        ./hm_compat.nix
+      ];
     };
     nixos = {
       name = "NixOS";
-      configuration = nixosConfiguration;
+      configuration = evalDocs inputs.self.nixosModules.stylix;
     };
   };
 
