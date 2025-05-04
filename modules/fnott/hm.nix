@@ -31,7 +31,7 @@
             background = bg base00;
           };
 
-          low.border-color = fg base0B;
+          low.border-color = fg base03;
           normal.border-color = fg base0E;
           critical.border-color = fg base08;
         }
