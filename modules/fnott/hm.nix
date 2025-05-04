@@ -32,7 +32,7 @@
           };
 
           low.border-color = fg base03;
-          normal.border-color = fg base0E;
+          normal.border-color = fg base0D;
           critical.border-color = fg base08;
         }
       );
