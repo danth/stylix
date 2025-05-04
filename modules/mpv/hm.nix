@@ -23,7 +23,6 @@
             background_text = base05;
             foreground = base05;
             foreground_text = base00;
-            curtain = base00;
             success = base0B;
             error = base08;
           };
