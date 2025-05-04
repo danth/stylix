@@ -13,14 +13,29 @@ let
   # Prefix to remove from option declaration file paths.
   rootPrefix = toString ../. + "/";
 
+  # A stub pkgs used while evaluating the stylix modules for the docs
+  # If any attr is accessed, it will throw
+  noPkgs =
+    lib.mapAttrs (
+      name: _:
+      throw "Attempted to access `pkgs.${lib.strings.escapeNixIdentifier name}` while rendering the docs."
+    ) pkgs
+    // {
+      inherit (pkgs)
+        _type
+        formats
+        ;
+
+      # FIXME: `pkgs.stdenv.hostPlatform.isLinux` is used by `stylix.targets.qt.enable` on hm & nixos for `autoEnable`
+      stdenv.hostPlatform.isLinux = true;
+    };
+
   evalDocs =
     module:
     lib.evalModules {
       modules = lib.toList module ++ [
         ./eval_compat.nix
-        # TODO: enforce pkgs is not used in option docs
-        # E.g. throw when a package is evaluated
-        { _module.args = { inherit pkgs; }; }
+        { _module.args.pkgs = noPkgs; }
       ];
     };
 

@@ -16,6 +16,9 @@ let
 in
 {
   options.stylix.targets.qt = {
+    # FIXME: autoEnable shouldn't depend on pkgs, because it is used in the docs
+    # Maybe we need a function that separates the real bool from a literal text bool?
+    # Anything dynamic like this needs additional care when documenting it.
     enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
     platform = lib.mkOption {
       description = ''
