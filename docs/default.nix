@@ -2,9 +2,6 @@
   lib,
   pkgs,
   inputs,
-  nixosSystem,
-  homeManagerConfiguration,
-  system,
   callPackage,
   writeText,
   stdenvNoCC,
@@ -13,40 +10,31 @@
 }:
 
 let
-  nixosConfiguration = nixosSystem {
-    inherit system;
-    modules = [
-      inputs.home-manager.nixosModules.home-manager
-      inputs.self.nixosModules.stylix
-      ./settings.nix
-    ];
-  };
+  evalDocs =
+    module:
+    lib.evalModules {
+      modules = lib.toList module ++ [
+        ./eval_compat.nix
+        # TODO: enforce pkgs is not used in option docs
+        # E.g. throw when a package is evaluated
+        { _module.args = { inherit pkgs; }; }
+      ];
 
-  homeConfiguration = homeManagerConfiguration {
-    inherit pkgs;
-    modules = [
-      inputs.self.homeModules.stylix
-      ./settings.nix
-      {
-        home = {
-          homeDirectory = "/home/book";
-          stateVersion = "22.11";
-          username = "book";
-        };
-      }
-    ];
-  };
+    };
 
   # TODO: Include Nix Darwin options
 
   platforms = {
     home_manager = {
       name = "Home Manager";
-      configuration = homeConfiguration;
+      configuration = evalDocs [
+        inputs.self.homeModules.stylix
+        ./hm_compat.nix
+      ];
     };
     nixos = {
       name = "NixOS";
-      configuration = nixosConfiguration;
+      configuration = evalDocs inputs.self.nixosModules.stylix;
     };
   };
 

@@ -26,6 +26,9 @@ in
     })
   ];
   options.stylix.targets.swaylock = {
+    # FIXME: autoEnable shouldn't depend on a config option, because it is used in the docs
+    # Maybe we need a function that separates the real bool from a literal text bool?
+    # Anything dynamic like this needs additional care when documenting it.
     enable =
       config.lib.stylix.mkEnableTarget "Swaylock"
         # When the state version is older than 23.05, Swaylock enables itself
