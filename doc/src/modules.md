@@ -106,6 +106,11 @@ the following applies:
 - There is no reliable way to detect whether the target is installed, *and*
 enabling it unconditionally would cause problems.
 
+> [!CAUTION]
+> The boolean value after `mkEnableTarget` should be a static `true` or `false`
+> literal. Using a dynamic expression will lead to potentially inaccurate
+> documentation.
+
 ### Overlays
 
 If your module is provided as an overlay it uses a special format, where config
