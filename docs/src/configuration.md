@@ -195,35 +195,12 @@ to customize this.
 
 ## Standalone Nixvim
 
-When using a NixOS or home-manager installation of [Nixvim], you can use Stylix
-as normal. However, when using Nixvim's ["standalone" configuration mode][Nixvim Standalone],
-you will need to pass Stylix's generated config to Nixvim yourself.
+<!--
+  NOTE: you can't redirect from a heading #anchor using [output.html.redirect]
+  TODO: Drop this redirect link after a while (added 2025-05-04)
+-->
 
-The generated config can be accessed as `config.lib.stylix.nixvim.config`. You
-can use this as a module in your standalone Nixvim Configuration or an
-extension of it.
-
-For example:
-
-```nix
-{
-  inputs,
-  config,
-  pkgs,
-  ...
-}:
-let
-  inherit (pkgs.stdenv.hostPlatform) system;
-  nixvim-package = inputs.nixvim-config.packages.${system}.default;
-  extended-nixvim = nixvim-package.extend config.lib.stylix.nixvim.config;
-in
-{
-  environment.systemPackages = [ extended-nixvim ];
-}
-```
-
-[Nixvim]: https://nix-community.github.io/nixvim
-[Nixvim Standalone]: https://nix-community.github.io/nixvim/user-guide/install.html#standalone-usage
+See [Modules → NixVim → Standalone Mode](./options/modules/nixvim.md#standalone-mode).
 
 ## Turning targets on and off
 
