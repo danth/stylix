@@ -141,7 +141,13 @@
               };
 
               statix.enable = true;
-              typos.enable = true;
+              typos = {
+                enable = true;
+                settings.configuration = ''
+                  [default.extend-words]
+                  criterias="criterias"
+                '';
+              };
               yamllint.enable = true;
             };
 
