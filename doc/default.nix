@@ -122,150 +122,147 @@ let
       option,
     }:
     # Only include options which are declared by a module within Stylix.
-    if lib.hasPrefix rootPrefix declaration then
+    let
+      subPath = lib.removePrefix rootPrefix (toString declaration);
+      pathComponents = lib.splitString "/" subPath;
+    in
+    # Options declared in the modules directory go to the Modules section,
+    # otherwise they're assumed to be shared between modules, and go to the
+    # Platforms section.
+    if builtins.elemAt pathComponents 0 == "modules" then
       let
-        subPath = lib.removePrefix rootPrefix (toString declaration);
-        pathComponents = lib.splitString "/" subPath;
+        module = builtins.elemAt pathComponents 1;
       in
-      # Options declared in the modules directory go to the Modules section,
-      # otherwise they're assumed to be shared between modules, and go to the
-      # Platforms section.
-      if builtins.elemAt pathComponents 0 == "modules" then
-        let
-          module = builtins.elemAt pathComponents 1;
-        in
-        insert {
-          inherit index platform option;
-          page = "src/options/modules/${module}.md";
-          emptyPage = {
-            referenceSection = "Modules";
+      insert {
+        inherit index platform option;
+        page = "src/options/modules/${module}.md";
+        emptyPage = {
+          referenceSection = "Modules";
 
-            readme =
-              let
-                maintainers =
-                  lib.throwIfNot (metadata ? ${module}.maintainers)
-                    "stylix: ${module} is missing `meta.maintainers`"
-                    metadata.${module}.maintainers;
+          readme =
+            let
+              maintainers =
+                lib.throwIfNot (metadata ? ${module}.maintainers)
+                  "stylix: ${module} is missing `meta.maintainers`"
+                  metadata.${module}.maintainers;
 
-                joinItems =
-                  items:
-                  if builtins.length items <= 2 then
-                    builtins.concatStringsSep " and " items
-                  else
-                    builtins.concatStringsSep ", " (
-                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
-                    );
+              joinItems =
+                items:
+                if builtins.length items <= 2 then
+                  builtins.concatStringsSep " and " items
+                else
+                  builtins.concatStringsSep ", " (
+                    lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
+                  );
 
-                # Render a maintainer's name and a link to the best contact
-                # information we have for them.
-                #
-                # The reasoning behind the order of preference is as follows:
-                #
-                # - GitHub:
-                #   - May link to multiple contact methods
-                #   - More likely to have up-to-date information than the
-                #     maintainers list
-                #   - Protects the email address from crawlers
-                # - Email:
-                #   - Very commonly used
-                # - Matrix:
-                #   - Only other contact method in the schema
-                #     (as of March 2025)
-                # - Name:
-                #   - If no other information is available, then just show
-                #     the maintainer's name without a link
-                renderMaintainer =
-                  maintainer:
-                  if maintainer ? github then
-                    "[${maintainer.name}](https://github.com/${maintainer.github})"
-                  else if maintainer ? email then
-                    "[${maintainer.name}](mailto:${maintainer.email})"
-                  else if maintainer ? matrix then
-                    "[${maintainer.name}](https://matrix.to/#/${maintainer.matrix})"
-                  else
-                    maintainer.name;
+              # Render a maintainer's name and a link to the best contact
+              # information we have for them.
+              #
+              # The reasoning behind the order of preference is as follows:
+              #
+              # - GitHub:
+              #   - May link to multiple contact methods
+              #   - More likely to have up-to-date information than the
+              #     maintainers list
+              #   - Protects the email address from crawlers
+              # - Email:
+              #   - Very commonly used
+              # - Matrix:
+              #   - Only other contact method in the schema
+              #     (as of March 2025)
+              # - Name:
+              #   - If no other information is available, then just show
+              #     the maintainer's name without a link
+              renderMaintainer =
+                maintainer:
+                if maintainer ? github then
+                  "[${maintainer.name}](https://github.com/${maintainer.github})"
+                else if maintainer ? email then
+                  "[${maintainer.name}](mailto:${maintainer.email})"
+                else if maintainer ? matrix then
+                  "[${maintainer.name}](https://matrix.to/#/${maintainer.matrix})"
+                else
+                  maintainer.name;
 
-                renderedMaintainers = joinItems (map renderMaintainer maintainers);
+              renderedMaintainers = joinItems (map renderMaintainer maintainers);
 
-                ghHandles = toString (
-                  map (m: lib.optionalString (m ? github) "@${m.github}") maintainers
-                );
+              ghHandles = toString (
+                map (m: lib.optionalString (m ? github) "@${m.github}") maintainers
+              );
 
-                maintainersText = lib.optionalString (
-                  maintainers != [ ]
-                ) "**Maintainers**: ${renderedMaintainers} (`${ghHandles}`)";
+              maintainersText = lib.optionalString (
+                maintainers != [ ]
+              ) "**Maintainers**: ${renderedMaintainers} (`${ghHandles}`)";
 
-                # Render homepages as hyperlinks in readme
-                homepage = metadata.${module}.homepage or null;
+              # Render homepages as hyperlinks in readme
+              homepage = metadata.${module}.homepage or null;
 
-                renderedHomepages = joinItems (
-                  lib.mapAttrsToList (name: url: "[${name}](${url})") homepage
-                );
+              renderedHomepages = joinItems (
+                lib.mapAttrsToList (name: url: "[${name}](${url})") homepage
+              );
 
-                homepageText =
-                  if homepage == null then
-                    ""
-                  else if builtins.isString homepage then
-                    "**Homepage**: [${homepage}](${homepage})\n"
-                  else if builtins.isAttrs homepage then
-                    lib.throwIf (builtins.length (builtins.attrNames homepage) == 1)
-                      "stylix: ${module}: `meta.homepage.${builtins.head (builtins.attrNames homepage)}` should be simplified to `meta.homepage`"
-                      "**Homepages**: ${renderedHomepages}\n"
-                  else
-                    throw "stylix: ${module}: unexpected type for `meta.homepage`: ${builtins.typeOf homepage}";
+              homepageText =
+                if homepage == null then
+                  ""
+                else if builtins.isString homepage then
+                  "**Homepage**: [${homepage}](${homepage})\n"
+                else if builtins.isAttrs homepage then
+                  lib.throwIf (builtins.length (builtins.attrNames homepage) == 1)
+                    "stylix: ${module}: `meta.homepage.${builtins.head (builtins.attrNames homepage)}` should be simplified to `meta.homepage`"
+                    "**Homepages**: ${renderedHomepages}\n"
+                else
+                  throw "stylix: ${module}: unexpected type for `meta.homepage`: ${builtins.typeOf homepage}";
 
-                name = lib.throwIfNot (
-                  metadata ? ${module}.name
-                ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
+              name = lib.throwIfNot (
+                metadata ? ${module}.name
+              ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
 
-              in
-              lib.concatMapStrings (paragraph: "${paragraph}\n\n") [
-                "# ${name}"
-                homepageText
-                maintainersText
-                "---"
-                metadata.${module}.description or ""
-              ];
+            in
+            lib.concatMapStrings (paragraph: "${paragraph}\n\n") [
+              "# ${name}"
+              homepageText
+              maintainersText
+              "---"
+              metadata.${module}.description or ""
+            ];
 
-            # Module pages initialise all platforms to an empty list, so that
-            # '*None provided.*' indicates platforms where the module isn't
-            # available.
-            optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
-          };
-        }
-      else
-        let
-          page = "src/options/platforms/${platform}.md";
-          path = ./. + "/${page}";
-        in
-        insert {
-          inherit
-            index
-            platform
-            page
-            option
-            ;
-          emptyPage = {
-            referenceSection = "Platforms";
-            readme =
-              if builtins.pathExists path then
-                builtins.readFile path
-              else
-                ''
-                  # ${platform.name}
-                  > [!NOTE]
-                  > Documentation is not available for this platform. Its
-                  > main options are listed below, and you may find more
-                  > specific options in the documentation for each module.
-                '';
-
-            # Platform pages only initialise that platform, since showing other
-            # platforms here would be nonsensical.
-            optionsByPlatform.${platform} = [ ];
-          };
-        }
+          # Module pages initialise all platforms to an empty list, so that
+          # '*None provided.*' indicates platforms where the module isn't
+          # available.
+          optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
+        };
+      }
     else
-      index;
+      let
+        page = "src/options/platforms/${platform}.md";
+        path = ./. + "/${page}";
+      in
+      insert {
+        inherit
+          index
+          platform
+          page
+          option
+          ;
+        emptyPage = {
+          referenceSection = "Platforms";
+          readme =
+            if builtins.pathExists path then
+              builtins.readFile path
+            else
+              ''
+                # ${platform.name}
+                > [!NOTE]
+                > Documentation is not available for this platform. Its
+                > main options are listed below, and you may find more
+                > specific options in the documentation for each module.
+              '';
+
+          # Platform pages only initialise that platform, since showing other
+          # platforms here would be nonsensical.
+          optionsByPlatform.${platform} = [ ];
+        };
+      };
 
   insertOption =
     {
@@ -283,16 +280,24 @@ let
 
   insertPlatform =
     index: platform:
-    builtins.foldl'
-      (
+    lib.pipe platforms.${platform}.configuration.options [
+
+      # Drop options that come from the module system
+      (lib.flip builtins.removeAttrs [ "_module" ])
+
+      # Get a list of all options, flattening sub-options recursively.
+      # This also normalises things like `defaultText` and `visible="shallow"`.
+      lib.optionAttrSetToDocList
+
+      # Insert the options into `index`
+      (builtins.foldl' (
         foldIndex: option:
         insertOption {
           index = foldIndex;
           inherit platform option;
         }
-      )
-      index
-      (lib.optionAttrSetToDocList platforms.${platform}.configuration.options);
+      ) index)
+    ];
 
   index = builtins.foldl' insertPlatform { } (builtins.attrNames platforms);
 
