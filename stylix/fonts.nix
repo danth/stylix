@@ -8,70 +8,46 @@
 let
   cfg = config.stylix.fonts;
 
-  mkFontOption =
+  mkFontOptions =
     {
       fontName,
       displayName,
       package,
     }:
-    let
-      packagePath = lib.toList package;
-      packageText = lib.showAttrPath packagePath;
-      realPackage =
-        lib.attrByPath packagePath (throw "${packageText} cannot be found in pkgs")
-          pkgs;
-    in
-    lib.mkOption {
-      type = lib.types.submodule {
-        options = {
-          package = lib.mkOption {
-            description = "Package providing the ${displayName} font.";
-            type = lib.types.package;
-          };
+    {
+      package = lib.mkPackageOption pkgs package { } // {
+        description = "Package providing the ${displayName} font.";
+      };
 
-          name = lib.mkOption {
-            description = "Name of the font within the package.";
-            type = lib.types.str;
-          };
-        };
+      name = lib.mkOption {
+        type = lib.types.str;
+        description = "Name of the ${displayName} font.";
+        default = fontName;
       };
-      default = {
-        package = realPackage;
-        name = fontName;
-      };
-      defaultText = lib.literalExpression ''
-        {
-          package = pkgs.${packageText};
-          name = ${lib.generators.toPretty { } fontName};
-        }
-      '';
-      description = ''
-        ${displayName} font.
-      '';
     };
 
 in
 {
   options.stylix.fonts = {
-    serif = mkFontOption {
+    serif = mkFontOptions {
       displayName = "Serif";
       fontName = "DejaVu Serif";
       package = "dejavu_fonts";
     };
 
-    sansSerif = mkFontOption {
+    sansSerif = mkFontOptions {
       displayName = "Sans-serif";
       fontName = "DejaVu Sans";
       package = "dejavu_fonts";
     };
 
-    monospace = mkFontOption {
+    monospace = mkFontOptions {
       displayName = "Monospace";
       fontName = "DejaVu Sans Mono";
       package = "dejavu_fonts";
     };
 
-    emoji = mkFontOption {
+    emoji = mkFontOptions {
       displayName = "Emoji";
       fontName = "Noto Color Emoji";
       package = "noto-fonts-color-emoji";
