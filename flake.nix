@@ -141,7 +141,13 @@
               };
 
               statix.enable = true;
-              typos.enable = true;
+              typos = {
+                enable = true;
+                settings.configuration = ''
+                  [default.extend-identifiers]
+                  MrSom3body="MrSom3body"
+                '';
+              };
               yamllint.enable = true;
             };
 
