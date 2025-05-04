@@ -8,57 +8,73 @@
 let
   cfg = config.stylix.fonts;
 
-  fontType = lib.types.submodule {
-    options = {
-      package = lib.mkOption {
-        description = "Package providing the font.";
-        type = lib.types.package;
-      };
+  mkFontOption =
+    {
+      fontName,
+      displayName,
+      package,
+    }:
+    let
+      packagePath = lib.toList package;
+      packageText = lib.showAttrPath packagePath;
+      realPackage =
+        lib.attrByPath packagePath (throw "${packageText} cannot be found in pkgs")
+          pkgs;
+    in
+    lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          package = lib.mkOption {
+            description = "Package providing the ${displayName} font.";
+            type = lib.types.package;
+          };
 
-      name = lib.mkOption {
-        description = "Name of the font within the package.";
-        type = lib.types.str;
+          name = lib.mkOption {
+            description = "Name of the font within the package.";
+            type = lib.types.str;
+          };
+        };
       };
+      default = {
+        package = realPackage;
+        name = fontName;
+      };
+      defaultText = lib.literalExpression ''
+        {
+          package = pkgs.${packageText};
+          name = ${lib.generators.toPretty { } fontName};
+        }
+      '';
+      description = ''
+        ${displayName} font.
+      '';
     };
-  };
 
 in
 {
   options.stylix.fonts = {
-    serif = lib.mkOption {
-      description = "Serif font.";
-      type = fontType;
-      default = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Serif";
-      };
+    serif = mkFontOption {
+      displayName = "Serif";
+      fontName = "DejaVu Serif";
+      package = "dejavu_fonts";
     };
 
-    sansSerif = lib.mkOption {
-      description = "Sans-serif font.";
-      type = fontType;
-      default = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans";
-      };
+    sansSerif = mkFontOption {
+      displayName = "Sans-serif";
+      fontName = "DejaVu Sans";
+      package = "dejavu_fonts";
     };
 
-    monospace = lib.mkOption {
-      description = "Monospace font.";
-      type = fontType;
-      default = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans Mono";
-      };
+    monospace = mkFontOption {
+      displayName = "Monospace";
+      fontName = "DejaVu Sans Mono";
+      package = "dejavu_fonts";
     };
 
-    emoji = lib.mkOption {
-      description = "Emoji font.";
-      type = fontType;
-      default = {
-        package = pkgs.noto-fonts-color-emoji;
-        name = "Noto Color Emoji";
-      };
+    emoji = mkFontOption {
+      displayName = "Emoji";
+      fontName = "Noto Color Emoji";
+      package = "noto-fonts-color-emoji";
     };
 
     sizes =
