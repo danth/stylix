@@ -289,6 +289,9 @@ let
       # This also normalises things like `defaultText` and `visible="shallow"`.
       lib.optionAttrSetToDocList
 
+      # Remove hidden options
+      (builtins.filter (opt: opt.visible && !opt.internal))
+
       # Insert the options into `index`
       (builtins.foldl' (
         foldIndex: option:
@@ -396,40 +399,38 @@ let
   #     | Default | The default value, if provided. Usually a code block. |
   #     | Example | An example value, if provided. Usually a code block.  |
   #     | Source  | - [modules/module1/nixos.nix](https://github.com/...) |
-  renderOption =
-    option:
-    lib.optionalString (option.visible && !option.internal) ''
-      ### ${option.name}
+  renderOption = option: ''
+    ### ${option.name}
 
-      ${option.description or ""}
+    ${option.description or ""}
 
-      ${lib.concatStrings (
-        [
-          "<table class=\"option-details\">"
-          "<colgroup>"
-          "<col span=\"1\">"
-          "<col span=\"1\">"
-          "</colgroup>"
-          "<tbody>"
-        ]
-        ++ (lib.optional (option ? type) (renderDetailsRow "Type" option.type))
-        ++ (lib.optional (option ? default) (
-          renderDetailsRow "Default" (renderValue option.default)
-        ))
-        ++ (lib.optional (option ? example) (
-          renderDetailsRow "Example" (renderValue option.example)
-        ))
-        ++ (lib.optional (option ? declarations) (
-          renderDetailsRow "Source" (
-            lib.concatLines (map renderDeclaration option.declarations)
-          )
-        ))
-        ++ [
-          "</tbody>"
-          "</table>"
-        ]
-      )}
-    '';
+    ${lib.concatStrings (
+      [
+        "<table class=\"option-details\">"
+        "<colgroup>"
+        "<col span=\"1\">"
+        "<col span=\"1\">"
+        "</colgroup>"
+        "<tbody>"
+      ]
+      ++ (lib.optional (option ? type) (renderDetailsRow "Type" option.type))
+      ++ (lib.optional (option ? default) (
+        renderDetailsRow "Default" (renderValue option.default)
+      ))
+      ++ (lib.optional (option ? example) (
+        renderDetailsRow "Example" (renderValue option.example)
+      ))
+      ++ (lib.optional (option ? declarations) (
+        renderDetailsRow "Source" (
+          lib.concatLines (map renderDeclaration option.declarations)
+        )
+      ))
+      ++ [
+        "</tbody>"
+        "</table>"
+      ]
+    )}
+  '';
 
   # Render the list of options for a single platform. Example output:
   #
