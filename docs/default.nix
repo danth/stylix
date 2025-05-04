@@ -106,160 +106,157 @@ let
       option,
     }:
     # Only include options which are declared by a module within Stylix.
-    if lib.hasPrefix "${inputs.self}/" declaration then
+    let
+      # Part of this string may become an attribute name in the index, and
+      # attribute names aren't allowed to have string context. The context
+      # comes from `${inputs.self}`, which is removed by `removePrefix`.
+      # Therefore, this use of `unsafeDiscardStringContext` is safe.
+      pathWithContext = lib.removePrefix "${inputs.self}/" declaration;
+      path = builtins.unsafeDiscardStringContext pathWithContext;
+      pathComponents = lib.splitString "/" path;
+    in
+    # Options declared in the modules directory go to the Modules section,
+    # otherwise they're assumed to be shared between modules, and go to the
+    # Platforms section.
+    if builtins.elemAt pathComponents 0 == "modules" then
       let
-        # Part of this string may become an attribute name in the index, and
-        # attribute names aren't allowed to have string context. The context
-        # comes from `${inputs.self}`, which is removed by `removePrefix`.
-        # Therefore, this use of `unsafeDiscardStringContext` is safe.
-        pathWithContext = lib.removePrefix "${inputs.self}/" declaration;
-        path = builtins.unsafeDiscardStringContext pathWithContext;
-        pathComponents = lib.splitString "/" path;
+        module = builtins.elemAt pathComponents 1;
       in
-      # Options declared in the modules directory go to the Modules section,
-      # otherwise they're assumed to be shared between modules, and go to the
-      # Platforms section.
-      if builtins.elemAt pathComponents 0 == "modules" then
-        let
-          module = builtins.elemAt pathComponents 1;
-        in
-        insert {
-          inherit index platform option;
-          page = "src/options/modules/${module}.md";
-          emptyPage = {
-            referenceSection = "Modules";
+      insert {
+        inherit index platform option;
+        page = "src/options/modules/${module}.md";
+        emptyPage = {
+          referenceSection = "Modules";
 
-            readme =
-              let
-                path = "${inputs.self}/modules/${module}/README.md";
+          readme =
+            let
+              path = "${inputs.self}/modules/${module}/README.md";
 
-                # This doesn't count as IFD because ${inputs.self} is a flake input
-                #
-                # In addition, this checks that the README.md starts with an
-                # appropriate title
-                mainText =
+              # This doesn't count as IFD because ${inputs.self} is a flake input
+              #
+              # In addition, this checks that the README.md starts with an
+              # appropriate title
+              mainText =
+                let
+                  name = lib.throwIfNot (
+                    metadata ? ${module}.name
+                  ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
+                in
+                if builtins.pathExists path then
                   let
-                    name = lib.throwIfNot (
-                      metadata ? ${module}.name
-                    ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
+                    text = builtins.readFile path;
                   in
-                  if builtins.pathExists path then
-                    let
-                      text = builtins.readFile path;
-                    in
-                    lib.throwIfNot (
-                      (builtins.head (lib.splitString "\n" text)) == "# ${name}"
-                    ) "README.md of ${name} must have a title which matches its `meta.name`" text
-                  else
-                    ''
-                      # ${name}
-                      > [!NOTE]
-                      > This module doesn't include any additional documentation.
-                      > You can browse the options it provides below.
-                    '';
+                  lib.throwIfNot (
+                    (builtins.head (lib.splitString "\n" text)) == "# ${name}"
+                  ) "README.md of ${name} must have a title which matches its `meta.name`" text
+                else
+                  ''
+                    # ${name}
+                    > [!NOTE]
+                    > This module doesn't include any additional documentation.
+                    > You can browse the options it provides below.
+                  '';
 
-                maintainers =
-                  lib.throwIfNot (metadata ? ${module}.maintainers)
-                    "stylix: ${module} is missing `meta.maintainers`"
-                    metadata.${module}.maintainers;
+              maintainers =
+                lib.throwIfNot (metadata ? ${module}.maintainers)
+                  "stylix: ${module} is missing `meta.maintainers`"
+                  metadata.${module}.maintainers;
 
-                # Render a maintainer's name and a link to the best contact
-                # information we have for them.
-                #
-                # The reasoning behind the order of preference is as follows:
-                #
-                # - GitHub:
-                #   - May link to multiple contact methods
-                #   - More likely to have up-to-date information than the
-                #     maintainers list
-                #   - Protects the email address from crawlers
-                # - Email:
-                #   - Very commonly used
-                # - Matrix:
-                #   - Only other contact method in the schema
-                #     (as of March 2025)
-                # - Name:
-                #   - If no other information is available, then just show
-                #     the maintainer's name without a link
-                renderMaintainer =
-                  maintainer:
-                  if maintainer ? github then
-                    "[${maintainer.name}](https://github.com/${maintainer.github})"
-                  else if maintainer ? email then
-                    "[${maintainer.name}](mailto:${maintainer.email})"
-                  else if maintainer ? matrix then
-                    "[${maintainer.name}](https://matrix.to/#/${maintainer.matrix})"
-                  else
-                    maintainer.name;
+              # Render a maintainer's name and a link to the best contact
+              # information we have for them.
+              #
+              # The reasoning behind the order of preference is as follows:
+              #
+              # - GitHub:
+              #   - May link to multiple contact methods
+              #   - More likely to have up-to-date information than the
+              #     maintainers list
+              #   - Protects the email address from crawlers
+              # - Email:
+              #   - Very commonly used
+              # - Matrix:
+              #   - Only other contact method in the schema
+              #     (as of March 2025)
+              # - Name:
+              #   - If no other information is available, then just show
+              #     the maintainer's name without a link
+              renderMaintainer =
+                maintainer:
+                if maintainer ? github then
+                  "[${maintainer.name}](https://github.com/${maintainer.github})"
+                else if maintainer ? email then
+                  "[${maintainer.name}](mailto:${maintainer.email})"
+                else if maintainer ? matrix then
+                  "[${maintainer.name}](https://matrix.to/#/${maintainer.matrix})"
+                else
+                  maintainer.name;
 
-                joinItems =
-                  items:
-                  if builtins.length items <= 2 then
-                    builtins.concatStringsSep " and " items
-                  else
-                    builtins.concatStringsSep ", " (
-                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
-                    );
+              joinItems =
+                items:
+                if builtins.length items <= 2 then
+                  builtins.concatStringsSep " and " items
+                else
+                  builtins.concatStringsSep ", " (
+                    lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
+                  );
 
-                renderedMaintainers = joinItems (map renderMaintainer maintainers);
+              renderedMaintainers = joinItems (map renderMaintainer maintainers);
 
-                ghHandles = toString (
-                  map (m: lib.optionalString (m ? github) "@${m.github}") maintainers
-                );
+              ghHandles = toString (
+                map (m: lib.optionalString (m ? github) "@${m.github}") maintainers
+              );
 
-                maintainersText =
-                  if maintainers == [ ] then
-                    "This module has no [dedicated maintainers](../../modules.md#maintainers)."
-                  else
-                    ''
-                      This module is maintained by ${renderedMaintainers},
-                      pingable via: `${ghHandles}`.
-                    '';
-              in
-              lib.concatLines [
-                mainText
-                "## Module information"
-                maintainersText
-              ];
+              maintainersText =
+                if maintainers == [ ] then
+                  "This module has no [dedicated maintainers](../../modules.md#maintainers)."
+                else
+                  ''
+                    This module is maintained by ${renderedMaintainers},
+                    pingable via: `${ghHandles}`.
+                  '';
+            in
+            lib.concatLines [
+              mainText
+              "## Module information"
+              maintainersText
+            ];
 
-            # Module pages initialise all platforms to an empty list, so that
-            # '*None provided.*' indicates platforms where the module isn't
-            # available.
-            optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
-          };
-        }
-      else
-        insert {
-          inherit index platform option;
-          page = "src/options/platforms/${platform}.md";
-          emptyPage = {
-            referenceSection = "Platforms";
-            readme =
-              let
-                path = "${inputs.self}/docs/src/options/platforms/${platform}.md";
-
-                # This doesn't count as IFD because ${inputs.self} is a flake input
-                mainText =
-                  if builtins.pathExists path then
-                    builtins.readFile path
-                  else
-                    ''
-                      # ${platform.name}
-                      > [!NOTE]
-                      > Documentation is not available for this platform. Its
-                      > main options are listed below, and you may find more
-                      > specific options in the documentation for each module.
-                    '';
-              in
-              mainText;
-
-            # Platform pages only initialise that platform, since showing other
-            # platforms here would be nonsensical.
-            optionsByPlatform.${platform} = [ ];
-          };
-        }
+          # Module pages initialise all platforms to an empty list, so that
+          # '*None provided.*' indicates platforms where the module isn't
+          # available.
+          optionsByPlatform = lib.mapAttrs (_: _: [ ]) platforms;
+        };
+      }
     else
-      index;
+      insert {
+        inherit index platform option;
+        page = "src/options/platforms/${platform}.md";
+        emptyPage = {
+          referenceSection = "Platforms";
+          readme =
+            let
+              path = "${inputs.self}/docs/src/options/platforms/${platform}.md";
+
+              # This doesn't count as IFD because ${inputs.self} is a flake input
+              mainText =
+                if builtins.pathExists path then
+                  builtins.readFile path
+                else
+                  ''
+                    # ${platform.name}
+                    > [!NOTE]
+                    > Documentation is not available for this platform. Its
+                    > main options are listed below, and you may find more
+                    > specific options in the documentation for each module.
+                  '';
+            in
+            mainText;
+
+          # Platform pages only initialise that platform, since showing other
+          # platforms here would be nonsensical.
+          optionsByPlatform.${platform} = [ ];
+        };
+      };
 
   insertOption =
     {
@@ -277,16 +274,24 @@ let
 
   insertPlatform =
     index: platform:
-    builtins.foldl'
-      (
+    lib.pipe platforms.${platform}.configuration.options [
+
+      # Drop options that come from the module system
+      (x: builtins.removeAttrs x [ "_module" ])
+
+      # Get a list of all options, flattening sub-options recursively.
+      # This also normalises things like `defaultText` and `visible="shallow"`.
+      lib.optionAttrSetToDocList
+
+      # Insert the options into `index`
+      (builtins.foldl' (
         foldIndex: option:
         insertOption {
           index = foldIndex;
           inherit platform option;
         }
-      )
-      index
-      (lib.optionAttrSetToDocList platforms.${platform}.configuration.options);
+      ) index)
+    ];
 
   index = builtins.foldl' insertPlatform { } (builtins.attrNames platforms);
 
@@ -325,7 +330,7 @@ let
     if lib.hasPrefix declarationPrefix declarationString then
       "- [${filePath}](${declarationPermalink}/${filePath})"
     else
-      builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
+      throw "`renderDeclaration` does not know how to render `${declarationString}`. Currently only declarations starting with `${declarationPrefix}` are supported.";
 
   # You can embed HTML inside a Markdown document, but to render further
   # Markdown between the HTML tags, it must be surrounded by blank lines:
