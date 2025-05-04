@@ -13,11 +13,24 @@ let
   # Prefix to remove from option declaration file paths.
   rootPrefix = toString ../. + "/";
 
+  # A stub pkgs used while evaluating the stylix modules for the docs
+  noPkgs = {
+    # Needed for type-checking
+    inherit (pkgs) _type;
+
+    # Permit access to (pkgs.formats.foo { }).type
+    formats = builtins.mapAttrs (_: fmt: args: {
+      inherit (fmt args) type;
+    }) pkgs.formats;
+  };
+
   evalDocs =
     module:
     lib.evalModules {
       modules = [ ./eval_compat.nix ] ++ lib.toList module;
-      specialArgs = { inherit pkgs; };
+      specialArgs = {
+        pkgs = noPkgs;
+      };
     };
 
   # TODO: Include Nix Darwin options
