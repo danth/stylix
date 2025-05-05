@@ -306,7 +306,7 @@ let
       remainingStr = builtins.elemAt groups 1;
       prevLen = builtins.stringLength prev;
       currLen = builtins.stringLength current;
-      longest = if currLen > prevLen then current else prev;
+      longest = lib.max currLen prevLen;
     in
     if groups == null then prev else longestFence' longest remainingStr;
 
