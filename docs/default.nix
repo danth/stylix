@@ -290,6 +290,26 @@ let
 
   index = builtins.foldl' insertPlatform { } (builtins.attrNames platforms);
 
+  /**
+    Extracts the longest markdown code fence from a string.
+
+    - `str`: the string to be checked
+    - returns: the longest sequence of "`" characters
+  */
+  longestFence = longestFence' "";
+
+  longestFence' =
+    prev: str:
+    let
+      groups = builtins.match "[^`]*(`+)(.*)" str;
+      current = builtins.elemAt groups 0;
+      remainingStr = builtins.elemAt groups 1;
+      prevLen = builtins.stringLength prev;
+      currLen = builtins.stringLength current;
+      longest = lib.max currLen prevLen;
+    in
+    if groups == null then prev else longestFence' longest remainingStr;
+
   # Renders a value, which should have been created with either lib.literalMD
   # or lib.literalExpression.
   renderValue =
@@ -297,10 +317,15 @@ let
     if lib.isType "literalMD" value then
       value.text
     else if lib.isType "literalExpression" value then
+      let
+        # If the text contains ``` characters, our code-fence must be longer
+        # than the longest "```"-substring in the text.
+        fence = longestFence value.text;
+      in
       ''
-        ```nix
+        ${fence}```nix
         ${value.text}
-        ```
+        ${fence}```
       ''
     else
       builtins.throw "unexpected value type: ${builtins.typeOf value}";
