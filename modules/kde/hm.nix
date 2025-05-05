@@ -341,9 +341,7 @@ let
               echo "Failed plasma-apply-wallpaperimage, ignoring error."
           fi
         '';
-    runtimeEnv = {
-      "QT_QPA_PLATFORM" = "minimal";
-    };
+    runtimeEnv.QT_QPA_PLATFORM = "minimal";
   };
   activator = lib.getExe activatorPackage;
 in
