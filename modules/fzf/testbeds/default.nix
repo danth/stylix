@@ -6,6 +6,9 @@
   };
 
   home-manager.sharedModules = lib.singleton {
-    programs.fzf.enable = true;
+    programs = {
+      bash.enable = true;
+      fzf.enable = true;
+    };
   };
 }
