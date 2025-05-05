@@ -306,8 +306,10 @@ let
       remainingStr = builtins.elemAt groups 1;
       prevLen = builtins.stringLength prev;
       currLen = builtins.stringLength current;
-      longest = lib.max currLen prevLen;
+      # Reduce to the longest of `prev` & `current`
+      longest = if currLen > prevLen then current else prev;
     in
+    # If no more matches for "`", return; otherwise keep looking
     if groups == null then prev else longestFence' longest remainingStr;
 
   # Renders a value, which should have been created with either lib.literalMD
