@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.danth ];
   name = "GNOME";
+  homepage = "https://www.gnome.org/";
+  maintainers = [ lib.maintainers.danth ];
 }

@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "qutebrowser";
+  homepage = "https://github.com/qutebrowser/qutebrowser";
+  maintainers = [ lib.maintainers.naho ];
 }

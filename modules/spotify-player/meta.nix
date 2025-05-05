@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.repparw ];
   name = "spotify-player";
+  homepage = "https://github.com/aome510/spotify-player";
+  maintainers = [ lib.maintainers.repparw ];
 }

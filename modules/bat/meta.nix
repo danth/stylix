@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "bat";
+  homepage = "https://github.com/sharkdp/bat";
+  maintainers = [ lib.maintainers.naho ];
 }

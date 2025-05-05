@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "fzf";
+  homepage = "https://github.com/junegunn/fzf";
+  maintainers = [ lib.maintainers.naho ];
 }

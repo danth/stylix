@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.ajgon ];
   name = "Kubecolor";
+  homepage = "https://github.com/kubecolor/kubecolor";
+  maintainers = [ lib.maintainers.ajgon ];
 }
