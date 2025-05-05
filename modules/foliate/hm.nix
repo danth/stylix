@@ -22,7 +22,7 @@
               link = base0D;
             };
           };
-          
+
         dconf.settings."com/github/johnfactotum/Foliate/viewer/view" = {
           theme = "stylix.json";
         };
