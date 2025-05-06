@@ -67,7 +67,7 @@ let
   };
   # Transparent is used a few times below
   transparent = {
-    bg = "none";
+    guibg = "none";
     ctermbg = "none";
   };
   highlightOverride = {
