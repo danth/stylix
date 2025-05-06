@@ -18,8 +18,17 @@ let
 in
 {
 
-  options.stylix.targets.rstudio.enable =
-    config.lib.stylix.mkEnableTarget "RStudio" true;
+  options.stylix.targets.rstudio = {
+    enable = config.lib.stylix.mkEnableTarget "RStudio" true;
+
+    themeAutoset = lib.mkOption {
+      description = ''
+        Whether to modify the RStudio preferences file to set the theme.
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
+  };
 
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.rstudio.enable)
@@ -52,26 +61,33 @@ in
             };
           };
         home.activation.rstudioThemeSelect =
-          let
-            file = builtins.toFile "rstudio-prefs.json" (
-              builtins.toJSON { editor_theme = name; }
-            );
+          if config.stylix.targets.rstudio.themeAutoset then
+            let
+              file = builtins.toFile "rstudio-prefs.json" (
+                builtins.toJSON { editor_theme = name; }
+              );
+              name = "stylixBase16";
+            in
 
-            name = "stylixBase16";
-          in
-          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            config="$HOME/.config/rstudio/rstudio-prefs.json"
-            if [[ -f "$config" ]]; then
-              run ${lib.getExe pkgs.jq} \
-                --raw-output \
-                '.editor_theme |= "stylixBase16"' \
-                "$config" |
-              ${lib.getExe' pkgs.moreutils "sponge"} "$config"
+            lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              config="$HOME/.config/rstudio/rstudio-prefs.json"
+              if [[ -f "$config" ]]; then
+                run ${lib.getExe pkgs.jq} \
+                  --raw-output \
+                  '.editor_theme |= "${name}"' \
+                  "$config" |
+                ${lib.getExe' pkgs.moreutils "sponge"} "$config"
+                verboseEcho \
+                  "stylix: rstudio: changing editor_theme from $theme to ${name} in $config"
+              else
+                run cp ${file} "$config"
+              fi
+            ''
+          else
+            lib.hm.dag.entryAfter ''
+
               verboseEcho \
-                "stylix: rstudio: setting editor_theme to '${name}' in $config"
-            else
-              run cp ${file} "$config"
-            fi
-          '';
+                "stylix: rstudio: not changing editor_theme: option disabled"
+            '';
       };
 }
