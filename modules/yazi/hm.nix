@@ -28,14 +28,14 @@
           };
 
           cwd = mkFg cyan;
-          hovered = (mkBoth base05 base03) // {
+          hovered = (mkBoth base05 base02) // {
             bold = true;
           };
           preview_hovered = hovered;
           find_keyword = (mkFg green) // {
             bold = true;
           };
-          find_position = mkFg base05;
+          find_position = mkFg magenta;
           marker_selected = mkSame yellow;
           marker_copied = mkSame green;
           marker_cut = mkSame red;
