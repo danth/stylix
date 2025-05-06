@@ -74,6 +74,9 @@ let
     Normal = lib.mkIf cfg.transparentBackground.main transparent;
     NonText = lib.mkIf cfg.transparentBackground.main transparent;
     SignColumn = lib.mkIf cfg.transparentBackground.signColumn transparent;
+    LineNr = lib.mkIf cfg.transparentBackground.numberLine transparent;
+    LineNrAbove = lib.mkIf cfg.transparentBackground.numberLine transparent;
+    LineNrBelow = lib.mkIf cfg.transparentBackground.numberLine transparent;
   };
 in
 {
@@ -87,6 +90,7 @@ in
     transparentBackground = {
       main = lib.mkEnableOption "background transparency for the main NeoVim window";
       signColumn = lib.mkEnableOption "background transparency for the NeoVim sign column";
+      numberLine = lib.mkEnableOption "background transparency for the NeoVim number/relativenumber column";
     };
   };
 

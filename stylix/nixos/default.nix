@@ -25,7 +25,7 @@ in
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
     "${inputs.self}/stylix/release.nix"
-    (import "${inputs.self}/stylix/overlays.nix" inputs)
+    (lib.modules.importApply "${inputs.self}/stylix/overlays.nix" inputs)
   ] ++ autoload;
   config.warnings =
     lib.mkIf

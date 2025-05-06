@@ -4,8 +4,7 @@ let
   package = pkgs.vesktop;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "vesktop";
     inherit package;
   };

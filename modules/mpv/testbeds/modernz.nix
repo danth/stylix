@@ -3,8 +3,7 @@ let
   package = pkgs.mpv;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "mpv";
     inherit package;
   };
