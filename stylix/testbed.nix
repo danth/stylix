@@ -254,7 +254,7 @@ let
           )
           [
             "testbed"
-            (if testbed.name == "default" then testbed.module else testbed.name)
+            testbed.name
             testcase
           ];
 
