@@ -51,8 +51,7 @@ jobs:
               # reviewers.
               if [[
                 "$gh_id" == "$PR_AUTHOR" || \
-                jq "if index(\"$gh_id\") then true else false end" <<< \
-                  "$existing_reviewers"
+                jq "index(\"$gh_id\") != null" <<< "$existing_reviewers"
               ]]; then
                   continue
               fi
