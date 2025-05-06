@@ -81,7 +81,7 @@ in
                   "stylix: rstudio: changing editor_theme from $theme to ${name} in $config"
               else
                 run cp ${file} "$config"
-                chmod 644 "$config"
+                run chmod 644 "$config"
               fi
             ''
           else
