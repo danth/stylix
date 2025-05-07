@@ -14,9 +14,9 @@
         programs.starship.settings = {
           palette = "base16";
           palettes.base16 = with config.lib.stylix.colors.withHashtag; {
-            black = base00;
-            bright-black = base03;
-            white = base05;
+            black = base01;
+            bright-black = base02;
+            white = base06;
             bright-white = base07;
 
             # Starship calls magenta purple.
