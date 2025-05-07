@@ -112,6 +112,11 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    adwaita-for-steam = {
+      flake = false;
+      url = "github:tkashkin/Adwaita-for-Steam";
+    };
   };
 
   outputs =
