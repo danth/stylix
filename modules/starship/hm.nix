@@ -19,9 +19,6 @@
             white = base05;
             bright-white = base07;
 
-            # There's just one yellow.
-            bright-yellow = yellow;
-
             # Starship calls magenta purple.
             purple = magenta;
             bright-purple = bright-magenta;
@@ -39,7 +36,7 @@
 
               # Set Starship's standard bright color names.
               bright-red
-              bright-orange
+              bright-yellow
               bright-green
               bright-cyan
               bright-blue
