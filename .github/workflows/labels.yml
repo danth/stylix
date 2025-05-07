@@ -1,0 +1,38 @@
+# Adapted from
+# https://github.com/NixOS/nixpkgs/blob/8ed4f7b5a62b2e41606eb66b4c5f6d142f46370b/.github/workflows/labels.yml
+# Copyright (c) 2003-2025 Eelco Dolstra and the Nixpkgs/NixOS contributors
+#
+# WARNING:
+# When extending this action, be aware that $GITHUB_TOKEN allows some write
+# access to the GitHub API. This means that it should not evaluate user input in
+# a way that allows code injection.
+---
+name: "Label PR"
+
+on:   # yamllint disable-line rule:truthy
+  pull_request_target:
+    types: [edited, opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  labels:
+    name: label-pr
+    runs-on: ubuntu-24.04
+    if: github.repository_owner == 'danth' && !contains(github.event.pull_request.title, '[skip treewide]')   # yamllint disable-line rule:line-length
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-pull-requests: write
+
+      - uses: actions/labeler@v5.0.0
+        with:
+          repo-token: ${{ steps.app-token.outputs.token }}
+          configuration-path: .github/labeler.yml
+          sync-labels: false
