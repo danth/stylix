@@ -13,7 +13,7 @@ body:
       options:
         - label: >-
             I assert that this is not a duplicate of an [existing feature
-            request](https://github.com/danth/stylix/issues).
+            request](https://github.com/danth/stylix/issues?q=is%3Aissue).
 
           required: true
 
