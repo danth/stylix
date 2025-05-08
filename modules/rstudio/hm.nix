@@ -4,18 +4,6 @@
   lib,
   ...
 }:
-let
-  hexToRGB =
-    hexString:
-    let
-      inherit (lib.trivial) fromHexString;
-    in
-    {
-      r = fromHexString (builtins.substring 0 2 hexString);
-      g = fromHexString (builtins.substring 2 2 hexString);
-      b = fromHexString (builtins.substring 4 2 hexString);
-    };
-in
 {
 
   options.stylix.targets.rstudio = {
@@ -35,8 +23,11 @@ in
       {
         xdg.configFile."rstudio/themes/stylix.rstheme" =
           let
-            rgb = hexToRGB config.lib.stylix.colors.base00;
-            luminance = (0.2126 * rgb.r) + (0.7152 * rgb.g) + (0.0722 * rgb.b);
+            inherit (config.lib.stylix) colors;
+            luminance =
+              (0.2126 * (lib.toInt colors.base00-rgb-r))
+              + (0.7152 * (lib.toInt colors.base00-rgb-g))
+              + (0.0722 * (lib.toInt colors.base00-rgb-b));
             polarity =
               if luminance < 128 then
                 "/* rs-theme-is-dark: TRUE */"
@@ -78,7 +69,7 @@ in
                   "$config" |
                 ${lib.getExe' pkgs.moreutils "sponge"} "$config"
                 verboseEcho \
-                  "stylix: rstudio: changing editor_theme from $theme to ${name} in $config"
+                  "stylix: rstudio: changing editor_theme to ${name} in $config"
               else
                 run cp ${file} "$config"
                 run chmod 644 "$config"
