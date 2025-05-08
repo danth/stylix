@@ -146,43 +146,44 @@ in
                 )
             ) (lib.importJSON cfg.generated.json).colors.${cfg.themeGeneration.polarity};
           in
+          with colors;
           if cfg.themeGeneration.polarity == "light" then
             {
-              base00 = colors.background;
-              base01 = colors.surface_container;
-              base02 = colors.surface_container_highest;
-              base03 = colors.outline;
-              base04 = colors.on_surface_variant;
-              base05 = colors.on_surface;
-              base06 = colors.on_secondary_fixed;
-              base07 = colors.on_primary_container;
-              base08 = colors.error;
-              base09 = colors.on_tertiary;
-              base0A = colors.on_secondary_container;
-              base0B = colors.on_secondary_fixed_variant;
-              base0C = colors.on_primary_fixed;
-              base0D = colors.surface_tint;
-              base0E = colors.on_tertiary_fixed;
-              base0F = colors.on_error_container;
+              base00 = background;
+              base01 = surface_container;
+              base02 = surface_container_highest;
+              base03 = outline;
+              base04 = on_surface_variant;
+              base05 = on_surface;
+              base06 = on_secondary_fixed;
+              base07 = on_primary_container;
+              base08 = error;
+              base09 = on_tertiary;
+              base0A = on_secondary_container;
+              base0B = on_secondary_fixed_variant;
+              base0C = on_primary_fixed;
+              base0D = surface_tint;
+              base0E = on_tertiary_fixed;
+              base0F = on_error_container;
             }
           else
             {
-              base00 = colors.background;
-              base01 = colors.surface_container;
-              base02 = colors.surface_container_highest;
-              base03 = colors.outline;
-              base04 = colors.on_surface_variant;
-              base05 = colors.on_surface;
-              base06 = colors.secondary_fixed;
-              base07 = colors.on_primary_container;
-              base08 = colors.error;
-              base09 = colors.tertiary;
-              base0A = colors.secondary;
-              base0B = colors.primary;
-              base0C = colors.primary_fixed;
-              base0D = colors.surface_tint;
-              base0E = colors.tertiary_fixed;
-              base0F = colors.on_error_container;
+              base00 = background;
+              base01 = surface_container;
+              base02 = surface_container_highest;
+              base03 = outline;
+              base04 = on_surface_variant;
+              base05 = on_surface;
+              base06 = secondary_fixed;
+              base07 = on_primary_container;
+              base08 = error;
+              base09 = tertiary;
+              base0A = secondary;
+              base0B = primary;
+              base0C = primary_fixed;
+              base0D = surface_tint;
+              base0E = tertiary_fixed;
+              base0F = on_error_container;
             };
       };
 
