@@ -27,7 +27,7 @@
             progress-color = "over ${base02}";
             font = "${fonts.sansSerif.name} ${toString fonts.sizes.popups}";
           };
-          criterias = {
+          criteria = {
             "urgency=low" = {
               background-color = "${base00}${makoOpacity}";
               border-color = base0D;

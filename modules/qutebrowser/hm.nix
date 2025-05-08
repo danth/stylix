@@ -245,18 +245,9 @@ in
               };
             };
           };
-
-          webpage =
-            let
-              isDark = config.stylix.themeGeneration.polarity == "dark";
-            in
-            {
-              darkmode.enabled = lib.mkIf isDark (lib.mkDefault true);
-
-              preferred_color_scheme = lib.mkIf isDark (
-                lib.mkDefault config.stylix.themeGeneration.polarity
-              );
-            };
+          webpage.preferred_color_scheme = lib.mkIf (config.stylix.themeGeneration.polarity == "dark") (
+            lib.mkDefault config.stylix.themeGeneration.polarity
+          );
         };
 
         fonts = {

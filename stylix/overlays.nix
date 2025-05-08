@@ -19,6 +19,7 @@ inputs:
           file;
     in
     {
+      _file = f;
       options = attrs.options or { };
       config.nixpkgs.overlays = lib.mkIf config.stylix.overlays.enable [
         attrs.overlay
