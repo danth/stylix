@@ -79,7 +79,7 @@ in
         # the output of the palette generator will not be protected from
         # garbage collection.
         default = pkgs.runCommand "palette.json" { } ''
-          ${cfg.paletteGenerator}/bin/palette-generator \
+          ${lib.getExe cfg.paletteGenerator} \
             "${cfg.polarity}" \
             ${lib.escapeShellArg "${cfg.image}"} \
             "$out"

@@ -39,4 +39,6 @@ stdenvNoCC.mkDerivation {
   '';
 
   passthru = { inherit docs; };
+
+  meta.mainProgram = "palette-generator";
 }

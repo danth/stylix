@@ -7,7 +7,7 @@ If you want to use a background image for your desktop but find it too bright or
 Here's an example Nix expression that takes an input image, applies a brightness/contrast adjustment to it, and saves the result as a new image file:
 
 ```nix
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   inputImage = ./path/to/image.jpg;
   brightness = -30;
@@ -16,7 +16,7 @@ let
 in
 {
   stylix.image = pkgs.runCommand "dimmed-background.png" { } ''
-    ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
+    ${lib.getExe' pkgs.imagemagick "convert"} "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
   '';
 }
 ```
@@ -27,12 +27,12 @@ With imagemagick, you can also dynamically generate wallpapers based on the sele
 Similarly, you can use a template image and repaint it for the current theme.
 
 ```nix
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   theme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
   wallpaper = pkgs.runCommand "image.png" { } ''
-    COLOR=$(${pkgs.yq}/bin/yq -r .palette.base00 ${theme})
-    ${pkgs.imagemagick}/bin/magick -size 1920x1080 xc:$COLOR $out
+    COLOR=$(${lib.getExe pkgs.yq} -r .palette.base00 ${theme})
+    ${lib.getExe pkgs.imagemagick} -size 1920x1080 xc:$COLOR $out
   '';
 in
 {
