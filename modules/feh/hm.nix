@@ -9,9 +9,11 @@ let
 in
 {
   options.stylix.targets.feh = {
-    enable = config.lib.stylix.mkEnableTarget "the desktop background using Feh" (
-      config.stylix.image != null
-    );
+    enable = config.lib.stylix.mkEnableTargetWith {
+      name = "the desktop background using Feh";
+      autoEnable = config.stylix.image != null;
+      autoEnableExpr = "stylix.image != null";
+    };
   };
 
   config.xsession.initExtra =
