@@ -38,9 +38,16 @@
     in
     {
       mkEnableTarget =
-        humanName: autoEnable:
+        name: autoEnable:
+        config.lib.stylix.mkEnableTargetWith { inherit name autoEnable; };
+
+      mkEnableTargetWith =
+        {
+          name,
+          autoEnable ? true,
+        }:
         self.mkEnableIf {
-          description = "Whether to enable theming for ${humanName}";
+          description = "Whether to enable theming for ${name}";
           condition = cfg.autoEnable && autoEnable;
           ${if autoEnable then "conditionText" else null} =
             lib.literalMD "same as `stylix.autoEnable`";
