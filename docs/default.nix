@@ -131,37 +131,19 @@ let
 
             readme =
               let
-                path = "${inputs.self}/modules/${module}/README.md";
-
-                # This doesn't count as IFD because ${inputs.self} is a flake input
-                #
-                # In addition, this checks that the README.md starts with an
-                # appropriate title
-                mainText =
-                  let
-                    name = lib.throwIfNot (
-                      metadata ? ${module}.name
-                    ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
-                  in
-                  if builtins.pathExists path then
-                    let
-                      text = builtins.readFile path;
-                    in
-                    lib.throwIfNot (
-                      (builtins.head (lib.splitString "\n" text)) == "# ${name}"
-                    ) "README.md of ${name} must have a title which matches its `meta.name`" text
-                  else
-                    ''
-                      # ${name}
-                      > [!NOTE]
-                      > This module doesn't include any additional documentation.
-                      > You can browse the options it provides below.
-                    '';
-
                 maintainers =
                   lib.throwIfNot (metadata ? ${module}.maintainers)
                     "stylix: ${module} is missing `meta.maintainers`"
                     metadata.${module}.maintainers;
+
+                joinItems =
+                  items:
+                  if builtins.length items <= 2 then
+                    builtins.concatStringsSep " and " items
+                  else
+                    builtins.concatStringsSep ", " (
+                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
+                    );
 
                 # Render a maintainer's name and a link to the best contact
                 # information we have for them.
@@ -192,34 +174,46 @@ let
                   else
                     maintainer.name;
 
-                joinItems =
-                  items:
-                  if builtins.length items <= 2 then
-                    builtins.concatStringsSep " and " items
-                  else
-                    builtins.concatStringsSep ", " (
-                      lib.dropEnd 1 items ++ [ "and ${lib.last items}" ]
-                    );
-
                 renderedMaintainers = joinItems (map renderMaintainer maintainers);
 
                 ghHandles = toString (
                   map (m: lib.optionalString (m ? github) "@${m.github}") maintainers
                 );
 
-                maintainersText =
-                  if maintainers == [ ] then
-                    "This module has no [dedicated maintainers](../../modules.md#maintainers)."
+                maintainersText = lib.optionalString (
+                  maintainers != [ ]
+                ) "**Maintainers**: ${renderedMaintainers} (`${ghHandles}`)";
+
+                # Render homepages as hyperlinks in readme
+                homepage = metadata.${module}.homepage or null;
+
+                renderedHomepages = joinItems (
+                  lib.mapAttrsToList (name: url: "[${name}](${url})") homepage
+                );
+
+                homepageText =
+                  if homepage == null then
+                    ""
+                  else if builtins.isString homepage then
+                    "**Homepage**: [${homepage}](${homepage})\n"
+                  else if builtins.isAttrs homepage then
+                    lib.throwIf (builtins.length (builtins.attrNames homepage) == 1)
+                      "stylix: ${module}: `meta.homepage.${builtins.head (builtins.attrNames homepage)}` should be simplified to `meta.homepage`"
+                      "**Homepages**: ${renderedHomepages}\n"
                   else
-                    ''
-                      This module is maintained by ${renderedMaintainers},
-                      pingable via: `${ghHandles}`.
-                    '';
+                    throw "stylix: ${module}: unexpected type for `meta.homepage`: ${builtins.typeOf homepage}";
+
+                name = lib.throwIfNot (
+                  metadata ? ${module}.name
+                ) "stylix: ${module} is missing `meta.name`" metadata.${module}.name;
+
               in
-              lib.concatLines [
-                mainText
-                "## Module information"
+              lib.concatMapStrings (paragraph: "${paragraph}\n\n") [
+                "# ${name}"
+                homepageText
                 maintainersText
+                "---"
+                metadata.${module}.description or ""
               ];
 
             # Module pages initialise all platforms to an empty list, so that
