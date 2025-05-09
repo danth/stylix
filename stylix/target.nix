@@ -35,6 +35,28 @@
     let
       cfg = config.stylix;
       self = config.lib.stylix;
+
+      # Will wrap with (parentheses) if the expr contains operators with lower precedence than `&&`
+      wrapExprWith =
+        {
+          autoWrapExpr ? true,
+          trimExpr ? true,
+        }:
+        expr:
+        let
+          trim = if trimExpr then lib.strings.trim else lib.id;
+          trimmed = trim expr;
+          isWrapped = builtins.match ''[(].*[)]'' trimmed != null;
+          needsWrapping = builtins.any (op: lib.strings.hasInfix op trimmed) [
+            # These operators have lower precedence than `&&`
+            # See https://nix.dev/manual/nix/2.28/language/operators
+            "||"
+            "->"
+            "|>"
+            "<|"
+          ];
+        in
+        if autoWrapExpr && !isWrapped && needsWrapping then "(${trimmed})" else trimmed;
     in
     {
       mkEnableTarget =
@@ -45,13 +67,26 @@
         {
           name,
           autoEnable ? true,
-        }:
+          autoEnableExpr ? null,
+          autoWrapExpr ? true,
+          example ? if args ? autoEnableExpr then true else !autoEnable,
+        }@args:
+        let
+          wrapExpr = wrapExprWith {
+            inherit autoWrapExpr;
+          };
+        in
         self.mkEnableIf {
           description = "Whether to enable theming for ${name}";
           condition = cfg.autoEnable && autoEnable;
-          ${if autoEnable then "conditionText" else null} =
-            lib.literalMD "same as `stylix.autoEnable`";
-          example = !autoEnable;
+          conditionText =
+            if args ? autoEnableExpr then
+              lib.literalExpression "stylix.autoEnable && ${wrapExpr autoEnableExpr}"
+            else if autoEnable then
+              lib.literalMD "same as `stylix.autoEnable`"
+            else
+              false;
+          inherit example;
         };
 
       mkEnableWallpaper =
