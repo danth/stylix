@@ -35,6 +35,42 @@
     let
       cfg = config.stylix;
       self = config.lib.stylix;
+
+      # Will wrap with (parentheses) if the expr contains operators with lower precedence than `&&`
+      wrapExprWith =
+        {
+          autoWrapExpr ? true,
+          trimExpr ? true,
+          indentMultilineExpr ? true,
+        }:
+        expr:
+        let
+          trimmed = if trimExpr then lib.trim expr else expr;
+          isWrapped = builtins.match ''[(].*[)]'' trimmed != null;
+          hasNewlines = lib.hasInfix "\n" trimmed;
+          needsWrapping = builtins.any (op: lib.hasInfix op trimmed) [
+            # These operators have lower precedence than `&&`
+            # See https://nix.dev/manual/nix/2.28/language/operators
+            "||"
+            "->"
+            "|>"
+            "<|"
+            # These keywords would also need wrapping
+            "with "
+            "assert "
+          ];
+          indented =
+            if indentMultilineExpr then
+              lib.pipe trimmed [
+                (lib.strings.splitString "\n")
+                (map (line: if line == "" then "" else "  " + line))
+                (builtins.concatStringsSep "\n")
+              ]
+            else
+              trimmed;
+          wrapped = if hasNewlines then "(\n${indented}\n)" else "(${trimmed})";
+        in
+        if autoWrapExpr && !isWrapped && needsWrapping then wrapped else trimmed;
     in
     {
       mkEnableTarget =
@@ -45,13 +81,26 @@
         {
           name,
           autoEnable ? true,
-        }:
+          autoEnableExpr ? null,
+          autoWrapExpr ? true,
+          example ? if args ? autoEnableExpr then true else !autoEnable,
+        }@args:
+        let
+          wrapExpr = wrapExprWith {
+            inherit autoWrapExpr;
+          };
+        in
         self.mkEnableIf {
-          description = "Whether to enable theming for ${name}.";
+          description = "Whether to enable theming for ${name}";
           default = cfg.autoEnable && autoEnable;
-          ${if autoEnable then "defaultText" else null} =
-            lib.literalExpression "stylix.autoEnable";
-          example = !autoEnable;
+          defaultText =
+            if args ? autoEnableExpr then
+              lib.literalExpression "stylix.autoEnable && ${wrapExpr autoEnableExpr}"
+            else if autoEnable then
+              lib.literalExpression "stylix.autoEnable"
+            else
+              false;
+          inherit example;
         };
 
       mkEnableWallpaper =
