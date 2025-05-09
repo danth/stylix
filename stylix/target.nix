@@ -44,14 +44,28 @@
         {
           humanName,
           autoEnable ? true,
-        }:
+          autoEnableExpr ? null,
+          defaultText ? null,
+          example ?
+            if args ? autoEnableExpr || args ? defaultTex then true else !autoEnable,
+        }@args:
+        assert !(args ? autoEnableExpr && args ? defaultText);
+        let
+          wrapExpr = expr: if lib.strings.hasInfix " " expr then "(${expr})" else expr;
+        in
         lib.mkEnableOption "theming for ${humanName}"
         // {
           default = cfg.enable && cfg.autoEnable && autoEnable;
-          example = !autoEnable;
-        }
-        // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalMD "same as `stylix.autoEnable`";
+          defaultText =
+            if args ? defaultText then
+              defaultText
+            else if args ? autoEnableExpr then
+              lib.literalExpression "stylix.enable && stylix.autoEnable && ${wrapExpr autoEnableExpr}"
+            else if autoEnable then
+              lib.literalExpression "stylix.enable && stylix.autoEnable"
+            else
+              false;
+          inherit example;
         };
 
       mkEnableWallpaper =
