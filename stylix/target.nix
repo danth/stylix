@@ -34,28 +34,44 @@
   config.lib.stylix =
     let
       cfg = config.stylix;
+      self = config.lib.stylix;
     in
     {
       mkEnableTarget =
         humanName: autoEnable:
-        lib.mkEnableOption "theming for ${humanName}"
-        // {
+        self.mkEnableIf {
+          description = "Whether to enable theming for ${humanName}.";
           default = cfg.autoEnable && autoEnable;
+          ${if autoEnable then "defaultText" else null} =
+            lib.literalExpression "stylix.autoEnable";
           example = !autoEnable;
-        }
-        // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalExpression "stylix.autoEnable";
         };
+
       mkEnableWallpaper =
         humanName: autoEnable:
-        lib.mkOption {
-          default = config.stylix.image != null && autoEnable;
-          example = config.stylix.image == null;
+        self.mkEnableIf {
           description = "Whether to set the wallpaper for ${humanName}.";
+          default = config.stylix.image != null && autoEnable;
+          defaultText =
+            if autoEnable then lib.literalExpression "stylix.image != null" else false;
+          example = config.stylix.image == null;
+        };
+
+      mkEnableIf =
+        {
+          description,
+          default,
+          defaultText ? null,
+          example ? if args ? defaultText then true else !default,
+        }@args:
+        lib.mkOption {
           type = lib.types.bool;
-        }
-        // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalExpression "stylix.image != null";
+          defaultText = if args ? defaultText then defaultText else default;
+          inherit
+            default
+            description
+            example
+            ;
         };
     };
 }
