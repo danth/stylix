@@ -38,6 +38,13 @@
     {
       mkEnableTarget =
         humanName: autoEnable:
+        config.lib.stylix.mkEnableTargetWith { inherit humanName autoEnable; };
+
+      mkEnableTargetWith =
+        {
+          humanName,
+          autoEnable ? true,
+        }:
         lib.mkEnableOption "theming for ${humanName}"
         // {
           default = cfg.enable && cfg.autoEnable && autoEnable;
@@ -46,6 +53,7 @@
         // lib.optionalAttrs autoEnable {
           defaultText = lib.literalMD "same as `stylix.autoEnable`";
         };
+
       mkEnableWallpaper =
         humanName: autoEnable:
         lib.mkOption {
