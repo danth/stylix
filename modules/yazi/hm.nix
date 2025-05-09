@@ -42,6 +42,10 @@
           tab_active = mkBoth base00 blue;
           tab_inactive = mkBoth base05 base01;
           border_style = mkFg base04;
+
+          count_copied = mkBoth base00 green;
+          count_cut = mkBoth base00 red;
+          count_selected = mkBoth base00 yellow;
         };
 
         mode = {
