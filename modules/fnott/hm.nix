@@ -7,7 +7,7 @@
     lib.mkIf (config.stylix.enable && config.stylix.targets.fnott.enable)
       (
         let
-          font = config.stylix.fonts.sansSerif.name;
+          font = "${config.stylix.fonts.sansSerif.name}:size=${toString config.stylix.fonts.sizes.popups}";
           fg = c: "${c}ff";
           bg =
             c:
