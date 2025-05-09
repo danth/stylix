@@ -28,7 +28,7 @@
           };
 
           cwd = mkFg cyan;
-          hovered = (mkBoth base05 base02) // {
+          hovered = (mkBg base02) // {
             bold = true;
           };
           preview_hovered = hovered;
