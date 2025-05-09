@@ -5,7 +5,6 @@
   pkgs,
   ...
 }:
-
 let
   copyModules =
     builtins.map
@@ -14,7 +13,11 @@ let
           path,
           condition ? lib.const true,
         }:
-        { config, osConfig, ... }:
+        {
+          config,
+          osConfig,
+          ...
+        }:
         lib.mkIf (condition config) (
           lib.setAttrByPath path (lib.mkDefault (lib.getAttrFromPath path osConfig))
         )
@@ -157,7 +160,34 @@ let
         {
           path = [
             "stylix"
+            "themeGeneration"
             "polarity"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "contrast"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "scheme"
           ];
         }
         {
@@ -169,7 +199,6 @@ let
           ];
         }
       ];
-
 in
 {
   options.stylix.homeManagerIntegration = {

@@ -11,7 +11,7 @@ in
     lib.mkIf (config.stylix.enable && config.stylix.targets.glance.enable)
       {
         services.glance.settings.theme = {
-          light = config.stylix.polarity == "light";
+          light = config.stylix.themeGeneration.polarity == "light";
           contrast-multiplier = 1.0;
           background-color = rgb-to-hsl "base00";
           primary-color = rgb-to-hsl "base05";

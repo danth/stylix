@@ -133,7 +133,6 @@
             hooks = {
               deadnix.enable = true;
               editorconfig-checker.enable = true;
-              hlint.enable = true;
 
               treefmt = {
                 enable = true;
@@ -199,18 +198,12 @@
         formatter = pkgs.treefmt.withConfig {
           runtimeInputs = with pkgs; [
             nixfmt-rfc-style
-            stylish-haskell
           ];
 
           settings = {
             on-unmatched = "info";
             tree-root-file = "flake.nix";
-
             formatter = {
-              stylish-haskell = {
-                command = "stylish-haskell";
-                includes = [ "*.hx" ];
-              };
               nixfmt = {
                 command = "nixfmt";
                 options = [ "--width=80" ];
@@ -224,7 +217,6 @@
           let
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
-              palette-generator = pkgs.callPackage ./palette-generator { };
             };
 
             # Testbeds are virtual machines based on NixOS, therefore they are
@@ -249,6 +241,7 @@
     )
     // {
       nixosModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
@@ -256,8 +249,6 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -266,6 +257,7 @@
         };
 
       homeManagerModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
@@ -273,8 +265,6 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
               };
             }
@@ -282,6 +272,7 @@
         };
 
       darwinModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
@@ -289,8 +280,6 @@
             {
               stylix = {
                 inherit inputs;
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -299,14 +288,13 @@
         };
 
       nixOnDroidModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/droid inputs)
             {
               stylix = {
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };

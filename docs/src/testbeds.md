@@ -52,7 +52,6 @@ github:danth/stylix
 └───packages
     └───x86_64-linux
         ├───docs: package 'stylix-book'
-        ├───palette-generator: package 'palette-generator'
         ├───"testbed:gnome:default:dark:image:scheme:cursor": package 'testbed-gnome-default-dark-image-scheme-cursor'
         ├───"testbed:gnome:default:dark:image:scheme:cursorless": package 'testbed-gnome-default-dark-image-scheme-cursorless'
         ├───"testbed:gnome:default:dark:image:schemeless:cursorless": package 'testbed-gnome-default-dark-image-schemeless-cursorless'
