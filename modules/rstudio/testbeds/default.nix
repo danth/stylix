@@ -1,17 +1,18 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   package = pkgs.rstudio;
 in
 {
-  stylix.testbed.ui = {
-    application = {
-
-      name = "rstudio";
-      inherit package;
-    };
-    command.text = "rstudio";
+  stylix.testbed.ui.application = {
+    name = "RStudio";
+    inherit package;
   };
 
-  environment.systemPackages = [ package ];
+  home-manager.sharedModules = lib.singleton {
+    programs.rstudio = {
+      enable = true;
+      inherit package;
+    };
+  };
 }
