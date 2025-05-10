@@ -18,7 +18,7 @@ let
   homeManagerConfiguration = inputs.home-manager.lib.homeManagerConfiguration {
     inherit pkgs;
     modules = [
-      inputs.self.homeManagerModules.stylix
+      inputs.self.homeModules.stylix
       ./settings.nix
       {
         home = {
