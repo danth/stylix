@@ -34,7 +34,12 @@ Other files needed by the module can also be stored within the
 
 ## Module template
 
-All modules should have an enable option created using `mkEnableTarget`.
+Modules should be created using `mkTarget` whenever possible.
+
+When using `mkTarget`, request it as a non-destructured arg before the optional
+module args. See the below example.
+
+When impossible, modules should have an enable option created using `mkEnableTarget`.
 This is similar to
 [`mkEnableOption`](https://nix-community.github.io/docnix/reference/lib/options/lib-options-mkenableoption/)
 from the standard library, however it integrates with
@@ -42,7 +47,27 @@ from the standard library, however it integrates with
 [`stylix.autoEnable`](./options/nixos.md#stylixautoenable)
 and generates more specific documentation.
 
-A general format for modules is shown below.
+General formats for modules are shown below.
+
+Using `mkTarget`:
+
+```nix
+mkTarget:
+{ config, lib, ... }: # this line for demonstration purposes only
+mkTarget
+{
+  name = "«target attribute name»";
+  humanName = "«human readable name»";
+
+  configElements =
+    { colors }:
+    {
+      programs.«name».backgroundColor = colors.base00;
+    };
+}
+```
+
+Manually using `mkEnableTarget`:
 
 ```nix
 { config, lib, ... }:
@@ -58,20 +83,29 @@ A general format for modules is shown below.
 }
 ```
 
-The human readable name will be inserted into the following sentence:
+### `mkTarget`
 
-> Whether to enable theming for «human readable name».
+The `mkTarget` function is a special function which automatically generates
+options and guards configuration with`stylix.${attr} != null` on configuration
+to cut down on boilerplate.
+
+When using this function, do not access Stylix options through `config` outside
+of the generated abstractions.
+
+Arguments without defaults must be set explicitly.
+
+| Argument         | Type                                                      | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                | Example                                                     |
+| ---------------- | --------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `name`           | String                                                    |         | Used when generating options; `stylix.targets.${name}`                                                                                                                                                                                                                                                                                                                                                     | "firefox"                                                   |
+| `humanName`      | String                                                    |         | Used when generating enable option; `stylix.targets.${name}.enable` has a description of "Whether to enable theming for ${humanName}."                                                                                                                                                                                                                                                                     | "Firefox"                                                   |
+| `autoEnable`     | Boolean                                                   | true    | Whether the target should be auto-enabled. Should be set to `false` if one of the following applies:<ul><li>The module requires further manual setup to work correctly.</li><li>There is no reliable way to detect whether the target is installed, *and* enabling it unconditionally would cause problems.</li></ul>                                                                                      | `false`                                                     |
+| `extraOptions`   | Attrset of option declarations                            | { }     | Attributes will be mapped to `stylix.targets.${name}.${option}`                                                                                                                                                                                                                                                                                                                                            | `{ colorTheme.enable = lib.mkEnableOption "color theme"; }` |
+| `configElements` | List of or single (attrset or function returning attrset) | { }     | Function(s) should take the Stylix attributes that it needs (e.g. `colors`, `image`, `fonts`) and `cfg` if necessary. This `cfg` is an alias for `config.stylix.targets.${name}`. Function(s) should return an attribute set to be merged into `config`. If any of the Stylix attributes needed by a/the function are `null`, i.e. if the Stylix option is disabled, the configuration will not be merged. | *See above template*                                        |
+| `generalConfig`  | Null or function returning attrset                        | null    | Same format as functions under `configElements`. Merged regardless of whether requested Stylix options are `null`. Avoid use when possible.                                                                                                                                                                                                                                                                | *See above template*                                        |
 
 If your module will touch options outside of `programs.«name»` or `services.«name»`,
-it should include an additional condition in `mkIf` to prevent any effects
-when the target is not installed.
-
-The boolean value after `mkEnableTarget` should be changed to `false` if
-one of the following applies:
-
-- The module requires further manual setup to work correctly.
-- There is no reliable way to detect whether the target is installed, *and*
-  enabling it unconditionally would cause problems.
+it should include config guarded by `mkIf` to prevent any effects when the
+target is not installed.
 
 ### Overlays
 
