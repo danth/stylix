@@ -18,6 +18,12 @@
     github = "cluther";
     githubId = 86579;
   };
+  gideonwolfe = {
+    email = "wolfegideon@gmail.com";
+    name = "Gideon Wolfe";
+    github = "gideonwolfe";
+    githubId = 32942052;
+  };
   make-42 = {
     email = "ontake@ontake.dev";
     name = "Louis Dalibard";
