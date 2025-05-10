@@ -5,7 +5,7 @@
 }:
 {
   options.stylix.targets.wofi.enable =
-    config.lib.stylix.mkEnableTarget "wofi" config.programs.wofi.enable;
+    config.lib.stylix.mkEnableTarget "wofi" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.wofi.enable) {
     programs.wofi.style =
