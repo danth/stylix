@@ -30,12 +30,12 @@ mkTarget {
 
               "urgency=low" = {
                 background-color = "${base00}${makoOpacity}";
-                border-color = base0D;
+                border-color = base03;
                 text-color = base0A;
               };
               "urgency=high" = {
                 background-color = "${base00}${makoOpacity}";
-                border-color = base0D;
+                border-color = base08;
                 text-color = base08;
               };
             };
