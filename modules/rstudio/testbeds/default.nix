@@ -4,15 +4,9 @@ let
   package = pkgs.rstudio;
 in
 {
-  stylix.testbed.ui.application = {
-    name = "RStudio";
-    inherit package;
-  };
+  stylix.testbed.ui.command.text = lib.getExe package;
 
   home-manager.sharedModules = lib.singleton {
-    programs.rstudio = {
-      enable = true;
-      inherit package;
-    };
+    home.packages = [ package ];
   };
 }
