@@ -1,10 +1,6 @@
 {
-  services = {
-    displayManager.sddm.enable = true;
-
-    xserver = {
-      enable = true;
-      desktopManager.plasma5.enable = true;
-    };
+  config = {
+    stylix.testbed.ui.desktop = "kde";
+    services.displayManager.autoLogin.enable = false;
   };
 }
