@@ -154,7 +154,7 @@
             src = ./.;
           };
 
-          maintainers-sorted = (import ./stylix/check-maintainers-sorted.nix) pkgs;
+          maintainers-sorted = pkgs.callPackage ./stylix/check-maintainers-sorted.nix { };
         } self.packages.${system};
 
         devShells = {
