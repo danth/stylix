@@ -1,0 +1,54 @@
+# This file is used by .github/workflows/labels.yml
+# This version uses `sync-labels: false`, meaning that a non-match will NOT
+# remove the label
+---
+"backport release-24.11":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/*"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: "flake.lock"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "README.md"
+
+nixos:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "stylix/nixos/*"
+          - "modules/*/nixos.nix"
+
+home-manager:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "stylix/hm/**"
+          - "modules/*/hm.nix"
+
+darwin:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "stylix/darwin/**"
+          - "modules/*/darwin.nix"
+
+droid:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "stylix/droid/**"
+          - "modules/*/droid.nix"
+
+overlay:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "stylix/overlays.nix"
+          - "modules/*/overlay.nix"
+
+testbed:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "stylix/testbed.nix"
+          - "modules/testbed/**"
