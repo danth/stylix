@@ -228,7 +228,7 @@ let
             write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
           ''
           ''
-            PATH="${pkgs.imagemagick}/bin:$PATH"
+            PATH="${lib.getBin pkgs.imagemagick}/bin:$PATH"
 
             mkdir --parents "$wallpaper/contents/images"
 

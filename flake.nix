@@ -141,14 +141,20 @@
               };
 
               statix.enable = true;
-              typos.enable = true;
+              typos = {
+                enable = true;
+                settings.configuration = ''
+                  [default.extend-identifiers]
+                  MrSom3body="MrSom3body"
+                '';
+              };
               yamllint.enable = true;
             };
 
             src = ./.;
           };
 
-          maintainers-sorted = (import ./stylix/check-maintainers-sorted.nix) pkgs;
+          maintainers-sorted = pkgs.callPackage ./stylix/check-maintainers-sorted.nix { };
         } self.packages.${system};
 
         devShells = {
