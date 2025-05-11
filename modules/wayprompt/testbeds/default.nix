@@ -6,7 +6,6 @@
 }:
 let
   pkg = pkgs.wayprompt;
-  waypromptCmd = "'${lib.getExe' pkg "wayprompt"}' --title \"Stylix test\" --description \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\" --prompt \"Enter your password\" --button-ok \"OK\" --button-not-ok \"Not OK\" --button-cancel \"Cancel\" --get-pin";
 in
 {
   programs.sway.enable = true;
@@ -28,7 +27,17 @@ in
     wayland.windowManager.sway = {
       enable = true;
       config.startup = [
-        { command = waypromptCmd; }
+        {
+          command = ''
+            '${lib.getExe' pkg "wayprompt"}' \
+              --title "Stylix test" \
+              --description "Lorem ipsum dolor sit amet, consectetur adipiscing elit." \
+              --prompt "Enter your password" \
+              --button-ok "OK" \
+              --button-not-ok "Not OK" \
+              --button-cancel "Cancel" \
+              --get-pin'';
+        }
       ];
     };
   };
