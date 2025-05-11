@@ -1,5 +1,5 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.nukdokplex ];
   name = "wayprompt";
+  maintainers = [ lib.maintainers.nukdokplex ];
 }
