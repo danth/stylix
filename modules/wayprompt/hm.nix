@@ -3,8 +3,7 @@ let
   cfg = config.stylix.targets.wayprompt;
 in
 {
-  options.stylix.targets.wayprompt.enable =
-    config.lib.stylix.mkEnableTarget "wayprompt" true;
+  options.stylix.targets.wayprompt.enable = config.lib.stylix.mkEnableTarget "wayprompt" true;
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
     programs.wayprompt.settings.colours =
@@ -20,15 +19,15 @@ in
         pin-square = base05;
 
         ok-button = green;
-        ok-button-border = base05;
+        ok-button-border = green;
         ok-button-text = base00;
 
         not-ok-button = yellow;
-        not-ok-button-border = base05;
+        not-ok-button-border = yellow;
         not-ok-button-text = base00;
 
         cancel-button = red;
-        cancel-button-border = base05;
+        cancel-button-border = red;
         cancel-button-text = base00;
       };
   };
