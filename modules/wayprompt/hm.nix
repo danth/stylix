@@ -1,6 +1,5 @@
 { config, lib, ... }:
 let
-  c = color: "0x${color}";
   cfg = config.stylix.targets.wayprompt;
 in
 {
@@ -8,27 +7,29 @@ in
     config.lib.stylix.mkEnableTarget "wayprompt" true;
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
-    programs.wayprompt.settings.colours = with config.lib.stylix.colors; {
-      background = c base00;
-      border = c base0D;
-      text = c base05;
-      error-text = c base08;
+    programs.wayprompt.settings.colours =
+      with config.lib.stylix.colors;
+      lib.mapAttrs (_: color: "0x${color}") {
+        background = base00;
+        border = base0D;
+        text = base05;
+        error-text = base08;
 
-      pin-background = c base01;
-      pin-border = c base05;
-      pin-square = c base05;
+        pin-background = base01;
+        pin-border = base05;
+        pin-square = base05;
 
-      ok-button = c base0B; # green
-      ok-button-border = c base05;
-      ok-button-text = c base00;
+        ok-button = green;
+        ok-button-border = base05;
+        ok-button-text = base00;
 
-      not-ok-button = c base0A; # yellow
-      not-ok-button-border = c base05;
-      not-ok-button-text = c base00;
+        not-ok-button = yellow;
+        not-ok-button-border = base05;
+        not-ok-button-text = base00;
 
-      cancel-button = c base08; # red
-      cancel-button-border = c base05;
-      cancel-button-text = c base00;
-    };
+        cancel-button = red;
+        cancel-button-border = base05;
+        cancel-button-text = base00;
+      };
   };
 }
