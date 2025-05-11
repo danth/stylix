@@ -1,9 +1,9 @@
 # Slight modification from nixpkgs's script: https://github.com/NixOS/nixpkgs/commit/4a694fc50007076566a204d6ea623fd5fc7ddbfa
 # Copyright (c) 2003-2025 Eelco Dolstra and the Nixpkgs/NixOS contributors
 
-pkgs:
+{ lib, runCommandLocal }:
 let
-  inherit (pkgs.lib)
+  inherit (lib)
     add
     attrNames
     attrValues
@@ -64,7 +64,7 @@ let
   );
 in
 assert length (attrValues maintainers) < 1 || errors == 0;
-pkgs.runCommandLocal "maintainers-sorted" { } "mkdir $out"
+runCommandLocal "maintainers-sorted" { } "mkdir $out"
 
 # generate edit commands to sort the list.
 # may everything following the last current entry (closing } ff) in the wrong place
