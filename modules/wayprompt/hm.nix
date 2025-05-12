@@ -6,7 +6,7 @@ let
 in
 {
   options.stylix.targets.wayprompt.enable =
-    config.lib.stylix.mkEnableTarget "wayprompt" true;
+    config.lib.stylix.mkEnableTarget "Wayprompt" true;
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
     programs.wayprompt.settings.colours = with config.lib.stylix.colors; {
