@@ -1,6 +1,8 @@
 { config, lib, ... }:
 let
   cfg = config.stylix.targets.wayprompt;
+
+  opacity = lib.toHexString (builtins.ceil (config.stylix.opacity.popups * 255));
 in
 {
   options.stylix.targets.wayprompt.enable =
@@ -8,7 +10,7 @@ in
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {
     programs.wayprompt.settings.colours = with config.lib.stylix.colors; {
-      background = base00;
+      background = "${base00-hex}${opacity}";
       border = base0D;
       text = base05;
       error-text = base08;
