@@ -12,24 +12,23 @@
         && config.programs.zellij.enable
       )
       {
-        xdg.configFile."zellij/themes/stylix.kdl".text =
-          with config.lib.stylix.colors.withHashtag; ''
-            themes {
-              default {
-                bg "${base03}";
-                fg "${base05}";
-                red "${base01}";
-                green "${base0B}";
-                blue "${base0D}";
-                yellow "${base0A}";
-                magenta "${base0E}";
-                orange "${base09}";
-                cyan "${base0C}";
-                black "${base00}";
-                white "${base07}";
-              }
-            }
-          '';
+        programs.zellij.themes.stylix = {
+          themes = with config.lib.stylix.colors.withHashtag; {
+            default = {
+              bg = base03;
+              fg = base05;
+              red = base01;
+              green = base0B;
+              blue = base0D;
+              yellow = base0A;
+              magenta = base0E;
+              orange = base09;
+              cyan = base0C;
+              black = base00;
+              white = base07;
+            };
+          };
+        };
       };
 
 }
