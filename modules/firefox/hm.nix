@@ -173,8 +173,8 @@ in
       lib.optional
         (
           config.programs.${target.path}.enable
-          && missingProfiles != [ ]
           && config.programs.${target.path}.enableProfileWarnings
+          && missingProfiles != [ ]
         )
         ''
           stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` does not include the following profile(s):
