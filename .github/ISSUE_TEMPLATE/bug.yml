@@ -1,6 +1,6 @@
 ---
 description: Report a bug
-labels: [bug]
+labels: ["kind: bug"]
 name: Bug
 title: "<SCOPE>: <SUMMARY>"
 
