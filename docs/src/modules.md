@@ -5,12 +5,19 @@
 Currently the easiest way to test Stylix is to use the new code in your actual
 configuration.
 
-You might find it useful to change the flake reference in your configuration
-from `github:nix-community/stylix` to `git+file:/home/user/path/to/stylix` so that you
-don't need to push your changes to GitHub during testing.
+You might find it useful to override Stylix' input flake reference on your
+flake, from `github:nix-community/stylix` to
+`git+file:/home/user/path/to/stylix`, so that you don't need to push changes to
+GitHub during testing.
 
-Then, remember to run `nix flake lock --update-input stylix` to refresh the
-flake each time you make an edit.
+To do that, instead of editing your `flake.nix`, you can leverage `nix`'
+`--override-input` parameter (which can also be supplied through their
+frontends: `nixos-rebuild`, `nix-on-droid` and even `nh`). It allows you to
+deploy your changes in one fell swoop, without having to update the lock file of
+your flake every time you make an edit.
+
+Just append `--override-input stylix git+file:/home/user/path/to/stylix` to your
+standard `nix` (or `nix` frontend) incantation.
 
 Nix only reads files which are tracked by Git, so you also need to `git add
 «file»` after creating a new file.
