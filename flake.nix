@@ -153,8 +153,6 @@
 
             src = ./.;
           };
-
-          maintainers-sorted = pkgs.callPackage ./stylix/check-maintainers-sorted.nix { };
         } self.packages.${system};
 
         devShells = {
@@ -200,6 +198,7 @@
           runtimeInputs = with pkgs; [
             nixfmt-rfc-style
             stylish-haskell
+            keep-sorted
           ];
 
           settings = {
@@ -215,6 +214,10 @@
                 command = "nixfmt";
                 options = [ "--width=80" ];
                 includes = [ "*.nix" ];
+              };
+              keep-sorted = {
+                command = "keep-sorted";
+                includes = [ "*" ];
               };
             };
           };
