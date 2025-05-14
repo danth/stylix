@@ -262,13 +262,13 @@
                 paletteGenerator =
                   self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
-                homeManagerIntegration.module = self.homeManagerModules.stylix;
+                homeManagerIntegration.module = self.homeModules.stylix;
               };
             }
           ];
         };
 
-      homeManagerModules.stylix =
+      homeModules.stylix =
         { pkgs, ... }@args:
         {
           imports = [
@@ -295,7 +295,7 @@
                 paletteGenerator =
                   self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
-                homeManagerIntegration.module = self.homeManagerModules.stylix;
+                homeManagerIntegration.module = self.homeModules.stylix;
               };
             }
           ];
@@ -311,10 +311,15 @@
                 paletteGenerator =
                   self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
                 base16 = base16.lib args;
-                homeManagerIntegration.module = self.homeManagerModules.stylix;
+                homeManagerIntegration.module = self.homeModules.stylix;
               };
             }
           ];
         };
-    };
+    }
+    //
+      # Drop this alias after 25.11
+      nixpkgs.lib.optionalAttrs (!nixpkgs.lib.oldestSupportedReleaseIsAtLeast 2511) {
+        homeManagerModules = builtins.warn "stylix: flake output `homeManagerModules` has been renamed to `homeModules`" self.homeModules;
+      };
 }
