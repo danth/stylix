@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "adwaita-for-steam": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1741201838,
+        "narHash": "sha256-wo8Y9bZjt3fzKUmZX4KlZaPXomZrXj0N2X6zQyjabeA=",
+        "owner": "tkashkin",
+        "repo": "Adwaita-for-Steam",
+        "rev": "71857bb55993109d2bc3767ad541c3dcd71ce81c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tkashkin",
+        "repo": "Adwaita-for-Steam",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -277,6 +293,7 @@
     },
     "root": {
       "inputs": {
+        "adwaita-for-steam": "adwaita-for-steam",
         "base16": "base16",
         "base16-fish": "base16-fish",
         "base16-helix": "base16-helix",
