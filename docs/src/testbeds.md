@@ -5,15 +5,14 @@ preview themes without installing the target to your live system.
 
 These can be particularly helpful for:
 
-- Working on targets before the login screen, since you can avoid closing
-  your editor to see the result.
+- Working on targets before the login screen, since you can avoid closing your
+editor to see the result.
 - Developing for a different desktop environment than the one you normally use.
 - Reducing the risk of breaking your system while reviewing pull requests.
 
 Testbeds are also built by GitHub Actions for every pull request. This is less
-beneficial compared to running them yourself, since it cannot visually check
-the theme, however it can catch build failures which may have been missed
-otherwise.
+beneficial compared to running them yourself, since it cannot visually check the
+theme, however it can catch build failures which may have been missed otherwise.
 
 ## Creation
 
@@ -22,8 +21,8 @@ automatically loaded as a NixOS module with options such as `stylix.image`
 already defined. The testbed should include any options necessary to install the
 target and any supporting software - for example, a window manager.
 
-If the target can only be used through Home Manager, you can write a
-Home Manager module within the NixOS module using the following format:
+If the target can only be used through Home Manager, you can write a Home
+Manager module within the NixOS module using the following format:
 
 ```nix
 { lib, ... }:
@@ -35,16 +34,16 @@ Home Manager module within the NixOS module using the following format:
 ```
 
 Using `home-manager.sharedModules` is preferred over `home-manager.users.guest`
-since it allows us to easily change the username or add additional users in
-the future.
+since it allows us to easily change the username or add additional users in the
+future.
 
 Once the module is complete, use `git add` to track the file, then the new
 packages will be [available to use](#usage).
 
 ## Usage
 
-You can list the available testbeds by running this command from anywhere
-within the repository:
+You can list the available testbeds by running this command from anywhere within
+the repository:
 
 ```console
 user@host:~$ nix flake show
@@ -74,8 +73,8 @@ To start a testbed, each of which is named in the format
 user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»:«image»:«scheme»:«cursor»
 ```
 
-Any package with a name not fitting the given format is not a testbed,
-and may behave differently with this command, or not work at all.
+Any package with a name not fitting the given format is not a testbed, and may
+behave differently with this command, or not work at all.
 
 Once the virtual machine starts, a window should open, similar to the screenshot
 below. The contents of the virtual machine will vary depending on the target you

@@ -6,6 +6,7 @@
 #
 # [1]: https://github.com/NixOS/nixpkgs/blob/1da63e6cc622a0cb6fd5b86d49923e4eb1e33b70/maintainers/maintainer-list.nix
 {
+  # keep-sorted start case=no numeric=no block=yes
   butzist = {
     email = "adam@szalkowski.de";
     name = "Adam M. Szalkowski";
@@ -55,4 +56,5 @@
     github = "skoove";
     githubId = 53106860;
   };
+  # keep-sorted end
 }

@@ -20,6 +20,7 @@ let
         )
       )
       [
+        # keep-sorted start block=yes
         {
           path = [
             "stylix"
@@ -50,14 +51,7 @@ let
           path = [
             "stylix"
             "fonts"
-            "serif"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sansSerif"
+            "emoji"
           ];
         }
         {
@@ -71,15 +65,14 @@ let
           path = [
             "stylix"
             "fonts"
-            "emoji"
+            "sansSerif"
           ];
         }
         {
           path = [
             "stylix"
             "fonts"
-            "sizes"
-            "desktop"
+            "serif"
           ];
         }
         {
@@ -95,7 +88,7 @@ let
             "stylix"
             "fonts"
             "sizes"
-            "terminal"
+            "desktop"
           ];
         }
         {
@@ -104,6 +97,14 @@ let
             "fonts"
             "sizes"
             "popups"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "fonts"
+            "sizes"
+            "terminal"
           ];
         }
         {
@@ -122,13 +123,6 @@ let
           path = [
             "stylix"
             "opacity"
-            "desktop"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "opacity"
             "applications"
           ];
         }
@@ -136,7 +130,7 @@ let
           path = [
             "stylix"
             "opacity"
-            "terminal"
+            "desktop"
           ];
         }
         {
@@ -144,6 +138,13 @@ let
             "stylix"
             "opacity"
             "popups"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "opacity"
+            "terminal"
           ];
         }
         {
@@ -168,6 +169,7 @@ let
             "platform"
           ];
         }
+        # keep-sorted end
       ];
 
 in
