@@ -4,9 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
     systems.url = "github:nix-systems/default";
@@ -67,7 +67,10 @@
 
     nur = {
       url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
     };
 
     tinted-foot = {
@@ -112,211 +115,10 @@
   };
 
   outputs =
-    {
-      nixpkgs,
-      base16,
-      self,
-      ...
-    }@inputs:
-    inputs.flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        inherit (nixpkgs) lib;
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        checks = lib.attrsets.unionOfDisjoint {
-          git-hooks = inputs.git-hooks.lib.${system}.run {
-            hooks = {
-              deadnix.enable = true;
-              editorconfig-checker.enable = true;
-              hlint.enable = true;
+    { flake-parts, systems, ... }@inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ ./flake ];
 
-              treefmt = {
-                enable = true;
-                package = self.formatter.${system};
-              };
-
-              statix.enable = true;
-              typos = {
-                enable = true;
-                settings.configuration = ''
-                  [default.extend-identifiers]
-                  MrSom3body="MrSom3body"
-                '';
-              };
-              yamllint.enable = true;
-            };
-
-            src = ./.;
-          };
-        } self.packages.${system};
-
-        devShells = {
-          default =
-            let
-              check = pkgs.writeShellApplication {
-                name = "stylix-check";
-                runtimeInputs = with pkgs; [
-                  nix
-                  nix-fast-build
-                ];
-                text = ''
-                  cores="$(nproc)"
-                  system="$(nix eval --expr builtins.currentSystem --impure --raw)"
-                  nix-fast-build \
-                    --eval-max-memory-size 512 \
-                    --eval-workers "$cores" \
-                    --flake ".#checks.$system" \
-                    --no-link \
-                    --skip-cached \
-                    "$@"
-                '';
-              };
-            in
-            pkgs.mkShell {
-              inherit (self.checks.${system}.git-hooks) shellHook;
-
-              packages = [
-                check
-                inputs.home-manager.packages.${system}.default
-                self.checks.${system}.git-hooks.enabledPackages
-                self.formatter.${system}
-              ] ++ self.formatter.${system}.runtimeInputs;
-            };
-
-          ghc = pkgs.mkShell {
-            inputsFrom = [ self.devShells.${system}.default ];
-            packages = [ pkgs.ghc ];
-          };
-        };
-
-        formatter = pkgs.treefmt.withConfig {
-          runtimeInputs = with pkgs; [
-            nixfmt-rfc-style
-            stylish-haskell
-            keep-sorted
-          ];
-
-          settings = {
-            on-unmatched = "info";
-            tree-root-file = "flake.nix";
-
-            formatter = {
-              stylish-haskell = {
-                command = "stylish-haskell";
-                includes = [ "*.hx" ];
-              };
-              nixfmt = {
-                command = "nixfmt";
-                options = [ "--width=80" ];
-                includes = [ "*.nix" ];
-              };
-              keep-sorted = {
-                command = "keep-sorted";
-                includes = [ "*" ];
-              };
-            };
-          };
-        };
-
-        packages =
-          let
-            universalPackages = {
-              docs = import ./docs { inherit pkgs inputs lib; };
-              palette-generator = pkgs.callPackage ./palette-generator { };
-            };
-
-            # Testbeds are virtual machines based on NixOS, therefore they are
-            # only available for Linux systems.
-            testbedPackages = lib.optionalAttrs (lib.hasSuffix "-linux" system) (
-              import ./stylix/testbed.nix { inherit pkgs inputs lib; }
-            );
-
-            # Discord is not available on arm64. This workaround filters out
-            # testbeds using that package, until we have a better way to handle
-            # this.
-            testbedPackages' =
-              if system == "aarch64-linux" then
-                lib.filterAttrs (
-                  name: _: !lib.hasPrefix "testbed:discord:vencord" name
-                ) testbedPackages
-              else
-                testbedPackages;
-          in
-          universalPackages // testbedPackages';
-      }
-    )
-    // {
-      nixosModules.stylix =
-        { pkgs, ... }@args:
-        {
-          imports = [
-            (import ./stylix/nixos inputs)
-            {
-              stylix = {
-                inherit inputs;
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
-                base16 = base16.lib args;
-                homeManagerIntegration.module = self.homeModules.stylix;
-              };
-            }
-          ];
-        };
-
-      homeModules.stylix =
-        { pkgs, ... }@args:
-        {
-          imports = [
-            (import ./stylix/hm inputs)
-            {
-              stylix = {
-                inherit inputs;
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
-                base16 = base16.lib args;
-              };
-            }
-          ];
-        };
-
-      darwinModules.stylix =
-        { pkgs, ... }@args:
-        {
-          imports = [
-            (import ./stylix/darwin inputs)
-            {
-              stylix = {
-                inherit inputs;
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
-                base16 = base16.lib args;
-                homeManagerIntegration.module = self.homeModules.stylix;
-              };
-            }
-          ];
-        };
-
-      nixOnDroidModules.stylix =
-        { pkgs, ... }@args:
-        {
-          imports = [
-            (import ./stylix/droid inputs)
-            {
-              stylix = {
-                paletteGenerator =
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.palette-generator;
-                base16 = base16.lib args;
-                homeManagerIntegration.module = self.homeModules.stylix;
-              };
-            }
-          ];
-        };
-    }
-    //
-      # Drop this alias after 25.11
-      nixpkgs.lib.optionalAttrs (!nixpkgs.lib.oldestSupportedReleaseIsAtLeast 2511) {
-        homeManagerModules = builtins.warn "stylix: flake output `homeManagerModules` has been renamed to `homeModules`" self.homeModules;
-      };
+      systems = import systems;
+    };
 }

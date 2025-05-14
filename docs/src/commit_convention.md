@@ -11,13 +11,14 @@ To keep things consistent, commit messages should follow a format
 
 Where the scope is one of:
 
-| Scope          | Purpose                                                                |
-|----------------|------------------------------------------------------------------------|
-| `ci`           | Changes to GitHub Actions workflows.                                   |
-| `doc`          | Changes to the website, `README.md`, and so on.                        |
-| `stylix`       | Changes in the `stylix` directory, `flake.nix`, and other global code. |
-| Name of target | Changes to code for a particular target.                               |
-| `treewide`     | Changes across many targets.                                           |
+| Scope          | Purpose                                                          |
+|----------------|------------------------------------------------------------------|
+| `ci`           | Changes to GitHub Actions workflows.                             |
+| `doc`          | Changes to the website, `README.md`, and so on.                  |
+| `flake`        | Changes in the `flake` directory, `flake.nix`, and `flake.lock`. |
+| `stylix`       | Changes in the `stylix` directory and other global code.         |
+| Name of target | Changes to code for a particular target.                         |
+| `treewide`     | Changes across many targets.                                     |
 
 The scope is meant to indicate which area of the code was changed. Specifying
 the type of change, such as `feat` or `fix`, is not necessary. Dependency
