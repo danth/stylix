@@ -26,17 +26,17 @@
             text-color = base05;
             progress-color = "over ${base02}";
             font = "${fonts.sansSerif.name} ${toString fonts.sizes.popups}";
-          };
-          criteria = {
-            "urgency=low" = {
-              background-color = "${base00}${makoOpacity}";
-              border-color = base0D;
-              text-color = base0A;
-            };
-            "urgency=high" = {
-              background-color = "${base00}${makoOpacity}";
-              border-color = base0D;
-              text-color = base08;
+            criteria = {
+              "urgency=low" = {
+                background-color = "${base00}${makoOpacity}";
+                border-color = base0D;
+                text-color = base0A;
+              };
+              "urgency=high" = {
+                background-color = "${base00}${makoOpacity}";
+                border-color = base0D;
+                text-color = base08;
+              };
             };
           };
         };
