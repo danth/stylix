@@ -1,11 +1,22 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   options.stylix.targets.foliate.enable =
     config.lib.stylix.mkEnableTarget "Foliate" true;
 
   config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.foliate.enable)
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.targets.foliate.enable
+        # only available on linux
+        && pkgs.stdenv.hostPlatform.isLinux
+      )
       {
         programs.foliate = {
           settings."viewer/view" = {
