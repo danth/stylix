@@ -7,9 +7,12 @@
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.foliate.enable)
       {
-        xdg.configFile."com.github.johnfactotum.Foliate/themes/stylix.json".text =
-          with config.lib.stylix.colors.withHashtag;
-          builtins.toJSON {
+        programs.foliate = {
+          settings."viewer/view" = {
+            theme = "stylix.json";
+          };
+
+          themes.stylix = with config.lib.stylix.colors.withHashtag; {
             label = "Stylix";
             light = {
               fg = base00;
@@ -22,9 +25,6 @@
               link = base0D;
             };
           };
-
-        dconf.settings."com/github/johnfactotum/Foliate/viewer/view" = {
-          theme = "stylix.json";
         };
       };
 }

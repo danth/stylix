@@ -9,5 +9,10 @@ in
     inherit package;
   };
 
-  home-manager.sharedModules = lib.singleton { home.packages = [ package ]; };
+  home-manager.sharedModules = lib.singleton {
+    programs.foliate = {
+      enable = true;
+      inherit package;
+    };
+  };
 }
