@@ -31,7 +31,7 @@
         lib.mkMerge [
           testbedPackages'
           {
-            docs = import "${self}/docs" { inherit pkgs inputs lib; };
+            docs = lib.modules.importApply "${self}/docs" { inherit pkgs inputs lib; };
             palette-generator = pkgs.callPackage "${self}/palette-generator" { };
           }
         ];
