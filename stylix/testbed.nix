@@ -305,5 +305,5 @@ in
 # Testbeds are merged using lib.attrsets.unionOfDisjoint to throw an error if
 # testbed names collide.
 builtins.foldl' lib.attrsets.unionOfDisjoint { } (
-  lib.flatten (map makeTestbeds autoload)
+  builtins.concatMap makeTestbeds autoload
 )
