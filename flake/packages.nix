@@ -20,11 +20,9 @@
 
       packages =
         let
-          # Testbeds are virtual machines based on NixOS, therefore they are
-          # only available for Linux systems.
-          testbedPackages = lib.optionalAttrs (lib.hasSuffix "-linux" system) (
-            import "${self}/stylix/testbed.nix" { inherit pkgs inputs lib; }
-          );
+          testbedPackages = import "${self}/stylix/testbed.nix" {
+            inherit pkgs inputs lib;
+          };
 
           # Discord is not available on arm64. This workaround filters out
           # testbeds using that package, until we have a better way to handle
@@ -38,7 +36,9 @@
               testbedPackages;
         in
         lib.mkMerge [
-          testbedPackages'
+          # Testbeds are virtual machines based on NixOS, therefore they are
+          # only available for Linux systems.
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux testbedPackages')
           {
             docs = pkgs.callPackage "${self}/docs" {
               inherit inputs;
