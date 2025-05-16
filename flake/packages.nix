@@ -31,7 +31,11 @@
         lib.mkMerge [
           testbedPackages'
           {
-            docs = lib.modules.importApply "${self}/docs" { inherit pkgs inputs lib; };
+            docs = pkgs.callPackage "${self}/docs" {
+              inherit inputs;
+              inherit (inputs.nixpkgs.lib) nixosSystem;
+              inherit (inputs.home-manager.lib) homeManagerConfiguration;
+            };
             palette-generator = pkgs.callPackage "${self}/palette-generator" { };
           }
         ];
