@@ -1,20 +1,13 @@
 {
-  lib,
   pkgs,
+  lib,
   inputs,
-  nixosSystem,
-  homeManagerConfiguration,
-  system,
-  callPackage,
-  writeText,
-  stdenvNoCC,
-  mdbook,
-  mdbook-alerts,
-}:
+  ...
+}@args:
 
 let
-  nixosConfiguration = nixosSystem {
-    inherit system;
+  nixosConfiguration = lib.nixosSystem {
+    inherit (pkgs) system;
     modules = [
       inputs.home-manager.nixosModules.home-manager
       inputs.self.nixosModules.stylix
@@ -22,7 +15,7 @@ let
     ];
   };
 
-  homeConfiguration = homeManagerConfiguration {
+  homeManagerConfiguration = inputs.home-manager.lib.homeManagerConfiguration {
     inherit pkgs;
     modules = [
       inputs.self.homeModules.stylix
@@ -42,7 +35,7 @@ let
   platforms = {
     home_manager = {
       name = "Home Manager";
-      configuration = homeConfiguration;
+      configuration = homeManagerConfiguration;
     };
     nixos = {
       name = "NixOS";
@@ -50,7 +43,7 @@ let
     };
   };
 
-  metadata = callPackage "${inputs.self}/stylix/meta.nix" { inherit inputs; };
+  metadata = import "${inputs.self}/stylix/meta.nix" args;
 
   # We construct an index of all Stylix options, using the following format:
   #
@@ -570,7 +563,7 @@ let
     lib.mapAttrsToList (
       path: text:
       let
-        file = writeText path text;
+        file = pkgs.writeText path text;
       in
       "install -D ${file} ${path}"
     ) renderedPages
@@ -614,10 +607,10 @@ let
   '';
 
 in
-stdenvNoCC.mkDerivation {
+pkgs.stdenvNoCC.mkDerivation {
   name = "stylix-book";
   src = ./.;
-  buildInputs = [
+  buildInputs = with pkgs; [
     mdbook
     mdbook-alerts
   ];
