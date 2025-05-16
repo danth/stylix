@@ -22,7 +22,7 @@
         let
           # Testbeds are virtual machines based on NixOS, therefore they are
           # only available for Linux systems.
-          testbedPackages = lib.mkIf (lib.hasSuffix "-linux" system) (
+          testbedPackages = lib.optionalAttrs (lib.hasSuffix "-linux" system) (
             import "${self}/stylix/testbed.nix" { inherit pkgs inputs lib; }
           );
 
