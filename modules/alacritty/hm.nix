@@ -13,6 +13,7 @@ in
   config =
     lib.mkIf (config.stylix.enable && config.stylix.targets.alacritty.enable)
       {
+        foo = "bar";
         programs.alacritty.settings = {
           font = with config.stylix.fonts; {
             normal = {
