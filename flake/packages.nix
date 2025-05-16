@@ -14,8 +14,8 @@
       ...
     }:
     {
-      # We want docs, palette-generator and testbeds to be checked when running
-      # `nix flake check` or `stylix-check`
+      # Build all packages with 'nix flake check' instead of only verifying they
+      # are derivations.
       checks = config.packages;
 
       packages =
