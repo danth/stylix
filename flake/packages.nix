@@ -7,8 +7,17 @@
 {
 
   perSystem =
-    { pkgs, system, ... }:
     {
+      pkgs,
+      system,
+      config,
+      ...
+    }:
+    {
+      # We want docs, palette-generator and testbeds to be checked when running
+      # `nix flake check` or `stylix-check`
+      checks = config.packages;
+
       packages =
         let
           # Testbeds are virtual machines based on NixOS, therefore they are
