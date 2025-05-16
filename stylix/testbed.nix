@@ -158,11 +158,16 @@ let
       directory = "testbeds";
       modules = "${inputs.self}/modules";
     in
-    lib.flatten (
-      lib.mapAttrsToList (
-        module: _:
+    lib.pipe modules [
+      builtins.readDir
+      builtins.attrNames
+      (builtins.concatMap (
+        module:
         let
           testbeds = "${modules}/${module}/${directory}";
+          files = lib.optionalAttrs (builtins.pathExists testbeds) (
+            builtins.readDir testbeds
+          );
         in
         lib.mapAttrsToList (
           testbed: type:
@@ -182,9 +187,9 @@ let
               name = lib.removeSuffix ".nix" testbed;
               path = "${testbeds}/${testbed}";
             }
-        ) (lib.optionalAttrs (builtins.pathExists testbeds) (builtins.readDir testbeds))
-      ) (builtins.readDir modules)
-    );
+        ) files
+      ))
+    ];
 
   makeTestbed =
     testbed: stylix:
