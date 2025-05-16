@@ -23,11 +23,6 @@
         ];
       };
 
-    # Drop this alias after 26.05
-    homeManagerModules = lib.mkIf (lib.oldestSupportedReleaseIsAtLeast 2511) (
-      builtins.warn "stylix: flake output `homeManagerModules` has been renamed to `homeModules`" self.homeModules
-    );
-
     homeModules.stylix =
       { pkgs, ... }@args:
       {
