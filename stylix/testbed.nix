@@ -189,8 +189,8 @@ let
   makeTestbed =
     testbed: stylix:
     let
-      name = builtins.concatStringsSep testbedFieldSeparator (
-        map
+      name =
+        lib.concatMapStringsSep testbedFieldSeparator
           (
             field:
             lib.throwIf (lib.hasInfix testbedFieldSeparator field)
@@ -205,8 +205,7 @@ let
             "image${lib.optionalString (stylix.image or null == null) "less"}"
             "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
             "cursor${lib.optionalString (stylix.cursor or null == null) "less"}"
-          ]
-      );
+          ];
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
