@@ -58,6 +58,13 @@ A general format for modules is shown below.
 }
 ```
 
+> [!CAUTION]
+> You **must** check _both_ `config.stylix.enable` _and_ your target's own
+> `enable` option before defining any config.
+>
+> In the above example this is done using
+> `config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)`.
+
 The human readable name will be inserted into the following sentence:
 
 > Whether to enable theming for «human readable name».

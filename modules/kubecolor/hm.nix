@@ -1,9 +1,12 @@
 { config, lib, ... }:
+let
+  cfg = config.stylix.targets.kubecolor;
+in
 {
   options.stylix.targets.kubecolor.enable =
     config.lib.stylix.mkEnableTarget "kubecolor" true;
 
-  config = lib.mkIf config.stylix.targets.kubecolor.enable {
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
     programs.kubecolor.settings = {
       preset =
         if config.stylix.polarity == "either" then "" else "${config.stylix.polarity}";
