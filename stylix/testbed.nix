@@ -48,6 +48,15 @@ let
           Whether to enable this testbed.
 
           The testbed will not be included as a flake output if set to false;
+
+          > [!CAUTION]
+          >
+          > This option's value can only evaluate `lib` and `pkgs` inputs,
+          > if it reads other inputs, the testbed will fail to evaluate;
+          > e.g., `config` or `options`.
+          >
+          > This restriction was made for performance reasons.
+          > See `isEnabled`.
         '';
       };
     };
@@ -168,6 +177,26 @@ let
       };
     };
 
+  # Creates a minimal configuration to extract the `stylix.testbed.enable`
+  # option value.
+  #
+  # This is for performance reasons. Primarily, to avoid fully evaluating
+  # testbed system configurations to determine flake outputs.
+  # E.g., when running `nix flake show`.
+  isEnabled =
+    module:
+    let
+      minimal = lib.evalModules {
+        modules = [
+          module
+          enableModule
+          { _module.check = false; }
+          { _module.args = { inherit pkgs; }; }
+        ];
+      };
+    in
+    minimal.config.stylix.testbed.enable;
+
   autoload =
     let
       directory = "testbeds";
@@ -245,8 +274,6 @@ let
         ];
       };
 
-      inherit (system.config.stylix.testbed) enable;
-
       script = pkgs.writeShellApplication {
         inherit name;
         text = ''
@@ -266,7 +293,7 @@ let
         '';
       };
     in
-    lib.optionalAttrs enable {
+    lib.optionalAttrs (isEnabled testbed.path) {
       ${name} = script;
     };
 
