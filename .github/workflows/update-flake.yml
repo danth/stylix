@@ -27,18 +27,22 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
-      - uses: DeterminateSystems/update-flake-lock@v25
+      - name: setup git
+        run: |
+          git config --global user.email \
+            "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: update lock files
+        run: |
+          nix flake update --commit-lock-file --option \
+            commit-lock-file-summary "flake: update root flake inputs"
+          nix flake update --commit-lock-file --flake ./flake/dev --option \
+            commit-lock-file-summary "flake: update dev flake inputs"
+
+      - uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update_flake_lock_action_${{ matrix.branch }}
-          commit-msg: "flake: update all inputs"
-          pr-title: "${{ startsWith(matrix.branch, 'release') && format('[{0}] ', matrix.branch) || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
-          pr-labels: dependencies
-          # yamllint disable rule:line-length
-          pr-body: |
-            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
-
-            ```
-            {{ env.GIT_COMMIT_MESSAGE }}
-            ```
-          # yamllint enable rule:line-length
+          title: "${{ startsWith(matrix.branch, 'release') && format('[{0}] ', matrix.branch) || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
+          labels: dependencies

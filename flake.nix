@@ -41,28 +41,12 @@
       flake = false;
     };
 
-    flake-compat.url = "github:edolstra/flake-compat";
-
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        flake-compat.follows = "flake-compat";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-
     gnome-shell = {
       # TODO: Unlocking the input and pointing to official repository requires
       # updating the patch:
       # https://github.com/nix-community/stylix/pull/224#discussion_r1460339607.
       url = "github:GNOME/gnome-shell/48.1";
       flake = false;
-    };
-
-    # The 'home-manager' input is used to generate the documentation.
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nur = {
