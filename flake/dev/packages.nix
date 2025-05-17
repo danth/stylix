@@ -5,18 +5,15 @@
   ...
 }:
 {
-
   perSystem =
     {
       pkgs,
       system,
-      config,
       ...
     }:
     {
       # Build all packages with 'nix flake check' instead of only verifying they
       # are derivations.
-      checks = config.packages;
 
       packages =
         let
@@ -45,7 +42,6 @@
               inherit (inputs.nixpkgs.lib) nixosSystem;
               inherit (inputs.home-manager.lib) homeManagerConfiguration;
             };
-            palette-generator = pkgs.callPackage "${self}/palette-generator" { };
           }
         ];
     };
