@@ -17,7 +17,8 @@ in
         gnome-text-editor = prev.gnome-text-editor.overrideAttrs (oldAttrs: {
           postFixup = ''
             ${oldAttrs.postFixup or ""}
-            cp ${style} $out/share/gnome-text-editor/styles/stylix.xml
+            mkdir -p $out/share/gtksourceview-5/styles
+            cp ${style} $out/share/gtksourceview-5/styles/stylix.xml
           '';
         });
       };
