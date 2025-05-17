@@ -40,11 +40,7 @@
           # only available for Linux systems.
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux testbedPackages')
           {
-            docs = pkgs.callPackage "${self}/docs" {
-              inherit inputs;
-              inherit (inputs.nixpkgs.lib) nixosSystem;
-              inherit (inputs.home-manager.lib) homeManagerConfiguration;
-            };
+            docs = pkgs.callPackage "${self}/docs" { inherit inputs; };
             palette-generator = pkgs.callPackage "${self}/palette-generator" { };
           }
         ];
