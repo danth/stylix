@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.mateusauler ];
   name = "mako";
+  homepage = "https://wayland.emersion.fr/mako/";
+  maintainers = [ lib.maintainers.mateusauler ];
 }
