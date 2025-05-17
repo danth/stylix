@@ -10,6 +10,7 @@ in
   config.lib.stylix = {
     mkOpacityHexColor =
       color: opacity: "0x${opacityHex opacity}${lib.removePrefix "#" color}";
+
     mkHexColor = color: "0x${lib.removePrefix "#" color}";
   };
 }

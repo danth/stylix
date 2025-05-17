@@ -143,10 +143,11 @@ and should be avoided.
 
 ### Hexadecimal colors
 
-You can use for these colors for functions from `config.lib.stylix` to produce hexadecimal outputs:
+- config.lib.stylix.mkHexColor`: Converts a hex `color` (e.g., `RRGGBB` or
+  `#RRGGBB`) to `0xRRGGBB`.
 
-`mkOpacityHexColor`: takes in `color` and `opacity` and returns `0xRRGGBBAA`
-`mkHexColor`: takes in `color` returns `0xRRGGBB`.
+- `config.lib.stylix.mkOpacityHexColor`: Converts a hex `color` and `opacity`
+  (0–1) to `0xRRGGBBAA`.
 
 ## How to apply other things
 
