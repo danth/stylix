@@ -53,7 +53,7 @@ in
               white = base07;
               red = bright-red;
               green = bright-green;
-              inherit yellow;
+              yellow = bright-yellow;
               blue = bright-blue;
               magenta = bright-magenta;
               cyan = bright-cyan;
