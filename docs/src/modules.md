@@ -147,6 +147,14 @@ individually.
 Also note that reading generated files with `builtins.readFile` can be very slow
 and should be avoided.
 
+
+### Hexadecimal colors
+
+You can use for these colors for functions from `config.lib.stylix` to produce hexadecimal outputs:
+
+`mkOpacityHexColor`: takes in `color` and `opacity` and returns `0xRRGGBBAA`
+`mkHexColor`: takes in `color` returns `0xRRGGBB`.
+
 ## How to apply other things
 
 For everything else, like fonts and wallpapers, you can just take option values
