@@ -6,9 +6,14 @@ let
   };
 in
 {
-  stylix.testbed.ui.application = {
-    name = "discord";
-    inherit package;
+  stylix.testbed = {
+    # Discord is not available on arm64.
+    enable = lib.meta.availableOn pkgs.stdenv.hostPlatform package;
+
+    ui.application = {
+      name = "discord";
+      inherit package;
+    };
   };
 
   environment.systemPackages = [ package ];
