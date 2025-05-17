@@ -37,6 +37,21 @@ let
       };
     };
 
+  enableModule =
+    { lib, ... }:
+    {
+      options.stylix.testbed.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        example = lib.literalExpression "lib.meta.availableOn pkgs.stdenv.hostPlatform pkgs.discord";
+        description = ''
+          Whether to enable this testbed.
+
+          The testbed will not be included as a flake output if set to false;
+        '';
+      };
+    };
+
   applicationModule =
     { config, lib, ... }:
     {
@@ -217,6 +232,7 @@ let
 
         modules = [
           commonModule
+          enableModule
           applicationModule
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
@@ -228,6 +244,8 @@ let
           }
         ];
       };
+
+      inherit (system.config.stylix.testbed) enable;
 
       script = pkgs.writeShellApplication {
         inherit name;
@@ -248,7 +266,7 @@ let
         '';
       };
     in
-    {
+    lib.optionalAttrs enable {
       ${name} = script;
     };
 
