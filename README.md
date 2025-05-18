@@ -16,7 +16,7 @@ philosophy.
 
 ## Resources
 
-- [Documentation](https://danth.github.io/stylix)
+- [Documentation](https://nix-community.github.io/stylix/)
 - [GitHub Discussions](https://github.com/nix-community/stylix/discussions)
 - [Matrix room](https://matrix.to/#/#stylix:danth.me)
 
