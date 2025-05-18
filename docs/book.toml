@@ -4,6 +4,6 @@ language = "en"
 
 [output.html]
 site-url = "/stylix/"
-git-repository-url = "https://github.com/danth/stylix"
-edit-url-template = "https://github.com/danth/stylix/edit/master/docs/{path}"
+git-repository-url = "https://github.com/nix-community/stylix"
+edit-url-template = "https://github.com/nix-community/stylix/edit/master/docs/{path}"
 

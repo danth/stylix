@@ -10,7 +10,7 @@ screens, and display managers.
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs = { nixpkgs, stylix, ... }: {
@@ -51,7 +51,7 @@ to NixOS via [Flakes][nix-flakes].
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs = { darwin, nixpkgs, stylix, ... }: {
@@ -81,7 +81,7 @@ is managed by someone else.
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs = { nixpkgs, home-manager, stylix, ... }: {
@@ -111,7 +111,7 @@ module as the `homeManagerModules.stylix` attribute.
 ```nix
 let
   stylix = pkgs.fetchFromGitHub {
-      owner = "danth";
+      owner = "nix-community";
       repo = "stylix";
       rev = "...";
       sha256 = "...";

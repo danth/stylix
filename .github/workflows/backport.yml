@@ -15,7 +15,7 @@ jobs:
 
     if: >
       (
-        github.repository_owner == 'danth' &&
+        github.repository_owner == 'nix-community' &&
         github.event.pull_request.merged == true &&
         (
           github.event_name != 'labeled' ||
