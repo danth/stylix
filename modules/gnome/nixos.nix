@@ -82,7 +82,7 @@ in
               lockAll = true;
               settings."org/gnome/desktop/interface" = {
                 icon-theme = builtins.head (
-                  lib.filter (x: null != x) [
+                  (lib.filter (x: null != x) [
                     (
                       {
                         inherit (iconCfg) dark light;
@@ -91,7 +91,7 @@ in
                     )
                     iconCfg.dark
                     iconCfg.light
-                  ]
+                  ]) ++ [ null ]
                 );
               };
             }
