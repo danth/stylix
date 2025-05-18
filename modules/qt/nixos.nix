@@ -23,8 +23,8 @@ in
 
         Defaults to the standard platform used in the configured DE.
       '';
-      type = lib.types.str;
-      default = "qtct";
+      type = with lib.types; nullOr str;
+      default = null;
     };
   };
 
