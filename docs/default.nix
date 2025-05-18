@@ -345,11 +345,11 @@ let
   # Permalink to view a source file on GitHub. If the commit isn't known,
   # then fall back to the latest commit.
   declarationCommit = inputs.self.rev or "master";
-  declarationPermalink = "https://github.com/danth/stylix/blob/${declarationCommit}";
+  declarationPermalink = "https://github.com/nix-community/stylix/blob/${declarationCommit}";
 
   # Renders a single option declaration. Example output:
   #
-  # - [modules/module1/nixos.nix](https://github.com/danth/stylix/blob/«commit»/modules/module1/nixos.nix)
+  # - [modules/module1/nixos.nix](https://github.com/nix-community/stylix/blob/«commit»/modules/module1/nixos.nix)
   renderDeclaration =
     declaration:
     let

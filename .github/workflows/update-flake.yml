@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   flake-update:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'danth'
+    if: github.repository_owner == 'nix-community'
     strategy:
       matrix:
         branch: [master, release-24.11]
