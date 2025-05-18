@@ -86,14 +86,7 @@
     };
 
     tinted-kitty = {
-      # Lock the tinted-kitty input to prevent upstream breaking changes.
-      #
-      # Considering that Stylix eventually re-implements this input's
-      # functionality [1], it might be easiest to lock this input to avoid
-      # wasted maintenance effort.
-      #
-      # [1]: https://github.com/nix-community/stylix/issues/534
-      url = "github:tinted-theming/tinted-kitty/de6f888497f2c6b2279361bfc790f164bfd0f3fa";
+      url = "github:tinted-theming/tinted-kitty";
       flake = false;
     };
 
