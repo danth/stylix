@@ -48,7 +48,7 @@ within the repository:
 
 ```console
 user@host:~$ nix flake show
-github:danth/stylix
+github:nix-community/stylix
 └───packages
     └───x86_64-linux
         ├───docs: package 'stylix-book'

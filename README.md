@@ -42,7 +42,7 @@ Stylix*](https://youtu.be/ljHkWgBaQWU) YouTube video by
 
 If you have any questions, you are welcome to
 join our [Matrix room](https://matrix.to/#/#stylix:danth.me),
-or ask on [GitHub Discussions](https://github.com/danth/stylix/discussions).
+or ask on [GitHub Discussions](https://github.com/nix-community/stylix/discussions).
 
 ## Example configurations
 
@@ -54,8 +54,8 @@ Photos by [Clay Banks](https://unsplash.com/photos/three-bicycles-parked-in-fron
 and [Derrick Cooper](https://unsplash.com/photos/brown-road-in-forest-during-daytime-L505cPnmIds).
 
 Try a live demo of this theme by running
-`nix run github:danth/stylix#testbed-gnome-light` or
-`nix run github:danth/stylix#testbed-gnome-dark`.
+`nix run github:nix-community/stylix#testbed-gnome-light` or
+`nix run github:nix-community/stylix#testbed-gnome-dark`.
 
 ### KDE Plasma 5
 
