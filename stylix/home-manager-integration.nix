@@ -2,6 +2,7 @@
   lib,
   config,
   options,
+  pkgs,
   ...
 }:
 
@@ -19,6 +20,7 @@ let
         )
       )
       [
+        # keep-sorted start block=yes
         {
           path = [
             "stylix"
@@ -36,48 +38,13 @@ let
           path = [
             "stylix"
             "cursor"
-            "name"
           ];
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "package"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "size"
-          ];
+          condition = _homeConfig: !pkgs.stdenv.hostPlatform.isDarwin;
         }
         {
           path = [
             "stylix"
             "enable"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "serif"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sansSerif"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "monospace"
           ];
         }
         {
@@ -91,8 +58,21 @@ let
           path = [
             "stylix"
             "fonts"
-            "sizes"
-            "desktop"
+            "monospace"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "fonts"
+            "sansSerif"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "fonts"
+            "serif"
           ];
         }
         {
@@ -108,7 +88,7 @@ let
             "stylix"
             "fonts"
             "sizes"
-            "terminal"
+            "desktop"
           ];
         }
         {
@@ -117,6 +97,14 @@ let
             "fonts"
             "sizes"
             "popups"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "fonts"
+            "sizes"
+            "terminal"
           ];
         }
         {
@@ -135,13 +123,6 @@ let
           path = [
             "stylix"
             "opacity"
-            "desktop"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "opacity"
             "applications"
           ];
         }
@@ -149,7 +130,7 @@ let
           path = [
             "stylix"
             "opacity"
-            "terminal"
+            "desktop"
           ];
         }
         {
@@ -157,6 +138,13 @@ let
             "stylix"
             "opacity"
             "popups"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "opacity"
+            "terminal"
           ];
         }
         {
@@ -181,6 +169,7 @@ let
             "platform"
           ];
         }
+        # keep-sorted end
       ];
 
 in
@@ -222,10 +211,19 @@ in
   };
 
   config = lib.optionalAttrs (options ? home-manager) (
-    lib.mkIf config.stylix.homeManagerIntegration.autoImport {
-      home-manager.sharedModules =
-        [ config.stylix.homeManagerIntegration.module ]
-        ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
-    }
+    lib.mkMerge [
+      (lib.mkIf config.stylix.homeManagerIntegration.autoImport {
+        home-manager.sharedModules =
+          [
+            config.stylix.homeManagerIntegration.module
+          ]
+          ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
+      })
+      (lib.mkIf config.home-manager.useGlobalPkgs {
+        home-manager.sharedModules = lib.singleton {
+          config.stylix.overlays.enable = false;
+        };
+      })
+    ]
   );
 }

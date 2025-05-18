@@ -175,7 +175,7 @@ let
       inherit Id Name;
       Description = "Generated from your Home Manager configuration";
       ServiceTypes = [ "Plasma/LookAndFeel" ];
-      Website = "https://github.com/danth/stylix";
+      Website = "https://github.com/nix-community/stylix";
     };
     KPackageStructure = "Plasma/LookAndFeel";
   };
@@ -228,7 +228,7 @@ let
             write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
           ''
           ''
-            PATH="${pkgs.imagemagick}/bin:$PATH"
+            PATH="${lib.getBin pkgs.imagemagick}/bin:$PATH"
 
             mkdir --parents "$wallpaper/contents/images"
 
@@ -280,18 +280,26 @@ let
 
   configPackage =
     pkgs.runCommandLocal "stylix-kde-config"
-      {
-        kcminputrc = formatConfig kcminputrc;
-        kded5rc = formatConfig kded5rc;
-        kdeglobals = formatConfig kdeglobals;
-      }
-      ''
-        mkdir "$out"
+      (
+        {
+          kded5rc = formatConfig kded5rc;
+          kdeglobals = formatConfig kdeglobals;
+        }
+        // (lib.optionalAttrs (config.stylix.cursor != null) {
+          kcminputrc = formatConfig kcminputrc;
+        })
+      )
+      (
+        ''
+          mkdir "$out"
 
-        printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
-        printf '%s\n' "$kded5rc" >"$out/kded5rc"
-        printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
-      '';
+          printf '%s\n' "$kded5rc" >"$out/kded5rc"
+          printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
+        ''
+        + (lib.optionalString (
+          config.stylix.cursor != null
+        ) ''printf '%s\n' "$kcminputrc" >"$out/kcminputrc"'')
+      );
 
   # plasma-apply-wallpaperimage is necessary to change the wallpaper
   # after the first login.
@@ -306,32 +314,36 @@ let
   # might be installed, and look there. The ideal solution would require
   # changes to KDE to make it possible to update the wallpaper through
   # config files alone.
-  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" (
-    mergeWithImage
-      ''
-        set -eu
-        get_exe() {
-          for directory in /run/current-system/sw/bin /usr/bin /bin; do
-            if [[ -f "$directory/$1" ]]; then
-              printf '%s\n' "$directory/$1"
-              return 0
-            fi
-          done
-          echo "Skipping '$1': command not found"
-          return 1
-        }
+  activatorPackage = pkgs.writeShellApplication {
+    name = "stylix-kde-apply-plasma-theme";
+    text =
+      mergeWithImage
+        ''
+          get_exe() {
+            for directory in /run/current-system/sw/bin /usr/bin /bin; do
+              if [[ -f "$directory/$1" ]]; then
+                printf '%s\n' "$directory/$1"
+                return 0
+              fi
+            done
+            echo "Skipping '$1': command not found"
+            return 1
+          }
 
-        if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
-          "$look_and_feel" --apply "${Id}"
-        fi
-      ''
-      ''
-        if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
-          "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}"
-        fi
-      ''
-  );
-  activator = lib.getExe activator';
+          if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
+            "$look_and_feel" --apply "${Id}" ||
+              echo "Failed plasma-apply-lookandfeel, ignoring error."
+          fi
+        ''
+        ''
+          if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
+            "$wallpaper_image" "${themePackage}/share/wallpapers/${Id}" ||
+              echo "Failed plasma-apply-wallpaperimage, ignoring error."
+          fi
+        '';
+    runtimeEnv.QT_QPA_PLATFORM = "minimal";
+  };
+  activator = lib.getExe activatorPackage;
 in
 {
   options.stylix.targets.kde = {
@@ -362,7 +374,7 @@ in
 
           # This activation entry will run the theme activator when the homeConfiguration is activated
           activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            ${activator} || verboseEcho \
+            run ${activator} || verboseEcho \
               "Stylix KDE theme setting failed. This only works in a running Plasma session."
           '';
         };

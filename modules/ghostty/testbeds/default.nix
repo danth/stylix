@@ -3,8 +3,7 @@ let
   package = pkgs.ghostty;
 in
 {
-  stylix.testbed.application = {
-    enable = true;
+  stylix.testbed.ui.application = {
     name = "com.mitchellh.ghostty";
     inherit package;
   };

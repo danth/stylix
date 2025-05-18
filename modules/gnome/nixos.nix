@@ -7,7 +7,8 @@
 
 let
   theme = pkgs.callPackage ./theme.nix {
-    inherit (config.lib.stylix) colors templates;
+    inherit (config.lib.stylix) colors;
+    inherit (config.stylix) inputs;
   };
   cursorCfg = config.stylix.cursor;
   iconCfg = config.stylix.iconTheme;
@@ -58,21 +59,22 @@ in
         # Cursor and icon settings are usually applied via Home Manager,
         # but the login screen uses a separate database.
         services.displayManager.environment.XDG_DATA_DIRS =
-          (lib.makeSearchPath "share" [
-            iconCfg.package
-          ])
-          + ":";
-        environment.systemPackages = [
+          lib.mkIf (iconCfg != null)
+            ((lib.makeSearchPath "share" [
+              iconCfg.package
+            ])
+            + ":");
+        environment.systemPackages = lib.mkIf (cursorCfg != null) [
           cursorCfg.package
         ];
         programs.dconf.profiles.gdm.databases = [
           {
             lockAll = true;
             settings."org/gnome/desktop/interface" = {
-              cursor-theme = cursorCfg.name;
-              cursor-size = lib.gvariant.mkInt32 cursorCfg.size;
+              cursor-theme = lib.mkIf (cursorCfg != null) cursorCfg.name;
+              cursor-size = lib.mkIf (cursorCfg != null) (lib.gvariant.mkInt32 cursorCfg.size);
 
-              icon-theme = builtins.head (
+              icon-theme = lib.mkIf (iconCfg != null) (builtins.head (
                 lib.filter (x: null != x) [
                   (
                     {
@@ -83,7 +85,7 @@ in
                   iconCfg.dark
                   iconCfg.light
                 ]
-              );
+              ));
             };
           }
         ];

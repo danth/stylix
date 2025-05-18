@@ -14,7 +14,7 @@ let
     themeDir="$out/share/plymouth/themes/stylix"
     mkdir -p $themeDir
 
-    ${pkgs.imagemagick}/bin/convert \
+    ${lib.getExe' pkgs.imagemagick "convert"} \
       -background transparent \
       -bordercolor transparent \
       ${

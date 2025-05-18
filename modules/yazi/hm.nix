@@ -28,20 +28,24 @@
           };
 
           cwd = mkFg cyan;
-          hovered = (mkBoth base05 base03) // {
+          hovered = (mkBg base02) // {
             bold = true;
           };
           preview_hovered = hovered;
           find_keyword = (mkFg green) // {
             bold = true;
           };
-          find_position = mkFg base05;
+          find_position = mkFg magenta;
           marker_selected = mkSame yellow;
           marker_copied = mkSame green;
           marker_cut = mkSame red;
           tab_active = mkBoth base00 blue;
           tab_inactive = mkBoth base05 base01;
           border_style = mkFg base04;
+
+          count_copied = mkBoth base00 green;
+          count_cut = mkBoth base00 red;
+          count_selected = mkBoth base00 yellow;
         };
 
         mode = {

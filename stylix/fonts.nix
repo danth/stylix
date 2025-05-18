@@ -8,57 +8,49 @@
 let
   cfg = config.stylix.fonts;
 
-  fontType = lib.types.submodule {
-    options = {
-      package = lib.mkOption {
-        description = "Package providing the font.";
-        type = lib.types.package;
+  mkFontOptions =
+    {
+      fontName,
+      displayName,
+      package,
+    }:
+    {
+      package = lib.mkPackageOption pkgs package { } // {
+        description = "Package providing the ${displayName} font.";
       };
 
       name = lib.mkOption {
-        description = "Name of the font within the package.";
         type = lib.types.str;
+        description = "Name of the ${displayName} font.";
+        default = fontName;
       };
     };
-  };
 
 in
 {
   options.stylix.fonts = {
-    serif = lib.mkOption {
-      description = "Serif font.";
-      type = fontType;
-      default = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Serif";
-      };
+    serif = mkFontOptions {
+      displayName = "Serif";
+      fontName = "DejaVu Serif";
+      package = "dejavu_fonts";
     };
 
-    sansSerif = lib.mkOption {
-      description = "Sans-serif font.";
-      type = fontType;
-      default = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans";
-      };
+    sansSerif = mkFontOptions {
+      displayName = "Sans-serif";
+      fontName = "DejaVu Sans";
+      package = "dejavu_fonts";
     };
 
-    monospace = lib.mkOption {
-      description = "Monospace font.";
-      type = fontType;
-      default = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans Mono";
-      };
+    monospace = mkFontOptions {
+      displayName = "Monospace";
+      fontName = "DejaVu Sans Mono";
+      package = "dejavu_fonts";
     };
 
-    emoji = lib.mkOption {
-      description = "Emoji font.";
-      type = fontType;
-      default = {
-        package = pkgs.noto-fonts-color-emoji;
-        name = "Noto Color Emoji";
-      };
+    emoji = mkFontOptions {
+      displayName = "Emoji";
+      fontName = "Noto Color Emoji";
+      package = "noto-fonts-color-emoji";
     };
 
     sizes =

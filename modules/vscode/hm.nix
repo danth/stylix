@@ -3,64 +3,50 @@
   config,
   lib,
   ...
-}:
-
-with config.stylix.fonts;
+}@args:
 
 let
-  themeFile = config.lib.stylix.colors {
-    template = ./template.mustache;
-    extension = ".json";
-  };
-
-  themeExtension =
+  extension =
     pkgs.runCommandLocal "stylix-vscode"
       {
         vscodeExtUniqueId = "stylix.stylix";
         vscodeExtPublisher = "stylix";
         version = "0.0.0";
+        theme = builtins.toJSON (import ./templates/theme.nix args);
+        passAsFile = [ "theme" ];
       }
       ''
         mkdir -p "$out/share/vscode/extensions/$vscodeExtUniqueId/themes"
         ln -s ${./package.json} "$out/share/vscode/extensions/$vscodeExtUniqueId/package.json"
-        ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
+        cp "$themePath" "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
       '';
+
+  settings = import ./templates/settings.nix args;
+
+  profile = {
+    extensions = [ extension ];
+    userSettings = settings;
+  };
+
+  cfg = config.stylix.targets.vscode;
 
 in
 {
-  options.stylix.targets.vscode.enable =
-    config.lib.stylix.mkEnableTarget "VSCode" true;
+  options.stylix.targets.vscode = {
+    enable = config.lib.stylix.mkEnableTarget "VSCode" true;
 
-  config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable)
-      {
-        programs.vscode.profiles.default = {
-          extensions = [ themeExtension ];
-          userSettings = {
-            "workbench.colorTheme" = "Stylix";
-            "editor.fontFamily" = monospace.name;
-            "editor.inlayHints.fontFamily" = monospace.name;
-            "editor.inlineSuggest.fontFamily" = monospace.name;
-            "scm.inputFontFamily" = monospace.name;
-            "debug.console.fontFamily" = monospace.name;
-            "markdown.preview.fontFamily" = sansSerif.name;
-            "chat.editor.fontFamily" = monospace.name;
+    profileNames = lib.mkOption {
+      description = "The VSCode profile names to apply styling on.";
+      type = lib.types.listOf lib.types.str;
+      default = [ "default" ];
+    };
+  };
 
-            # 4/3 factor used for pt to px;
-            "editor.fontSize" = sizes.terminal * 4.0 / 3.0;
-            "debug.console.fontSize" = sizes.terminal * 4.0 / 3.0;
-            "markdown.preview.fontSize" = sizes.terminal * 4.0 / 3.0;
-            "terminal.integrated.fontSize" = sizes.terminal * 4.0 / 3.0;
-            "chat.editor.fontSize" = sizes.terminal * 4.0 / 3.0;
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
+    programs.vscode.profiles = lib.genAttrs cfg.profileNames (_name: profile);
 
-            # other factors (9/14, 13/14, 56/14) based on default for given value
-            # divided by default for `editor.fontSize` (14) from
-            # https://code.visualstudio.com/docs/getstarted/settings#_default-settings.
-            "editor.minimap.sectionHeaderFontSize" =
-              sizes.terminal * 4.0 / 3.0 * 9.0 / 14.0;
-            "scm.inputFontSize" = sizes.terminal * 4.0 / 3.0 * 13.0 / 14.0;
-            "screencastMode.fontSize" = sizes.terminal * 4.0 / 3.0 * 56.0 / 14.0;
-          };
-        };
-      };
+    warnings =
+      lib.optional (config.programs.vscode.enable && cfg.profileNames == [ ])
+        ''stylix: vscode: `config.stylix.targets.vscode.profileNames` is empty. No theming will be applied. Add a profile or disable this warning by setting `stylix.targets.vscode.enable = false`.'';
+  };
 }

@@ -11,34 +11,40 @@ applications that don't fit into any of the groups below. In this case it is up
 to the committer to make sure said application fits in stylistically with the
 rest of the themed applications.
 
-It is also important to note that this is a growing theming guide and when theming an application and you find the guide to be lacking in any way in
-terms of direction, you are encouraged to open an issue regarding what you would like to see added to the style guide.
+It is also important to note that this is a growing theming guide and when
+theming an application and you find the guide to be lacking in any way in terms
+of direction, you are encouraged to open an issue regarding what you would like
+to see added to the style guide.
 
 ## Terms
 
 ### Alternate
 
-An alternate color should be used when something needs to look separate while not
-being drastically different. The smaller or less common element should use the
-alternate color.
+An alternate color should be used when something needs to look separate while
+not being drastically different. The smaller or less common element should use
+the alternate color.
 
 ![Appearance tab in GNOME settings](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/e29f9fec-7b68-45ce-95ef-90d8e787c991)
 
-For example, each section in this settings menu uses the alternate background color
-to separate it from the rest of the window, which is using the default background.
+For example, each section in this settings menu uses the alternate background
+color to separate it from the rest of the window, which is using the default
+background.
 
 ### On/Off
 
-This is for toggles or simple status indicators which have an obvious on and off state.
+This is for toggles or simple status indicators which have an obvious on and off
+state.
 
 ![Toggles in GNOME quick settings](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/710056f6-26f7-47d4-bd2f-1384185fb46a)
 
-In the screenshot above the Wired and Night Light buttons are on, Power Mode is off.
+In the screenshot above the Wired and Night Light buttons are on, Power Mode is
+off.
 
 ### Lists and selections
 
-A list of items to select between, such as tabs in a web browser. The selection is
-the currently active item, or there could be multiple selected depending on the use case.
+A list of items to select between, such as tabs in a web browser. The selection
+is the currently active item, or there could be multiple selected depending on
+the use case.
 
 ![Sidebar of Nautilus file manager](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/3b893677-75e1-4190-b3ab-b07d10930b19)
 
@@ -59,9 +65,9 @@ Window Managers arrange windows and provide decorations like title bars and
 borders. Examples include Sway and i3.
 
 This does not include applications bundled with the desktop environment such as
-file managers, which would fall into the general category. Desktop helpers such as
-taskbars and menus are not technically part of the window manager, although they're
-often configured in the same place.
+file managers, which would fall into the general category. Desktop helpers such
+as taskbars and menus are not technically part of the window manager, although
+they're often configured in the same place.
 
 An urgent window is one which is grabbing for attention - Windows shows this by
 a flashing orange taskbar icon.
@@ -117,8 +123,8 @@ readable when the background is more vibrant.
 For creating modified versions of logos, icons, etc; where we would rather the
 colors be similar to the original.
 
-Note that the colors provided by the scheme won't necessarily match the names given
-below, although most handmade schemes do.
+Note that the colors provided by the scheme won't necessarily match the names
+given below, although most handmade schemes do.
 
 - Background color: base00
 - Alternate background color: base01
@@ -135,13 +141,13 @@ below, although most handmade schemes do.
 
 ![Recolored systemd logo](https://github.com/SomeGuyNamedMy/stylix/assets/28959268/00ba9b23-c7eb-4cbf-9f3d-aa8de159d6dd)
 
-Example of a modified systemd logo. The square brackets are using the main color,
-which is usually be white or black depending on the polarity of the scheme.
+Example of a modified systemd logo. The square brackets are using the main
+color, which is usually be white or black depending on the polarity of the
+scheme.
 
 ## Text Editors/Viewers
 
-Text editors are any application that can view or edit source code.
-Examples include vim, helix, and bat.
+Text editors are any application that can view or edit source code. Examples
+include vim, helix, and bat.
 
-For these please refer to the official
-[base16 style guide](https://github.com/chriskempson/base16/blob/main/styling.md).
+For these please refer to the official [base16 style guide](https://github.com/chriskempson/base16/blob/main/styling.md).

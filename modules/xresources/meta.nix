@@ -1,0 +1,4 @@
+{
+  maintainers = [ ];
+  name = "Xresources file";
+}

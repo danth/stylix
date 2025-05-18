@@ -10,11 +10,18 @@ let
 
 in
 {
-  config = lib.mkIf (config.stylix.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.pointerCursor = {
-      inherit (cfg) name package size;
-      x11.enable = true;
-      gtk.enable = true;
-    };
-  };
+  config =
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.cursor != null
+        && pkgs.stdenv.hostPlatform.isLinux
+      )
+      {
+        home.pointerCursor = {
+          inherit (cfg) name package size;
+          x11.enable = true;
+          gtk.enable = true;
+        };
+      };
 }

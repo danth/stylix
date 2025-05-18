@@ -2,7 +2,7 @@
 
 let
   theme = config.lib.stylix.colors {
-    templateRepo = config.lib.stylix.templates.tinted-tmux;
+    templateRepo = config.stylix.inputs.tinted-tmux;
     target = "base16";
   };
 

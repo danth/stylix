@@ -1,0 +1,11 @@
+---
+blank_issues_enabled: true
+
+contact_links:
+  - name: Ask on GitHub Discussions
+    url: https://github.com/nix-community/stylix/discussions/new/choose
+    about: For questions or informal discussions
+
+  - name: Ask on Matrix
+    url: https://matrix.to/#/#stylix:danth.me
+    about: For questions or informal discussions

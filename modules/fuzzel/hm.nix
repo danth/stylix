@@ -1,10 +1,6 @@
 { config, lib, ... }:
-
-with config.lib.stylix.colors;
-
 let
   opacity = lib.toHexString (builtins.ceil (config.stylix.opacity.popups * 255));
-
 in
 {
   options.stylix.targets.fuzzel.enable =
@@ -13,7 +9,7 @@ in
   config.programs.fuzzel.settings =
     lib.mkIf (config.stylix.enable && config.stylix.targets.fuzzel.enable)
       {
-        colors = {
+        colors = with config.lib.stylix.colors; {
           background = "${base00-hex}${opacity}";
           text = "${base05-hex}ff";
           placeholder = "${base03-hex}ff";

@@ -5,15 +5,14 @@ preview themes without installing the target to your live system.
 
 These can be particularly helpful for:
 
-- Working on targets before the login screen, since you can avoid closing
-  your editor to see the result.
+- Working on targets before the login screen, since you can avoid closing your
+editor to see the result.
 - Developing for a different desktop environment than the one you normally use.
 - Reducing the risk of breaking your system while reviewing pull requests.
 
 Testbeds are also built by GitHub Actions for every pull request. This is less
-beneficial compared to running them yourself, since it cannot visually check
-the theme, however it can catch build failures which may have been missed
-otherwise.
+beneficial compared to running them yourself, since it cannot visually check the
+theme, however it can catch build failures which may have been missed otherwise.
 
 ## Creation
 
@@ -22,40 +21,47 @@ automatically loaded as a NixOS module with options such as `stylix.image`
 already defined. The testbed should include any options necessary to install the
 target and any supporting software - for example, a window manager.
 
-If the target can only be used through Home Manager, you can write a
-Home Manager module within the NixOS module using the following format:
+If the target can only be used through Home Manager, you can write a Home
+Manager module within the NixOS module using the following format:
 
 ```nix
+{ lib, ... }:
 {
-    home-manager.sharedModules = [{
-        # Write Home Manager options here
-    }];
+  home-manager.sharedModules = lib.singleton {
+    # Write Home Manager options here
+  };
 }
 ```
 
 Using `home-manager.sharedModules` is preferred over `home-manager.users.guest`
-since it allows us to easily change the username or add additional users in
-the future.
+since it allows us to easily change the username or add additional users in the
+future.
 
 Once the module is complete, use `git add` to track the file, then the new
 packages will be [available to use](#usage).
 
 ## Usage
 
-You can list the available testbeds by running this command from anywhere
-within the repository:
+You can list the available testbeds by running this command from anywhere within
+the repository:
 
 ```console
 user@host:~$ nix flake show
-github:danth/stylix
+github:nix-community/stylix
 └───packages
     └───x86_64-linux
         ├───docs: package 'stylix-book'
         ├───palette-generator: package 'palette-generator'
-        ├───testbed:gnome:default:dark: package 'testbed:gnome:default:dark'
-        ├───testbed:gnome:default:light: package 'testbed:gnome:default:light'
-        ├───testbed:kde:default:dark: package 'testbed:kde:default:dark'
-        └───testbed:kde:default:light: package 'testbed:kde:default:light'
+        ├───"testbed:gnome:default:dark:image:scheme:cursor": package 'testbed-gnome-default-dark-image-scheme-cursor'
+        ├───"testbed:gnome:default:dark:image:scheme:cursorless": package 'testbed-gnome-default-dark-image-scheme-cursorless'
+        ├───"testbed:gnome:default:dark:image:schemeless:cursorless": package 'testbed-gnome-default-dark-image-schemeless-cursorless'
+        ├───"testbed:gnome:default:dark:imageless:scheme:cursorless": package 'testbed-gnome-default-dark-imageless-scheme-cursorless'
+        ├───"testbed:gnome:default:light:image:scheme:cursorless": package 'testbed-gnome-default-light-image-scheme-cursorless'
+        ├───"testbed:kde:default:dark:image:scheme:cursor": package 'testbed-kde-default-dark-image-scheme-cursor'
+        ├───"testbed:kde:default:dark:image:scheme:cursorless": package 'testbed-kde-default-dark-image-scheme-cursorless'
+        ├───"testbed:kde:default:dark:image:schemeless:cursorless": package 'testbed-kde-default-dark-image-schemeless-cursorless'
+        ├───"testbed:kde:default:dark:imageless:scheme:cursorless": package 'testbed-kde-default-dark-imageless-scheme-cursorless'
+        └───"testbed:kde:default:light:image:scheme:cursorless": package 'testbed-kde-default-light-image-scheme-cursorless'
 ```
 
 (This has been edited down to only the relevant parts.)
@@ -64,11 +70,11 @@ To start a testbed, each of which is named in the format
 `testbed:«module»:«testbed»:«polarity»`, run the following command:
 
 ```console
-user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»
+user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»:«image»:«scheme»:«cursor»
 ```
 
-Any package with a name not fitting the given format is not a testbed,
-and may behave differently with this command, or not work at all.
+Any package with a name not fitting the given format is not a testbed, and may
+behave differently with this command, or not work at all.
 
 Once the virtual machine starts, a window should open, similar to the screenshot
 below. The contents of the virtual machine will vary depending on the target you
