@@ -46,6 +46,8 @@ in
     config.lib.stylix.mkEnableTarget "GNOME" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gnome.enable) {
+    home.packages = [ pkgs.gnomeExtensions.user-themes ];
+
     dconf.settings = {
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
