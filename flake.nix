@@ -55,7 +55,7 @@
       # TODO: Unlocking the input and pointing to official repository requires
       # updating the patch:
       # https://github.com/nix-community/stylix/pull/224#discussion_r1460339607.
-      url = "github:GNOME/gnome-shell/47.2";
+      url = "github:GNOME/gnome-shell/48.1";
       flake = false;
     };
 
