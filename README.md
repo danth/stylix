@@ -4,7 +4,7 @@
 
 Stylix is a theming framework for [NixOS](https://nixos.org), [Home
 Manager](https://nix-community.github.io/home-manager#ch-introduction),
-[nix-darwin](https://github.com/LnL7/nix-darwin#readme), and
+[nix-darwin](https://github.com/nix-darwin/nix-darwin#readme), and
 [Nix-on-Droid](https://github.com/nix-community/nix-on-droid) that applies
 color schemes, wallpapers, and fonts to a wide range of applications.
 
