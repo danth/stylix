@@ -10,7 +10,7 @@ screens, and display managers.
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs =
@@ -34,7 +34,7 @@ Stylix release. For example:
 ```nix
 {
   nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-  stylix.url = "github:danth/stylix/release-24.11";
+  stylix.url = "github:nix-community/stylix/release-24.11";
 }
 ```
 
@@ -66,7 +66,7 @@ to NixOS via [Flakes][nix-flakes].
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs =
@@ -106,7 +106,7 @@ similar fashion to NixOS via [Flakes][nix-flakes].
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs =
@@ -147,7 +147,7 @@ by someone else.
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs =
@@ -177,7 +177,7 @@ matching Stylix release. For example:
 {
   nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
   home-manager.url = "github:nix-community/home-manager/release-24.11";
-  stylix.url = "github:danth/stylix/release-24.11";
+  stylix.url = "github:nix-community/stylix/release-24.11";
 }
 ```
 
@@ -197,7 +197,7 @@ Home Manager module as the `homeModules.stylix` attribute.
 ```nix
 let
   stylix = pkgs.fetchFromGitHub {
-    owner = "danth";
+    owner = "nix-community";
     repo = "stylix";
     rev = "...";
     sha256 = "...";

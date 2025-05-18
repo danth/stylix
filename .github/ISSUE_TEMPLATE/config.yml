@@ -3,7 +3,7 @@ blank_issues_enabled: true
 
 contact_links:
   - name: Ask on GitHub Discussions
-    url: https://github.com/danth/stylix/discussions/new/choose
+    url: https://github.com/nix-community/stylix/discussions/new/choose
     about: For questions or informal discussions
 
   - name: Ask on Matrix

@@ -14,9 +14,9 @@ body:
         If you need help or are unsure whether this is a Stylix bug, please
         consider reading the [documentation](https://stylix.danth.me) or asking
         for help in a [GitHub
-        Discussion](https://github.com/danth/stylix/discussions) or the [Stylix
-        Matrix Room](https://matrix.to/#/#stylix:danth.me) before opening an
-        issue.
+        Discussion](https://github.com/nix-community/stylix/discussions) or the
+        [Stylix Matrix Room](https://matrix.to/#/#stylix:danth.me) before
+        opening an issue.
 
       options:
         - label: >-
@@ -27,7 +27,7 @@ body:
 
         - label: >-
             I assert that this is not a duplicate of an [existing
-            issue](https://github.com/danth/stylix/issues?q=is%3Aissue).
+            issue](https://github.com/nix-community/stylix/issues?q=is%3Aissue).
 
           required: true
 

@@ -21,7 +21,7 @@ jobs:
   labels:
     name: label-pr
     runs-on: ubuntu-24.04
-    if: github.repository_owner == 'danth' && !contains(github.event.pull_request.title, '[skip treewide]')   # yamllint disable-line rule:line-length
+    if: github.repository_owner == 'nix-community' && !contains(github.event.pull_request.title, '[skip treewide]')   # yamllint disable-line rule:line-length
     steps:
       - uses: actions/create-github-app-token@v2
         id: app-token

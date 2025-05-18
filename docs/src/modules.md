@@ -6,7 +6,7 @@ Currently the easiest way to test Stylix is to use the new code in your actual
 configuration.
 
 You might find it useful to change the flake reference in your configuration
-from `github:danth/stylix` to `git+file:/home/user/path/to/stylix` so that you
+from `github:nix-community/stylix` to `git+file:/home/user/path/to/stylix` so that you
 don't need to push your changes to GitHub during testing.
 
 Then, remember to run `nix flake lock --update-input stylix` to refresh the

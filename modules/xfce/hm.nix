@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 {
-  # Disabled by default due to https://github.com/danth/stylix/issues/180
+  # Disabled by default due to https://github.com/nix-community/stylix/issues/180
   options.stylix.targets.xfce.enable =
     config.lib.stylix.mkEnableTarget "Xfce" false;
 
