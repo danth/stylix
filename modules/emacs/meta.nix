@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.panchoh ];
   name = "Emacs";
+  homepage = "https://www.gnu.org/software/emacs/";
+  maintainers = [ lib.maintainers.panchoh ];
 }
