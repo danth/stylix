@@ -93,7 +93,7 @@
       # wasted maintenance effort.
       #
       # [1]: https://github.com/nix-community/stylix/issues/534
-      url = "github:tinted-theming/tinted-kitty/eb39e141db14baef052893285df9f266df041ff8";
+      url = "github:tinted-theming/tinted-kitty/de6f888497f2c6b2279361bfc790f164bfd0f3fa";
       flake = false;
     };
 
