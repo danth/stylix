@@ -62,7 +62,8 @@ This is based on [`nix-fast-build`](https://github.com/Mic92/nix-fast-build#read
 ## Documentation
 
 The documentation in the `docs` subtree gets
-[published](https://stylix.danth.me) automatically, using GitHub Actions.
+[published](https://nix-community.github.io/stylix) automatically, using GitHub
+Actions.
 
 If you modify it, you can easily build it and check your changes locally:
 

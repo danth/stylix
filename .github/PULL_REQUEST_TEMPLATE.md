@@ -13,9 +13,9 @@ Please check what applies. Note that these are not hard requirements but merely
 serve as information for reviewers.
 -->
 - [ ] Tested locally
-- [ ] Tested in [testbed](https://stylix.danth.me/testbeds.html)
-- [ ] Commit message follows [commit convention](https://stylix.danth.me/commit_convention.html)
-- [ ] Fits [style guide](https://stylix.danth.me/styling.html)
+- [ ] Tested in [testbed](https://nix-community.github.io/stylix/testbeds.html)
+- [ ] Commit message follows [commit convention](https://nix-community.github.io/stylix/commit_convention.html)
+- [ ] Fits [style guide](https://nix-community.github.io/stylix/styling.html)
 - [ ] Respects license of any existing code used
 
 ## Notify maintainers
