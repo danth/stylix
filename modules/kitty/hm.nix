@@ -4,7 +4,7 @@ let
   cfg = config.stylix.targets.kitty;
   theme = config.lib.stylix.colors {
     templateRepo = config.stylix.inputs.tinted-kitty;
-    target = if cfg.variant256Colors then "default-256" else "default";
+    target = if cfg.variant256Colors then "base16-256-deprecated" else "base16";
   };
 in
 {
