@@ -62,12 +62,14 @@
 
             lib.hm.dag.entryAfter [ "writeBoundary" ] ''
               config="$HOME/.config/rstudio/rstudio-prefs.json"
+
               if [[ -f "$config" ]]; then
                 run ${lib.getExe pkgs.jq} \
                   --raw-output \
                   '.editor_theme |= "${name}"' \
                   "$config" |
-                ${lib.getExe' pkgs.moreutils "sponge"} "$config"
+                  ${lib.getExe' pkgs.moreutils "sponge"} "$config"
+
                 verboseEcho \
                   "stylix: rstudio: changing editor_theme to ${name} in $config"
               else
