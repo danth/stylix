@@ -40,6 +40,7 @@
     email = "gradyb@broggl.farm";
     github = "Mrbroggle";
     githubId = 40074860;
+  };
   nukdokplex = {
     email = "nukdokplex@nukdokplex.ru";
     name = "Viktor Titov";
