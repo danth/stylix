@@ -21,7 +21,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (config.stylix.enable && cfg.enable) {
     programs.kitty = {
       font = {
         inherit (config.stylix.fonts.monospace) package name;

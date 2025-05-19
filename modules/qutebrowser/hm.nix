@@ -266,7 +266,7 @@ in
             };
 
             # TODO: Use the pixel unit:
-            # https://github.com/danth/stylix/issues/251.
+            # https://github.com/nix-community/stylix/issues/251.
             size.default = builtins.floor (sizes.applications * 4 / 3 + 0.5);
           };
         };

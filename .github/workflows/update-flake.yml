@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   flake-update:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'danth'
+    if: github.repository_owner == 'nix-community'
     strategy:
       matrix:
         branch: [master, release-24.11]
@@ -27,11 +27,11 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
-      - uses: DeterminateSystems/update-flake-lock@v24
+      - uses: DeterminateSystems/update-flake-lock@v25
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update_flake_lock_action_${{ matrix.branch }}
-          commit-msg: "stylix: update all flake inputs"
+          commit-msg: "flake: update all inputs"
           pr-title: "${{ startsWith(matrix.branch, 'release') && format('[{0}] ', matrix.branch) || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
           pr-labels: dependencies
           # yamllint disable rule:line-length
