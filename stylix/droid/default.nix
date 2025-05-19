@@ -12,6 +12,7 @@ in
     "${inputs.self}/stylix/palette.nix"
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
+    "${inputs.self}/stylix/colors.nix"
     (lib.modules.importApply "${inputs.self}/stylix/overlays.nix" inputs)
   ] ++ autoload;
 
