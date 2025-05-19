@@ -170,7 +170,7 @@ available under `meta`:
   on the number of homepages:
 
   - ```nix
-    homepage = "https://github.com/danth/stylix";
+    homepage = "https://github.com/nix-community/stylix";
     ```
 
   - ```nix
