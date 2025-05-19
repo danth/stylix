@@ -12,7 +12,8 @@ body:
 
       description: >-
         If you need help or are unsure whether this is a Stylix bug, please
-        consider reading the [documentation](https://stylix.danth.me) or asking
+        consider reading the
+        [documentation](https://nix-community.github.io/stylix) or asking
         for help in a [GitHub
         Discussion](https://github.com/nix-community/stylix/discussions) or the
         [Stylix Matrix Room](https://matrix.to/#/#stylix:danth.me) before
@@ -108,6 +109,6 @@ body:
       description: >-
         If this bug is module-specific, consider pinging its maintainers. Each
         module lists its maintainers in the
-        [documentation](https://stylix.danth.me).
+        [documentation](https://nix-community.github.io/stylix).
 
       placeholder: "@danth, @trueNAHO"

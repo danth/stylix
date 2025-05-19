@@ -38,6 +38,7 @@ body:
 
       description: >-
         Consider pinging the module maintainers. Each module lists its
-        maintainers in the [documentation](https://stylix.danth.me).
+        maintainers in the
+        [documentation](https://nix-community.github.io/stylix).
 
       placeholder: "@danth, @trueNAHO"
