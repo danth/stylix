@@ -2,7 +2,7 @@
 # This version uses `sync-labels: false`, meaning that a non-match will NOT
 # remove the label
 ---
-"backport release-24.11":
+"backport release-25.05":
   - changed-files:
       - any-glob-to-any-file:
           - ".github/workflows/*"
