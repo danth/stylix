@@ -40,7 +40,7 @@
           # only available for Linux systems.
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux testbedPackages')
           {
-            docs = pkgs.callPackage "${self}/docs" {
+            docs = pkgs.callPackage "${self}/doc" {
               inherit inputs;
               inherit (inputs.nixpkgs.lib) nixosSystem;
               inherit (inputs.home-manager.lib) homeManagerConfiguration;
