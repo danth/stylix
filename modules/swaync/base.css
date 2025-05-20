@@ -47,7 +47,6 @@ trough {
 .notification-action {
   color: @base05;
   background: @base01;
-  border: 1px solid @base0D;
 }
 
 .notification-action:hover {
