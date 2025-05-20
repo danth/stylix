@@ -73,7 +73,7 @@ let
   #       "src/options/platforms/«platform».md" = {
   #         referenceSection = "Platforms";
   #         readme = ''
-  #           Content of docs/src/options/platforms/«platform».md, or a default
+  #           Content of doc/src/options/platforms/«platform».md, or a default
   #           title followed by a note about that file not existing.
   #         '';
   #         optionsByPlatform.«platform» = [ ... ];
@@ -237,7 +237,7 @@ let
             referenceSection = "Platforms";
             readme =
               let
-                path = "${inputs.self}/docs/src/options/platforms/${platform}.md";
+                path = "${inputs.self}/doc/src/options/platforms/${platform}.md";
 
                 # This doesn't count as IFD because ${inputs.self} is a flake input
                 mainText =
@@ -550,7 +550,7 @@ let
   );
 
   # This function generates a Bash script that installs each page to the
-  # correct location, over the top of an original copy of docs/src.
+  # correct location, over the top of an original copy of doc/src.
   #
   # Each page must be written in a separate derivation, because passing all
   # the text into a single derivation exceeds the maximum size of command
