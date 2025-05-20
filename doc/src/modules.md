@@ -5,12 +5,19 @@
 Currently the easiest way to test Stylix is to use the new code in your actual
 configuration.
 
-You might find it useful to change the flake reference in your configuration
-from `github:danth/stylix` to `git+file:/home/user/path/to/stylix` so that you
-don't need to push your changes to GitHub during testing.
+You might find it useful to override Stylix' input flake reference on your
+flake, from `github:nix-community/stylix` to
+`git+file:/home/user/path/to/stylix`, so that you don't need to push changes to
+GitHub during testing.
 
-Then, remember to run `nix flake lock --update-input stylix` to refresh the
-flake each time you make an edit.
+To do that, instead of editing your `flake.nix`, you can leverage `nix`'
+`--override-input` parameter (which can also be supplied through their
+frontends: `nixos-rebuild`, `nix-on-droid` and even `nh`). It allows you to
+deploy your changes in one fell swoop, without having to update the lock file of
+your flake every time you make an edit.
+
+Just append `--override-input stylix git+file:/home/user/path/to/stylix` to your
+standard `nix` (or `nix` frontend) incantation.
 
 Nix only reads files which are tracked by Git, so you also need to `git add
 «file»` after creating a new file.
@@ -57,6 +64,13 @@ A general format for modules is shown below.
       };
 }
 ```
+
+> [!CAUTION]
+> You **must** check _both_ `config.stylix.enable` _and_ your target's own
+> `enable` option before defining any config.
+>
+> In the above example this is done using
+> `config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)`.
 
 The human readable name will be inserted into the following sentence:
 
@@ -150,9 +164,29 @@ directly from `config`. See the reference pages for a list of options.
 Metadata is stored in `/modules/«module»/meta.nix`. The following attributes are
 available under `meta`:
 
-- `maintainers`: required list of maintainers. See [Maintainers](#maintainers)
-section.
 - `name`: required human-readable string name.
+
+- `homepage`: homepage string or attribute set of homepage strings, depending
+  on the number of homepages:
+
+  - ```nix
+    homepage = "https://github.com/nix-community/stylix";
+    ```
+
+  - ```nix
+    homepage = {
+      Nix = "https://github.com/NixOS/nix";
+      Nixpkgs = "https://github.com/NixOS/nixpkgs";
+    };
+    ```
+
+  The attribute names are used as hyperlink text and the attribute values are
+  used as URLs.
+
+- `maintainers`: required list of maintainers. See [Maintainers](#maintainers)
+  section.
+
+- `description`: optional markdown string for extra documentation.
 
 ### Maintainers
 

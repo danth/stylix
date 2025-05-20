@@ -57,3 +57,17 @@ stylix-check
 ```
 
 This is based on [`nix-fast-build`](https://github.com/Mic92/nix-fast-build#readme).
+
+
+## Documentation
+
+The documentation in the `docs` subtree gets
+[published](https://nix-community.github.io/stylix) automatically, using GitHub
+Actions.
+
+If you modify it, you can easily build it and check your changes locally:
+
+```sh
+nix build .#docs
+xdg-open result/index.html
+```

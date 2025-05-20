@@ -175,7 +175,7 @@ let
       inherit Id Name;
       Description = "Generated from your Home Manager configuration";
       ServiceTypes = [ "Plasma/LookAndFeel" ];
-      Website = "https://github.com/danth/stylix";
+      Website = "https://github.com/nix-community/stylix";
     };
     KPackageStructure = "Plasma/LookAndFeel";
   };

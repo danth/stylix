@@ -38,7 +38,7 @@ in
     flatpakSupport.enable = config.lib.stylix.mkEnableTarget "support for theming Flatpak apps" true;
   };
 
-  config = lib.mkIf cfg.enable (
+  config = lib.mkIf (config.stylix.enable && cfg.enable) (
     lib.mkMerge [
       {
         warnings =
