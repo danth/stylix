@@ -44,7 +44,7 @@
           example = !autoEnable;
         }
         // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalMD "same as `stylix.autoEnable`";
+          defaultText = lib.literalExpression "stylix.autoEnable";
         };
       mkEnableWallpaper =
         humanName: autoEnable:
@@ -55,7 +55,7 @@
           type = lib.types.bool;
         }
         // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalMD "`stylix.image != null`";
+          defaultText = lib.literalExpression "stylix.image != null";
         };
     };
 }
