@@ -15,6 +15,7 @@
       formatter = pkgs.treefmt.withConfig {
         runtimeInputs = with pkgs; [
           nixfmt-rfc-style
+          biome
           ruff
           stylish-haskell
           keep-sorted
@@ -28,6 +29,23 @@
             stylish-haskell = {
               command = "stylish-haskell";
               includes = [ "*.hx" ];
+            };
+            biome = {
+              command = "biome";
+              options = [
+                "format"
+                "--write"
+                "--no-errors-on-unmatched"
+                "--config-path"
+                (pkgs.writers.writeJSON "biome.json" {
+                  formatter = {
+                    indentStyle = "space";
+                    indentWidth = 2;
+                    lineWidth = 80;
+                  };
+                })
+              ];
+              includes = [ "*.js" ];
             };
             ruff = {
               command = "ruff";
