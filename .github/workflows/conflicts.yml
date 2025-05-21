@@ -19,7 +19,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: read
           permission-pull-requests: write
-      - uses: mschilde/auto-label-merge-conflicts@v2
+      - uses: mschilde/auto-label-merge-conflicts@v2.0
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           CONFLICT_LABEL_NAME: "status: merge conflict"
