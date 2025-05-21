@@ -1,26 +1,16 @@
 # Documentation is available at:
 # - https://alacritty.org/config-alacritty.html
 # - `man 5 alacritty`
-{ config, lib, ... }:
-
-let
-  colors = config.lib.stylix.colors.withHashtag;
-in
-{
-  options.stylix.targets.alacritty.enable =
-    config.lib.stylix.mkEnableTarget "Alacritty" true;
-
-  config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.alacritty.enable)
+{ config, mkTarget, ... }:
+mkTarget {
+  name = "alacritty";
+  humanName = "Alacritty";
+  configElements = [
+    (
+      { colors }:
+      with colors.withHashtag;
       {
         programs.alacritty.settings = {
-          font = with config.stylix.fonts; {
-            normal = {
-              family = monospace.name;
-              style = "Regular";
-            };
-            size = sizes.terminal;
-          };
           window.opacity = config.stylix.opacity.terminal;
           colors = with colors; {
             primary = {
@@ -60,5 +50,25 @@ in
             };
           };
         };
-      };
+      }
+    )
+    (
+      { fonts }:
+      {
+        programs.alacritty.settings.font = {
+          normal = {
+            family = fonts.monospace.name;
+            style = "Regular";
+          };
+          size = fonts.sizes.terminal;
+        };
+      }
+    )
+    (
+      { opacity }:
+      {
+        programs.alacritty.settings.window.opacity = config.stylix.opacity.terminal;
+      }
+    )
+  ];
 }
