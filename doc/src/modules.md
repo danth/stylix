@@ -225,8 +225,8 @@ this documentation, ensure that any custom options created using `mkOption` are
 given an appropriate `type` and a detailed `description`. This may use Markdown
 syntax for formatting and links.
 
-For modules needing more general documentation, create
-`modules/«module»/README.md`:
+For modules needing more general documentation, add a `description` to
+`modules/«module»/meta.nix`:
 
 ```markdown
 # Module Name
