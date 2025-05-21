@@ -1,28 +1,39 @@
 {
+  mkTarget,
   pkgs,
-  config,
   lib,
   ...
 }:
-{
-  options.stylix.targets.helix.enable =
-    config.lib.stylix.mkEnableTarget "Helix" true;
+mkTarget {
+  name = "helix";
+  humanName = "Helix";
 
-  config =
-    lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.helix.enable
-        && config.programs.helix.enable
-      )
+  extraOptions.transparent = lib.mkEnableOption "transparent theming" // {
+    internal = true;
+    default = false;
+  };
+
+  configElements = [
+    (
+      { opacity }:
+      {
+        stylix.targets.helix.transparent = opacity.terminal != 1.0;
+      }
+    )
+    (
+      {
+        cfg,
+        colors,
+        inputs,
+      }:
       {
         programs.helix = {
           settings.theme = "stylix";
 
           themes.stylix =
             let
-              theme = config.lib.stylix.colors {
-                templateRepo = config.stylix.inputs.base16-helix;
+              theme = colors {
+                templateRepo = inputs.base16-helix;
               };
 
               # Removing the background exposes transparency from the terminal. The
@@ -32,7 +43,9 @@
                 sed 's/,\? bg = "base00"//g' <${theme} >$out
               '';
             in
-            if config.stylix.opacity.terminal == 1.0 then theme else transparentTheme;
+            if cfg.transparent then transparentTheme else theme;
         };
-      };
+      }
+    )
+  ];
 }
