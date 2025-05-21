@@ -1,13 +1,14 @@
-{ config, lib, ... }:
-{
-  options.stylix.targets.halloy.enable =
-    config.lib.stylix.mkEnableTarget "Halloy" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "halloy";
+  humanName = "Halloy";
 
-  config.programs.halloy =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.halloy.enable)
-      {
+  configElements =
+    { colors }:
+    {
+      programs.halloy = {
         settings.theme = "stylix";
-        themes.stylix = with config.lib.stylix.colors.withHashtag; {
+        themes.stylix = with colors.withHashtag; {
           general = {
             background = base00;
             border = base07;
@@ -58,4 +59,5 @@
           };
         };
       };
+    };
 }
