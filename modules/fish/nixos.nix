@@ -1,10 +1,11 @@
-{ config, lib, ... }:
+{ mkTarget, ... }:
+mkTarget {
+  name = "fish";
+  humanName = "Fish";
 
-{
-  options.stylix.targets.fish.enable =
-    config.lib.stylix.mkEnableTarget "Fish" true;
-
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.fish.enable) {
-    programs.fish.promptInit = import ./prompt.nix config;
-  };
+  configElements =
+    { colors, inputs }:
+    {
+      programs.fish.promptInit = import ./prompt.nix { inherit colors inputs; };
+    };
 }
