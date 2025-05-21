@@ -13,7 +13,9 @@ import os
 from markdown_it import MarkdownIt
 import requests
 
-documentation = requests.get('https://raw.githubusercontent.com/microsoft/vscode-docs/main/api/references/theme-color.md').text
+documentation = requests.get(
+    'https://raw.githubusercontent.com/microsoft/vscode-docs/main/api/references/theme-color.md'
+).text
 
 color_names = [
     token.children[0].content
