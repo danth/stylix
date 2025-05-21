@@ -331,7 +331,7 @@ let
         ${fence}```
       ''
     else
-      builtins.throw "unexpected value type: ${builtins.typeOf value}";
+      throw "unexpected value type: ${builtins.typeOf value}";
 
   # Prefix to remove from file paths when listing where an option is declared.
   declarationPrefix = "${inputs.self}";
@@ -353,7 +353,7 @@ let
     if lib.hasPrefix declarationPrefix declarationString then
       "- [${filePath}](${declarationPermalink}/${filePath})"
     else
-      builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
+      throw "declaration not in ${declarationPrefix}: ${declarationString}";
 
   # You can embed HTML inside a Markdown document, but to render further
   # Markdown between the HTML tags, it must be surrounded by blank lines:
@@ -525,7 +525,7 @@ let
         if hasTitle then
           "  - [${title}](${relativePath})"
         else
-          builtins.throw "page must start with a title: ${path}";
+          throw "page must start with a title: ${path}";
     in
     summary
     // {
