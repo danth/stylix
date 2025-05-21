@@ -167,13 +167,13 @@ let
         lib.mapAttrsToList (
           testbed: type:
           if type != "regular" then
-            builtins.throw "${testbed} must be regular: ${type}"
+            throw "${testbed} must be regular: ${type}"
 
           else if !lib.hasSuffix ".nix" testbed then
-            builtins.throw "testbed must be a Nix file: ${testbeds}/${testbed}"
+            throw "testbed must be a Nix file: ${testbeds}/${testbed}"
 
           else if testbed == ".nix" then
-            builtins.throw "testbed must have a name: ${testbed}"
+            throw "testbed must have a name: ${testbed}"
 
           else
             {
