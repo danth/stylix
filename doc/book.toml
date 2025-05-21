@@ -9,6 +9,8 @@ site-url = "/stylix/"
 git-repository-url = "https://github.com/nix-community/stylix"
 edit-url-template = "https://github.com/nix-community/stylix/edit/master/doc/{path}"
 no-section-label = true
+# Ensure static file (css, js) have a unique filename, to avoid outdated cache.
+hash-files = true
 additional-js = [
   # JavaScript page redirects, using `window.location`.
   # Supports redirecting from an #anchor tag.
