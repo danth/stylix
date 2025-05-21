@@ -1,15 +1,14 @@
-{ config, lib, ... }:
+{ mkTarget, ... }:
+mkTarget {
+  name = "forge";
+  humanName = "Forge";
 
-{
-  options.stylix.targets.forge.enable =
-    config.lib.stylix.mkEnableTarget "Forge" true;
-
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.forge.enable) {
-    xdg.configFile."forge/stylesheet/forge/stylesheet.css".source =
-      config.lib.stylix.colors
-        {
-          template = ./stylesheet.css.mustache;
-          extension = ".css";
-        };
-  };
+  configElements =
+    { colors }:
+    {
+      xdg.configFile."forge/stylesheet/forge/stylesheet.css".source = colors {
+        template = ./stylesheet.css.mustache;
+        extension = ".css";
+      };
+    };
 }
