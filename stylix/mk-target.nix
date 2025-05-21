@@ -22,6 +22,12 @@
     name = "«name»";
     humanName = "«human readable name»";
 
+    extraOptions =
+      { stylixLib }:
+      {
+        useWallpaper = stylixLib.mkEnableWallpaper "«human readable name»" true;
+      };
+
     generalConfig =
       lib.mkIf complexCondition {
         home.packages = [ pkgs.hello ];
@@ -66,9 +72,11 @@
       This should be disabled if manual setup is required or if auto-enabling
       causes issues.
 
-    `extraOptions` (Attribute set)
+    `extraOptions` (Attribute set or function)
     : Additional options to be added in the `stylix.targets.${name}` namespace
-      along the `stylix.targets.${name}.enable` option.
+      along the `stylix.targets.${name}.enable` option. If it is passed a
+      function, its argument will contain `stylixLib` (equivalent to
+      `config.stylix.lib`).
 
       For example, an extension guard used in the configuration can be declared
       as follows:
@@ -124,6 +132,12 @@
 #     {
 #       name = "example";
 #       humanName = "Example Target";
+#
+#       extraOptions =
+#         { stylixLib }:
+#         {
+#           useWallpaper = stylixLib.mkEnableWallpaper "«human readable name»" true;
+#         };
 #
 #       generalConfig =
 #         { lib, pkgs }:
@@ -221,7 +235,16 @@ let
 in
 {
   imports = [
-    { options.stylix.targets.${name} = extraOptions; }
+    (
+      { config, ... }:
+      {
+        options.stylix.targets.${name} =
+          if builtins.isFunction extraOptions then
+            extraOptions { stylixLib = config.lib.stylix; }
+          else
+            extraOptions;
+      }
+    )
     module
   ];
 }
