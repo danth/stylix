@@ -13,29 +13,31 @@ import os
 from markdown_it import MarkdownIt
 import requests
 
-documentation = requests.get('https://raw.githubusercontent.com/microsoft/vscode-docs/main/api/references/theme-color.md').text
+documentation = requests.get(
+    "https://raw.githubusercontent.com/microsoft/vscode-docs/main/api/references/theme-color.md"
+).text
 
 color_names = [
     token.children[0].content
     for token in MarkdownIt().parse(documentation)
-    if token.type == 'inline' and token.children[0].type == 'code_inline'
+    if token.type == "inline" and token.children[0].type == "code_inline"
 ]
 
-template_path = os.path.join(os.path.dirname(__file__), 'templates/theme.nix')
+template_path = os.path.join(os.path.dirname(__file__), "templates/theme.nix")
 
 before_lines = []
 color_lines = []
 after_lines = []
 
-with open(template_path, 'r') as template_file:
+with open(template_path, "r") as template_file:
     while line := template_file.readline():
         before_lines.append(line)
 
-        if line == '  colors = {\n':
+        if line == "  colors = {\n":
             break
 
     while line := template_file.readline():
-        if line == '  };\n':
+        if line == "  };\n":
             after_lines.append(line)
             break
 
@@ -45,15 +47,15 @@ with open(template_path, 'r') as template_file:
             color_lines.append(line)
             color_names.remove(name)
         else:
-            print('-', name)
+            print("-", name)
 
     for name in color_names:
-        print('+', name)
+        print("+", name)
         color_lines.append(f'    "{name}" = null;\n')
 
     color_lines.sort()
 
     after_lines.extend(template_file.readlines())
 
-with open(template_path, 'w') as template_file:
+with open(template_path, "w") as template_file:
     template_file.writelines(before_lines + color_lines + after_lines)

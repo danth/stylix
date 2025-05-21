@@ -15,6 +15,7 @@
       formatter = pkgs.treefmt.withConfig {
         runtimeInputs = with pkgs; [
           nixfmt-rfc-style
+          ruff
           stylish-haskell
           keep-sorted
         ];
@@ -27,6 +28,17 @@
             stylish-haskell = {
               command = "stylish-haskell";
               includes = [ "*.hx" ];
+            };
+            ruff = {
+              command = "ruff";
+              options = [
+                "--config"
+                (pkgs.writers.writeTOML "ruff.toml" {
+                  line-length = 80;
+                })
+                "format"
+              ];
+              includes = [ "*.py" ];
             };
             nixfmt = {
               command = "nixfmt";
