@@ -44,6 +44,6 @@ in
             else
               "--bg-max";
         in
-        "${pkgs.feh}/bin/feh --no-fehbg ${bg-arg} ${config.stylix.image}"
+        "${lib.getExe pkgs.feh} --no-fehbg ${bg-arg} ${config.stylix.image}"
       );
 }

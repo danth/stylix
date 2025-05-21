@@ -2,18 +2,25 @@
 
 ## Development setup
 
-Currently the easiest way to test Stylix is to use the new code in your
-actual configuration.
+Currently the easiest way to test Stylix is to use the new code in your actual
+configuration.
 
-You might find it useful to change the flake reference in your configuration
-from `github:danth/stylix` to `git+file:/home/user/path/to/stylix`
-so that you don't need to push your changes to GitHub during testing.
+You might find it useful to override Stylix' input flake reference on your
+flake, from `github:nix-community/stylix` to
+`git+file:/home/user/path/to/stylix`, so that you don't need to push changes to
+GitHub during testing.
 
-Then, remember to run `nix flake lock --update-input stylix` to refresh the
-flake each time you make an edit.
+To do that, instead of editing your `flake.nix`, you can leverage `nix`'
+`--override-input` parameter (which can also be supplied through their
+frontends: `nixos-rebuild`, `nix-on-droid` and even `nh`). It allows you to
+deploy your changes in one fell swoop, without having to update the lock file of
+your flake every time you make an edit.
 
-Nix only reads files which are tracked by Git, so you also need to
-`git add «file»` after creating a new file.
+Just append `--override-input stylix git+file:/home/user/path/to/stylix` to your
+standard `nix` (or `nix` frontend) incantation.
+
+Nix only reads files which are tracked by Git, so you also need to `git add
+«file»` after creating a new file.
 
 ## Module naming
 
@@ -29,20 +36,39 @@ The following platforms are supported:
 
 Correctly named modules will be imported automatically.
 
-Other files needed by the module can also be stored within the
-`modules/«name»` folder, using any name which is not on the list above.
+Other files needed by the module can also be stored within the `modules/«name»`
+folder, using any name which is not on the list above.
 
 ## Module template
 
-All modules should have an enable option created using `mkEnableTarget`.
-This is similar to
-[`mkEnableOption`](https://nix-community.github.io/docnix/reference/lib/options/lib-options-mkenableoption/)
-from the standard library, however it integrates with
-[`stylix.enable`](./options/nixos.md#stylixenable) and
-[`stylix.autoEnable`](./options/nixos.md#stylixautoenable)
-and generates more specific documentation.
+Modules should be created using the `mkTarget` function whenever possible (see
+the [`/stylix/mk-target.nix`](
+https://github.com/danth/stylix/blob/-/stylix/mk-target.nix) in-source
+documentation for more details):
 
-A general format for modules is shown below.
+```nix
+{ config, lib, mkTarget ... }:
+mkTarget {
+  name = "«name»";
+  humanName = "«human readable name»";
+
+  configElements =
+    { colors }:
+    {
+      programs.«name».theme.background = colors.base00;
+    };
+}
+```
+
+> [!IMPORTANT]
+> The `mkTarget` argument is only available to modules imported by Stylix's
+> [autoload system](https://github.com/danth/stylix/blob/-/stylix/autoload.nix),
+> e.g., `modules/«target»/«platform».nix` modules.
+>
+> I.e., it is not available to normal modules imported via the `imports` list.
+
+When the `mkTarget` function cannot be used, modules must manually replicate its
+safeguarding behaviour:
 
 ```nix
 { config, lib, ... }:
@@ -58,20 +84,27 @@ A general format for modules is shown below.
 }
 ```
 
+> [!CAUTION]
+> If not using `mkTarget`, you **must** check _both_ `config.stylix.enable`
+> _and_ your target's own`enable` option before defining any config.
+>
+> In the above example this is done using
+> `config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)`.
+
 The human readable name will be inserted into the following sentence:
 
 > Whether to enable theming for «human readable name».
 
-If your module will touch options outside of `programs.«name»` or `services.«name»`,
-it should include an additional condition in `mkIf` to prevent any effects
-when the target is not installed.
+If your module will touch options outside of `programs.«name»` or
+`services.«name»`, it should include an additional condition in `mkIf` to
+prevent any effects when the target is not installed.
 
-The boolean value after `mkEnableTarget` should be changed to `false` if
-one of the following applies:
+The boolean value after `mkEnableTarget` should be changed to `false` if one of
+the following applies:
 
 - The module requires further manual setup to work correctly.
 - There is no reliable way to detect whether the target is installed, *and*
-  enabling it unconditionally would cause problems.
+enabling it unconditionally would cause problems.
 
 ### Overlays
 
@@ -103,8 +136,8 @@ taking two arguments and returning an attrset:
 
 ## How to apply colors
 
-Refer to the [style guide](./styling.md) to see how colors are named,
-and where to use each one.
+Refer to the [style guide](./styling.md) to see how colors are named, and where
+to use each one.
 
 The colors are exported under `config.lib.stylix.colors`, which originates from
 [`mkSchemeAttrs`](https://github.com/SenchoPens/base16.nix/blob/main/DOCUMENTATION.md#mkschemeattrs).
@@ -137,8 +170,8 @@ Setting options through an existing NixOS or Home Manager module is preferable
 to generating whole files, since users will have the option of overriding things
 individually.
 
-Also note that reading generated files with `builtins.readFile` can be very
-slow and should be avoided.
+Also note that reading generated files with `builtins.readFile` can be very slow
+and should be avoided.
 
 ## How to apply other things
 
@@ -150,8 +183,29 @@ directly from `config`. See the reference pages for a list of options.
 Metadata is stored in `/modules/«module»/meta.nix`. The following attributes are
 available under `meta`:
 
-- `maintainers`: required list of maintainers. See [Maintainers](#maintainers) section.
 - `name`: required human-readable string name.
+
+- `homepage`: homepage string or attribute set of homepage strings, depending
+  on the number of homepages:
+
+  - ```nix
+    homepage = "https://github.com/nix-community/stylix";
+    ```
+
+  - ```nix
+    homepage = {
+      Nix = "https://github.com/NixOS/nix";
+      Nixpkgs = "https://github.com/NixOS/nixpkgs";
+    };
+    ```
+
+  The attribute names are used as hyperlink text and the attribute values are
+  used as URLs.
+
+- `maintainers`: required list of maintainers. See [Maintainers](#maintainers)
+  section.
+
+- `description`: optional markdown string for extra documentation.
 
 ### Maintainers
 
@@ -185,10 +239,10 @@ modules.
 
 ## Documentation
 
-Documentation for options is automatically generated. To improve the quality
-of this documentation, ensure that any custom options created using `mkOption`
-are given an appropriate `type` and a detailed `description`. This may use
-Markdown syntax for formatting and links.
+Documentation for options is automatically generated. To improve the quality of
+this documentation, ensure that any custom options created using `mkOption` are
+given an appropriate `type` and a detailed `description`. This may use Markdown
+syntax for formatting and links.
 
 For modules needing more general documentation, create
 `modules/«module»/README.md`:

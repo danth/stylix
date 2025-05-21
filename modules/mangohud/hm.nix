@@ -33,7 +33,7 @@
             fps_color = "${base0B}, ${base0A}, ${base08}";
 
             # TODO: Use the point unit:
-            # https://github.com/danth/stylix/issues/251.
+            # https://github.com/nix-community/stylix/issues/251.
             font_scale = 1.33333;
           };
       };

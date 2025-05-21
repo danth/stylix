@@ -246,9 +246,9 @@ in
             };
           };
 
-          webpage.preferred_color_scheme = lib.mkIf (config.stylix.polarity == "dark") (
-            lib.mkDefault config.stylix.polarity
-          );
+          webpage.preferred_color_scheme = lib.mkIf (
+            config.stylix.polarity == "dark"
+          ) config.stylix.polarity;
         };
 
         fonts = {
@@ -266,7 +266,7 @@ in
             };
 
             # TODO: Use the pixel unit:
-            # https://github.com/danth/stylix/issues/251.
+            # https://github.com/nix-community/stylix/issues/251.
             size.default = builtins.floor (sizes.applications * 4 / 3 + 0.5);
           };
         };

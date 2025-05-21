@@ -37,6 +37,36 @@ let
       };
     };
 
+  enableModule =
+    { lib, config, ... }:
+    {
+      options.stylix.testbed.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        example = lib.literalExpression "lib.meta.availableOn pkgs.stdenv.hostPlatform pkgs.discord";
+        description = ''
+          Whether to enable this testbed.
+
+          The testbed will not be included as a flake output if set to false.
+
+          > [!CAUTION]
+          >
+          > This option can only access `lib` and `pkgs` inputs. Attempting to
+          > read other inputs, like `config` or `options`, will cause the
+          > testbed evaluation to fail.
+          >
+          > This is a performance-driven restriction, as noted in `isEnabled`.
+        '';
+      };
+
+      config.assertions = [
+        {
+          assertion = config.stylix.testbed.enable;
+          message = "Building a disabled testbed. This testbed should have been filtered out!";
+        }
+      ];
+    };
+
   applicationModule =
     { config, lib, ... }:
     {
@@ -153,27 +183,52 @@ let
       };
     };
 
+  # Creates a minimal configuration to extract the `stylix.testbed.enable`
+  # option value.
+  #
+  # This is for performance reasons. Primarily, to avoid fully evaluating
+  # testbed system configurations to determine flake outputs.
+  # E.g., when running `nix flake show`.
+  isEnabled =
+    module:
+    let
+      minimal = lib.evalModules {
+        modules = [
+          module
+          enableModule
+          { _module.check = false; }
+          { _module.args = { inherit pkgs; }; }
+        ];
+      };
+    in
+    minimal.config.stylix.testbed.enable;
+
   autoload =
     let
       directory = "testbeds";
       modules = "${inputs.self}/modules";
     in
-    lib.flatten (
-      lib.mapAttrsToList (
-        module: _:
+    lib.pipe modules [
+      builtins.readDir
+      builtins.attrNames
+      (builtins.concatMap (
+        module:
         let
           testbeds = "${modules}/${module}/${directory}";
+          files = lib.optionalAttrs (builtins.pathExists testbeds) (
+            builtins.readDir testbeds
+          );
         in
         lib.mapAttrsToList (
           testbed: type:
           if type != "regular" then
-            builtins.throw "${testbed} must be regular: ${type}"
+            throw "${testbed} must be regular: ${type}"
 
           else if !lib.hasSuffix ".nix" testbed then
-            builtins.throw "testbed must be a Nix file: ${testbeds}/${testbed}"
+            throw "testbed must be a Nix file: ${testbeds}/${testbed}"
 
           else if testbed == ".nix" then
-            builtins.throw "testbed must have a name: ${testbed}"
+            throw "testbed must have a name: ${testbed}"
 
           else
             {
@@ -182,15 +237,15 @@ let
               name = lib.removeSuffix ".nix" testbed;
               path = "${testbeds}/${testbed}";
             }
-        ) (lib.optionalAttrs (builtins.pathExists testbeds) (builtins.readDir testbeds))
-      ) (builtins.readDir modules)
-    );
+        ) files
+      ))
+    ];
 
   makeTestbed =
     testbed: stylix:
     let
-      name = builtins.concatStringsSep testbedFieldSeparator (
-        map
+      name =
+        lib.concatMapStringsSep testbedFieldSeparator
           (
             field:
             lib.throwIf (lib.hasInfix testbedFieldSeparator field)
@@ -205,14 +260,14 @@ let
             "image${lib.optionalString (stylix.image or null == null) "less"}"
             "scheme${lib.optionalString (stylix.base16Scheme or null == null) "less"}"
             "cursor${lib.optionalString (stylix.cursor or null == null) "less"}"
-          ]
-      );
+          ];
 
       system = lib.nixosSystem {
         inherit (pkgs) system;
 
         modules = [
           commonModule
+          enableModule
           applicationModule
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
@@ -244,7 +299,7 @@ let
         '';
       };
     in
-    {
+    lib.optionalAttrs (isEnabled testbed.path) {
       ${name} = script;
     };
 
@@ -306,5 +361,5 @@ in
 # Testbeds are merged using lib.attrsets.unionOfDisjoint to throw an error if
 # testbed names collide.
 builtins.foldl' lib.attrsets.unionOfDisjoint { } (
-  lib.flatten (map makeTestbeds autoload)
+  builtins.concatMap makeTestbeds autoload
 )
