@@ -19,9 +19,8 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: read
           permission-pull-requests: write
-      - uses: mschilde/auto-label-merge-conflicts@v2.0
+      - uses: prince-chrismc/label-merge-conflicts-action@v3
         with:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          CONFLICT_LABEL_NAME: "status: merge conflict"
-          MAX_RETRIES: 5
-          WAIT_MS: 10000
+          github_token: ${{ steps.app-token.outputs.token }}
+          conflict_label_name: "status: merge conflict"
+          conflict_comment: ""
