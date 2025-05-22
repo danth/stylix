@@ -1,6 +1,6 @@
 ---
 description: Request the addition of a new option
-labels: [new-option]
+labels: ["kind: new-option"]
 name: New option
 title: "<SCOPE>: add <OPTION> option"
 

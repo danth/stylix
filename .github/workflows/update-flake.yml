@@ -33,7 +33,7 @@ jobs:
           branch: update_flake_lock_action_${{ matrix.branch }}
           commit-msg: "flake: update all inputs"
           pr-title: "${{ startsWith(matrix.branch, 'release') && format('[{0}] ', matrix.branch) || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
-          pr-labels: dependencies
+          pr-labels: "topic: dependencies"
           # yamllint disable rule:line-length
           pr-body: |
             Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
