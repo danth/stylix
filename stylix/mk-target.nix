@@ -59,6 +59,10 @@
     : The descriptive target name passed to the lib.mkEnableOption function
       when generating the `stylix.targets.${name}.enable` option.
 
+    `addEnableOption` (Boolean)
+    : Whether to add the `stylix.targets.${name}.enable}` option, defaulting to
+      `true`.
+
     `autoEnable` (Boolean)
     : Whether the target should be automatically enabled by default according
       to the `stylix.autoEnable` option.
@@ -152,6 +156,7 @@
 {
   name,
   humanName,
+  addEnableOption ? true,
   autoEnable ? true,
   extraOptions ? { },
   configElements ? [ ],
@@ -208,8 +213,9 @@ let
           c;
     in
     {
-      options.stylix.targets.${name}.enable =
-        config.lib.stylix.mkEnableTarget humanName autoEnable;
+      options.stylix.targets.${name} = lib.optionalAttrs addEnableOption {
+        enable = config.lib.stylix.mkEnableTarget humanName autoEnable;
+      };
 
       config = lib.mkIf (config.stylix.enable && cfg.enable) (
         lib.mkMerge (
