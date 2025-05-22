@@ -1,15 +1,12 @@
-config:
-
+{ colors, inputs }:
 let
-  theme = config.lib.stylix.colors {
-    templateRepo = config.stylix.inputs.base16-fish;
-  };
+  theme = colors { templateRepo = inputs.base16-fish; };
 in
 ''
   source ${theme}
 
   # See https://github.com/tomyun/base16-fish/issues/7 for why this condition exists
   if status --is-interactive && test -z "$TMUX"
-    base16-${config.lib.stylix.colors.slug}
+    base16-${colors.slug}
   end
 ''
