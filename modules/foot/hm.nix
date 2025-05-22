@@ -8,7 +8,7 @@ mkTarget {
       { fonts }:
       {
         programs.foot.settings.main = {
-          font = "${fonts.monospace.name}:=size=${toString fonts.sizes.terminal}";
+          font = "${fonts.monospace.name}:size=${toString fonts.sizes.terminal}";
           dpi-aware = "no";
         };
       }
