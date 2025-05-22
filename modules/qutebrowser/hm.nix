@@ -248,7 +248,7 @@ in
 
           webpage.preferred_color_scheme = lib.mkIf (
             config.stylix.polarity == "dark"
-          ) config.stylix.polarity;
+          ) "dark";
         };
 
         fonts = {
