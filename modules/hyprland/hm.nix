@@ -42,11 +42,12 @@ mkTarget {
     )
     (
       { cfg }:
-      (lib.mkIf cfg.hyprpaper.enable {
-        services.hyprpaper.enable = true;
-        stylix.targets.hyprpaper.enable = true;
-        wayland.windowManager.hyprland.settings.misc.disable_hyprland_logo = true;
-      })
+      lib.mkIf (config.wayland.windowManager.hyprland.enable && cfg.hyprpaper.enable)
+        {
+          services.hyprpaper.enable = true;
+          stylix.targets.hyprpaper.enable = true;
+          wayland.windowManager.hyprland.settings.misc.disable_hyprland_logo = true;
+        }
     )
   ];
 }
