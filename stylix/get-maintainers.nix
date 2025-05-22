@@ -1,14 +1,15 @@
 {
-  pkgs,
   lib,
-  ...
-}@args:
+  pkgs,
+  inputs,
+  writeText,
+}:
 let
   ghIds = lib.mapAttrs' (
     name: value:
     lib.nameValuePair "modules/${name}" (
       builtins.concatMap (m: [ m.github ]) value.maintainers
     )
-  ) (import ./meta.nix args);
+  ) (import ./meta.nix { inherit lib pkgs inputs; });
 in
-pkgs.writeText "get-maintainers" (builtins.toJSON { inherit ghIds; })
+writeText "get-maintainers" (builtins.toJSON { inherit ghIds; })

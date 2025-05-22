@@ -28,8 +28,8 @@
             inherit (inputs.home-manager.lib) homeManagerConfiguration;
           };
           palette-generator = pkgs.callPackage "${self}/palette-generator" { };
-          get-maintainers = import "${self}/stylix/get-maintainers.nix" {
-            inherit pkgs inputs lib;
+          get-maintainers = pkgs.callPackage "${self}/stylix/get-maintainers.nix" {
+            inherit inputs;
           };
         }
       ];
