@@ -1,36 +1,26 @@
 {
+  mkTarget,
+  lib,
   pkgs,
   config,
-  lib,
   ...
 }:
-let
-  cfg = config.stylix.targets.feh;
-in
-{
-  options.stylix.targets.feh = {
-    enable = config.lib.stylix.mkEnableTarget "the desktop background using Feh" (
-      config.stylix.image != null
-    );
-  };
+mkTarget {
+  name = "feh";
+  humanName = "the desktop background using Feh";
+  autoEnable =
+    with config.xsession.windowManager;
+    bspwm.enable
+    || herbstluftwm.enable
+    || i3.enable
+    || spectrwm.enable
+    || xmonad.enable;
 
-  config.xsession.initExtra =
-    lib.mkIf
-      (
-        config.stylix.enable
-        && cfg.enable
-        && (
-          with config.xsession.windowManager;
-          bspwm.enable
-          || herbstluftwm.enable
-          || i3.enable
-          || spectrwm.enable
-          || xmonad.enable
-        )
-      )
-      (
+  configElements =
+    { imageScalingMode, image }:
+    {
+      xsession.initExtra =
         let
-          inherit (config.stylix) imageScalingMode;
           bg-arg =
             if imageScalingMode == "fill" then
               "--bg-fill"
@@ -44,6 +34,6 @@ in
             else
               "--bg-max";
         in
-        "${lib.getExe pkgs.feh} --no-fehbg ${bg-arg} ${config.stylix.image}"
-      );
+        "${lib.getExe pkgs.feh} --no-fehbg ${bg-arg} ${image}";
+    };
 }
