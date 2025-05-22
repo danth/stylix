@@ -2,47 +2,47 @@
 # This version uses `sync-labels: false`, meaning that a non-match will NOT
 # remove the label
 ---
-dependencies:
+"topic: dependencies":
   - changed-files:
       - any-glob-to-any-file: "flake.lock"
 
-documentation:
+"topic: documentation":
   - changed-files:
       - any-glob-to-any-file:
           - "docs/**"
           - "README.md"
 
-nixos:
+"topic: nixos":
   - changed-files:
       - any-glob-to-any-file:
           - "stylix/nixos/*"
           - "modules/*/nixos.nix"
 
-home-manager:
+"topic: home-manager":
   - changed-files:
       - any-glob-to-any-file:
           - "stylix/hm/**"
           - "modules/*/hm.nix"
 
-darwin:
+"topic: darwin":
   - changed-files:
       - any-glob-to-any-file:
           - "stylix/darwin/**"
           - "modules/*/darwin.nix"
 
-droid:
+"topic: droid":
   - changed-files:
       - any-glob-to-any-file:
           - "stylix/droid/**"
           - "modules/*/droid.nix"
 
-overlay:
+"topic: overlay":
   - changed-files:
       - any-glob-to-any-file:
           - "stylix/overlays.nix"
           - "modules/*/overlay.nix"
 
-testbed:
+"topic: testbed":
   - changed-files:
       - any-glob-to-any-file:
           - "stylix/testbed.nix"
