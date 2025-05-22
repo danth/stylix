@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   package = pkgs.halloy;
@@ -9,5 +9,17 @@ in
     inherit package;
   };
 
-  environment.systemPackages = [ package ];
+  home-manager.sharedModules = lib.singleton {
+    programs.halloy = {
+      enable = true;
+      inherit package;
+      settings = {
+        servers.liberachat = {
+          nickname = "stylix-testbed";
+          server = "irc.libera.chat";
+          channels = [ "#halloy" ];
+        };
+      };
+    };
+  };
 }

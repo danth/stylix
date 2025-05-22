@@ -27,7 +27,7 @@ in
               &&
                 # defined in https://github.com/NixOS/nixpkgs/blob/8f3e1f807051e32d8c95cd12b9b421623850a34d/nixos/modules/programs/regreet.nix#L153
                 config.services.greetd.settings.default_session.command
-                != "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} ${lib.escapeShellArgs cfg.cageArgs} -- ${lib.getExe cfg.package}"
+                != "${lib.getExe' pkgs.dbus "dbus-run-session"} ${lib.getExe pkgs.cage} ${lib.escapeShellArgs cfg.cageArgs} -- ${lib.getExe cfg.package}"
             )
             "stylix: regreet: custom services.greetd.settings.default_session.command value may not work: ${config.services.greetd.settings.default_session.command}";
         programs.regreet = {

@@ -4,7 +4,7 @@
 
 Stylix is a theming framework for [NixOS](https://nixos.org), [Home
 Manager](https://nix-community.github.io/home-manager#ch-introduction),
-[nix-darwin](https://github.com/LnL7/nix-darwin#readme), and
+[nix-darwin](https://github.com/nix-darwin/nix-darwin#readme), and
 [Nix-on-Droid](https://github.com/nix-community/nix-on-droid) that applies
 color schemes, wallpapers, and fonts to a wide range of applications.
 
@@ -16,8 +16,8 @@ philosophy.
 
 ## Resources
 
-- [Documentation](https://danth.github.io/stylix)
-- [GitHub Discussions](https://github.com/danth/stylix/discussions)
+- [Documentation](https://nix-community.github.io/stylix/)
+- [GitHub Discussions](https://github.com/nix-community/stylix/discussions)
 - [Matrix room](https://matrix.to/#/#stylix:danth.me)
 
 ## Example configurations
@@ -40,7 +40,7 @@ philosophy.
 Try a live demo of this dark theme by running:
 
 ```console
-nix run github:danth/stylix#testbed:gnome:default:dark:image:scheme:cursor
+nix run github:nix-community/stylix#testbed:gnome:default:dark:image:scheme:cursor
 ```
 
 ### KDE Plasma 5

@@ -1,0 +1,27 @@
+---
+name: Label Merge Conflicts
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+      - release-**
+
+jobs:
+  conflicts:
+    runs-on: ubuntu-24.04
+    if: github.repository_owner == 'nix-community'
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-pull-requests: write
+      - uses: mschilde/auto-label-merge-conflicts@v2.0
+        with:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          CONFLICT_LABEL_NAME: "status: merge conflict"
+          MAX_RETRIES: 5
+          WAIT_MS: 10000
