@@ -5,7 +5,6 @@
   ...
 }:
 {
-
   perSystem =
     { pkgs, config, ... }:
     {
@@ -27,7 +26,6 @@
             inherit (inputs.nixpkgs.lib) nixosSystem;
             inherit (inputs.home-manager.lib) homeManagerConfiguration;
           };
-          palette-generator = pkgs.callPackage "${self}/palette-generator" { };
         }
       ];
     };
