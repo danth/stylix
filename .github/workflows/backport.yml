@@ -19,7 +19,7 @@ jobs:
         github.event.pull_request.merged == true &&
         (
           github.event_name != 'labeled' ||
-          startsWith('backport:', github.event.label.name)
+          startsWith('backport: ', github.event.label.name)
         )
       )
 
