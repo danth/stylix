@@ -1,30 +1,33 @@
-{ config, lib, ... }:
-let
-  fonts =
-    let
-      inherit (config.stylix) fonts;
-    in
-    {
-      names = [ fonts.sansSerif.name ];
-      size = fonts.sizes.desktop * 1.0;
-    };
-in
-{
-  options.stylix.targets.i3.enable = config.lib.stylix.mkEnableTarget "i3" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "i3";
+  humanName = "i3";
 
-  config =
-    with config.lib.stylix.colors.withHashtag;
-    let
-      text = base05;
-      urgent = base08;
-      focused = base0D;
-      unfocused = base03;
-    in
-    lib.mkMerge [
-      (lib.mkIf config.stylix.targets.i3.enable {
+  configElements = [
+    (
+      { fonts }:
+      {
+        xsession.windowManager.i3.config.fonts = {
+          names = [ fonts.sansSerif.name ];
+          size = fonts.size.desktop * 1.0;
+        };
+        lib.stylix.i3.bar.fonts = {
+          names = [ fonts.sansSerif.name ];
+          size = fonts.size.desktop * 1.0;
+        };
+      }
+    )
+    (
+      { colors }:
+      with colors.withHashtag;
+      let
+        text = base05;
+        urgent = base08;
+        focused = base0D;
+        unfocused = base03;
+      in
+      {
         xsession.windowManager.i3.config = {
-          inherit fonts;
-
           colors =
             let
               background = base00;
@@ -61,9 +64,7 @@ in
 
           #        output."*".bg = "${config.stylix.image} fill";
         };
-      })
 
-      {
         # Merge this with your bar configuration using //config.lib.stylix.i3.bar
         lib.stylix.i3.bar = {
           inherit fonts;
@@ -99,5 +100,6 @@ in
             };
         };
       }
-    ];
+    )
+  ];
 }
