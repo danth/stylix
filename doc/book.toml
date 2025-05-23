@@ -9,11 +9,23 @@ site-url = "/stylix/"
 git-repository-url = "https://github.com/nix-community/stylix"
 edit-url-template = "https://github.com/nix-community/stylix/edit/master/doc/{path}"
 no-section-label = true
+# Ensure static file (css, js) have a unique filename, to avoid outdated cache.
+hash-files = true
+additional-js = [
+  # JavaScript page redirects, using `window.location`.
+  # Supports redirecting from an #anchor tag.
+  #
+  # NOTE: this assumes the redirect file still exists
+  "redirects.js",
+]
 
 [output.html.fold]
 enable = true
 
+# HTML page redirects, using "meta refresh" tags.
+# Usually preferred, but does not support redirects from #anchor tags.
+#
+# NOTE: The redirect target must be a path relative to the redirect file.
 [output.html.redirect]
-# Must use relative paths with . or .. for offline browsing to work correctly
 "/options/hm.html" = "./platforms/home_manager.html"
 "/options/nixos.html" = "./platforms/nixos.html"
