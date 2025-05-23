@@ -16,7 +16,9 @@ mkTarget {
     (
       { cfg, image }:
       {
-        programs.hyprlock.settings.path = lib.mkIf cfg.useWallpaper "${image}";
+        programs.hyprlock.settings.background.path = lib.mkIf cfg.useWallpaper "${
+          image
+        }";
       }
     )
     (
