@@ -3,6 +3,7 @@ inputs:
   lib,
   pkgs,
   config,
+  options,
   ...
 }:
 {
@@ -14,7 +15,14 @@ inputs:
       file = import f;
       attrs =
         if builtins.typeOf file == "lambda" then
-          file { inherit lib pkgs config; }
+          file {
+            inherit
+              lib
+              pkgs
+              config
+              options
+              ;
+          }
         else
           file;
     in
