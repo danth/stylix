@@ -46,8 +46,11 @@ let
       g = colors."${color}-rgb-g";
       b = colors."${color}-rgb-b";
     };
-  nur =
-    config.stylix.inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  inherit
+    (config.stylix.inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system}.repos.rycee
+    )
+    firefox-addons
+    ;
 in
 {
   options.stylix.targets = lib.listToAttrs (
@@ -64,7 +67,14 @@ in
 
         colorTheme.enable = lib.mkEnableOption "[Firefox Color](https://color.firefox.com/) on ${target.name}";
 
-        firefoxGnomeTheme.enable = lib.mkEnableOption "[Firefox GNOME theme](https://github.com/rafaelmardojai/firefox-gnome-theme) on ${target.name}";
+        darkReader.enable = config.lib.stylix.mkEnableTarget ''
+          [Dark Reader](https://darkreader.org/) theming
+        '' false;
+
+        firefoxGnomeTheme.enable = config.lib.stylix.mkEnableTarget ''
+          [Firefox GNOME theme](https://github.com/rafaelmardojai/firefox-gnome-theme)
+          on ${target.name}
+        '' false;
       }
     ) targets
   );
@@ -107,7 +117,7 @@ in
           })
           (lib.mkIf cfg.colorTheme.enable {
             extensions = {
-              packages = [ nur.repos.rycee.firefox-addons.firefox-color ];
+              packages = [ firefox-addons.firefox-color ];
               settings."FirefoxColor@mozilla.com".settings = {
                 firstRunDone = true;
                 theme = {
@@ -152,6 +162,20 @@ in
                   };
                 };
               };
+            };
+          })
+          (lib.mkIf cfg.darkReader.enable {
+            extensions = {
+              packages = [ firefox-addons.darkreader ];
+              settings."addon@darkreader.org".settings.theme =
+                with config.lib.stylix.colors.withHashtag; {
+                  fontFamily = config.stylix.fonts.sansSerif.name;
+                  lightSchemeBackgroundColor = base00;
+                  darkSchemeBackgroundColor = base00;
+                  lightSchemeTextColor = base05;
+                  darkSchemeTextColor = base05;
+                  selectionColor = base0D;
+                };
             };
           })
         ];
