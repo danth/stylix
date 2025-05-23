@@ -1,4 +1,4 @@
-{ mkTarget, ... }:
+{ mkTarget, lib, ... }:
 mkTarget {
   name = "tofi";
   humanName = "Tofi";
