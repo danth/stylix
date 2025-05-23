@@ -1,18 +1,24 @@
-{ config, lib, ... }:
-{
-  options.stylix.targets.sxiv.enable =
-    config.lib.stylix.mkEnableTarget "Sxiv" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "sxiv";
+  humanName = "Sxiv";
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.sxiv.enable) {
-    xresources.properties =
-      let
-        inherit (config.lib.stylix) colors;
-        inherit (config.stylix) fonts;
-      in
+  configElements = [
+    (
+      { fonts }:
       {
-        "Sxiv.foreground" = "#${colors.base01}";
-        "Sxiv.background" = "#${colors.base04}";
-        "Sxiv.font" = "${fonts.sansSerif.name}-${toString fonts.sizes.applications}";
-      };
-  };
+        xresources.properties."Sxiv.font" =
+          "${fonts.sansSerif.name}-${toString fonts.sizes.applications}";
+      }
+    )
+    (
+      { colors }:
+      {
+        xresources.properties = {
+          "Sxiv.foreground" = "#${colors.base01}";
+          "Sxiv.background" = "#${colors.base04}";
+        };
+      }
+    )
+  ];
 }
