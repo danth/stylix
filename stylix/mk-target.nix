@@ -156,6 +156,7 @@
   extraOptions ? { },
   configElements ? [ ],
   generalConfig ? null,
+  imports ? [ ],
 }:
 let
   module =
@@ -208,6 +209,8 @@ let
           c;
     in
     {
+      inherit imports;
+
       options.stylix.targets.${name}.enable =
         config.lib.stylix.mkEnableTarget humanName autoEnable;
 
