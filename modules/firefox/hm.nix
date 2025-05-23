@@ -176,11 +176,7 @@ in
           && config.programs.${target.path}.enableProfileWarnings
           && missingProfiles != [ ]
         )
-        ''
-          stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` does not include the following profile(s):
-          ${lib.concatStringsSep ", " missingProfiles}
-          If this was intentional, you can disable this warning by setting `config.stylix.targets.${target.path}.enableProfileWarnings = false;'.
-        ''
+        "stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` does not include the following profile(s): ${lib.concatStringsSep ", " missingProfiles}. If this is intentional, you can disable this warning by setting `config.stylix.targets.${target.path}.enableProfileWarnings = false;'."
     );
   };
 }
