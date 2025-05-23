@@ -177,11 +177,17 @@ let
           arg:
           if arg == "cfg" then
             cfg
+          else if arg == "config" then
+            config
+            // {
+              stylix = throw "stylix: `config.stylix` accessed";
+              lib.stylix.colors = throw "stylix: `config.lib.stylix.colors` accessed";
+            }
           else if arg == "colors" then
             config.lib.stylix.colors
           else
             config.stylix.${arg}
-              or (throw "stylix: mkTarget expected one of `cfg`, `colors`, ${
+              or (throw "stylix: mkTarget expected one of `cfg`, `config`, `colors`, ${
                 lib.concatMapStringsSep ", " (name: "`${name}`") (
                   builtins.attrNames config.stylix
                 )
