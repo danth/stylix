@@ -1,9 +1,9 @@
-{ lib, config, ... }:
+{ lib, colors, ... }:
 color:
 let
-  r = ((lib.toInt config.lib.stylix.colors."${color}-rgb-r") * 100.0) / 255;
-  g = ((lib.toInt config.lib.stylix.colors."${color}-rgb-g") * 100.0) / 255;
-  b = ((lib.toInt config.lib.stylix.colors."${color}-rgb-b") * 100.0) / 255;
+  r = ((lib.toInt colors."${color}-rgb-r") * 100.0) / 255;
+  g = ((lib.toInt colors."${color}-rgb-g") * 100.0) / 255;
+  b = ((lib.toInt colors."${color}-rgb-b") * 100.0) / 255;
   max = lib.max r (lib.max g b);
   min = lib.min r (lib.min g b);
   delta = max - min;
