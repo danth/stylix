@@ -12,25 +12,25 @@ mkTarget {
       {
         programs.wayprompt.settings.colours = with colors; {
           background = "${base00-hex}${opacity'}";
-          border = base0D;
-          text = base05;
-          error-text = base08;
+          border = base0D-hex;
+          text = base05-hex;
+          error-text = base08-hex;
 
-          pin-background = base01;
-          pin-border = base05;
-          pin-square = base05;
+          pin-background = base01-hex;
+          pin-border = base05-hex;
+          pin-square = base05-hex;
 
           ok-button = green;
           ok-button-border = green;
-          ok-button-text = base00;
+          ok-button-text = base00-hex;
 
           not-ok-button = yellow;
           not-ok-button-border = yellow;
-          not-ok-button-text = base00;
+          not-ok-button-text = base00-hex;
 
           cancel-button = red;
           cancel-button-border = red;
-          cancel-button-text = base00;
+          cancel-button-text = base00-hex;
         };
       }
     )
