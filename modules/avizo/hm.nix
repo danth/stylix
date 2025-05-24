@@ -1,22 +1,18 @@
-{
-  config,
-  lib,
-  options,
-  ...
-}:
-{
-  options.stylix.targets.avizo.enable =
-    config.lib.stylix.mkEnableTarget "Avizo" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "avizo";
+  humanName = "Avizo";
 
   # Referenced https://github.com/stacyharper/base16-mako
-  config = lib.optionalAttrs (options.services ? avizo) (
-    lib.mkIf (config.stylix.enable && config.stylix.targets.avizo.enable) {
+  configElements =
+    { colors, opacity }:
+    {
       services.avizo = {
         settings = {
           default =
-            with config.lib.stylix.colors;
+            with colors;
             let
-              aviOpacity = toString config.stylix.opacity.popups;
+              aviOpacity = toString opacity.popups;
             in
             {
               background = "rgba(${base01-rgb-r}, ${base01-rgb-g}, ${base01-rgb-b}, ${aviOpacity})";
@@ -27,6 +23,5 @@
             };
         };
       };
-    }
-  );
+    };
 }

@@ -1,35 +1,32 @@
-{
-  config,
-  lib,
-  ...
-}:
-{
-  options.stylix.targets.zed.enable = config.lib.stylix.mkEnableTarget "zed" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "zed";
+  humanName = "zed";
 
-  config =
-    lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.zed.enable
-        && config.programs.zed-editor.enable
-      )
+  configElements = [
+    (
+      { fonts }:
       {
         programs.zed-editor = {
-          userSettings =
-            let
-              inherit (config.stylix) fonts;
-            in
-            {
-              "buffer_font_family" = fonts.monospace.name;
-              "buffer_font_size" = fonts.sizes.terminal * 4.0 / 3.0;
-              "theme" = "Base16 ${config.lib.stylix.colors.scheme-name}";
-              "ui_font_family" = fonts.sansSerif.name;
-              "ui_font_size" = fonts.sizes.applications * 4.0 / 3.0;
-            };
-
-          themes.stylix = config.lib.stylix.colors {
-            templateRepo = config.stylix.inputs.tinted-zed;
+          userSettings = {
+            "buffer_font_family" = fonts.monospace.name;
+            "buffer_font_size" = fonts.sizes.terminal * 4.0 / 3.0;
+            "ui_font_family" = fonts.sansSerif.name;
+            "ui_font_size" = fonts.sizes.applications * 4.0 / 3.0;
           };
         };
-      };
+      }
+    )
+    (
+      { colors, inputs }:
+      {
+        programs.zed-editor = {
+          userSettings.theme = "Base16 ${colors.scheme-name}";
+          themes.stylix = colors {
+            templateRepo = inputs.tinted-zed;
+          };
+        };
+      }
+    )
+  ];
 }

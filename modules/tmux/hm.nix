@@ -1,19 +1,18 @@
-{ config, lib, ... }:
+{ mkTarget, ... }:
+mkTarget {
+  name = "tmux";
+  humanName = "Tmux";
 
-let
-  theme = config.lib.stylix.colors {
-    templateRepo = config.stylix.inputs.tinted-tmux;
-    target = "base16";
-  };
-
-in
-{
-  options.stylix.targets.tmux.enable =
-    config.lib.stylix.mkEnableTarget "Tmux" true;
-
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.tmux.enable) {
-    programs.tmux.extraConfig = ''
-      source-file ${theme}
-    '';
-  };
+  configElements =
+    { colors, inputs }:
+    {
+      programs.tmux.extraConfig = ''
+        source-file ${
+          colors {
+            templateRepo = inputs.tinted-tmux;
+            target = "base16";
+          }
+        }
+      '';
+    };
 }

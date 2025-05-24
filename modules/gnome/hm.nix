@@ -44,7 +44,7 @@ let
 in
 {
   options.stylix.targets.gnome = {
-    enable = config.lib.stylix.mkEnableTarget "GNOME" true;
+    enable = config.lib.stylix.mkEnableTarget "GNOME" pkgs.stdenv.hostPlatform.isLinux;
     useWallpaper = config.lib.stylix.mkEnableWallpaper "GNOME" true;
   };
 

@@ -1,16 +1,9 @@
-{ config, lib, ... }:
+{ mkTarget, lib, ... }:
+mkTarget {
+  name = "kitty";
+  humanName = "Kitty";
 
-let
-  cfg = config.stylix.targets.kitty;
-  theme = config.lib.stylix.colors {
-    templateRepo = config.stylix.inputs.tinted-kitty;
-    target = if cfg.variant256Colors then "base16-256-deprecated" else "base16";
-  };
-in
-{
-  options.stylix.targets.kitty = {
-    enable = config.lib.stylix.mkEnableTarget "Kitty" true;
-
+  extraOptions = {
     variant256Colors = lib.mkOption {
       description = ''
         Whether to use the [256-color variant](https://github.com/kdrag0n/base16-kitty#256-color-variants)
@@ -21,16 +14,39 @@ in
     };
   };
 
-  config = lib.mkIf (config.stylix.enable && cfg.enable) {
-    programs.kitty = {
-      font = {
-        inherit (config.stylix.fonts.monospace) package name;
-        size = config.stylix.fonts.sizes.terminal;
-      };
-      settings.background_opacity = "${builtins.toString config.stylix.opacity.terminal}";
-      extraConfig = ''
-        include ${theme}
-      '';
-    };
-  };
+  configElements = [
+    (
+      { fonts }:
+      {
+        programs.kitty.font = {
+          inherit (fonts.monospace) package name;
+          size = fonts.sizes.terminal;
+        };
+      }
+    )
+    (
+      { opacity }:
+      {
+        programs.kitty.settings.background_opacity = toString opacity.terminal;
+      }
+    )
+    (
+      {
+        cfg,
+        colors,
+        inputs,
+      }:
+      let
+        theme = colors {
+          templateRepo = inputs.tinted-kitty;
+          target = if cfg.variant256Colors then "base16-256-deprecated" else "base16";
+        };
+      in
+      {
+        programs.kitty.extraConfig = ''
+          include ${theme}
+        '';
+      }
+    )
+  ];
 }

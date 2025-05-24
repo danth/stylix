@@ -1,44 +1,46 @@
-{
-  config,
-  lib,
-  options,
-  ...
-}:
-{
-  options.stylix.targets.mako.enable =
-    config.lib.stylix.mkEnableTarget "Mako" true;
+{ mkTarget, lib, ... }:
+mkTarget {
+  name = "mako";
+  humanName = "Mako";
 
   # Referenced https://github.com/stacyharper/base16-mako
-  config = lib.optionalAttrs (options.services ? mako) (
-    lib.mkIf (config.stylix.enable && config.stylix.targets.mako.enable) {
-      services.mako =
-        let
-          makoOpacity = lib.toHexString (
-            ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
-          );
-          inherit (config.stylix) fonts;
-        in
-        with config.lib.stylix.colors.withHashtag;
-        {
-          settings = {
-            background-color = base00 + makoOpacity;
-            border-color = base0D;
-            text-color = base05;
-            progress-color = "over ${base02}";
-            font = "${fonts.sansSerif.name} ${toString fonts.sizes.popups}";
+  configElements = [
+    (
+      { fonts }:
+      {
+        services.mako.settings.font = "${fonts.sansSerif.name} ${toString fonts.sizes.popups}";
+      }
+    )
+    (
+      { colors, opacity }:
+      {
+        services.mako =
+          let
+            makoOpacity = lib.toHexString (
+              ((builtins.ceil (opacity.popups * 100)) * 255) / 100
+            );
+          in
+          with colors.withHashtag;
+          {
+            settings = {
+              background-color = base00 + makoOpacity;
+              border-color = base0D;
+              text-color = base05;
+              progress-color = "over ${base02}";
 
-            "urgency=low" = {
-              background-color = "${base00}${makoOpacity}";
-              border-color = base0D;
-              text-color = base0A;
-            };
-            "urgency=high" = {
-              background-color = "${base00}${makoOpacity}";
-              border-color = base0D;
-              text-color = base08;
+              "urgency=low" = {
+                background-color = "${base00}${makoOpacity}";
+                border-color = base0D;
+                text-color = base0A;
+              };
+              "urgency=high" = {
+                background-color = "${base00}${makoOpacity}";
+                border-color = base0D;
+                text-color = base08;
+              };
             };
           };
-        };
-    }
-  );
+      }
+    )
+  ];
 }

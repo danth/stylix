@@ -1,8 +1,14 @@
-{ config, lib, ... }:
 {
-  options.stylix.targets.bemenu = {
-    enable = config.lib.stylix.mkEnableTarget "bemenu" true;
+  mkTarget,
+  lib,
+  config,
+  ...
+}:
+mkTarget {
+  name = "bemenu";
+  humanName = "bemenu";
 
+  extraOptions = {
     fontSize = lib.mkOption {
       description = ''
         Font size used for bemenu.
@@ -20,15 +26,26 @@
     };
   };
 
-  config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.bemenu.enable)
+  configElements = [
+    (
+      { cfg, fonts }:
+      {
+        programs.bemenu.settings = {
+          # Font name
+          fn = "${fonts.sansSerif.name} ${
+            lib.optionalString (cfg.fontSize != null) (builtins.toString cfg.fontSize)
+          }";
+        };
+      }
+    )
+    (
+      { colors, opacity }:
       {
         programs.bemenu.settings =
-          with config.lib.stylix.colors.withHashtag;
+          with colors.withHashtag;
           let
-            inherit (config.stylix.targets.bemenu) alternate fontSize;
             bemenuOpacity = lib.toHexString (
-              ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
+              ((builtins.ceil (opacity.popups * 100)) * 255) / 100
             );
           in
           {
@@ -48,11 +65,8 @@
 
             ab = "${if alternate then base00 else base01}"; # Alternate bg
             af = "${if alternate then base04 else base05}"; # Alternate fg
-
-            # Font name
-            fn = "${config.stylix.fonts.sansSerif.name} ${
-              lib.optionalString (fontSize != null) (builtins.toString fontSize)
-            }";
           };
-      };
+      }
+    )
+  ];
 }

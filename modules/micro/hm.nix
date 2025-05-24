@@ -1,13 +1,9 @@
-{
-  config,
-  lib,
-  ...
-}:
-{
-  options.stylix.targets.micro.enable =
-    config.lib.stylix.mkEnableTarget "micro" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "micro";
+  humanName = "micro";
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.micro.enable) {
+  configElements = {
     # TODO: Provide a real colorscheme once [1] is resolved.
     #
     # [1]: https://github.com/nix-community/stylix/issues/249

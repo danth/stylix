@@ -1,14 +1,21 @@
-{ config, lib, ... }:
-let
-  cfg = config.stylix.targets.lightdm;
-in
 {
-  options.stylix.targets.lightdm = {
-    enable = config.lib.stylix.mkEnableTarget "LightDM" true;
+  mkTarget,
+  config,
+  lib,
+  ...
+}:
+mkTarget {
+  name = "lightdm";
+  humanName = "LightDM";
+
+  extraOptions = {
     useWallpaper = config.lib.stylix.mkEnableWallpaper "LightDM" true;
   };
 
-  config.services.xserver.displayManager.lightdm.background = lib.mkIf (
-    config.stylix.enable && cfg.enable && cfg.useWallpaper
-  ) config.stylix.image;
+  configElements =
+    { cfg, image }:
+    {
+      services.xserver.displayManager.lightdm.background =
+        lib.mkIf cfg.useWallpaper image;
+    };
 }
