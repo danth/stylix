@@ -5,6 +5,10 @@
   ...
 }:
 {
+  imports = [
+    ./nixvim.nix
+    ./nvf.nix
+  ];
   options.stylix.targets.neovim = {
     enable = config.lib.stylix.mkEnableTarget "Neovim" true;
     plugin = lib.mkOption {
