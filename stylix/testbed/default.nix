@@ -8,6 +8,10 @@
 let
   testbedFieldSeparator = ":";
   username = "guest";
+  defaultGraphicalEnvironment = "gnome";
+  availableGraphicalEnvironments = lib.mapAttrsToList (
+    name: _: lib.removeSuffix ".nix" name
+  ) (builtins.readDir ./graphicalEnvironments);
 
   commonModule =
     { config, ... }:
@@ -88,6 +92,13 @@ let
                   used may change in the future.
                 '';
               };
+              graphicalEnvironment = lib.mkOption {
+                type = lib.types.enum availableGraphicalEnvironments;
+                default = defaultGraphicalEnvironment;
+                description = ''
+                  The desktop environment/window manager to run on VM startup.
+                '';
+              };
               application = lib.mkOption {
                 description = ''
                   Options defining an application to be launched using its provided
@@ -146,19 +157,10 @@ let
       };
 
       config = lib.mkIf (config.stylix.testbed.ui != null) {
-        services.xserver = {
-          enable = true;
-          displayManager.gdm.enable = true;
-          desktopManager.gnome.enable = true;
-        };
-
         services.displayManager.autoLogin = {
-          enable = true;
+          enable = lib.mkDefault true;
           user = username;
         };
-
-        # Disable the GNOME tutorial which pops up on first login.
-        environment.gnome.excludePackages = [ pkgs.gnome-tour ];
 
         # for use when application is set
         environment.systemPackages =
@@ -265,19 +267,23 @@ let
       system = lib.nixosSystem {
         inherit (pkgs) system;
 
-        modules = [
-          commonModule
-          enableModule
-          applicationModule
-          inputs.self.nixosModules.stylix
-          inputs.home-manager.nixosModules.home-manager
-          testbed.path
+        modules =
+          [
+            commonModule
+            enableModule
+            applicationModule
+            inputs.self.nixosModules.stylix
+            inputs.home-manager.nixosModules.home-manager
+            testbed.path
 
-          {
-            inherit stylix;
-            system.name = name;
-          }
-        ];
+            {
+              inherit stylix;
+              system.name = name;
+            }
+          ]
+          ++ map (
+            name: import ./graphicalEnvironments/${name}.nix
+          ) availableGraphicalEnvironments;
       };
 
       script = pkgs.writeShellApplication {
