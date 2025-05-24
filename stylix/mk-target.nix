@@ -66,6 +66,21 @@
       This should be disabled if manual setup is required or if auto-enabling
       causes issues.
 
+      Defaults to `true`.
+
+    `autoEnableExpr` (String)
+    : A string representation of `autoEnable`, for use in documentation.
+
+      Not required if `autoEnable` is a literal `true` or `false`, but **must**
+      be used when `autoEnable` is a dynamic expression.
+
+      E.g. `"pkgs.stdenv.hostPlatform.isLinux"`.
+
+    `enableExample` (Boolean or Literal Expression)
+
+    : The example to use for the `enable` option. Defaults to `true` if
+      `autoEnableExpr` is used, or `!autoEnable` otherwise.
+
     `extraOptions` (Attribute set)
     : Additional options to be added in the `stylix.targets.${name}` namespace
       along the `stylix.targets.${name}.enable` option.
@@ -151,12 +166,18 @@
 #     }
 {
   name,
+  # Accessed via `args`
   humanName,
-  autoEnable ? true,
+  # Accessed via `args`; deadnix: skip
+  autoEnable ? null,
+  # Accessed via `args`; deadnix: skip
+  autoEnableExpr ? null,
+  # Accessed via `args`; deadnix: skip
+  enableExample ? null,
   extraOptions ? { },
   configElements ? [ ],
   generalConfig ? null,
-}:
+}@args:
 let
   module =
     { config, lib, ... }:
@@ -209,7 +230,23 @@ let
     in
     {
       options.stylix.targets.${name}.enable =
-        config.lib.stylix.mkEnableTarget humanName autoEnable;
+        let
+          inherit (config.lib.stylix) mkEnableTargetWith;
+
+          # Map mkTarget arg names → mkEnableTargetWith arg names
+          argNameMap = {
+            humanName = "name";
+            enableExample = "example";
+          };
+
+          # Rename and filter args for use with mkEnableTargetWith
+          enableArgs = lib.pipe args [
+            (lib.flip builtins.removeAttrs [ "name" ])
+            (lib.attrsets.mapAttrs' (name: lib.nameValuePair (argNameMap.${name} or name)))
+            (lib.attrsets.intersectAttrs (builtins.functionArgs mkEnableTargetWith))
+          ];
+        in
+        mkEnableTargetWith enableArgs;
 
       config = lib.mkIf (config.stylix.enable && cfg.enable) (
         lib.mkMerge (

@@ -34,28 +34,97 @@
   config.lib.stylix =
     let
       cfg = config.stylix;
+      self = config.lib.stylix;
+
+      # Will wrap with (parentheses) if the expr contains operators with lower precedence than `&&`
+      wrapExprWith =
+        {
+          autoWrapExpr ? true,
+          trimExpr ? true,
+          indentMultilineExpr ? true,
+        }:
+        expr:
+        let
+          trimmed = if trimExpr then lib.strings.trim expr else expr;
+          isWrapped = builtins.match ''[(].*[)]'' trimmed != null;
+          hasNewlines = lib.strings.hasInfix "\n" trimmed;
+          needsWrapping = builtins.any (op: lib.strings.hasInfix op trimmed) [
+            # These operators have lower precedence than `&&`
+            # See https://nix.dev/manual/nix/2.28/language/operators
+            "||"
+            "->"
+            "|>"
+            "<|"
+            # These keywords would also need wrapping
+            "with "
+            "assert "
+          ];
+          indented =
+            if indentMultilineExpr then
+              lib.pipe trimmed [
+                (lib.strings.splitString "\n")
+                (map (line: if line == "" then "" else "  " + line))
+                (builtins.concatStringsSep "\n")
+              ]
+            else
+              trimmed;
+          wrapped = if hasNewlines then "(\n${indented}\n)" else "(${trimmed})";
+        in
+        if autoWrapExpr && !isWrapped && needsWrapping then wrapped else trimmed;
     in
     {
       mkEnableTarget =
-        humanName: autoEnable:
-        lib.mkEnableOption "theming for ${humanName}"
-        // {
-          default = cfg.autoEnable && autoEnable;
-          example = !autoEnable;
-        }
-        // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalMD "same as `stylix.autoEnable`";
+        name: autoEnable:
+        config.lib.stylix.mkEnableTargetWith { inherit name autoEnable; };
+
+      mkEnableTargetWith =
+        {
+          name,
+          autoEnable ? true,
+          autoEnableExpr ? null,
+          autoWrapExpr ? true,
+          example ? if args ? autoEnableExpr then true else !autoEnable,
+        }@args:
+        let
+          wrapExpr = wrapExprWith {
+            inherit autoWrapExpr;
+          };
+        in
+        self.mkEnableIf {
+          description = "Whether to enable theming for ${name}";
+          condition = cfg.autoEnable && autoEnable;
+          conditionText =
+            if args ? autoEnableExpr then
+              lib.literalExpression "stylix.autoEnable && ${wrapExpr autoEnableExpr}"
+            else if autoEnable then
+              lib.literalExpression "stylix.autoEnable"
+            else
+              false;
+          inherit example;
         };
+
       mkEnableWallpaper =
         humanName: autoEnable:
-        lib.mkOption {
-          default = config.stylix.image != null && autoEnable;
-          example = config.stylix.image == null;
+        self.mkEnableIf {
           description = "Whether to set the wallpaper for ${humanName}.";
+          condition = config.stylix.image != null && autoEnable;
+          conditionText =
+            if autoEnable then lib.literalExpression "stylix.image != null" else false;
+          example = config.stylix.image == null;
+        };
+
+      mkEnableIf =
+        {
+          description,
+          condition,
+          conditionText ? null,
+          example ? if args ? conditionText then true else !condition,
+        }@args:
+        lib.mkOption {
           type = lib.types.bool;
-        }
-        // lib.optionalAttrs autoEnable {
-          defaultText = lib.literalMD "`stylix.image != null`";
+          default = condition;
+          defaultText = if args ? conditionText then conditionText else condition;
+          inherit description example;
         };
     };
 }
