@@ -8,7 +8,7 @@
 
 let
   copyModules =
-    builtins.map
+    map
       (
         {
           path,

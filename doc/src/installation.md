@@ -10,7 +10,10 @@ screens, and display managers.
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stylix.url = "github:nix-community/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -33,8 +36,8 @@ Stylix release. For example:
 
 ```nix
 {
-  nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-  stylix.url = "github:nix-community/stylix/release-24.11";
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  stylix.url = "github:nix-community/stylix/release-25.05";
 }
 ```
 
@@ -61,12 +64,15 @@ to NixOS via [Flakes][nix-flakes].
 ```nix
 {
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     darwin = {
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stylix.url = "github:nix-community/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -101,12 +107,15 @@ similar fashion to NixOS via [Flakes][nix-flakes].
 ```nix
 {
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-on-droid = {
-      url = "github:nix-community/nix-on-droid/release-24.05";
+      url = "github:nix-community/nix-on-droid";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    stylix.url = "github:nix-community/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -146,8 +155,14 @@ by someone else.
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    stylix.url = "github:nix-community/stylix";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -175,9 +190,9 @@ matching Stylix release. For example:
 
 ```nix
 {
-  nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-  home-manager.url = "github:nix-community/home-manager/release-24.11";
-  stylix.url = "github:nix-community/stylix/release-24.11";
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  home-manager.url = "github:nix-community/home-manager/release-25.05";
+  stylix.url = "github:nix-community/stylix/release-25.05";
 }
 ```
 

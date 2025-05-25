@@ -41,15 +41,34 @@ folder, using any name which is not on the list above.
 
 ## Module template
 
-All modules should have an enable option created using `mkEnableTarget`. This is
-similar to
-[`mkEnableOption`](https://nix-community.github.io/docnix/reference/lib/options/lib-options-mkenableoption/)
-from the standard library, however it integrates with
-[`stylix.enable`](./options/nixos.md#stylixenable) and
-[`stylix.autoEnable`](./options/nixos.md#stylixautoenable) and generates more
-specific documentation.
+Modules should be created using the `mkTarget` function whenever possible (see
+the [`/stylix/mk-target.nix`](
+https://github.com/danth/stylix/blob/-/stylix/mk-target.nix) in-source
+documentation for more details):
 
-A general format for modules is shown below.
+```nix
+{ config, lib, mkTarget ... }:
+mkTarget {
+  name = "«name»";
+  humanName = "«human readable name»";
+
+  configElements =
+    { colors }:
+    {
+      programs.«name».theme.background = colors.base00;
+    };
+}
+```
+
+> [!IMPORTANT]
+> The `mkTarget` argument is only available to modules imported by Stylix's
+> [autoload system](https://github.com/danth/stylix/blob/-/stylix/autoload.nix),
+> e.g., `modules/«target»/«platform».nix` modules.
+>
+> I.e., it is not available to normal modules imported via the `imports` list.
+
+When the `mkTarget` function cannot be used, modules must manually replicate its
+safeguarding behaviour:
 
 ```nix
 { config, lib, ... }:
@@ -66,8 +85,8 @@ A general format for modules is shown below.
 ```
 
 > [!CAUTION]
-> You **must** check _both_ `config.stylix.enable` _and_ your target's own
-> `enable` option before defining any config.
+> If not using `mkTarget`, you **must** check _both_ `config.stylix.enable`
+> _and_ your target's own`enable` option before defining any config.
 >
 > In the above example this is done using
 > `config = lib.mkIf (config.stylix.enable && config.stylix.targets.«name».enable)`.

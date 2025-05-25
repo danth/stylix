@@ -73,7 +73,7 @@ let
   #       "src/options/platforms/«platform».md" = {
   #         referenceSection = "Platforms";
   #         readme = ''
-  #           Content of docs/src/options/platforms/«platform».md, or a default
+  #           Content of doc/src/options/platforms/«platform».md, or a default
   #           title followed by a note about that file not existing.
   #         '';
   #         optionsByPlatform.«platform» = [ ... ];
@@ -237,7 +237,7 @@ let
             referenceSection = "Platforms";
             readme =
               let
-                path = "${inputs.self}/docs/src/options/platforms/${platform}.md";
+                path = "${inputs.self}/doc/src/options/platforms/${platform}.md";
 
                 # This doesn't count as IFD because ${inputs.self} is a flake input
                 mainText =
@@ -331,7 +331,7 @@ let
         ${fence}```
       ''
     else
-      builtins.throw "unexpected value type: ${builtins.typeOf value}";
+      throw "unexpected value type: ${builtins.typeOf value}";
 
   # Prefix to remove from file paths when listing where an option is declared.
   declarationPrefix = "${inputs.self}";
@@ -353,7 +353,7 @@ let
     if lib.hasPrefix declarationPrefix declarationString then
       "- [${filePath}](${declarationPermalink}/${filePath})"
     else
-      builtins.throw "declaration not in ${declarationPrefix}: ${declarationString}";
+      throw "declaration not in ${declarationPrefix}: ${declarationString}";
 
   # You can embed HTML inside a Markdown document, but to render further
   # Markdown between the HTML tags, it must be surrounded by blank lines:
@@ -525,7 +525,7 @@ let
         if hasTitle then
           "  - [${title}](${relativePath})"
         else
-          builtins.throw "page must start with a title: ${path}";
+          throw "page must start with a title: ${path}";
     in
     summary
     // {
@@ -550,7 +550,7 @@ let
   );
 
   # This function generates a Bash script that installs each page to the
-  # correct location, over the top of an original copy of docs/src.
+  # correct location, over the top of an original copy of doc/src.
   #
   # Each page must be written in a separate derivation, because passing all
   # the text into a single derivation exceeds the maximum size of command

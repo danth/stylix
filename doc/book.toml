@@ -7,7 +7,7 @@ language = "en"
 [output.html]
 site-url = "/stylix/"
 git-repository-url = "https://github.com/nix-community/stylix"
-edit-url-template = "https://github.com/nix-community/stylix/edit/master/docs/{path}"
+edit-url-template = "https://github.com/nix-community/stylix/edit/master/doc/{path}"
 no-section-label = true
 
 [output.html.fold]

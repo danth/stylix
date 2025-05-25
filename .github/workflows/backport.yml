@@ -19,7 +19,7 @@ jobs:
         github.event.pull_request.merged == true &&
         (
           github.event_name != 'labeled' ||
-          startsWith('backport', github.event.label.name)
+          startsWith('backport: ', github.event.label.name)
         )
       )
 
@@ -42,5 +42,6 @@ jobs:
       - uses: korthout/backport-action@v3
         with:
           github_token: ${{ steps.app-token.outputs.token }}
+          label_pattern: "^backport: ([^ ]+)$"
           pull_title: "[${target_branch}] ${pull_title}"
           pull_description: "This is an automated backport of #${pull_number}."
