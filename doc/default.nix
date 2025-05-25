@@ -57,13 +57,19 @@ let
   #     {
   #       "src/options/modules/«module».md" = {
   #         referenceSection = "Modules";
-  #         readme = ''
-  #           Content of modules/«module»/README.md, or a default title
-  #           followed by a note about that file not existing.
+  #         readme =
+  #           # Generated from modules/«module»/meta.nix
+  #           ''
+  #             # «name»
   #
-  #           Summary of module maintainers, or a warning that the module
-  #           is unmaintained.
-  #         '';
+  #             «Links to homepage(s)»
+  #
+  #             «Maintainers info»
+  #
+  #             ---
+  #
+  #             «Optional description»
+  #           '';
   #         optionsByPlatform = {
   #           home_manager = [ ... ];
   #           nixos = [ ... ];
@@ -447,15 +453,20 @@ let
       ${renderedOptions}
     '';
 
-  # Renders the list of options for all platforms on a page, preceded by either
-  # the relevant README, or the default README if it doesn't exist.
+  # Renders the list of options for all platforms on a page, preceded by the
+  # module's metadata generated from modules/«module»/meta.nix.
   #
   # Example output:
   #
-  #     # Module 1
+  #     # «name»
   #
-  #     This is the content of `modules/module1/README.md`, including the title
-  #     above.
+  #     «Links to homepage(s)»
+  #
+  #     «Maintainers info»
+  #
+  #     ---
+  #
+  #     «Optional description»
   #
   #     ## Home Manager options
   #     *None provided.*
