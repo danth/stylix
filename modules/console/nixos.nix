@@ -22,7 +22,7 @@ mkTarget {
         blue
         magenta
         cyan
-        base06-hex
+        base07-hex
       ];
     };
 }
