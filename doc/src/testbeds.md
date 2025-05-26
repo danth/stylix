@@ -21,6 +21,24 @@ automatically loaded as a NixOS module with options such as `stylix.image`
 already defined. The testbed should include any options necessary to install the
 target and any supporting software - for example, a window manager.
 
+### Special Options
+
+Testbeds are given a special set of options which configure for common testbed
+uses.
+
+- `config.stylix.testbed`
+  - `enable` defaults to true; allows for conditionally disabling a testbed
+  - `ui` and all of its suboptions are optional. Setting any will enable a
+    graphical environment.
+    - `command` takes a string command to be run once the graphical environment
+      has loaded
+    - `application` takes a desktop application to be run once the graphical
+      environment has loaded. If one of its suboptions is set, all must be.
+      - `name` takes the string name of the desktop application
+      - `package` takes the package which provides the `.desktop` file
+
+### Home Manager
+
 If the target can only be used through Home Manager, you can write a Home
 Manager module within the NixOS module using the following format:
 
