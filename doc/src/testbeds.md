@@ -29,7 +29,7 @@ uses.
 - `config.stylix.testbed`
   - `enable` defaults to true; allows for conditionally disabling a testbed
   - `ui` and all of its suboptions are optional. Setting any will enable a
-    desktop environment.
+    graphical environment.
     - `command` takes a string command to be run once the graphical environment
       has loaded
     - `application` takes a desktop application to be run once the graphical
