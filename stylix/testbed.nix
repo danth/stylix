@@ -2,10 +2,10 @@
   pkgs,
   inputs,
   lib,
+  testbedFieldSeparator ? ":",
 }:
 
 let
-  testbedFieldSeparator = ":";
   username = "guest";
 
   commonModule =
