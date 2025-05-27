@@ -8,7 +8,7 @@ mkTarget {
     (
       { fonts }:
       {
-        services.mako.settings.font = "${fonts.sansSerif.name} ${toString fonts.sizes.popups}";
+        services.mako.settings.font = "'${fonts.sansSerif.name}' ${toString fonts.sizes.popups}";
       }
     )
     (
