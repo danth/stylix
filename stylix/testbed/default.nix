@@ -65,7 +65,7 @@ let
     ];
 
   makeTestbed =
-    testbed: testcase: stylix:
+    testbed: themeName: themeModule:
     let
       name =
         lib.concatMapStringsSep testbedFieldSeparator
@@ -78,7 +78,7 @@ let
           [
             "testbed"
             testbed.name
-            testcase
+            themeName
           ];
 
       system = lib.nixosSystem {
@@ -91,11 +91,8 @@ let
           inputs.self.nixosModules.stylix
           inputs.home-manager.nixosModules.home-manager
           testbed.path
-
-          {
-            inherit stylix;
-            system.name = name;
-          }
+          themeModule
+          { system.name = name; }
         ];
       };
 
@@ -122,74 +119,21 @@ let
       ${name} = script;
     };
 
-  # This generates a copy of each testbed for each of the following themes.
-  makeTestbeds =
-    let
-      images = {
-        dark = pkgs.fetchurl {
-          name = "mountains.jpg";
-          url = "https://unsplash.com/photos/ZqLeQDjY6fY/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzY1NDY4fA&force=true";
-          hash = "sha256-Dm/0nKiTFOzNtSiARnVg7zM0J1o+EuIdUQ3OAuasM58=";
-        };
+  # Import all the testbed themes
+  themes = lib.pipe ./themes [
+    builtins.readDir
+    (lib.filterAttrs (name: _: lib.strings.hasSuffix ".nix" name))
+    (builtins.mapAttrs (
+      name: type:
+      lib.throwIfNot (type == "regular")
+        "Unexpected filetype in testbed themes: ${toString ./themes/${name}} is a ${type}."
+        ./themes/${name}
+    ))
+    (lib.mapAttrs' (name: lib.nameValuePair (lib.strings.removeSuffix ".nix" name)))
+  ];
 
-        light = pkgs.fetchurl {
-          name = "three-bicycles.jpg";
-          url = "https://unsplash.com/photos/hwLAI5lRhdM/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzE2MzYxNDcwfA&force=true";
-          hash = "sha256-S0MumuBGJulUekoGI2oZfUa/50Jw0ZzkqDDu1nRkFUA=";
-        };
-      };
-    in
-    testbed:
-    lib.mapAttrsToList (makeTestbed testbed) {
-      light = {
-        enable = true;
-        image = images.light;
-        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-latte.yaml";
-        polarity = "light";
-        cursor = {
-          name = "Vanilla-DMZ";
-          package = pkgs.vanilla-dmz;
-          size = 32;
-        };
-      };
-      dark = {
-        enable = true;
-        image = images.dark;
-        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
-        cursor = {
-          name = "Vanilla-DMZ";
-          package = pkgs.vanilla-dmz;
-          size = 32;
-        };
-      };
-      imageless = {
-        enable = true;
-        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
-        cursor = {
-          name = "Vanilla-DMZ";
-          package = pkgs.vanilla-dmz;
-          size = 32;
-        };
-      };
-      schemeless = {
-        enable = true;
-        image = images.dark;
-        polarity = "dark";
-        cursor = {
-          name = "Vanilla-DMZ";
-          package = pkgs.vanilla-dmz;
-          size = 32;
-        };
-      };
-      cursorless = {
-        enable = true;
-        image = images.dark;
-        base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
-      };
-    };
+  # This generates a copy of each testbed for each of the imported themes.
+  makeTestbeds = testbed: lib.mapAttrsToList (makeTestbed testbed) themes;
 
 in
 # Testbeds are merged using lib.attrsets.unionOfDisjoint to throw an error if
