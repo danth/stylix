@@ -39,7 +39,11 @@ mkTarget {
       }
     )
     (
-      { colors, opacity }:
+      {
+        colors,
+        opacity,
+        cfg,
+      }:
       {
         programs.bemenu.settings =
           with colors.withHashtag;
@@ -63,8 +67,8 @@ mkTarget {
             nf = "${base05}"; # Normal fg
             scf = "${base03}"; # Scrollbar fg
 
-            ab = "${if alternate then base00 else base01}"; # Alternate bg
-            af = "${if alternate then base04 else base05}"; # Alternate fg
+            ab = "${if cfg.alternate then base00 else base01}"; # Alternate bg
+            af = "${if cfg.alternate then base04 else base05}"; # Alternate fg
           };
       }
     )
