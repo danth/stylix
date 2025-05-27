@@ -9,12 +9,9 @@
   options.stylix.targets.rstudio = {
     enable = config.lib.stylix.mkEnableTarget "RStudio" true;
 
-    themeAutoset = lib.mkOption {
-      description = ''
-        Whether to modify the RStudio preferences file to set the theme.
-      '';
-      type = lib.types.bool;
+    themeAutoset = lib.mkEnableOption "setting Stylix as the theme" // {
       default = true;
+      example = false;
     };
   };
 
@@ -25,7 +22,10 @@
           let
             inherit (config.lib.stylix) colors;
 
-            # Magic numbers to convert from RGB to luminance
+            # The coefficients for converting linear RGB to luminance are taken
+            # from the ITU-R BT.709 and sRGB specifications [1].
+            #
+            # [1]: https://en.wikipedia.org/wiki/Relative_luminance.
             luminance =
               (0.2126 * (lib.toInt colors.base00-rgb-r))
               + (0.7152 * (lib.toInt colors.base00-rgb-g))
@@ -55,6 +55,7 @@
               extension = ".rstheme";
             };
           };
+
         home.activation = lib.mkIf config.stylix.targets.rstudio.themeAutoset {
           rstudioThemeSelect =
             let
@@ -73,11 +74,11 @@
                   "$config" |
                   ${lib.getExe' pkgs.moreutils "sponge"} "$config"
 
-              verboseEcho \
-                "stylix: rstudio: changing editor_theme to ${name} in $config"
+                verboseEcho \
+                  "stylix: rstudio: changed editor_theme to ${name} in $config"
+
               else
-                run cp ${file} "$config"
-                run chmod 644 "$config"
+                run install --mode 644 ${file} "$config"
               fi
             '';
         };
