@@ -10,7 +10,7 @@ inputs:
 # documentation.
 
 let
-  autoload = import ../autoload.nix { inherit lib inputs; } "darwin";
+  autoload = import ../autoload.nix { inherit lib; } "darwin";
 in
 {
   imports = [
@@ -23,7 +23,7 @@ in
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
     "${inputs.self}/stylix/release.nix"
-    (lib.modules.importApply "${inputs.self}/stylix/overlays.nix" inputs)
+    "${inputs.self}/stylix/overlays.nix"
   ] ++ autoload;
   config.warnings =
     lib.mkIf

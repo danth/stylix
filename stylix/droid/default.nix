@@ -2,7 +2,7 @@ inputs:
 { lib, ... }:
 
 let
-  autoload = import ../autoload.nix { inherit lib inputs; } "droid";
+  autoload = import ../autoload.nix { inherit lib; } "droid";
 in
 {
   imports = [
@@ -12,7 +12,7 @@ in
     "${inputs.self}/stylix/palette.nix"
     "${inputs.self}/stylix/pixel.nix"
     "${inputs.self}/stylix/target.nix"
-    (lib.modules.importApply "${inputs.self}/stylix/overlays.nix" inputs)
+    "${inputs.self}/stylix/overlays.nix"
   ] ++ autoload;
 
   # See https://github.com/nix-community/nix-on-droid/issues/436
