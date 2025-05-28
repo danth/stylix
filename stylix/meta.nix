@@ -5,10 +5,10 @@
 builtins.mapAttrs
   (
     _: value:
-    if (builtins.typeOf value == "lambda") then
+    if builtins.isFunction value then
       (value {
         inherit pkgs;
-        lib = pkgs.lib.extend (
+        lib = lib.extend (
           _: prev: {
             maintainers = lib.attrsets.unionOfDisjoint prev.maintainers (import ./maintainers.nix);
           }
