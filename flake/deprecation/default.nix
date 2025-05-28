@@ -4,6 +4,10 @@
   ...
 }:
 {
+  imports = [
+    ./per-system-option.nix
+  ];
+
   # NOTE: the `flake` submodule has a `lazyAttrsOf` freeform type.
   #
   # This means a `mkIf false` definition will not omit the attr, because
