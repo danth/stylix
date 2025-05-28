@@ -53,7 +53,7 @@ let
     };
   };
 
-  metadata = callPackage ../stylix/meta.nix { inherit inputs; };
+  metadata = callPackage ../stylix/meta.nix { };
 
   # We construct an index of all Stylix options, using the following format:
   #
