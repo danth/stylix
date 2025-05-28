@@ -1,4 +1,3 @@
-inputs:
 {
   lib,
   pkgs,
@@ -33,5 +32,5 @@ inputs:
         attrs.overlay
       ];
     }
-  ) (import ./autoload.nix { inherit lib inputs; } "overlay");
+  ) (import ./autoload.nix { inherit lib; } "overlay");
 }
