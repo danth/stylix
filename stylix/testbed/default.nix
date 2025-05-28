@@ -8,43 +8,40 @@
 let
   isEnabled = pkgs.callPackage ./is-enabled.nix { };
 
-  autoload =
-    let
-      directory = "testbeds";
-      modules = "${inputs.self}/modules";
-    in
-    lib.pipe modules [
-      builtins.readDir
-      builtins.attrNames
-      (builtins.concatMap (
-        module:
+  autoload = lib.pipe ../../modules [
+    builtins.readDir
+    builtins.attrNames
+    (builtins.concatMap (
+      module:
+      let
+        testbeds = ../../modules/${module}/testbeds;
+        files = lib.optionalAttrs (builtins.pathExists testbeds) (
+          builtins.readDir testbeds
+        );
+      in
+      lib.mapAttrsToList (
+        testbed: type:
         let
-          testbeds = "${modules}/${module}/${directory}";
-          files = lib.optionalAttrs (builtins.pathExists testbeds) (
-            builtins.readDir testbeds
-          );
+          path = testbeds + "/${testbed}";
+          pathStr = toString path;
         in
-        lib.mapAttrsToList (
-          testbed: type:
-          if type != "regular" then
-            throw "${testbed} must be regular: ${type}"
+        if type != "regular" then
+          throw "${pathStr} must be regular: ${type}"
 
-          else if !lib.hasSuffix ".nix" testbed then
-            throw "testbed must be a Nix file: ${testbeds}/${testbed}"
+        else if !lib.hasSuffix ".nix" testbed then
+          throw "testbed must be a Nix file: ${pathStr}"
 
-          else if testbed == ".nix" then
-            throw "testbed must have a name: ${testbed}"
+        else if testbed == ".nix" then
+          throw "testbed must have a name: ${pathStr}"
 
-          else
-            {
-              inherit module;
-
-              name = lib.removeSuffix ".nix" testbed;
-              path = "${testbeds}/${testbed}";
-            }
-        ) files
-      ))
-    ];
+        else
+          {
+            inherit module path;
+            name = lib.removeSuffix ".nix" testbed;
+          }
+      ) files
+    ))
+  ];
 
   makeTestbed =
     testbed: themeName: themeModule:
