@@ -43,7 +43,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply ../stylix/darwin inputs)
+          ../stylix/darwin
           {
             stylix = {
               inherit inputs;
