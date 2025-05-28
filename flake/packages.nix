@@ -2,8 +2,15 @@
   lib,
   inputs,
   self,
+  config,
   ...
 }:
+let
+  packageAliasNames = lib.pipe config.stylix.perSystemAliases [
+    (builtins.filter (a: a.output == "packages"))
+    (builtins.catAttrs "old")
+  ];
+in
 {
 
   perSystem =
@@ -11,7 +18,7 @@
     {
       # Build all packages with 'nix flake check' instead of only verifying they
       # are derivations.
-      checks = config.packages;
+      checks = builtins.removeAttrs config.packages packageAliasNames;
 
       packages = lib.mkMerge [
         # Testbeds are virtual machines based on NixOS, therefore they are
@@ -22,7 +29,7 @@
           }
         ))
         {
-          docs = pkgs.callPackage "${self}/doc" {
+          doc = pkgs.callPackage "${self}/doc" {
             inherit inputs;
             inherit (inputs.nixpkgs.lib) nixosSystem;
             inherit (inputs.home-manager.lib) homeManagerConfiguration;
