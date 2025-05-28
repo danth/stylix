@@ -10,7 +10,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply "${self}/stylix/nixos" inputs)
+          (lib.modules.importApply ../stylix/nixos inputs)
           {
             stylix = {
               inherit inputs;
@@ -27,7 +27,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply "${self}/stylix/hm" inputs)
+          (lib.modules.importApply ../stylix/hm inputs)
           {
             stylix = {
               inherit inputs;
@@ -43,7 +43,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply "${self}/stylix/darwin" inputs)
+          (lib.modules.importApply ../stylix/darwin inputs)
           {
             stylix = {
               inherit inputs;
@@ -60,7 +60,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply "${self}/stylix/droid" inputs)
+          (lib.modules.importApply ../stylix/droid inputs)
           {
             stylix = {
               paletteGenerator =
