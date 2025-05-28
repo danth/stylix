@@ -27,7 +27,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply ../stylix/hm inputs)
+          ../stylix/hm
           {
             stylix = {
               inherit inputs;
