@@ -60,7 +60,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply ../stylix/droid inputs)
+          ../stylix/droid
           {
             stylix = {
               paletteGenerator =
