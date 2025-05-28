@@ -10,7 +10,7 @@
       { pkgs, ... }@args:
       {
         imports = [
-          (lib.modules.importApply ../stylix/nixos inputs)
+          ../stylix/nixos
           {
             stylix = {
               inherit inputs;
