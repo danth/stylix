@@ -1,0 +1,5 @@
+username = "guest"
+description = "Guest"
+hashedPassword = ""
+isNormalUser = true
+extraGroups = [ "wheel" ]

@@ -50,5 +50,5 @@
 "topic: testbed":
   - changed-files:
       - any-glob-to-any-file:
-          - "stylix/testbed.nix"
+          - "stylix/testbed/**"
           - "modules/testbed/**"
