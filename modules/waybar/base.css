@@ -58,3 +58,9 @@
 #window {
   padding: 0 5px;
 }
+#bluetooth {
+  padding: 0 5px;
+}
+#bluetooth.disabled {
+  padding: 0 5px;
+}
