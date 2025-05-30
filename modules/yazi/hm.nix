@@ -16,9 +16,9 @@ mkTarget {
           mkSame = c: (mkBoth c c);
         in
         {
-          manager = rec {
+          mgr = rec {
             # Reusing bat themes, since it's suggested in the stying guide
-            # https://yazi-rs.github.io/docs/configuration/theme#manager
+            # https://yazi-rs.github.io/docs/configuration/theme#mgr
             syntect_theme = colors {
               template = ../bat/base16-stylix.tmTheme.mustache;
               extension = ".tmTheme";
