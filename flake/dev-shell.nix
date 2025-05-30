@@ -25,6 +25,13 @@
             "$@"
         '';
       };
+
+      # The shell should not directly depend on `packages.serve-docs`, because
+      # that'd build the docs before entering the shell. Instead, we want to
+      # build the docs only when running 'serve-docs'.
+      build-and-run-docs = pkgs.writeShellScriptBin "serve-docs" ''
+        nix run .#docs
+      '';
     in
     {
       devShells = {
@@ -35,6 +42,7 @@
           packages =
             [
               stylix-check
+              build-and-run-docs
               inputs'.home-manager.packages.default
               config.formatter
             ]
