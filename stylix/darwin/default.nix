@@ -14,7 +14,6 @@ let
 in
 {
   imports = [
-    "${inputs.self}/stylix/darwin/fonts.nix"
     "${inputs.self}/stylix/darwin/palette.nix"
     "${inputs.self}/stylix/fonts.nix"
     "${inputs.self}/stylix/home-manager-integration.nix"

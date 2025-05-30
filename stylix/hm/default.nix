@@ -17,7 +17,6 @@ in
     "${inputs.self}/stylix/cursor.nix"
     "${inputs.self}/stylix/fonts.nix"
     "${inputs.self}/stylix/hm/cursor.nix"
-    "${inputs.self}/stylix/hm/fonts.nix"
     "${inputs.self}/stylix/hm/icon.nix"
     "${inputs.self}/stylix/hm/palette.nix"
     "${inputs.self}/stylix/icon.nix"
