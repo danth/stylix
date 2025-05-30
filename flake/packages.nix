@@ -22,11 +22,7 @@
           }
         ))
         {
-          docs = pkgs.callPackage "${self}/doc" {
-            inherit inputs;
-            inherit (inputs.nixpkgs.lib) nixosSystem;
-            inherit (inputs.home-manager.lib) homeManagerConfiguration;
-          };
+          docs = pkgs.callPackage "${self}/doc" { inherit inputs; };
           palette-generator = pkgs.callPackage "${self}/palette-generator" { };
         }
       ];
