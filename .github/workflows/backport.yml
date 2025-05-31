@@ -1,6 +1,6 @@
 ---
 # Derived from
-# https://github.com/NixOS/nixpkgs/blob/bdc995d3e97cec29eacc8fbe87e66edfea26b861/.github/workflows/backport.yml
+# https://github.com/NixOS/nixpkgs/blob/2566f9dcb469b06241519a8185863d67773f943a/.github/workflows/backport.yml
 name: Backport
 
 on:  # yamllint disable-line rule:truthy
@@ -17,11 +17,11 @@ jobs:
 
     if: >
       (
-        github.repository_owner == 'nix-community' &&
+        vars.APP_ID &&
         github.event.pull_request.merged == true &&
         (
-          github.event_name != 'labeled' ||
-          startsWith('backport: ', github.event.label.name)
+          github.event.action != 'labeled' ||
+          startsWith(github.event.label.name, 'backport: ')
         )
       )
 

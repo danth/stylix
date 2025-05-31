@@ -13,6 +13,9 @@
 }:
 
 let
+  # Prefix to remove from option declaration file paths.
+  rootPrefix = toString ../. + "/";
+
   nixosConfiguration = nixosSystem {
     inherit system;
     modules = [
@@ -50,7 +53,7 @@ let
     };
   };
 
-  metadata = callPackage "${inputs.self}/stylix/meta.nix" { inherit inputs; };
+  metadata = callPackage ../stylix/meta.nix { };
 
   # We construct an index of all Stylix options, using the following format:
   #
@@ -119,15 +122,10 @@ let
       option,
     }:
     # Only include options which are declared by a module within Stylix.
-    if lib.hasPrefix "${inputs.self}/" declaration then
+    if lib.hasPrefix rootPrefix declaration then
       let
-        # Part of this string may become an attribute name in the index, and
-        # attribute names aren't allowed to have string context. The context
-        # comes from `${inputs.self}`, which is removed by `removePrefix`.
-        # Therefore, this use of `unsafeDiscardStringContext` is safe.
-        pathWithContext = lib.removePrefix "${inputs.self}/" declaration;
-        path = builtins.unsafeDiscardStringContext pathWithContext;
-        pathComponents = lib.splitString "/" path;
+        subPath = lib.removePrefix rootPrefix (toString declaration);
+        pathComponents = lib.splitString "/" subPath;
       in
       # Options declared in the modules directory go to the Modules section,
       # otherwise they're assumed to be shared between modules, and go to the
@@ -236,29 +234,30 @@ let
           };
         }
       else
-        insert {
-          inherit index platform option;
+        let
           page = "src/options/platforms/${platform}.md";
+          path = ./. + "/${page}";
+        in
+        insert {
+          inherit
+            index
+            platform
+            page
+            option
+            ;
           emptyPage = {
             referenceSection = "Platforms";
             readme =
-              let
-                path = "${inputs.self}/doc/src/options/platforms/${platform}.md";
-
-                # This doesn't count as IFD because ${inputs.self} is a flake input
-                mainText =
-                  if builtins.pathExists path then
-                    builtins.readFile path
-                  else
-                    ''
-                      # ${platform.name}
-                      > [!NOTE]
-                      > Documentation is not available for this platform. Its
-                      > main options are listed below, and you may find more
-                      > specific options in the documentation for each module.
-                    '';
-              in
-              mainText;
+              if builtins.pathExists path then
+                builtins.readFile path
+              else
+                ''
+                  # ${platform.name}
+                  > [!NOTE]
+                  > Documentation is not available for this platform. Its
+                  > main options are listed below, and you may find more
+                  > specific options in the documentation for each module.
+                '';
 
             # Platform pages only initialise that platform, since showing other
             # platforms here would be nonsensical.
@@ -339,9 +338,6 @@ let
     else
       throw "unexpected value type: ${builtins.typeOf value}";
 
-  # Prefix to remove from file paths when listing where an option is declared.
-  declarationPrefix = "${inputs.self}";
-
   # Permalink to view a source file on GitHub. If the commit isn't known,
   # then fall back to the latest commit.
   declarationCommit = inputs.self.rev or "master";
@@ -354,12 +350,11 @@ let
     declaration:
     let
       declarationString = toString declaration;
-      filePath = lib.removePrefix "${declarationPrefix}/" declarationString;
+      subPath = lib.removePrefix rootPrefix declarationString;
     in
-    if lib.hasPrefix declarationPrefix declarationString then
-      "- [${filePath}](${declarationPermalink}/${filePath})"
-    else
-      throw "declaration not in ${declarationPrefix}: ${declarationString}";
+    lib.throwIfNot (lib.hasPrefix rootPrefix declarationString)
+      "declaration not in ${rootPrefix}: ${declarationString}"
+      "- [${subPath}](${declarationPermalink}/${subPath})";
 
   # You can embed HTML inside a Markdown document, but to render further
   # Markdown between the HTML tags, it must be surrounded by blank lines:

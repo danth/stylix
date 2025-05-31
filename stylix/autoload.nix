@@ -1,13 +1,13 @@
-{ lib, inputs }:
+{ lib }:
 
 # string -> [ path ]
 # List include path for either nixos modules or hm modules
-for:
+platform:
 builtins.concatLists (
   lib.mapAttrsToList (
-    path: kind:
+    target: kind:
     let
-      file = "${inputs.self}/modules/${path}/${for}.nix";
+      file = ../modules/${target}/${platform}.nix;
       module = import file;
 
       # Detect whether the file's value has an argument named `mkTarget`
@@ -47,5 +47,5 @@ builtins.concatLists (
       else
         file
     )
-  ) (builtins.readDir "${inputs.self}/modules")
+  ) (builtins.readDir ../modules)
 )

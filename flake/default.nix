@@ -45,7 +45,15 @@
                   };
                 })
               ];
-              includes = [ "*.js" ];
+              includes = [
+                "*.css"
+                "*.js"
+                "*.json"
+              ];
+              excludes = [
+                # Contains custom syntax that biome can't handle
+                "modules/swaync/base.css"
+              ];
             };
             ruff = {
               command = "ruff";

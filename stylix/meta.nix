@@ -1,16 +1,14 @@
 {
   pkgs,
   lib,
-  inputs,
-  ...
 }:
 builtins.mapAttrs
   (
     _: value:
-    if (builtins.typeOf value == "lambda") then
+    if builtins.isFunction value then
       (value {
         inherit pkgs;
-        lib = pkgs.lib.extend (
+        lib = lib.extend (
           _: prev: {
             maintainers = lib.attrsets.unionOfDisjoint prev.maintainers (import ./maintainers.nix);
           }
@@ -21,9 +19,9 @@ builtins.mapAttrs
   )
   (
     lib.concatMapAttrs (
-      path: kind:
+      target: kind:
       lib.optionalAttrs (kind == "directory") {
-        ${path} = import "${inputs.self}/modules/${path}/meta.nix";
+        ${target} = import ../modules/${target}/meta.nix;
       }
-    ) (builtins.readDir "${inputs.self}/modules")
+    ) (builtins.readDir ../modules)
   )
