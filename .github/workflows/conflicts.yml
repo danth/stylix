@@ -1,7 +1,7 @@
 ---
 name: Label Merge Conflicts
 
-on:  # yamllint disable-line rule:truthy
+on:
   push:
     branches:
       - master
