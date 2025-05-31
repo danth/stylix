@@ -16,7 +16,7 @@ builtins.concatLists (
 
       # NOTE: `mkTarget` cannot be distributed normally through the module system
       # due to issues of infinite recursion.
-      mkTarget = import ./mk-target.nix;
+      mkTarget = import ./mk-target;
     in
     lib.optional (kind == "directory" && builtins.pathExists file) (
       if useMkTarget then
