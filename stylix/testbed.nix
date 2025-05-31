@@ -116,7 +116,7 @@ let
       };
 
       config = lib.mkIf (config.stylix.testbed.ui != null) {
-        services.xserver = {
+        services = {
           enable = true;
           displayManager.gdm.enable = true;
           desktopManager.gnome.enable = true;

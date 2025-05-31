@@ -22,8 +22,8 @@ in
         config.stylix.enable
         && config.stylix.targets.gnome.enable
         && (
-          config.services.xserver.desktopManager.gnome.enable
-          || config.services.xserver.displayManager.gdm.enable
+          config.services.desktopManager.gnome.enable
+          || config.services.displayManager.gdm.enable
         )
       )
       {

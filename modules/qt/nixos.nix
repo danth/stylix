@@ -30,8 +30,8 @@ in
 
   config =
     let
-      inherit (config.services.xserver.desktopManager) gnome plasma5 lxqt;
-      inherit (config.services.desktopManager) plasma6;
+      inherit (config.services.xserver.desktopManager) plasma5 lxqt;
+      inherit (config.services.desktopManager) gnome plasma6;
     in
     lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
       stylix.targets.qt.platform =
