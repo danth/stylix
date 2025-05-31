@@ -66,6 +66,21 @@
       This should be disabled if manual setup is required or if auto-enabling
       causes issues.
 
+      Defaults to `true`.
+
+    `autoEnableExpr` (String)
+    : A string representation of `autoEnable`, for use in documentation.
+
+      Not required if `autoEnable` is a literal `true` or `false`, but **must**
+      be used when `autoEnable` is a dynamic expression.
+
+      E.g. `"pkgs.stdenv.hostPlatform.isLinux"`.
+
+    `extraEnableArgs` (Attribute set)
+    : Extra arguments passed to `mkEnableTargetWith`.
+
+      E.g. `{ example = true; }`
+
     `extraOptions` (Attribute set)
     : Additional options to be added in the `stylix.targets.${name}` namespace
       along the `stylix.targets.${name}.enable` option.
@@ -152,11 +167,13 @@
 {
   name,
   humanName,
-  autoEnable ? true,
+  autoEnable ? null,
+  autoEnableExpr ? null,
+  extraEnableArgs ? { },
   extraOptions ? { },
   configElements ? [ ],
   generalConfig ? null,
-}:
+}@args:
 let
   module =
     { config, lib, ... }:
@@ -209,7 +226,16 @@ let
     in
     {
       options.stylix.targets.${name}.enable =
-        config.lib.stylix.mkEnableTarget humanName autoEnable;
+        let
+          enableArgs =
+            {
+              name = humanName;
+            }
+            // lib.optionalAttrs (args ? autoEnable) { inherit autoEnable; }
+            // lib.optionalAttrs (args ? autoEnableExpr) { inherit autoEnableExpr; }
+            // extraEnableArgs;
+        in
+        config.lib.stylix.mkEnableTargetWith enableArgs;
 
       config = lib.mkIf (config.stylix.enable && cfg.enable) (
         lib.mkMerge (

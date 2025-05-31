@@ -15,6 +15,14 @@ mkTarget {
     || i3.enable
     || spectrwm.enable
     || xmonad.enable;
+  autoEnableExpr = ''
+    with config.xsession.windowManager;
+    bspwm.enable
+    || herbstluftwm.enable
+    || i3.enable
+    || spectrwm.enable
+    || xmonad.enable
+  '';
 
   configElements =
     { imageScalingMode, image }:
