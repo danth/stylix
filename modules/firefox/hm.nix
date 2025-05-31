@@ -56,10 +56,16 @@ in
       lib.nameValuePair target.path {
         enable = config.lib.stylix.mkEnableTarget target.name true;
 
+        enableProfileWarning = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Whether to warn when any ${target.name} profiles are detected as being set through Home Manager but not themed through Stylix.";
+        };
+
         profileNames = lib.mkOption {
           description = "The ${target.name} profile names to apply styling on.";
           type = lib.types.listOf lib.types.str;
-          default = [ ];
+          default = [ "default" ];
         };
 
         colorTheme.enable = lib.mkEnableOption "[Firefox Color](https://color.firefox.com/) on ${target.name}";
@@ -159,12 +165,18 @@ in
     );
     warnings = eachTarget (
       { target, ... }:
+      let
+        missingProfiles = lib.lists.subtractLists (builtins.attrNames
+          config.programs.${target.path}.profiles
+        ) config.stylix.targets.${target.path}.profileNames;
+      in
       lib.optional
         (
           config.programs.${target.path}.enable
-          && config.stylix.targets.${target.path}.profileNames == [ ]
+          && config.programs.${target.path}.enableProfileWarnings
+          && missingProfiles != [ ]
         )
-        ''stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` is not set. Declare profile names with 'config.stylix.targets.${target.path}.profileNames = [ "<PROFILE_NAME>" ];'.''
+        "stylix: ${target.path}: `config.stylix.targets.${target.path}.profileNames` does not include the following profile(s): ${lib.concatStringsSep ", " missingProfiles}. If this is intentional, you can disable this warning by setting `config.stylix.targets.${target.path}.enableProfileWarnings = false;'."
     );
   };
 }
