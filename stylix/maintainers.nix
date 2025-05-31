@@ -44,12 +44,6 @@
       { fingerprint = "3C97 1C61 0E9E BE35 3259  C1D3 2CA7 0354 EA17 07B9"; }
     ];
   };
-  repparw = {
-    email = "ubritos@gmail.com";
-    name = "Ulises Britos";
-    github = "repparw";
-    githubId = 45952970;
-  };
   skoove = {
     email = "zie@sturges.com.au";
     name = "Zie Sturges";
