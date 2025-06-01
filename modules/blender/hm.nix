@@ -26,15 +26,19 @@ in
               }
             );
           in
-          lib.mapAttrs (version: {
-            "blender/${version}/scripts/presets/interface_theme/Stylix.xml".text =
-              builtins.replaceStrings
-                [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
-                [
-                  (toString config.stylix.fonts.sizes.popups)
-                  (toString config.stylix.fonts.sizes.desktop)
-                ]
-                theme;
-          }) versions;
+          builtins.foldl' (
+            acc: version:
+            acc
+            // {
+              "blender/${version}/scripts/presets/interface_theme/Stylix.xml".text =
+                builtins.replaceStrings
+                  [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
+                  [
+                    (toString config.stylix.fonts.sizes.popups)
+                    (toString config.stylix.fonts.sizes.desktop)
+                  ]
+                  theme;
+            }
+          ) { } versions;
       };
 }
