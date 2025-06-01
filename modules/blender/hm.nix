@@ -19,25 +19,28 @@
               }
             );
           in
-          builtins.listToAttrs ( map (
-              version:
-              lib.nameValuePair
-                "blender/${version}/scripts/presets/interface_theme/Stylix.xml"
-                {
-                  text =
-                    builtins.replaceStrings
-                      [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
-                      [
-                        (toString config.stylix.fonts.sizes.popups)
-                        (toString config.stylix.fonts.sizes.desktop)
-                      ]
-                      theme;
-                }
-            )
-            [
-              "4.2" 
-              "4.3"
-              "4.4"
-            ]);
+          builtins.listToAttrs (
+            map
+              (
+                version:
+                lib.nameValuePair
+                  "blender/${version}/scripts/presets/interface_theme/Stylix.xml"
+                  {
+                    text =
+                      builtins.replaceStrings
+                        [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
+                        [
+                          (toString config.stylix.fonts.sizes.popups)
+                          (toString config.stylix.fonts.sizes.desktop)
+                        ]
+                        theme;
+                  }
+              )
+              [
+                "4.2"
+                "4.3"
+                "4.4"
+              ]
+          );
       };
 }
