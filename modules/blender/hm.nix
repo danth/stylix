@@ -19,10 +19,9 @@
               }
             );
           in
-          lib.attrsets.mapAttrs'
-            (
-              version: value:
-              lib.attrsets.nameValuePair
+          builtins.listToAttrs ( map (
+              version:
+              lib.nameValuePair
                 "blender/${version}/scripts/presets/interface_theme/Stylix.xml"
                 {
                   text =
@@ -32,13 +31,13 @@
                         (toString config.stylix.fonts.sizes.popups)
                         (toString config.stylix.fonts.sizes.desktop)
                       ]
-                      value;
+                      theme;
                 }
             )
-            {
-              "4.2" = theme;
-              "4.3" = theme;
-              "4.4" = theme;
-            };
+            [
+              "4.2" 
+              "4.3"
+              "4.4"
+            ]);
       };
 }
