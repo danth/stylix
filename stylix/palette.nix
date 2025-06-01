@@ -29,7 +29,10 @@ in
     };
 
     image = lib.mkOption {
-      type = with lib.types; nullOr (coercedTo package toString path);
+      type = lib.types.nullOr lib.types.path;
+      # Ensure the path is copied to the store
+      apply =
+        value: if value == null || lib.isDerivation value then value else "${value}";
       description = ''
         Wallpaper image.
 
@@ -79,7 +82,7 @@ in
         # the output of the palette generator will not be protected from
         # garbage collection.
         default = pkgs.runCommand "palette.json" { } ''
-          ${cfg.paletteGenerator}/bin/palette-generator \
+          ${lib.getExe cfg.paletteGenerator} \
             "${cfg.polarity}" \
             ${lib.escapeShellArg "${cfg.image}"} \
             "$out"
@@ -164,12 +167,22 @@ in
   config = {
     # This attrset can be used like a function too, see
     # https://github.com/SenchoPens/base16.nix/blob/b390e87cd404e65ab4d786666351f1292e89162a/README.md#theme-step-22
-    lib.stylix.colors = (cfg.base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
+    #
+    # NOTE: base16Scheme is nullable. If null, we cannot pass it to mkSchemeAttrs.
+    # See https://github.com/nix-community/stylix/pull/1408
+    lib.stylix.colors =
+      if cfg.base16Scheme == null then
+        null
+      else
+        (cfg.base16.mkSchemeAttrs cfg.base16Scheme).override cfg.override;
 
     assertions = lib.mkIf cfg.enable [
       {
         assertion = !(cfg.image == null && cfg.base16Scheme == null);
-        message = "One of `stylix.image` or `stylix.base16Scheme` must be set";
+
+        message = ''
+          stylix: one of `stylix.image` or `stylix.base16Scheme` must be set
+        '';
       }
     ];
 

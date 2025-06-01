@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.awwpotato ];
   name = "Waybar";
+  homepage = "https://github.com/alexays/waybar";
+  maintainers = [ lib.maintainers.awwpotato ];
 }

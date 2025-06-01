@@ -1,5 +1,6 @@
 { lib, ... }:
 {
-  maintainers = [ lib.maintainers.naho ];
   name = "fish";
+  homepage = "https://fishshell.com/";
+  maintainers = [ lib.maintainers.naho ];
 }

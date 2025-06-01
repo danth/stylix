@@ -26,7 +26,7 @@ let
         )
 
         # Convert to .pf2
-        ${pkgs.grub2}/bin/grub-mkfont $font --output $out --size ${toString fonts.sizes.applications}
+        ${lib.getExe' pkgs.grub2 "grub-mkfont"} $font --output $out --size ${toString fonts.sizes.applications}
       '';
 
   image-scale =
@@ -135,7 +135,7 @@ in
                 cfg.useWallpaper
               # Make sure the background image is .png by asking to convert it
               then
-                "${pkgs.imagemagick}/bin/convert ${config.stylix.image} png32:$out/background.png"
+                "${lib.getExe' pkgs.imagemagick "convert"} ${config.stylix.image} png32:$out/background.png"
               else
                 "cp ${pixel "base00"} $out/background.png"
             }

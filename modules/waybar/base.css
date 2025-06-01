@@ -1,60 +1,66 @@
 #wireplumber,
 #pulseaudio,
 #sndio {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #wireplumber.muted,
 #pulseaudio.muted,
 #sndio.muted {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #upower,
 #battery {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #upower.charging,
 #battery.Charging {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #network {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #network.disconnected {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #user {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #clock {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #backlight {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #cpu {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #disk {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #idle_inhibitor {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #temperature {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #mpd {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #language {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #keyboard-state {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #memory {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 #window {
-    padding: 0 5px;
+  padding: 0 5px;
+}
+#bluetooth {
+  padding: 0 5px;
+}
+#bluetooth.disabled {
+  padding: 0 5px;
 }
