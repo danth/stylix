@@ -23,16 +23,17 @@
             (
               version: value:
               lib.attrsets.nameValuePair
-                "blender/${version}/scripts/presets/interface_theme/Stylix.xml".text
-                (
-                  builtins.replaceStrings
-                    [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
-                    [
-                      (toString config.stylix.fonts.sizes.popups)
-                      (toString config.stylix.fonts.sizes.desktop)
-                    ]
-                    value
-                )
+                "blender/${version}/scripts/presets/interface_theme/Stylix.xml"
+                {
+                  text =
+                    builtins.replaceStrings
+                      [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
+                      [
+                        (toString config.stylix.fonts.sizes.popups)
+                        (toString config.stylix.fonts.sizes.desktop)
+                      ]
+                      value;
+                }
             )
             {
               "4.2" = theme;
