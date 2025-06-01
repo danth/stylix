@@ -3,13 +3,6 @@
   lib,
   ...
 }:
-let
-  versions = [
-    "4.2"
-    "4.3"
-    "4.4"
-  ];
-in
 {
   options.stylix.targets.blender.enable =
     config.lib.stylix.mkEnableTarget "blender" true;
@@ -26,19 +19,25 @@ in
               }
             );
           in
-          builtins.foldl' (
-            acc: version:
-            acc
-            // {
-              "blender/${version}/scripts/presets/interface_theme/Stylix.xml".text =
-                builtins.replaceStrings
-                  [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
-                  [
-                    (toString config.stylix.fonts.sizes.popups)
-                    (toString config.stylix.fonts.sizes.desktop)
-                  ]
-                  theme;
-            }
-          ) { } versions;
+          lib.attrsets.mapAttrs'
+            (
+              version: value:
+              lib.attrsets.nameValuePair
+                "blender/${version}/scripts/presets/interface_theme/Stylix.xml".text
+                (
+                  builtins.replaceStrings
+                    [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
+                    [
+                      (toString config.stylix.fonts.sizes.popups)
+                      (toString config.stylix.fonts.sizes.desktop)
+                    ]
+                    value
+                )
+            )
+            {
+              "4.2" = theme;
+              "4.3" = theme;
+              "4.4" = theme;
+            };
       };
 }
