@@ -4,14 +4,6 @@
   config,
   ...
 }:
-
-let
-  theme = pkgs.callPackage ./theme.nix {
-    inherit (config.lib.stylix) colors;
-    inherit (config.stylix) inputs;
-  };
-
-in
 {
   options.stylix.targets.gnome.enable =
     config.lib.stylix.mkEnableTarget "GNOME and GDM" true;
@@ -33,25 +25,6 @@ in
         # "${pkgs.gnome-backgrounds}/path/to/your/preferred/background"
         # which will then download the pack regardless of its exclusion below.
         environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
-
-        nixpkgs.overlays = [
-          (_: super: {
-            gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
-              # Themes are usually applied via an extension, but extensions are
-              # not available on the login screen. The only way to change the
-              # theme there is by replacing the default.
-              postFixup =
-                (oldAttrs.postFixup or "")
-                + ''
-                  cp ${theme}/share/gnome-shell/gnome-shell-theme.gresource \
-                    $out/share/gnome-shell/gnome-shell-theme.gresource
-                '';
-              patches = (oldAttrs.patches or [ ]) ++ [
-                ./shell_remove_dark_mode.patch
-              ];
-            });
-          })
-        ];
 
         # Cursor settings are usually applied via Home Manager,
         # but the login screen uses a separate database.
