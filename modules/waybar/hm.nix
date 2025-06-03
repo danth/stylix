@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.stylix.targets.waybar;
   colorlessModules = place: ''
@@ -29,6 +33,26 @@ in
       type = lib.types.bool;
       default = true;
       description = "adds fully functional css (otherwise just adds colors and fonts)";
+    };
+    customCss = lib.mkOption {
+      type = lib.types.string;
+      default = "";
+      description = "add custom CSS to the end of waybar's configuration";
+      example =
+        # css
+        ''
+          * {
+            font-size: 16px;
+            min-height: 0;
+            border-radius: 1rem;
+            padding: 0.1rem;
+          }
+
+          window#waybar {
+            background: rgba(255, 255, 255, 0.5);
+            color: rgb(0, 0, 0);
+          }
+        '';
     };
     enableLeftBackColors = lib.mkOption {
       type = lib.types.bool;
@@ -92,6 +116,7 @@ in
           else
             colorlessModules "right"
         )
-      );
+      )
+      + cfg.customCss;
   };
 }
