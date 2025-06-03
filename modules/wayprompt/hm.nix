@@ -10,7 +10,7 @@ mkTarget {
     in
     {
       programs.wayprompt.settings.colours = with colors; {
-        background = "${base00-hex}${opacity'}";
+        background = "${base00}${opacity'}";
         border = base0D;
         text = base05;
         error-text = base08;
