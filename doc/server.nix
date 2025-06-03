@@ -1,5 +1,5 @@
 {
-  docs,
+  doc,
   http-server,
   writeShellApplication,
 }:
@@ -17,6 +17,6 @@ writeShellApplication {
     "-o"
   ];
   text = ''
-    http-server ${docs} "''${server_flags[@]}"
+    http-server ${doc} "''${server_flags[@]}"
   '';
 }
