@@ -20,4 +20,19 @@
   flake = lib.mkIf (!lib.oldestSupportedReleaseIsAtLeast 2605) {
     homeManagerModules = builtins.warn "stylix: flake output `homeManagerModules` has been renamed to `homeModules`" self.homeModules;
   };
+
+  perSystem.stylix.aliases = [
+    {
+      output = "apps";
+      old = "docs";
+      new = "doc";
+      until = 2511;
+    }
+    {
+      output = "packages";
+      old = "docs";
+      new = "doc";
+      until = 2511;
+    }
+  ];
 }

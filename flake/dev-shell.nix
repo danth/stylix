@@ -35,7 +35,7 @@
       # not the local flake worktree that has possibly been modified since
       # entering the devshell.
       build-and-run-docs = pkgs.writeShellScriptBin "serve-docs" ''
-        nix run .#docs
+        nix run .#doc
       '';
     in
     {
