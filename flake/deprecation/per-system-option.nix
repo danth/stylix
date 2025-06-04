@@ -64,12 +64,18 @@
               system
               attr
             ]) { inherit old new; };
-            names = builtins.mapAttrs (_: lib.showAttrPath) paths;
+            names = builtins.mapAttrs (_: lib.showAttrPath) paths // {
+              until = lib.pipe until [
+                builtins.toString
+                (builtins.match "([[:digit:]]{2})([[:digit:]]{2})")
+                (lib.concatStringsSep ".")
+              ];
+            };
           in
           lib.mkIf (!lib.oldestSupportedReleaseIsAtLeast until) (
             lib.attrsets.setAttrByPath paths.old (
               lib.warnIf (since != null -> lib.oldestSupportedReleaseIsAtLeast since)
-                "stylix: flake output `${names.old}` has been renamed to `${names.new}`."
+                "stylix: flake output `${names.old}` has been renamed to `${names.new}` and will be removed after ${names.until}."
                 (cfg.${output}.${new} or (throw "stylix: flake alias not found: ${names.new}"))
             )
           );
