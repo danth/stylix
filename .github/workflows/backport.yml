@@ -7,7 +7,9 @@ on:
   pull_request_target:
     types: [closed, labeled]
 
-permissions: {}
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   backport:
@@ -45,3 +47,17 @@ jobs:
           label_pattern: "^backport: ([^ ]+)$"
           pull_title: "[${target_branch}] ${pull_title}"
           pull_description: "This is an automated backport of #${pull_number}."
+
+      - name: "Add 'has: port to stable' label"
+        if: steps.backport.outputs.created_pull_numbers != ''
+        env:
+          # Not the app on purpose to avoid triggering another workflow run
+          # after adding this label
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          NUMBER: ${{ github.event.number }}
+        run: |
+          gh api \
+            --method POST \
+            /repos/"$REPOSITORY"/issues/"$NUMBER"/labels \
+            -f "labels[]=has: port to stable"
