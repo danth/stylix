@@ -10,7 +10,6 @@ in
 {
   imports = [
     ./cursor.nix
-    ./fonts.nix
     ./palette.nix
     ../cursor.nix
     ../fonts.nix
