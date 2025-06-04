@@ -9,7 +9,7 @@
       checks = config.packages;
 
       # Make 'nix run .#docs' serve the docs
-      apps.docs.program = config.packages.serve-docs;
+      apps.doc.program = config.packages.serve-docs;
 
       packages = lib.mkMerge [
         # Testbeds are virtual machines based on NixOS, therefore they are
@@ -20,13 +20,13 @@
           }
         ))
         {
-          docs = pkgs.callPackage ../doc {
+          doc = pkgs.callPackage ../doc {
             inherit inputs;
             inherit (inputs.nixpkgs.lib) nixosSystem;
             inherit (inputs.home-manager.lib) homeManagerConfiguration;
           };
           serve-docs = pkgs.callPackage ../doc/server.nix {
-            inherit (config.packages) docs;
+            inherit (config.packages) doc;
           };
           palette-generator = pkgs.callPackage ../palette-generator { };
         }

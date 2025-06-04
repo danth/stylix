@@ -1,6 +1,6 @@
 {
   imports = [
-    ./deprecated.nix
+    ./deprecation
     ./dev-shell.nix
     ./modules.nix
     ./packages.nix
