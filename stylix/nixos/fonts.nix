@@ -5,8 +5,6 @@ let
 in
 {
   config.fonts = lib.mkIf config.stylix.enable {
-    inherit (cfg) packages;
-
     fontconfig.defaultFonts = {
       monospace = [ cfg.monospace.name ];
       serif = [ cfg.serif.name ];
