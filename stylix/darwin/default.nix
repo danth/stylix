@@ -9,7 +9,6 @@ let
 in
 {
   imports = [
-    ./fonts.nix
     ./palette.nix
     ../fonts.nix
     ../home-manager-integration.nix
