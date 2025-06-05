@@ -9,7 +9,7 @@ on:
 jobs:
   flake-update:
     runs-on: ubuntu-24.04
-    if: github.repository_owner == 'nix-community'
+    if: vars.APP_ID
     strategy:
       matrix:
         branch: [master, release-25.05]
