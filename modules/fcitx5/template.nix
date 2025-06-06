@@ -3,7 +3,6 @@ with colors;
 {
   Metadata = {
     Name = "Stylix";
-    Version = 0.1;
     Author = "sanweiya and ontake (make-42)";
     Description = "Stylix fcitx5 theme based on the mellow-themes by sanweiya";
   };
