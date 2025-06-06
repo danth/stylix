@@ -22,8 +22,6 @@
         {
           doc = pkgs.callPackage ../doc {
             inherit inputs;
-            inherit (inputs.nixpkgs.lib) nixosSystem;
-            inherit (inputs.home-manager.lib) homeManagerConfiguration;
           };
           serve-docs = pkgs.callPackage ../doc/server.nix {
             inherit (config.packages) doc;
