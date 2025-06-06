@@ -1,13 +1,17 @@
-{ mkTarget, lib, ... }:
+{
+  mkTarget,
+  lib,
+  ...
+}:
 mkTarget {
   name = "glance";
   humanName = "Glance";
 
   configElements = [
     (
-      { polarity }:
+      { themeGeneration }:
       {
-        services.glance.settings.theme.light = polarity == "light";
+        services.glance.settings.theme.light = themeGeneration.polarity == "light";
       }
     )
     (

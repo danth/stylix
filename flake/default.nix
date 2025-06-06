@@ -17,7 +17,6 @@
           nixfmt-rfc-style
           biome
           ruff
-          stylish-haskell
           keep-sorted
         ];
 
@@ -26,10 +25,6 @@
           tree-root-file = "flake.nix";
 
           formatter = {
-            stylish-haskell = {
-              command = "stylish-haskell";
-              includes = [ "*.hx" ];
-            };
             biome = {
               command = "biome";
               options = [
