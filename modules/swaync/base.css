@@ -8,12 +8,18 @@ trough {
   background: @base01;
 }
 
-.notification.low,
+.notification.low {
+  border: 1px solid @base03;
+}
+
+.notification.low progress {
+  background: @base03;
+}
+
 .notification.normal {
   border: 1px solid @base0D;
 }
 
-.notification.low progress,
 .notification.normal progress {
   background: @base0F;
 }
@@ -41,7 +47,6 @@ trough {
 .notification-action {
   color: @base05;
   background: @base01;
-  border: 1px solid @base0D;
 }
 
 .notification-action:hover {
