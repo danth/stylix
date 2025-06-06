@@ -26,15 +26,19 @@ in
     })
   ];
   options.stylix.targets.swaylock = {
-    enable =
-      config.lib.stylix.mkEnableTarget "Swaylock"
-        # When the state version is older than 23.05, Swaylock enables itself
-        # automatically if `settings != {}` [1]. Therefore, Swaylock theming
-        # shouldn't be enabled by default for such state versions, to avoid
-        # inadvertently installing Swaylock when it's not desired.
-        #
-        # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
-        (lib.versionAtLeast config.home.stateVersion "23.05");
+    enable = config.lib.stylix.mkEnableTargetWith {
+      name = "Swaylock";
+      # When the state version is older than 23.05, Swaylock enables itself
+      # automatically if `settings != {}` [1]. Therefore, Swaylock theming
+      # shouldn't be enabled by default for such state versions, to avoid
+      # inadvertently installing Swaylock when it's not desired.
+      #
+      # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
+      autoEnable = lib.versionAtLeast config.home.stateVersion "23.05";
+      autoEnableExpr = ''
+        lib.versionAtLeast home.stateVersion "23.05"
+      '';
+    };
 
     useWallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock" true;
   };
