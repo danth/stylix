@@ -48,9 +48,7 @@ mkTarget {
         programs.bemenu.settings =
           with colors.withHashtag;
           let
-            bemenuOpacity = lib.toHexString (
-              ((builtins.ceil (opacity.popups * 100)) * 255) / 100
-            );
+            bemenuOpacity = lib.toHexString (builtins.ceil (opacity.popups * 255));
           in
           {
             tb = "${base01}${bemenuOpacity}"; # Title bg
