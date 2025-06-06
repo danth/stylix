@@ -1,34 +1,56 @@
-{ config, lib, ... }:
+{ mkTarget, lib, ... }:
+mkTarget {
+  name = "ncspot";
+  humanName = "Ncspot";
 
-{
-  options.stylix.targets.ncspot.enable =
-    config.lib.stylix.mkEnableTarget "Ncspot" true;
+  extraOptions.background = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    description = "Used to set bg even if `opacity` or `colors` is null.";
+    internal = true;
+    default = null;
+  };
 
-  config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.ncspot.enable)
-      {
-        programs.ncspot.settings = {
-          theme = with config.lib.stylix.colors.withHashtag; {
-            background =
-              if (config.stylix.opacity.terminal != 1.0) then "#00000000" else base00;
-            primary = base05;
-            secondary = base04;
-            title = base06;
-            playing = base0B;
-            playing_selected = base0B;
-            playing_bg =
-              if (config.stylix.opacity.terminal != 1.0) then "#00000000" else base00;
-            highlight = base05;
-            highlight_bg = base02;
-            error = base05;
-            error_bg = base08;
-            statusbar = base00;
-            statusbar_progress = base04;
-            statusbar_bg = base04;
-            cmdline = base02;
-            cmdline_bg = base05;
-            search_match = base05;
-          };
+  configElements = [
+    (
+      { cfg }:
+      lib.mkIf (cfg.background != null) {
+        programs.ncspot.settings.theme = {
+          inherit (cfg) background;
+          playing_bg = cfg.background;
         };
-      };
+      }
+    )
+    (
+      { opacity }:
+      {
+        stylix.targets.ncspot.background = lib.mkIf (
+          opacity.terminal != 1.0
+        ) "#00000000";
+      }
+    )
+    (
+      { colors }:
+      with colors.withHashtag;
+      {
+        stylix.targets.ncspot.background = lib.mkDefault base00;
+        programs.ncspot.settings.theme = {
+          primary = base05;
+          secondary = base04;
+          title = base06;
+          playing = base0B;
+          playing_selected = base0B;
+          highlight = base05;
+          highlight_bg = base02;
+          error = base05;
+          error_bg = base08;
+          statusbar = base00;
+          statusbar_progress = base04;
+          statusbar_bg = base04;
+          cmdline = base02;
+          cmdline_bg = base05;
+          search_match = base05;
+        };
+      }
+    )
+  ];
 }
