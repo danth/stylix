@@ -1,14 +1,15 @@
-{ config, lib, ... }:
-{
-  options.stylix.targets.cava = {
-    enable = config.lib.stylix.mkEnableTarget "CAVA" true;
+{ mkTarget, lib, ... }:
+mkTarget {
+  name = "cava";
+  humanName = "CAVA";
+
+  extraOptions = {
     rainbow.enable = lib.mkEnableOption "rainbow gradient theming";
   };
 
-  config =
+  configElements =
+    { cfg, colors }:
     let
-      cfg = config.stylix.targets.cava;
-
       mkGradient =
         colors:
         lib.listToAttrs (
@@ -21,10 +22,10 @@
           gradient_count = builtins.length colors;
         };
     in
-    lib.mkIf (config.stylix.enable && cfg.enable) {
+    {
       programs.cava.settings.color = lib.mkIf cfg.rainbow.enable (
         mkGradient (
-          with config.lib.stylix.colors;
+          with colors;
           [
             base0E
             base0D

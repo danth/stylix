@@ -16,7 +16,7 @@ philosophy.
 
 ## Resources
 
-- [Documentation](https://danth.github.io/stylix)
+- [Documentation](https://nix-community.github.io/stylix/)
 - [GitHub Discussions](https://github.com/nix-community/stylix/discussions)
 - [Matrix room](https://matrix.to/#/#stylix:danth.me)
 
@@ -40,7 +40,7 @@ philosophy.
 Try a live demo of this dark theme by running:
 
 ```console
-nix run github:nix-community/stylix#testbed:gnome:default:dark:image:scheme:cursor
+nix run github:nix-community/stylix#testbed:gnome:dark
 ```
 
 ### KDE Plasma 5

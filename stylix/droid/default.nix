@@ -1,18 +1,17 @@
-inputs:
 { lib, ... }:
 
 let
-  autoload = import ../autoload.nix { inherit lib inputs; } "droid";
+  autoload = import ../autoload.nix { inherit lib; } "droid";
 in
 {
   imports = [
-    "${inputs.self}/stylix/fonts.nix"
-    "${inputs.self}/stylix/home-manager-integration.nix"
-    "${inputs.self}/stylix/opacity.nix"
-    "${inputs.self}/stylix/palette.nix"
-    "${inputs.self}/stylix/pixel.nix"
-    "${inputs.self}/stylix/target.nix"
-    (lib.modules.importApply "${inputs.self}/stylix/overlays.nix" inputs)
+    ../fonts.nix
+    ../home-manager-integration.nix
+    ../opacity.nix
+    ../palette.nix
+    ../pixel.nix
+    ../target.nix
+    ../overlays.nix
   ] ++ autoload;
 
   # See https://github.com/nix-community/nix-on-droid/issues/436

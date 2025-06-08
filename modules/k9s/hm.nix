@@ -1,14 +1,12 @@
-{
-  config,
-  lib,
-  ...
-}:
-{
-  options.stylix.targets.k9s.enable = config.lib.stylix.mkEnableTarget "k9s" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "k9s";
+  humanName = "k9s";
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.k9s.enable) {
-    programs.k9s.skins.skin = {
-      k9s = with config.lib.stylix.colors.withHashtag; {
+  configElements =
+    { colors }:
+    {
+      programs.k9s.skins.skin.k9s = with colors.withHashtag; {
         body = {
           fgColor = base05;
           bgColor = "default";
@@ -130,5 +128,4 @@
         };
       };
     };
-  };
 }

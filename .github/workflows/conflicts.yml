@@ -1,0 +1,26 @@
+---
+name: Label Merge Conflicts
+
+on:
+  push:
+    branches:
+      - master
+      - release-**
+
+jobs:
+  conflicts:
+    runs-on: ubuntu-24.04
+    if: vars.APP_ID
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-pull-requests: write
+      - uses: prince-chrismc/label-merge-conflicts-action@v3
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          conflict_label_name: "status: merge conflict"
+          conflict_comment: ""

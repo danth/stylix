@@ -1,13 +1,15 @@
 ---
 # Derived from
-# https://github.com/NixOS/nixpkgs/blob/2ab6f6d61630889491f86396b27a76ffb6fbc7bb/.github/workflows/backport.yml
+# https://github.com/NixOS/nixpkgs/blob/2566f9dcb469b06241519a8185863d67773f943a/.github/workflows/backport.yml
 name: Backport
 
-on:  # yamllint disable-line rule:truthy
+on:
   pull_request_target:
     types: [closed, labeled]
 
-permissions: {}
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   backport:
@@ -15,11 +17,11 @@ jobs:
 
     if: >
       (
-        github.repository_owner == 'nix-community' &&
+        vars.APP_ID &&
         github.event.pull_request.merged == true &&
         (
-          github.event_name != 'labeled' ||
-          startsWith('backport', github.event.label.name)
+          github.event.action != 'labeled' ||
+          startsWith(github.event.label.name, 'backport: ')
         )
       )
 
@@ -42,5 +44,20 @@ jobs:
       - uses: korthout/backport-action@v3
         with:
           github_token: ${{ steps.app-token.outputs.token }}
+          label_pattern: "^backport: ([^ ]+)$"
           pull_title: "[${target_branch}] ${pull_title}"
           pull_description: "This is an automated backport of #${pull_number}."
+
+      - name: "Add 'has: port to stable' label"
+        if: steps.backport.outputs.created_pull_numbers != ''
+        env:
+          # Not the app on purpose to avoid triggering another workflow run
+          # after adding this label
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          NUMBER: ${{ github.event.number }}
+        run: |
+          gh api \
+            --method POST \
+            /repos/"$REPOSITORY"/issues/"$NUMBER"/labels \
+            -f "labels[]=has: port to stable"

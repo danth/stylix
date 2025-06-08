@@ -1,26 +1,28 @@
-{ config, lib, ... }:
-{
-  options.stylix.targets.console.enable =
-    config.lib.stylix.mkEnableTarget "the Linux kernel console" true;
+{ mkTarget, ... }:
+mkTarget {
+  name = "console";
+  humanName = "the Linux kernel console";
 
-  config.console.colors =
-    with config.lib.stylix.colors;
-    lib.mkIf (config.stylix.enable && config.stylix.targets.console.enable) [
-      base00-hex
-      red
-      green
-      yellow
-      blue
-      magenta
-      cyan
-      base05-hex
-      base03-hex
-      red
-      green
-      yellow
-      blue
-      magenta
-      cyan
-      base06-hex
-    ];
+  configElements =
+    { colors }:
+    {
+      console.colors = with colors; [
+        base00-hex
+        red
+        green
+        yellow
+        blue
+        magenta
+        cyan
+        base05-hex
+        base03-hex
+        red
+        green
+        yellow
+        blue
+        magenta
+        cyan
+        base07-hex
+      ];
+    };
 }

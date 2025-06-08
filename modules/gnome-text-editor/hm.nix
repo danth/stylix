@@ -1,9 +1,9 @@
-{ config, lib, ... }:
-{
-  config =
-    lib.mkIf
-      (config.stylix.enable && config.stylix.targets.gnome-text-editor.enable)
-      {
-        dconf.settings."org/gnome/TextEditor".style-scheme = "stylix";
-      };
+{ mkTarget, ... }:
+mkTarget {
+  name = "gnome-text-editor";
+  humanName = "GNOME Text Editor";
+
+  configElements = {
+    dconf.settings."org/gnome/TextEditor".style-scheme = "stylix";
+  };
 }

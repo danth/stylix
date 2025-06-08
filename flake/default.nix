@@ -1,6 +1,6 @@
 {
   imports = [
-    ./deprecated.nix
+    ./deprecation
     ./dev-shell.nix
     ./modules.nix
     ./packages.nix
@@ -15,6 +15,8 @@
       formatter = pkgs.treefmt.withConfig {
         runtimeInputs = with pkgs; [
           nixfmt-rfc-style
+          biome
+          ruff
           stylish-haskell
           keep-sorted
         ];
@@ -27,6 +29,42 @@
             stylish-haskell = {
               command = "stylish-haskell";
               includes = [ "*.hx" ];
+            };
+            biome = {
+              command = "biome";
+              options = [
+                "format"
+                "--write"
+                "--no-errors-on-unmatched"
+                "--config-path"
+                (pkgs.writers.writeJSON "biome.json" {
+                  formatter = {
+                    indentStyle = "space";
+                    indentWidth = 2;
+                    lineWidth = 80;
+                  };
+                })
+              ];
+              includes = [
+                "*.css"
+                "*.js"
+                "*.json"
+              ];
+              excludes = [
+                # Contains custom syntax that biome can't handle
+                "modules/swaync/base.css"
+              ];
+            };
+            ruff = {
+              command = "ruff";
+              options = [
+                "--config"
+                (pkgs.writers.writeTOML "ruff.toml" {
+                  line-length = 80;
+                })
+                "format"
+              ];
+              includes = [ "*.py" ];
             };
             nixfmt = {
               command = "nixfmt";
