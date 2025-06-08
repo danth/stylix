@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -12,11 +13,14 @@
       {
         xdg.configFile =
           let
-            theme = builtins.readFile (
-              config.lib.stylix.colors {
-                template = ./Stylix.xml.mustache;
-                extension = ".xml";
-              }
+            theme = pkgs.writeText "Stylix.replaced.xml.mustache" (
+              builtins.replaceStrings
+                [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
+                [
+                  (toString config.stylix.fonts.sizes.popups)
+                  (toString config.stylix.fonts.sizes.desktop)
+                ]
+                (builtins.readFile ./Stylix.xml.mustache)
             );
           in
           builtins.listToAttrs (
@@ -26,14 +30,10 @@
                 lib.nameValuePair
                   "blender/${version}/scripts/presets/interface_theme/Stylix.xml"
                   {
-                    text =
-                      builtins.replaceStrings
-                        [ "%POPUPSFONTSIZE%" "%DESKTOPFONTSIZE%" ]
-                        [
-                          (toString config.stylix.fonts.sizes.popups)
-                          (toString config.stylix.fonts.sizes.desktop)
-                        ]
-                        theme;
+                    source = config.lib.stylix.colors {
+                      template = theme;
+                      extension = ".xml";
+                    };
                   }
               )
               [
