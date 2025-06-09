@@ -1,9 +1,4 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{ lib, config, ... }:
 
 let
 
@@ -16,7 +11,7 @@ let
 in
 {
   options.stylix.targets.qt = {
-    enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
+    enable = config.lib.stylix.mkEnableTarget "QT" true;
     platform = lib.mkOption {
       description = ''
         Selects the platform theme to use for Qt applications.

@@ -11,6 +11,10 @@ mkTarget {
   autoEnable =
     with config.services.xserver.windowManager;
     xmonad.enable || i3.enable;
+  autoEnableExpr = ''
+    with services.xserver.windowManager;
+    xmonad.enable || i3.enable
+  '';
 
   configElements =
     { image, imageScalingMode }:
