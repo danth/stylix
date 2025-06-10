@@ -137,7 +137,7 @@ in
     {
       lib.stylix.nixvim.config = {
         imports = [
-          (lib.modules.importApply ../neovide/nixvim.nix config.stylix)
+          (lib.modules.importApply ./neovide-common.nix config.stylix)
         ];
         config = lib.mkMerge [
           pluginConfigs.${cfg.plugin}

@@ -1,5 +1,5 @@
+mkTarget:
 {
-  mkTarget,
   lib,
   pkgs,
   ...

@@ -1,4 +1,4 @@
-{ mkTarget, ... }:
+mkTarget:
 mkTarget {
   name = "neovide";
   humanName = "Neovide";
