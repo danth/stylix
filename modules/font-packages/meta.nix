@@ -6,10 +6,6 @@
     This module makes the Stylix fonts available in the environment of each of
     the platforms that this module supports.
 
-    ### Related modules
-
-    <!-- If updating this section, make sure to update it on the linked pages too. -->
-
-    - [Fontconfig](fontconfig.md)
+    Also see [general fonts documentation](../../configuration.html#fonts).
   '';
 }
