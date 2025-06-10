@@ -125,6 +125,11 @@
       )
       ```
 
+      Arguments prefixed with an underscore (`_`) resolve to their non-prefixed
+      counterparts. For example, the `_colors` argument resolves to `colors`.
+      Underscored arguments are considered unused and should never be accessed.
+      Their sole purpose is satisfying `deadnix` in complex configurations.
+
     `generalConfig` (Attribute set or function)
     : This argument mirrors the `configElements` argument but intentionally
       lacks automatic safeguarding and should only be used for complex
@@ -200,17 +205,24 @@ let
         fn:
         lib.genAttrs (functionArgNames fn) (
           arg:
-          if arg == "cfg" then
+          let
+            trimmedArg =
+              let
+                prefix = "_";
+              in
+              if lib.hasPrefix prefix arg then lib.removePrefix prefix arg else arg;
+          in
+          if trimmedArg == "cfg" then
             cfg
-          else if arg == "colors" then
+          else if trimmedArg == "colors" then
             config.lib.stylix.colors
           else
-            config.stylix.${arg}
+            config.stylix.${trimmedArg}
               or (throw "stylix: mkTarget expected one of `cfg`, `colors`, ${
                 lib.concatMapStringsSep ", " (name: "`${name}`") (
                   builtins.attrNames config.stylix
                 )
-              }, but got: ${arg}")
+              }, but got: ${trimmedArg}")
         );
 
       # Call the configuration function with its required Stylix arguments.
