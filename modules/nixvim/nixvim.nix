@@ -135,7 +135,17 @@ in
 
   config = lib.mkMerge [
     {
-      lib.stylix.nixvim.config = pluginConfigs.${cfg.plugin};
+      lib.stylix.nixvim.config = {
+        imports = [
+          (lib.modules.importApply ../neovide/nixvim.nix config.stylix)
+        ];
+        config = lib.mkMerge [
+          pluginConfigs.${cfg.plugin}
+          {
+            opts.guifont = "${config.stylix.fonts.monospace.name}:h${toString config.stylix.fonts.sizes.terminal}";
+          }
+        ];
+      };
     }
     (lib.mkIf (config.stylix.enable && cfg.enable && options.programs ? nixvim) (
       lib.optionalAttrs (options.programs ? nixvim) {
