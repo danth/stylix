@@ -1,6 +1,6 @@
-{ config, ... }:
+fonts:
 
-with config.stylix.fonts;
+with fonts;
 
 {
   "workbench.colorTheme" = "Stylix";

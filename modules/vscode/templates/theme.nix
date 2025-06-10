@@ -1,6 +1,5 @@
-{ config, ... }:
-
-with config.lib.stylix.colors.withHashtag;
+colors:
+with colors.withHashtag;
 
 {
   "$schema" = "vscode://schemas/color-theme";
