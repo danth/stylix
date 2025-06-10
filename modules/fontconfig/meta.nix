@@ -4,14 +4,9 @@
   homepage = "https://fontconfig.org";
   maintainers = [ lib.maintainers.mightyiam ];
   description = ''
-    On NixOS, `fonts.fontconfig.defaultFonts` options are declared without
-    enabling `fonts.fontconfig.enable`. On Home Manager, only the
-    `fonts.fontconfig.enable` option is declared and enabled.
+    This module adds the Stylix fonts to `fonts.fontconfig.defaultFonts` in
+    each of the platforms that this module supports.
 
-    ### Related modules
-
-    <!-- If updating this section, make sure to update it on the linked pages too. -->
-
-    - [Font packages](font-packages.md)
+    Also see [general fonts documentation](../../configuration.html#fonts).
   '';
 }
