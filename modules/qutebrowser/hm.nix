@@ -1,4 +1,8 @@
-{ mkTarget, lib, ... }:
+{
+  mkTarget,
+  lib,
+  ...
+}:
 mkTarget {
   name = "qutebrowser";
   humanName = "Qutebrowser";
@@ -29,10 +33,10 @@ mkTarget {
       }
     )
     (
-      { polarity }:
+      { themeGeneration }:
       {
         programs.qutebrowser.settings.colors.webpage.preferred_color_scheme = lib.mkIf (
-          polarity == "dark"
+          themeGeneration.polarity == "dark"
         ) "dark";
       }
     )
@@ -281,7 +285,6 @@ mkTarget {
               };
             };
           };
-
         };
       }
     )
