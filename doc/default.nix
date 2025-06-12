@@ -21,7 +21,6 @@ let
     modules = [
       inputs.home-manager.nixosModules.home-manager
       inputs.self.nixosModules.stylix
-      ./settings.nix
     ];
   };
 
@@ -29,7 +28,6 @@ let
     inherit pkgs;
     modules = [
       inputs.self.homeModules.stylix
-      ./settings.nix
       {
         home = {
           homeDirectory = "/home/book";
