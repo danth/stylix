@@ -1,7 +1,7 @@
 {
   "name": "stylix",
   "displayName": "Stylix",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "publisher": "stylix",
   "description": "Theme configured via NixOS or Home Manager.",
   "categories": ["Themes"],
