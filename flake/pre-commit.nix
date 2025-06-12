@@ -11,7 +11,11 @@
         check.enable = true;
 
         settings.hooks = {
-          deadnix.enable = true;
+          deadnix = {
+            enable = true;
+            settings.noUnderscore = true;
+          };
+
           editorconfig-checker.enable = true;
           hlint.enable = true;
 
