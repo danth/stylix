@@ -21,6 +21,7 @@ mkTarget {
   autoEnable =
     lib.versionAtLeast config.home.stateVersion "23.05"
     && pkgs.stdenv.hostPlatform.isLinux;
+
   autoEnableExpr = ''
     lib.versionAtLeast home.stateVersion "23.05" && pkgs.stdenv.hostPlatform.isLinux
   '';
