@@ -85,4 +85,11 @@ place: ''
       background-color: @base0C;
       color: @base00;
   }
+  .modules-${place} #bluetooth {
+      background-color: @base0E;
+      color: @base00;
+  }
+  .modules-${place} #bluetooth.disabled {
+      background-color: @base0C;
+  }
 ''

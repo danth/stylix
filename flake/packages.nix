@@ -1,9 +1,4 @@
-{
-  lib,
-  inputs,
-  self,
-  ...
-}:
+{ lib, inputs, ... }:
 {
 
   perSystem =
@@ -13,21 +8,27 @@
       # are derivations.
       checks = config.packages;
 
+      # Make 'nix run .#docs' serve the docs
+      apps.doc.program = config.packages.serve-docs;
+
       packages = lib.mkMerge [
         # Testbeds are virtual machines based on NixOS, therefore they are
         # only available for Linux systems.
         (lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
-          import "${self}/stylix/testbed.nix" {
+          import ../stylix/testbed/default.nix {
             inherit pkgs inputs lib;
           }
         ))
         {
-          docs = pkgs.callPackage "${self}/doc" {
+          doc = pkgs.callPackage ../doc {
             inherit inputs;
             inherit (inputs.nixpkgs.lib) nixosSystem;
             inherit (inputs.home-manager.lib) homeManagerConfiguration;
           };
-          palette-generator = pkgs.callPackage "${self}/palette-generator" { };
+          serve-docs = pkgs.callPackage ../doc/server.nix {
+            inherit (config.packages) doc;
+          };
+          palette-generator = pkgs.callPackage ../palette-generator { };
         }
       ];
     };

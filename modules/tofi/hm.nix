@@ -19,9 +19,7 @@ mkTarget {
         programs.tofi.settings =
           with colors.withHashtag;
           let
-            opacity' = lib.toHexString (
-              ((builtins.ceil (opacity.popups * 100)) * 255) / 100
-            );
+            opacity' = lib.toHexString (builtins.ceil (opacity.popups * 255));
             background = base00 + opacity';
             foreground = base05;
             darkForeground = base04 + opacity';

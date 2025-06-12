@@ -1,18 +1,18 @@
 ---
 name: Update flake inputs
 
-on:  # yamllint disable-line rule:truthy
+on:
   schedule:
     - cron: "0 0 1 * *"
   workflow_dispatch:
 
 jobs:
   flake-update:
-    runs-on: ubuntu-latest
-    if: github.repository_owner == 'nix-community'
+    runs-on: ubuntu-24.04
+    if: vars.APP_ID
     strategy:
       matrix:
-        branch: [master, release-24.11]
+        branch: [master, release-25.05]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,11 +34,11 @@ jobs:
           commit-msg: "flake: update all inputs"
           pr-title: "${{ startsWith(matrix.branch, 'release') && format('[{0}] ', matrix.branch) || '' }}stylix: update all flake inputs"   # yamllint disable-line rule:line-length
           pr-labels: "topic: dependencies"
-          # yamllint disable rule:line-length
-          pr-body: |
-            Automated changes by the [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock) GitHub Action.
+          pr-body: >
+            Automated changes by the
+            [update-flake-lock](https://github.com/DeterminateSystems/update-flake-lock)
+            GitHub Action.
 
             ```
             {{ env.GIT_COMMIT_MESSAGE }}
             ```
-          # yamllint enable rule:line-length

@@ -25,6 +25,18 @@
             "$@"
         '';
       };
+
+      # The shell should not directly depend on `packages.serve-docs`, because
+      # that'd build the docs before entering the shell. Instead, we want to
+      # build the docs only when running 'serve-docs'.
+      #
+      # For a similar reason, we can't use `self` as a reference to the flake:
+      # `self` represents the flake as it was when the devshell was evaluated,
+      # not the local flake worktree that has possibly been modified since
+      # entering the devshell.
+      build-and-run-docs = pkgs.writeShellScriptBin "serve-docs" ''
+        nix run .#doc
+      '';
     in
     {
       devShells = {
@@ -35,6 +47,7 @@
           packages =
             [
               stylix-check
+              build-and-run-docs
               inputs'.home-manager.packages.default
               config.formatter
             ]

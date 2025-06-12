@@ -1,29 +1,23 @@
-inputs:
 {
   lib,
   config,
   ...
 }:
 
-# Imported modules which define new options must use an absolute path based
-# on ${inputs.self}, otherwise those options will not appear in the generated
-# documentation.
-
 let
-  autoload = import ../autoload.nix { inherit lib inputs; } "darwin";
+  autoload = import ../autoload.nix { inherit lib; } "darwin";
 in
 {
   imports = [
-    "${inputs.self}/stylix/darwin/fonts.nix"
-    "${inputs.self}/stylix/darwin/palette.nix"
-    "${inputs.self}/stylix/fonts.nix"
-    "${inputs.self}/stylix/home-manager-integration.nix"
-    "${inputs.self}/stylix/opacity.nix"
-    "${inputs.self}/stylix/palette.nix"
-    "${inputs.self}/stylix/pixel.nix"
-    "${inputs.self}/stylix/target.nix"
-    "${inputs.self}/stylix/release.nix"
-    (lib.modules.importApply "${inputs.self}/stylix/overlays.nix" inputs)
+    ./palette.nix
+    ../fonts.nix
+    ../home-manager-integration.nix
+    ../opacity.nix
+    ../palette.nix
+    ../pixel.nix
+    ../target.nix
+    ../release.nix
+    ../overlays.nix
   ] ++ autoload;
   config.warnings =
     lib.mkIf

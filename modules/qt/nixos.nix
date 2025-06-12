@@ -1,9 +1,4 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{ lib, config, ... }:
 
 let
 
@@ -16,7 +11,7 @@ let
 in
 {
   options.stylix.targets.qt = {
-    enable = config.lib.stylix.mkEnableTarget "QT" pkgs.stdenv.hostPlatform.isLinux;
+    enable = config.lib.stylix.mkEnableTarget "QT" true;
     platform = lib.mkOption {
       description = ''
         Selects the platform theme to use for Qt applications.
@@ -30,8 +25,8 @@ in
 
   config =
     let
-      inherit (config.services.xserver.desktopManager) gnome plasma5 lxqt;
-      inherit (config.services.desktopManager) plasma6;
+      inherit (config.services.xserver.desktopManager) plasma5 lxqt;
+      inherit (config.services.desktopManager) gnome plasma6;
     in
     lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) {
       stylix.targets.qt.platform =

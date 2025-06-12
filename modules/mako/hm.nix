@@ -16,9 +16,7 @@ mkTarget {
       {
         services.mako =
           let
-            makoOpacity = lib.toHexString (
-              ((builtins.ceil (opacity.popups * 100)) * 255) / 100
-            );
+            makoOpacity = lib.toHexString (builtins.ceil (opacity.popups * 255));
           in
           with colors.withHashtag;
           {

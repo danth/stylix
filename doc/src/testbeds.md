@@ -21,6 +21,24 @@ automatically loaded as a NixOS module with options such as `stylix.image`
 already defined. The testbed should include any options necessary to install the
 target and any supporting software - for example, a window manager.
 
+### Special Options
+
+Testbeds are given a special set of options which configure for common testbed
+uses.
+
+- `config.stylix.testbed`
+  - `enable` defaults to true; allows for conditionally disabling a testbed
+  - `ui` and all of its suboptions are optional. Setting any will enable a
+    graphical environment.
+    - `command` takes a string command to be run once the graphical environment
+      has loaded
+    - `application` takes a desktop application to be run once the graphical
+      environment has loaded. If one of its suboptions is set, all must be.
+      - `name` takes the string name of the desktop application
+      - `package` takes the package which provides the `.desktop` file
+
+### Home Manager
+
 If the target can only be used through Home Manager, you can write a Home
 Manager module within the NixOS module using the following format:
 
@@ -52,25 +70,25 @@ github:nix-community/stylix
     └───x86_64-linux
         ├───docs: package 'stylix-book'
         ├───palette-generator: package 'palette-generator'
-        ├───"testbed:gnome:default:dark:image:scheme:cursor": package 'testbed-gnome-default-dark-image-scheme-cursor'
-        ├───"testbed:gnome:default:dark:image:scheme:cursorless": package 'testbed-gnome-default-dark-image-scheme-cursorless'
-        ├───"testbed:gnome:default:dark:image:schemeless:cursorless": package 'testbed-gnome-default-dark-image-schemeless-cursorless'
-        ├───"testbed:gnome:default:dark:imageless:scheme:cursorless": package 'testbed-gnome-default-dark-imageless-scheme-cursorless'
-        ├───"testbed:gnome:default:light:image:scheme:cursorless": package 'testbed-gnome-default-light-image-scheme-cursorless'
-        ├───"testbed:kde:default:dark:image:scheme:cursor": package 'testbed-kde-default-dark-image-scheme-cursor'
-        ├───"testbed:kde:default:dark:image:scheme:cursorless": package 'testbed-kde-default-dark-image-scheme-cursorless'
-        ├───"testbed:kde:default:dark:image:schemeless:cursorless": package 'testbed-kde-default-dark-image-schemeless-cursorless'
-        ├───"testbed:kde:default:dark:imageless:scheme:cursorless": package 'testbed-kde-default-dark-imageless-scheme-cursorless'
-        └───"testbed:kde:default:light:image:scheme:cursorless": package 'testbed-kde-default-light-image-scheme-cursorless'
+        ├───"testbed:gnome:cursorless": package 'testbed-gnome-cursorless'
+        ├───"testbed:gnome:dark": package 'testbed-gnome-dark'
+        ├───"testbed:gnome:imageless": package 'testbed-gnome-imageless'
+        ├───"testbed:gnome:light": package 'testbed-gnome-light'
+        ├───"testbed:gnome:schemeless": package 'testbed-gnome-schemeless'
+        ├───"testbed:kde:cursorless": package 'testbed-kde-cursorless'
+        ├───"testbed:kde:dark": package 'testbed-kde-dark'
+        ├───"testbed:kde:imageless": package 'testbed-kde-imageless'
+        ├───"testbed:kde:light": package 'testbed-kde-light'
+        └───"testbed:kde:schemeless": package 'testbed-kde-schemeless'
 ```
 
 (This has been edited down to only the relevant parts.)
 
 To start a testbed, each of which is named in the format
-`testbed:«module»:«testbed»:«polarity»`, run the following command:
+`testbed:«module»:«testcase»`, run the following command:
 
 ```console
-user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»:«image»:«scheme»:«cursor»
+user@host:~$ nix run .#testbed:«module»:«testcase»
 ```
 
 Any package with a name not fitting the given format is not a testbed, and may

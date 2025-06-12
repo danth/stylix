@@ -106,6 +106,13 @@ the following applies:
 - There is no reliable way to detect whether the target is installed, *and*
 enabling it unconditionally would cause problems.
 
+> [!CAUTION]
+> The boolean value after `mkEnableTarget` should usually be a static `true` or
+> `false` literal.
+>
+> Using a dynamic value requires you to document the dynamic expression using
+> `mkEnableTargetWith`'s `autoEnableExpr` argument.
+
 ### Overlays
 
 If your module is provided as an overlay it uses a special format, where config
@@ -244,8 +251,11 @@ this documentation, ensure that any custom options created using `mkOption` are
 given an appropriate `type` and a detailed `description`. This may use Markdown
 syntax for formatting and links.
 
-For modules needing more general documentation, create
-`modules/«module»/README.md`:
+For modules needing more general documentation, add a `description` to
+`modules/«module»/meta.nix`:
+
+You can build and view the documentation by running `nix run .#docs`, or
+`serve-docs` from within the dev shell.
 
 ```markdown
 # Module Name
