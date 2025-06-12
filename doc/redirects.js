@@ -3,7 +3,7 @@
   // NOTE: This script doesn't run on 404.html, so the old page must still exist.
   const redirects = {
     "/configuration.html#standalone-nixvim":
-      "./options/modules/nixvim.html#standalone-mode",
+      "./options/modules/neovim.html#standalone-mode",
   };
 
   const fullPath = window.location.pathname + window.location.hash;
