@@ -1,1 +1,0 @@
-import ./nixvim.nix

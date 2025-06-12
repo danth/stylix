@@ -29,3 +29,6 @@ enable = true
 [output.html.redirect]
 "/options/hm.html" = "./platforms/home_manager.html"
 "/options/nixos.html" = "./platforms/nixos.html"
+"/options/modules/nixvim.html" = "./neovim.html"
+"/options/modules/nvf.html" = "./neovim.html"
+"/options/modules/vim.html" = "./neovim.html"
