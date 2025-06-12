@@ -1,64 +1,39 @@
 {
+  mkTarget,
   pkgs,
   config,
   lib,
   ...
 }:
-let
-  cfg = config.stylix.targets.swaylock;
-in
-{
-  imports = [
-    (lib.mkRenamedOptionModuleWith {
-      from = [
-        "stylix"
-        "targets"
-        "swaylock"
-        "useImage"
-      ];
-      sinceRelease = 2505;
-      to = [
-        "stylix"
-        "targets"
-        "swaylock"
-        "useWallpaper"
-      ];
-    })
-  ];
-  options.stylix.targets.swaylock = {
-    enable = config.lib.stylix.mkEnableTargetWith {
-      name = "Swaylock";
-      # When the state version is older than 23.05, Swaylock enables itself
-      # automatically if `settings != {}` [1]. Therefore, Swaylock theming
-      # shouldn't be enabled by default for such state versions, to avoid
-      # inadvertently installing Swaylock when it's not desired.
-      #
-      # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
-      autoEnable = lib.versionAtLeast config.home.stateVersion "23.05";
-      autoEnableExpr = ''
-        lib.versionAtLeast home.stateVersion "23.05"
-      '';
-    };
+mkTarget {
+  name = "swaylock";
+  humanName = "Swaylock";
 
-    useWallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock" true;
-  };
+  # When the state version is older than 23.05, Swaylock enables itself
+  # automatically if `settings != {}` [1]. Therefore, Swaylock theming
+  # shouldn't be enabled by default for such state versions, to avoid
+  # inadvertently installing Swaylock when it's not desired.
+  #
+  # Adding `&& config.programs.swaylock.enable` below may lead to infinite
+  # recursion, due to the above.
+  #
+  # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
+  autoEnable =
+    lib.versionAtLeast config.home.stateVersion "23.05"
+    && pkgs.stdenv.hostPlatform.isLinux;
 
-  config =
-    lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.swaylock.enable
-        && pkgs.stdenv.hostPlatform.isLinux
-        # Adding `&& config.programs.swaylock.enable` here may lead to infinite
-        # recursion, due to the default value depending on `settings != {}`
-        # when the state version is older than 23.05 [1], and the content of
-        # this module affecting that default.
-        #
-        # [1]: https://github.com/nix-community/home-manager/blob/5cfbf5cc37a3bd1da07ae84eea1b828909c4456b/modules/programs/swaylock.nix#L12-L17
-      )
+  autoEnableExpr = ''
+    lib.versionAtLeast home.stateVersion "23.05" && pkgs.stdenv.hostPlatform.isLinux
+  '';
+
+  extraOptions.useWallpaper = config.lib.stylix.mkEnableWallpaper "Swaylock" true;
+
+  configElements = [
+    (
+      { colors }:
       {
         programs.swaylock.settings =
-          with config.lib.stylix.colors;
+          with colors;
           let
             inside = base00-hex;
             outside = base00-hex;
@@ -69,7 +44,6 @@ in
           in
           {
             color = outside;
-            scaling = config.stylix.imageScalingMode;
             inside-color = inside;
             inside-clear-color = inside;
             inside-caps-lock-color = inside;
@@ -91,9 +65,37 @@ in
             text-caps-lock-color = text;
             text-ver-color = text;
             text-wrong-color = text;
-          }
-          // lib.optionalAttrs cfg.useWallpaper {
-            image = "${config.stylix.image}";
           };
-      };
+      }
+    )
+    (
+      { cfg, image }:
+      {
+        programs.swaylock.settings.image = lib.mkIf cfg.useWallpaper "${image}";
+      }
+    )
+    (
+      { imageScalingMode }:
+      {
+        programs.swaylock.settings.scaling = imageScalingMode;
+      }
+    )
+  ];
+  imports = [
+    (lib.mkRenamedOptionModuleWith {
+      from = [
+        "stylix"
+        "targets"
+        "swaylock"
+        "useImage"
+      ];
+      sinceRelease = 2505;
+      to = [
+        "stylix"
+        "targets"
+        "swaylock"
+        "useWallpaper"
+      ];
+    })
+  ];
 }
