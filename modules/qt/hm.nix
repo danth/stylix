@@ -79,7 +79,7 @@
 
       assertions =
         lib.optional (config.stylix.targets.qt.platform == null && osConfig != null)
-          "stylix: qt: When using standalon home-manager `config.stylix.targets.qt.platform` must be set.";
+          "stylix: qt: When using standalone home-manager, `config.stylix.targets.qt.platform` must be set.";
 
       home.packages = lib.optional (config.qt.style.name == "kvantum") kvantumPackage;
 
