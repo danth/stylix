@@ -3,6 +3,7 @@ title = "Stylix"
 language = "en"
 
 [preprocessor.alerts]
+renderers = ["html", "linkcheck"]
 
 [output.html]
 site-url = "/stylix/"
@@ -32,3 +33,8 @@ enable = true
 "/options/modules/nixvim.html" = "./neovim.html"
 "/options/modules/nvf.html" = "./neovim.html"
 "/options/modules/vim.html" = "./neovim.html"
+
+[output.linkcheck]
+follow-web-links = false
+traverse-parent-directories = false
+warning-policy = "error"

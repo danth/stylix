@@ -81,6 +81,7 @@
 
     [Neovim]: https://neovim.io
     [Nixvim]: https://github.com/nix-community/nixvim#readme
+    [NixVim Standalone]: https://nix-community.github.io/nixvim/user-guide/install.html#standalone-usage
     [nvf]: https://github.com/NotAShelf/nvf#readme
     [Vim]: https://www.vim.org
   '';
