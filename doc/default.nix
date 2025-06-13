@@ -643,7 +643,7 @@ stdenvNoCC.mkDerivation {
   '';
 
   postBuild = ''
-    cp -r book/html $out
+    cp --recursive book/html $out
     cat $extraCSSPath >>$out/css/general.css
   '';
 }
