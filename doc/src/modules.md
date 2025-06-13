@@ -254,7 +254,7 @@ syntax for formatting and links.
 For modules needing more general documentation, add a `description` to
 `modules/«module»/meta.nix`:
 
-You can build and view the documentation by running `nix run .#docs`, or
+You can build and view the documentation by running `nix run .#doc`, or
 `serve-docs` from within the dev shell.
 
 ```markdown
