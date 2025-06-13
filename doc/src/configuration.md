@@ -187,22 +187,22 @@ theme for each user.
 
 You may prefer to disable inheritance entirely, and set up the Home Manager
 version of Stylix yourself if required. Refer to the options
-[`stylix.homeManagerIntegration.autoImport`](options/global/nixos.md#stylixhomemanagerintegrationautoimport)
+[`stylix.homeManagerIntegration.autoImport`](options/platforms/nixos.md#stylixhomemanagerintegrationautoimport)
 and
-[`stylix.homeManagerIntegration.followSystem`](options/global/nixos.md#stylixhomemanagerintegrationfollowsystem)
+[`stylix.homeManagerIntegration.followSystem`](options/platforms/nixos.md#stylixhomemanagerintegrationfollowsystem)
 to customize this.
 
 > [!NOTE]
 >
 > There is a special case involving the
-> [`stylix.base16Scheme`](options/global/nixos.md#stylixbase16scheme)
+> [`stylix.base16Scheme`](options/platforms/home_manager.md#stylixbase16scheme)
 > option:
 >
 > If the wallpaper in a Home Manager configuration is changed, then Home Manager
 > will stop inheriting the color scheme from NixOS. This allows Home Manager
 > configurations to use the automatic palette generator without being overridden.
 >
-> Similarly, [`stylix.override`](options/global/nixos.md#stylixoverride) is not inherited
+> Similarly, [`stylix.override`](options/platforms/home_manager.md#stylixoverride) is not inherited
 > if the color scheme is different.
 
 ## Turning targets on and off
