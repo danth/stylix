@@ -4,10 +4,8 @@ mkTarget {
   humanName = "Fish";
 
   configElements =
-    { colors, inputs }:
+    { callElement }:
     {
-      programs.fish.interactiveShellInit = import ./prompt.nix {
-        inherit colors inputs;
-      };
+      programs.fish.interactiveShellInit = callElement ./prompt.nix;
     };
 }

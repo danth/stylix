@@ -1,5 +1,5 @@
 { colors }:
-with colors;
+with colors.withHashtag;
 {
   Metadata = {
     Name = "Stylix";
