@@ -14,7 +14,7 @@
 "topic: documentation":
   - changed-files:
       - any-glob-to-any-file:
-          - "docs/**"
+          - "doc/**"
           - "README.md"
 
 "topic: nixos":

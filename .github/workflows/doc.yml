@@ -1,5 +1,5 @@
 ---
-name: Docs
+name: Documentation
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
         continue-on-error: true
 
-      - run: nix build .#docs
+      - run: nix build .#doc
 
       - uses: actions/upload-pages-artifact@v3
         with:

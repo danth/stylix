@@ -10,8 +10,8 @@ let
     ]
   );
 
-  # `nix build .#palette-generator.passthru.docs` and open in a web browser
-  docs = stdenvNoCC.mkDerivation {
+  # `nix build .#palette-generator.doc && xdg-open result/index.html`
+  doc = stdenvNoCC.mkDerivation {
     name = "palette-generator-haddock";
 
     src = ./.;
@@ -38,7 +38,7 @@ stdenvNoCC.mkDerivation {
     install -D Stylix/Main $out/bin/palette-generator
   '';
 
-  passthru = { inherit docs; };
+  passthru = { inherit doc; };
 
   meta.mainProgram = "palette-generator";
 }

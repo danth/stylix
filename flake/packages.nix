@@ -8,7 +8,7 @@
       # are derivations.
       checks = config.packages;
 
-      # Make 'nix run .#docs' serve the docs
+      # Make 'nix run .#doc' serve the documentation site
       apps.doc.program = config.packages.serve-docs;
 
       packages = lib.mkMerge [
