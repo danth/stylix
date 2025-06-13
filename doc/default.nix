@@ -10,6 +10,7 @@
   stdenvNoCC,
   mdbook,
   mdbook-alerts,
+  mdbook-linkcheck,
 }:
 
 let
@@ -618,6 +619,7 @@ stdenvNoCC.mkDerivation {
   buildInputs = [
     mdbook
     mdbook-alerts
+    mdbook-linkcheck
   ];
 
   inherit extraCSS renderedSummary;
@@ -636,11 +638,12 @@ stdenvNoCC.mkDerivation {
 
   buildPhase = ''
     runHook preBuild
-    mdbook build --dest-dir $out
+    mdbook build
     runHook postBuild
   '';
 
   postBuild = ''
+    cp --recursive book/html $out
     cat $extraCSSPath >>$out/css/general.css
   '';
 }
