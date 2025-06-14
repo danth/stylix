@@ -9,8 +9,25 @@ let
       size = fonts.sizes.desktop * 1.0;
     };
 in
+
 {
-  options.stylix.targets.i3.enable = config.lib.stylix.mkEnableTarget "i3" true;
+  options.stylix.targets.i3 = {
+    enable = config.lib.stylix.mkEnableTarget "i3" true;
+    exportedBarConfig = lib.mkOption {
+      type = lib.types.attrs;
+      description = ''
+        Theming configuration which can be merged with your own:
+        ```nix
+        xsession.windowManager.i3.config.bars.«name» =
+          {
+            # your configuration
+          }
+          // config.stylix.targets.i3.exportedBarConfig;
+        ```
+      '';
+      readOnly = true;
+    };
+  };
 
   config =
     with config.lib.stylix.colors.withHashtag;
@@ -64,8 +81,7 @@ in
       })
 
       {
-        # Merge this with your bar configuration using //config.lib.stylix.i3.bar
-        lib.stylix.i3.bar = {
+        stylix.targets.i3.exportedBarConfig = {
           inherit fonts;
 
           colors =
