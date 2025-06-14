@@ -254,19 +254,22 @@ syntax for formatting and links.
 For modules needing more general documentation, add a `description` to
 `modules/«module»/meta.nix`:
 
-You can build and view the documentation by running `nix run .#docs`, or
-`serve-docs` from within the dev shell.
-
-```markdown
-# Module Name
-
-Consider describing which applications are themed by this module (if it's not
-obvious from the module name), how the applications need to be installed for the
-module to work correctly, which theming items are supported (colors, fonts,
-wallpaper, ...), and any caveats the user should be aware of.
+```nix
+description = ''
+  Consider describing which applications are themed by this module (if it's not
+  obvious from the module name), how the applications need to be installed for
+  the module to work correctly, which theming items are supported (colors,
+  fonts, wallpaper, ...), and any caveats the user should be aware of.
+'';
 ```
 
 This will be inserted before the automatically generated list of options.
+
+You can build and view the documentation by running `nix run .#doc`, which will
+build the documentation, start a localhost web-server, and open it in your
+browser.
+
+See also: [Development environment → Documentation](./development_environment.md#documentation)
 
 ## Testbeds
 
