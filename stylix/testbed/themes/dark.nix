@@ -1,4 +1,8 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  ...
+}:
 let
   images = pkgs.callPackages ../images.nix { };
   inherit (config.stylix.inputs) tinted-schemes;
@@ -8,7 +12,7 @@ in
     enable = true;
     image = images.dark;
     base16Scheme = "${tinted-schemes}/base16/catppuccin-macchiato.yaml";
-    polarity = "dark";
+    themeGeneration.polarity = "dark";
     cursor = {
       name = "Vanilla-DMZ";
       package = pkgs.vanilla-dmz;
