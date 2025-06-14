@@ -185,7 +185,8 @@ in
         [`stylix.homeManagerIntegration.autoImport`](#stylixhomemanagerintegrationautoimport).
       '';
       type = lib.types.bool;
-      default = true;
+      default = config.stylix.enable;
+      defaultText = "config.stylix.enable";
       example = false;
     };
 
