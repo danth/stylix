@@ -32,5 +32,12 @@ mkTarget {
         };
       }
     )
+    (
+      { polarity, iconTheme }:
+      {
+        programs.fuzzel.settings.main."icon-theme" =
+          if (polarity == "dark") then iconTheme.dark else iconTheme.light;
+      }
+    )
   ];
 }
