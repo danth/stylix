@@ -92,6 +92,14 @@ in
       signColumn = lib.mkEnableOption "background transparency for the NeoVim sign column";
       numberLine = lib.mkEnableOption "background transparency for the NeoVim number/relativenumber column";
     };
+    exportedConfig = lib.mkOption {
+      type = lib.types.attrs;
+      description = ''
+        Theming configuration which can be merged with your own. See
+        [Standalone Mode](#standalone-mode) documentation.
+      '';
+      readOnly = true;
+    };
   };
 
   imports = [
@@ -135,7 +143,7 @@ in
 
   config = lib.mkMerge [
     {
-      lib.stylix.nixvim.config = {
+      stylix.targets.nixvim.exportedConfig = {
         imports = [
           (lib.modules.importApply ./neovide-common.nix config.stylix)
         ];
@@ -149,7 +157,7 @@ in
     }
     (lib.mkIf (config.stylix.enable && cfg.enable && options.programs ? nixvim) (
       lib.optionalAttrs (options.programs ? nixvim) {
-        programs.nixvim = config.lib.stylix.nixvim.config;
+        programs.nixvim = config.stylix.targets.nixvim.exportedConfig;
       }
     ))
   ];

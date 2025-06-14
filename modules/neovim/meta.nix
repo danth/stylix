@@ -38,7 +38,7 @@
     as normal. However, when using Nixvim's ["standalone" configuration mode][NixVim Standalone],
     you will need to pass Stylix's generated config to Nixvim yourself.
 
-    The generated config can be accessed as `config.lib.stylix.nixvim.config`. You
+    The generated config can be accessed as `config.stylix.targets.nixvim.exportedConfig`. You
     can use this as a module in your standalone Nixvim Configuration or an
     extension of it.
 
@@ -54,7 +54,7 @@
     let
       inherit (pkgs.stdenv.hostPlatform) system;
       nixvim-package = inputs.nixvim-config.packages.''${system}.default;
-      extended-nixvim = nixvim-package.extend config.lib.stylix.nixvim.config;
+      extended-nixvim = nixvim-package.extend config.stylix.targets.nixvim.exportedConfig;
     in
     {
       environment.systemPackages = [ extended-nixvim ];
