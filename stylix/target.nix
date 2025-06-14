@@ -110,7 +110,7 @@
           default = config.stylix.image != null && autoEnable;
           defaultText =
             if autoEnable then lib.literalExpression "stylix.image != null" else false;
-          example = config.stylix.image == null;
+          example = true;
         };
 
       mkEnableIf =

@@ -2,9 +2,6 @@
   lib,
   pkgs,
   inputs,
-  nixosSystem,
-  homeManagerConfiguration,
-  system,
   callPackage,
   writeText,
   stdenvNoCC,
@@ -17,38 +14,75 @@ let
   # Prefix to remove from option declaration file paths.
   rootPrefix = toString ../. + "/";
 
-  nixosConfiguration = nixosSystem {
-    inherit system;
-    modules = [
-      inputs.home-manager.nixosModules.home-manager
-      inputs.self.nixosModules.stylix
-    ];
+  # A stub pkgs used while evaluating the stylix modules for the docs
+  noPkgs = {
+    # Needed for type-checking
+    inherit (pkgs) _type;
+
+    # Permit access to (pkgs.formats.foo { }).type
+    formats = builtins.mapAttrs (_: fmt: args: {
+      inherit (fmt args) type;
+    }) pkgs.formats;
   };
 
-  homeConfiguration = homeManagerConfiguration {
-    inherit pkgs;
-    modules = [
-      inputs.self.homeModules.stylix
-      {
-        home = {
-          homeDirectory = "/home/book";
-          stateVersion = "22.11";
-          username = "book";
+  # A stub config used while evaluating the stylix modules for the docs
+  #
+  # To resolve #98, this should be simplified to `noConfig = {}`.
+  # However, currently we access option-declaring functions via
+  # `config.lib.stylix`.
+  noConfig =
+    let
+      configuration = evalDocs {
+        # The config.lib option, as found in NixOS and home-manager.
+        # Currently required by the `target.nix` module.
+        options.lib = lib.mkOption {
+          type = lib.types.attrsOf lib.types.attrs;
+          description = ''
+            This option allows modules to define helper functions, constants, etc.
+          '';
+          default = { };
+          visible = false;
         };
-      }
-    ];
-  };
+
+        # The target.nix module defines functions that are currently needed to
+        # declare options
+        imports = [ ../stylix/target.nix ];
+      };
+    in
+    {
+      lib.stylix = {
+        inherit (configuration.config.lib.stylix)
+          mkEnableIf
+          mkEnableTarget
+          mkEnableTargetWith
+          mkEnableWallpaper
+          ;
+      };
+    };
+
+  evalDocs =
+    module:
+    lib.evalModules {
+      modules = [ ./eval_compat.nix ] ++ lib.toList module;
+      specialArgs = {
+        pkgs = noPkgs;
+        config = noConfig;
+      };
+    };
 
   # TODO: Include Nix Darwin options
 
   platforms = {
     home_manager = {
       name = "Home Manager";
-      configuration = homeConfiguration;
+      configuration = evalDocs [
+        inputs.self.homeModules.stylix
+        ./hm_compat.nix
+      ];
     };
     nixos = {
       name = "NixOS";
-      configuration = nixosConfiguration;
+      configuration = evalDocs inputs.self.nixosModules.stylix;
     };
   };
 
