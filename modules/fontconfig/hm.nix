@@ -1,9 +1,6 @@
-{ mkTarget, ... }:
-mkTarget {
-  name = "fontconfig";
-  humanName = "Fontconfig";
-
-  configElements = {
-    fonts.fontconfig.enable = true;
-  };
+{ lib, mkTarget, ... }:
+{
+  imports = [
+    (lib.modules.importApply ./fontconfig.nix { inherit mkTarget; })
+  ];
 }
