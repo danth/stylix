@@ -61,13 +61,17 @@ This is based on [`nix-fast-build`](https://github.com/Mic92/nix-fast-build#read
 
 ## Documentation
 
-The documentation in the `docs` subtree gets
+The documentation in the `doc` subtree gets
 [published](https://nix-community.github.io/stylix) automatically, using GitHub
 Actions.
 
 If you modify it, you can easily build it and check your changes locally:
 
 ```sh
-nix build .#docs
-xdg-open result/index.html
+nix run .#doc
 ```
+
+This will build the documentation, start a localhost web-server, and open it in
+your browser.
+
+See also: [Adding modules → Documentation](./modules.md#documentation)
