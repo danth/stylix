@@ -5,8 +5,21 @@ let
   );
 in
 {
-  # Merge this with your bar's theme's overrides with //config.lib.stylix.i3status-rust.bar
-  config.lib.stylix.i3status-rust.bar =
+  options.stylix.targets.i3status-rust.exportedBarConfig = lib.mkOption {
+    type = lib.types.attrs;
+    description = ''
+      Theming configuration which can be merged with your own:
+      ```nix
+      programs.i3status-rust.bars.«name».settings.theme.overrides =
+        {
+          # your configuration
+        }
+        // config.stylix.targets.i3status-rust.exportedBarConfig;
+      ```
+    '';
+    readOnly = true;
+  };
+  config.stylix.targets.i3status-rust.exportedBarConfig =
     lib.mapAttrs (n: v: if lib.hasSuffix "_bg" n then v + opacityHex else v)
       (
         with config.lib.stylix.colors.withHashtag;
