@@ -35,6 +35,12 @@
       { fingerprint = "36BC 916D DD4E B1EE EE82  4BBF DC95 900F 6DA7 9992"; }
     ];
   };
+  mrbroggle = {
+    name = "Grady Brown";
+    email = "gradyb@broggl.farm";
+    github = "Mrbroggle";
+    githubId = 40074860;
+  };
   nukdokplex = {
     email = "nukdokplex@nukdokplex.ru";
     name = "Viktor Titov";
