@@ -29,13 +29,13 @@ mkTarget {
             urgency_low = {
               background = base01 + dunstOpacity;
               foreground = base05;
-              frame_color = base0B;
+              frame_color = base03;
             };
 
             urgency_normal = {
               background = base01 + dunstOpacity;
               foreground = base05;
-              frame_color = base0E;
+              frame_color = base0D;
             };
 
             urgency_critical = {
