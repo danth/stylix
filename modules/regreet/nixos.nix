@@ -31,7 +31,8 @@ in
             )
             "stylix: regreet: custom services.greetd.settings.default_session.command value may not work: ${config.services.greetd.settings.default_session.command}";
         programs.regreet = {
-          settings.GTK.application_prefer_dark_theme = config.stylix.polarity == "dark";
+          settings.GTK.application_prefer_dark_theme =
+            config.stylix.themeGeneration.polarity == "dark";
           settings.background = lib.mkIf cfg.useWallpaper {
             path = config.stylix.image;
             fit =

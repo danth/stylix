@@ -1,8 +1,11 @@
-{ config, lib, ... }:
-
+{
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.stylix.iconTheme;
-  inherit (config.stylix) polarity;
+  inherit (config.stylix.themeGeneration) polarity;
 in
 {
   config = lib.mkIf (config.stylix.enable && cfg.enable) {

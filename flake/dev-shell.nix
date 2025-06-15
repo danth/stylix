@@ -54,11 +54,6 @@
             ++ config.pre-commit.settings.enabledPackages
             ++ config.formatter.runtimeInputs;
         };
-
-        ghc = pkgs.mkShell {
-          inputsFrom = [ config.devShells.default ];
-          packages = [ pkgs.ghc ];
-        };
       };
     };
 }

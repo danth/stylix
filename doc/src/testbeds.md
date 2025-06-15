@@ -69,7 +69,6 @@ github:nix-community/stylix
 └───packages
     └───x86_64-linux
         ├───docs: package 'stylix-book'
-        ├───palette-generator: package 'palette-generator'
         ├───"testbed:gnome:cursorless": package 'testbed-gnome-cursorless'
         ├───"testbed:gnome:dark": package 'testbed-gnome-dark'
         ├───"testbed:gnome:imageless": package 'testbed-gnome-imageless'
