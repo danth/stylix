@@ -206,11 +206,7 @@ let
         lib.genAttrs (functionArgNames fn) (
           arg:
           let
-            trimmedArg =
-              let
-                prefix = "_";
-              in
-              if lib.hasPrefix prefix arg then lib.removePrefix prefix arg else arg;
+            trimmedArg = lib.removePrefix "_" arg;
           in
           if trimmedArg == "cfg" then
             cfg
