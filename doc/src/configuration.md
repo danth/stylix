@@ -111,6 +111,18 @@ or at `~/.config/stylix/palette.html` on Home Manager.
 
 ## Fonts
 
+Fonts can apply in three ways:
+
+1. An app's own font options
+  (e.g. [the Alacritty module](./options/modules/alacritty.html) sets home-manager's
+  `programs.alacritty.settings.font`).
+
+2. Widely, through
+  [the Fontconfig module](./options/modules/fontconfig.html).
+
+3. Made available in an environment using
+  [the font packages module](./options/modules/font-packages.html).
+
 The default combination of fonts is:
 
 ```nix
