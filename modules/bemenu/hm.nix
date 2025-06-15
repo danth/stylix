@@ -15,6 +15,7 @@ mkTarget {
       '';
       type = with lib.types; nullOr int;
       default = config.stylix.fonts.sizes.popups;
+      defaultText = "stylix.fonts.sizes.popups";
     }; # optional argument
 
     alternate = lib.mkOption {
