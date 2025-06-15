@@ -46,6 +46,8 @@ let
   makeTestbed =
     testbed: themeName: themeModule:
     let
+      meta = pkgs.callPackage ../meta.nix { };
+
       name =
         lib.concatMapStringsSep testbedFieldSeparator
           (
@@ -95,7 +97,9 @@ let
       };
     in
     lib.optionalAttrs (isEnabled testbed.path) {
-      ${name} = script;
+      ${name} = lib.recursiveUpdate script {
+        meta.maintainers = meta.${testbed.module}.maintainers;
+      };
     };
 
   # Import all the testbed themes
