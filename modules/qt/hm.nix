@@ -73,13 +73,9 @@
         ++ (lib.optional (config.qt.style.name != recommendedStyle)
           "stylix: qt: Changing `config.qt.style` is unsupported and may result in breakage! Use with caution!"
         )
-        ++ (lib.optional (config.qt.platformTheme.name == null && osConfig != null)
-          "stylix: qt: Automatic Theme selection for Qt can only work when stylix is enabled system-wide. Set `stylix.enable = true` in your NixOS configuration"
+        ++ (lib.optional (config.stylix.targets.qt.platform == null && osConfig != null)
+          "stylix: qt: When using standalone home-manager, `config.stylix.targets.qt.platform` must be set."
         );
-
-      assertions =
-        lib.optional (config.stylix.targets.qt.platform == null && osConfig != null)
-          "stylix: qt: When using standalone home-manager, `config.stylix.targets.qt.platform` must be set.";
 
       home.packages = lib.optional (config.qt.style.name == "kvantum") kvantumPackage;
 
