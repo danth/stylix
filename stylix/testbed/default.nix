@@ -7,6 +7,9 @@
 
 let
   isEnabled = pkgs.callPackage ./is-enabled.nix { };
+  availableGraphicalEnvironments =
+    pkgs.callPackage ./available-graphical-environments.nix
+      { };
 
   autoload = lib.pipe ../../modules [
     builtins.readDir
@@ -63,16 +66,20 @@ let
       system = lib.nixosSystem {
         inherit (pkgs) system;
 
-        modules = [
-          ./modules/common.nix
-          ./modules/enable.nix
-          ./modules/application.nix
-          inputs.self.nixosModules.stylix
-          inputs.home-manager.nixosModules.home-manager
-          testbed.path
-          themeModule
-          { system.name = name; }
-        ];
+        modules =
+          [
+            ./modules/common.nix
+            ./modules/enable.nix
+            ./modules/application.nix
+            inputs.self.nixosModules.stylix
+            inputs.home-manager.nixosModules.home-manager
+            testbed.path
+            themeModule
+            { system.name = name; }
+          ]
+          ++ map (
+            name: import ./graphicalEnvironments/${name}.nix
+          ) availableGraphicalEnvironments;
       };
 
       script = pkgs.writeShellApplication {
