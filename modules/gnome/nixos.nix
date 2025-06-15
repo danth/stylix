@@ -2,38 +2,50 @@
   lib,
   pkgs,
   config,
+  mkTarget,
   ...
 }:
+mkTarget {
+  name = "gnome";
+  humanName = "GNOME and GDM";
+  autoEnable =
+    config.services.xserver.desktopManager.gnome.enable
+    || config.services.xserver.displayManager.gdm.enable;
+  autoEnableExpr = ''
+    config.services.xserver.desktopManager.gnome.enable
+      || config.services.xserver.displayManager.gdm.enable
+  '';
 
-let
-  theme = pkgs.callPackage ./theme.nix {
-    inherit (config.lib.stylix) colors;
-    inherit (config.stylix) inputs;
-  };
-
-in
-{
-  options.stylix.targets.gnome.enable =
-    config.lib.stylix.mkEnableTarget "GNOME and GDM" true;
-
-  config =
-    lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.gnome.enable
-        && (
-          config.services.desktopManager.gnome.enable
-          || config.services.displayManager.gdm.enable
-        )
-      )
+  configElements = [
+    {
+      # As Stylix is controlling the wallpaper, there is no need for this
+      # pack of default wallpapers to be installed.
+      # If you want to use one, you can set stylix.image to something like
+      # "${pkgs.gnome-backgrounds}/path/to/your/preferred/background"
+      # which will then download the pack regardless of its exclusion below.
+      environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
+    }
+    (
+      { cursor }:
       {
-        # As Stylix is controlling the wallpaper, there is no need for this
-        # pack of default wallpapers to be installed.
-        # If you want to use one, you can set stylix.image to something like
-        # "${pkgs.gnome-backgrounds}/path/to/your/preferred/background"
-        # which will then download the pack regardless of its exclusion below.
-        environment.gnome.excludePackages = [ pkgs.gnome-backgrounds ];
-
+        environment.systemPackages = [ cursor.package ];
+        programs.dconf.profiles.gdm.databases = [
+          {
+            lockAll = true;
+            settings."org/gnome/desktop/interface" = {
+              cursor-theme = config.stylix.cursor.name;
+              cursor-size = lib.gvariant.mkInt32 config.stylix.cursor.size;
+            };
+          }
+        ];
+      }
+    )
+    (
+      { colors, inputs }:
+      let
+        theme = pkgs.callPackage ./theme.nix { inherit colors inputs; };
+      in
+      {
         nixpkgs.overlays = [
           (_: super: {
             gnome-shell = super.gnome-shell.overrideAttrs (oldAttrs: {
@@ -52,22 +64,7 @@ in
             });
           })
         ];
-
-        # Cursor settings are usually applied via Home Manager,
-        # but the login screen uses a separate database.
-        environment.systemPackages = lib.mkIf (config.stylix.cursor != null) [
-          config.stylix.cursor.package
-        ];
-        programs.dconf.profiles.gdm.databases =
-          lib.mkIf (config.stylix.cursor != null)
-            [
-              {
-                lockAll = true;
-                settings."org/gnome/desktop/interface" = {
-                  cursor-theme = config.stylix.cursor.name;
-                  cursor-size = lib.gvariant.mkInt32 config.stylix.cursor.size;
-                };
-              }
-            ];
-      };
+      }
+    )
+  ];
 }
