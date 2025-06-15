@@ -212,9 +212,11 @@ let
             cfg
           else if trimmedArg == "colors" then
             config.lib.stylix.colors
+          else if trimmedArg == "callElement" then
+            f: import f mkConditionalConfig
           else
             config.stylix.${trimmedArg}
-              or (throw "stylix: mkTarget expected one of `cfg`, `colors`, ${
+              or (throw "stylix: mkTarget expected one of `cfg`, `colors`, `callElement`, ${
                 lib.concatMapStringsSep ", " (name: "`${name}`") (
                   builtins.attrNames config.stylix
                 )

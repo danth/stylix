@@ -15,7 +15,7 @@ mkTarget {
       }
     )
     (
-      { colors }:
+      { colors, callElement }:
       {
         i18n.inputMethod.fcitx5 = {
           settings.addons.classicui.globalSection = {
@@ -34,9 +34,7 @@ mkTarget {
               template = ./panel.svg.mustache;
               extension = ".svg";
             };
-            theme = import ./template.nix {
-              colors = colors.withHashtag;
-            };
+            theme = callElement ./template.nix;
           };
         };
       }
