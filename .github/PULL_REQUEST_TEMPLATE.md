@@ -12,7 +12,7 @@ Please also link any relevant issues or pull requests e.g. `Closes: #<ISSUE-ID>`
 Please check what applies. Note that these are not hard requirements but merely
 serve as information for reviewers.
 -->
-- [ ] Tested locally
+- [ ] Tested [locally](https://nix-community.github.io/stylix/modules.html#development-setup)
 - [ ] Tested in [testbed](https://nix-community.github.io/stylix/testbeds.html)
 - [ ] Commit message follows [commit convention](https://nix-community.github.io/stylix/commit_convention.html)
 - [ ] Fits [style guide](https://nix-community.github.io/stylix/styling.html)
